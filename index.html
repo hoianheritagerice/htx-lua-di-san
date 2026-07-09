@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)file:///C:/Users/Admin/Downloads/index_4.html -->
+<html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTX Lúa Di Sản — Bản đồ canh tác</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./Giao diện_files/css2" rel="stylesheet">
+<style>
+:root{
+  --nen:#f5f2e8; --muc:#26321f; --xanh-dam:#1e4d2b; --xanh-la:#8bc34a;
+  --xanh-vien:#33691e; --dat:#e3d9c4; --dat-vien:#8d6e63; --vang:#c9a227;
+  --trang:#ffffff; --xam:#90a4ae; --do:#c0392b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--nen);color:var(--muc);min-height:100vh}
+
+header{background:var(--xanh-dam);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header .logo{font-weight:700;font-size:17px;letter-spacing:.3px}
+header .logo small{display:block;font-weight:400;font-size:11px;opacity:.75;letter-spacing:1.5px;text-transform:uppercase}
+header .spacer{flex:1}
+#userBox{font-size:13px;display:flex;align-items:center;gap:8px}
+#userBox button{background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:6px;padding:5px 12px;font-size:12.5px;cursor:pointer;font-family:inherit}
+
+.chon{display:flex;gap:10px;padding:12px 16px;flex-wrap:wrap;align-items:center}
+.chon label{font-size:12px;font-weight:600;color:var(--xanh-dam);text-transform:uppercase;letter-spacing:.5px}
+.chon select{font-family:inherit;font-size:14px;padding:8px 10px;border:1.5px solid #cfc8b4;border-radius:8px;background:#fff;color:var(--muc)}
+
+#trangthai{margin:0 16px 8px;font-size:12.5px;color:#6b7263;min-height:18px}
+#trangthai.loi{color:var(--do)}
+
+.khung-bando{position:relative;margin:0 10px 14px;background:#fbf9f1;border:1.5px solid #ddd3ba;border-radius:12px;overflow:auto;max-height:78vh}
+#svgwrap{transform-origin:0 0}
+svg{display:block;width:100%;height:auto;max-height:72vh}
+.thua{cursor:pointer;transition:filter .12s}
+.thua:hover{filter:brightness(1.08)}
+.thua.chon-active{stroke-width:14 !important;stroke:var(--vang) !important}
+.thua.huu-co{fill:#9ccc65;stroke:var(--xanh-vien)}
+.thua.khong-huu-co{fill:#e6dcc6;stroke:#a1887f}
+.thua.chua-ro{fill:#eceff1;stroke:#b0bec5;stroke-dasharray:22 14}
+.ten-nd{font-weight:600;fill:#1b2a14;pointer-events:none}
+.dt-nd{fill:#3c4a33;pointer-events:none}
+.vung{fill:#a8b0a0;font-weight:600;letter-spacing:6px;pointer-events:none;opacity:.8}
+
+.zoombtns{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px;z-index:5}
+.zoombtns button{width:38px;height:38px;border-radius:9px;border:1.5px solid #cfc8b4;background:#fff;font-size:19px;cursor:pointer;color:var(--xanh-dam);font-weight:700}
+
+.chuthich{display:flex;gap:16px;padding:0 16px 18px;font-size:12.5px;flex-wrap:wrap}
+.chuthich span{display:inline-flex;align-items:center;gap:6px}
+.chuthich i{width:16px;height:16px;border-radius:4px;display:inline-block;border:1.5px solid}
+.i-hc{background:#9ccc65;border-color:var(--xanh-vien)}
+.i-khc{background:#e6dcc6;border-color:#a1887f}
+.i-cr{background:#eceff1;border-color:#b0bec5}
+
+/* ---------- modal ---------- */
+.modal-phu{position:fixed;inset:0;background:rgba(20,28,15,.55);display:none;align-items:flex-end;justify-content:center;z-index:50}
+.modal-phu.mo{display:flex}
+.modal{background:#fff;width:100%;max-width:560px;border-radius:18px 18px 0 0;max-height:88vh;overflow-y:auto;padding:20px 20px 28px}
+@media(min-width:640px){.modal-phu{align-items:center}.modal{border-radius:18px}}
+.modal h2{font-size:18px;color:var(--xanh-dam)}
+.modal .ma-sp{font-size:12.5px;color:#6b7263;margin:2px 0 4px;font-family:ui-monospace,monospace}
+.badge{display:inline-block;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:14px}
+.badge.hc{background:#e6f2d8;color:#33691e}
+.badge.khc{background:#efe7d8;color:#795548}
+.badge.cr{background:#eceff1;color:#607d8b}
+.hai-nut{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.hai-nut button{padding:14px 10px;border-radius:11px;border:none;font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer}
+.nut-xem{background:#eef2e6;color:var(--xanh-dam)}
+.nut-nhap{background:var(--xanh-dam);color:#fff}
+.dong{display:block;margin:16px auto 0;background:none;border:none;color:#8a9180;font-size:13px;cursor:pointer;font-family:inherit}
+
+.form-o{margin-bottom:13px}
+.form-o label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:#41503a}
+.form-o input,.form-o textarea{width:100%;font-family:inherit;font-size:14px;padding:10px;border:1.5px solid #cfc8b4;border-radius:9px;background:#fdfcf8}
+.form-o textarea{min-height:90px;resize:vertical}
+.nut-gui{width:100%;padding:14px;border:none;border-radius:11px;background:var(--xanh-dam);color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px}
+.nut-gui:disabled{opacity:.55}
+.bao-loi{color:var(--do);font-size:13px;margin-top:8px;min-height:16px}
+.anh-xem{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.anh-xem img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1.5px solid #ddd}
+
+.nkmuc{border-bottom:1px solid #ece5d2;padding:12px 2px}
+.nkmuc .nk-ngay{font-size:11.5px;color:#8a9180;font-family:ui-monospace,monospace}
+.nkmuc .nk-tieude{font-weight:600;font-size:14.5px;margin:2px 0}
+.nkmuc .nk-tt{display:inline-block;font-size:11px;padding:2px 9px;border-radius:12px;background:#e6f2d8;color:#33691e}
+.nkmuc a{font-size:12px;color:var(--xanh-dam)}
+.trong{color:#8a9180;font-size:13.5px;text-align:center;padding:22px 0}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">HTX LÚA DI SẢN<small>Bản đồ canh tác minh bạch</small></div>
+  <div class="spacer"></div>
+  <div id="userBox"><button onclick="moModal(&#39;mpDN&#39;)">Đăng nhập</button></div>
+</header>
+
+<div class="chon">
+  <label>Mùa vụ</label>
+  <select id="selVu"><option value="HT26">Hè Thu 2026</option></select>
+  <label>Cánh đồng</label>
+  <select id="selDong">
+    <option value="CKOD">Ông Đảng — Cẩm Kim</option>
+    <option value="" disabled="">Đồng Mẫu — Cẩm Thanh (sắp có)</option>
+    <option value="" disabled="">Đồng Cao — Cẩm Thanh (sắp có)</option>
+  </select>
+</div>
+
+<div id="trangthai">Chưa cấu hình API_URL — bản đồ hiển thị được nhưng chưa kết nối Notion.</div>
+
+<div class="khung-bando">
+  <div class="zoombtns">
+    <button onclick="zoom(1.25)">+</button>
+    <button onclick="zoom(0.8)">−</button>
+  </div>
+  <div id="svgwrap"><svg viewBox="0 0 5760.5 3710.9" xmlns="http://www.w3.org/2000/svg"><polygon id="thua0" class="thua chua-ro" points="249.7,2721.6 589.8,2770.5 451.6,3293.1 120,3250.6" stroke-width="7" onclick="chonThua(0)"></polygon><polygon id="thua1" class="thua chua-ro" points="589.8,2770.5 451.6,3293.1 887.6,3348.9 1003.7,2829.9" stroke-width="7" onclick="chonThua(1)"></polygon><polygon id="thua2" class="thua chua-ro" points="887.6,3348.9 1293.2,3400.9 1396.3,2762.7 1031.2,2708.7" stroke-width="7" onclick="chonThua(2)"></polygon><polygon id="thua3" class="thua chua-ro" points="1396.3,2762.7 1847.3,2829.4 1742.3,3255.6 1486,3425.6 1293.2,3400.9" stroke-width="7" onclick="chonThua(3)"></polygon><polygon id="thua4" class="thua chua-ro" points="1742.3,3255.6 1967.4,2371.2 2221.8,2405.3 2039.6,3324.8" stroke-width="7" onclick="chonThua(4)"></polygon><polygon id="thua5" class="thua chua-ro" points="2039.6,3324.8 2456.3,3421.9 2630.1,2460 2221.8,2405.3" stroke-width="7" onclick="chonThua(5)"></polygon><polygon id="thua6" class="thua chua-ro" points="2773,3304.7 3060.5,3322 3194.3,2535.7 2905.4,2497" stroke-width="7" onclick="chonThua(6)"></polygon><polygon id="thua7" class="thua chua-ro" points="3218.2,2395.3 3023.4,3548.4 3503.4,3590.9 3658.7,2443.9" stroke-width="7" onclick="chonThua(7)"></polygon><polygon id="thua8" class="thua chua-ro" points="2630.1,2460 2905.4,2497 2773,3304.7 2477.5,3304.7" stroke-width="7" onclick="chonThua(8)"></polygon><polygon id="thua9" class="thua chua-ro" points="5044.1,3348.8 4464.8,3297.6 4514.5,2603.8 5101.6,2754.3" stroke-width="7" onclick="chonThua(9)"></polygon><polygon id="thua10" class="thua chua-ro" points="4464.8,3297.6 4464.8,3393.8 4247.4,3393.8 4199.2,3552.1 3947.6,3491.6 4023.8,2477.9 4514.5,2603.8" stroke-width="7" onclick="chonThua(10)"></polygon><polygon id="thua11" class="thua chua-ro" points="5533.4,3387.6 5640.5,2884.7 5101.6,2754.3 5044.1,3348.8" stroke-width="7" onclick="chonThua(11)"></polygon><polygon id="thua12" class="thua chua-ro" points="4023.8,2477.9 3658.7,2443.9 3503.4,3590.9 3947.6,3491.6" stroke-width="7" onclick="chonThua(12)"></polygon><polygon id="thua13" class="thua chua-ro" points="2081.6,1924 1967.4,2371.2 3194.3,2535.7 3284.8,1965.9 2140.1,1662.9" stroke-width="7" onclick="chonThua(13)"></polygon><polygon id="thua14" class="thua chua-ro" points="2140.1,1662.9 2207.3,1363.5 3340.2,1663.6 3284.8,1965.9" stroke-width="7" onclick="chonThua(14)"></polygon><polygon id="thua15" class="thua chua-ro" points="1812.6,1261.8 2207.3,1363.5 2081.6,1924 1670.9,1818.3" stroke-width="7" onclick="chonThua(15)"></polygon><polygon id="thua16" class="thua chua-ro" points="1374.9,1136.4 1225.6,1703.8 1670.9,1818.3 1812.6,1261.8" stroke-width="7" onclick="chonThua(16)"></polygon><polygon id="thua17" class="thua chua-ro" points="1555.1,451.3 1976.7,646.7 1812.6,1261.8 1374.9,1136.4" stroke-width="7" onclick="chonThua(17)"></polygon><polygon id="thua18" class="thua chua-ro" points="1976.7,646.7 2277.2,786.1 2221.4,1091.4 2794.3,1239.3 2736.4,1499.9 1812.6,1261.8" stroke-width="7" onclick="chonThua(18)"></polygon><polygon id="thua19" class="thua chua-ro" points="737.6,547.8 840.6,120 1555.1,451.3 1468.2,766.5" stroke-width="7" onclick="chonThua(19)"></polygon><g><text class="ten-nd" x="352.8" y="2995.6" font-size="46" text-anchor="middle">TRẦN CƯỚC</text><text class="dt-nd" x="352.8" y="3051.6" font-size="42" text-anchor="middle">532.2</text></g><g><text class="ten-nd" x="732.2" y="3050.6" font-size="46" text-anchor="middle">NGUYỄN HỘ</text><text class="dt-nd" x="732.2" y="3106.6" font-size="42" text-anchor="middle">535.5</text></g><g><text class="ten-nd" x="1150.7" y="3048.7" font-size="46" text-anchor="middle">TÔ VĂN HƯNG</text><text class="dt-nd" x="1150.7" y="3104.7" font-size="42" text-anchor="middle">695.9</text></g><g><text class="ten-nd" x="1551.7" y="3070.2" font-size="46" text-anchor="middle">NGUYỄN SÔ</text><text class="dt-nd" x="1551.7" y="3126.2" font-size="42" text-anchor="middle">675.2</text></g><g transform="rotate(-78.8 1990.4 2852.6)"><text class="ten-nd" x="1990.4" y="2840.6" font-size="46" text-anchor="middle">TRẦN ĐÌNH CHÍNH</text><text class="dt-nd" x="1990.4" y="2896.6" font-size="42" text-anchor="middle">612.8</text></g><g transform="rotate(-79.8 2337.8 2906.3)"><text class="ten-nd" x="2337.8" y="2894.3" font-size="46" text-anchor="middle">PHẠM THỊ HƯƠNG</text><text class="dt-nd" x="2337.8" y="2950.3" font-size="42" text-anchor="middle">1009.7</text></g><g transform="rotate(-80.7 2982.8 2913.7)"><text class="ten-nd" x="2982.8" y="2901.7" font-size="46" text-anchor="middle">HUỲNH KIM LONG 2/2</text><text class="dt-nd" x="2982.8" y="2957.7" font-size="42" text-anchor="middle">496.7</text></g><g><text class="ten-nd" x="3349.4" y="2990.5" font-size="46" text-anchor="middle">TÔ THỊ ANH</text><text class="dt-nd" x="3349.4" y="3046.5" font-size="42" text-anchor="middle">1043.1</text></g><g transform="rotate(-79.8 2694.8 2894.8)"><text class="ten-nd" x="2694.8" y="2882.8" font-size="46" text-anchor="middle">ĐỖ HỮU THÁI</text><text class="dt-nd" x="2694.8" y="2938.8" font-size="42" text-anchor="middle">603.7</text></g><g><text class="ten-nd" x="4774.1" y="2986.4" font-size="46" text-anchor="middle">HUỲNH KIM LONG 1/2</text><text class="dt-nd" x="4774.1" y="3042.4" font-size="42" text-anchor="middle">947.1</text></g><g><text class="ten-nd" x="4221.6" y="2993" font-size="46" text-anchor="middle">TRẦN SỞ</text><text class="dt-nd" x="4221.6" y="3049" font-size="42" text-anchor="middle">1196.9</text></g><g><text class="ten-nd" x="5324.4" y="3075.3" font-size="46" text-anchor="middle">NGUYỄN MẠNH THẤN</text><text class="dt-nd" x="5324.4" y="3131.3" font-size="42" text-anchor="middle">780.5</text></g><g><text class="ten-nd" x="3777.8" y="3004" font-size="40" text-anchor="middle">NGUYỄN ĐÌNH BÁN</text><text class="dt-nd" x="3777.8" y="3060" font-size="38" text-anchor="middle">930.1</text></g><g><text class="ten-nd" x="2624.5" y="2120" font-size="46" text-anchor="middle">DƯƠNG NGUYỆN</text><text class="dt-nd" x="2624.5" y="2176" font-size="42" text-anchor="middle">2029.4</text></g><g><text class="ten-nd" x="2743" y="1652.2" font-size="46" text-anchor="middle">NGUYỄN LA 1/2</text><text class="dt-nd" x="2743" y="1708.2" font-size="42" text-anchor="middle">1164.1</text></g><g><text class="ten-nd" x="1942.6" y="1581.8" font-size="46" text-anchor="middle">ĐỖ HỐT 2/2</text><text class="dt-nd" x="1942.6" y="1637.8" font-size="42" text-anchor="middle">611.2</text></g><g><text class="ten-nd" x="1520.1" y="1468.3" font-size="46" text-anchor="middle">ĐỖ HỐT 1/2</text><text class="dt-nd" x="1520.1" y="1524.3" font-size="42" text-anchor="middle">686.7</text></g><g><text class="ten-nd" x="1676.1" y="860.4" font-size="46" text-anchor="middle">NGUYỄN LA 2/2</text><text class="dt-nd" x="1676.1" y="916.4" font-size="42" text-anchor="middle">762.5</text></g><g><text class="ten-nd" x="2100" y="1168" font-size="46" text-anchor="middle">VÕ THỊ THU</text><text class="dt-nd" x="2100" y="1224" font-size="42" text-anchor="middle">977.8</text></g><g><text class="ten-nd" x="1133" y="452.2" font-size="46" text-anchor="middle">HUỲNH KIM BÌNH</text><text class="dt-nd" x="1133" y="508.2" font-size="42" text-anchor="middle">765</text></g><text class="vung" x="2995.5" y="1457" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1841.1" y="362.9" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1043.7" y="1122.9" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1598" y="2304.4" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1183.8" y="3542.8" font-size="86" text-anchor="middle">KHU DÂN CƯ</text><text class="vung" x="4825" y="3598.4" font-size="86" text-anchor="middle">KHU DÂN CƯ</text></svg></div>
+</div>
+
+<div class="chuthich">
+  <span><i class="i-hc"></i> Canh tác hữu cơ</span>
+  <span><i class="i-khc"></i> Không hữu cơ</span>
+  <span><i class="i-cr"></i> Chưa có dữ liệu Notion</span>
+</div>
+
+<!-- Modal chi tiết thửa -->
+<div class="modal-phu" id="mpThua">
+  <div class="modal">
+    <h2 id="tThua"></h2>
+    <div class="ma-sp" id="tMa"></div>
+    <div id="tBadge"></div>
+    <div class="hai-nut">
+      <button class="nut-xem" onclick="moNhatKy()">📖 Xem nhật ký</button>
+      <button class="nut-nhap" onclick="moNhapLieu()">✏️ Nhập liệu mới</button>
+    </div>
+    <button class="dong" onclick="dongModal(&#39;mpThua&#39;)">Đóng</button>
+  </div>
+</div>
+
+<!-- Modal nhật ký -->
+<div class="modal-phu" id="mpNK">
+  <div class="modal">
+    <h2>Nhật ký canh tác</h2>
+    <div class="ma-sp" id="nkMa"></div>
+    <div id="nkDS"><div class="trong">Đang tải…</div></div>
+    <button class="dong" onclick="dongModal(&#39;mpNK&#39;)">Đóng</button>
+  </div>
+</div>
+
+<!-- Modal nhập liệu -->
+<div class="modal-phu" id="mpNhap">
+  <div class="modal">
+    <h2>Nhập liệu thăm đồng</h2>
+    <div class="ma-sp" id="nlMa"></div>
+    <div class="form-o"><label>Tiêu đề *</label><input id="nlTieuDe" placeholder="VD: Thăm đồng kiểm tra sâu bệnh"></div>
+    <div class="form-o"><label>Ngày</label><input id="nlNgay" type="date"></div>
+    <div class="form-o"><label>Nội dung</label><textarea id="nlNoiDung" placeholder="Ghi chú tình hình lúa, nước, sâu bệnh…"></textarea></div>
+    <div class="form-o"><label>Hình ảnh</label><input id="nlAnh" type="file" accept="image/*" multiple="">
+      <div class="anh-xem" id="nlXemAnh"></div></div>
+    <button class="nut-gui" id="nlGui" onclick="guiNhapLieu()">Lưu vào Notion</button>
+    <div class="bao-loi" id="nlLoi"></div>
+    <button class="dong" onclick="dongModal(&#39;mpNhap&#39;)">Đóng</button>
+  </div>
+</div>
+
+<!-- Modal đăng nhập -->
+<div class="modal-phu" id="mpDN">
+  <div class="modal">
+    <h2>Đăng nhập xã viên</h2>
+    <p style="font-size:13px;color:#6b7263;margin:4px 0 14px">Chỉ xã viên có tài khoản mới được nhập liệu. Khách vẫn xem bản đồ và nhật ký bình thường.</p>
+    <div class="form-o"><label>Tên đăng nhập</label><input id="dnUser" autocomplete="username"></div>
+    <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password" autocomplete="current-password"></div>
+    <button class="nut-gui" id="dnGui" onclick="dangNhap()">Đăng nhập</button>
+    <div class="bao-loi" id="dnLoi"></div>
+    <button class="dong" onclick="dongModal(&#39;mpDN&#39;)">Đóng</button>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   1. CẤU HÌNH — CHỈ CẦN SỬA 2 CHỖ NÀY
+   ================================================================ */
+// (a) Dán URL Web App của Apps Script (Triển khai → Ứng dụng web → URL /exec)
+const API_URL = 'https://script.google.com/macros/s/AKfycbxkBLw-2LGnKPrc0m8cjogwqyv1kCyP5D1hN8A7Pt2IQ6n8QwRGQhD8ea8PAQzOVwjy/exec';
+
+// (b) Mã nông dân trong Mã sản phẩm Notion (CKOD-<MÃ>-HT26-…)
+//     Sửa vế phải cho khớp CHÍNH XÁC với mã trong Notion của anh.
+const MA_NONG_DAN = {
+  'TRẦN CƯỚC': 'CUOC',
+  'NGUYỄN HỘ': 'HO',
+  'TÔ VĂN HƯNG': 'HUNG',
+  'NGUYỄN SÔ': 'NGSO',          // ⚠ trùng với TRẦN SỞ — sửa theo Notion
+  'TRẦN ĐÌNH CHÍNH': 'CHINH',
+  'PHẠM THỊ HƯƠNG': 'HUONG',
+  'HUỲNH KIM LONG 1/2': 'LONG1',
+  'HUỲNH KIM LONG 2/2': 'LONG2',
+  'TÔ THỊ ANH': 'ANH',
+  'ĐỖ HỮU THÁI': 'THAI',
+  'TRẦN SỞ': 'TRANSO',            // ⚠ trùng với NGUYỄN SÔ — sửa theo Notion
+  'NGUYỄN MẠNH THẤN': 'THAN',
+  'NGUYỄN ĐÌNH BÁN': 'BAN',
+  'DƯƠNG NGUYỆN': 'NGUYEN',
+  'NGUYỄN LA 1/2': 'LA1',
+  'NGUYỄN LA 2/2': 'LA2',
+  'ĐỖ HỐT 1/2': 'HOT1',
+  'ĐỖ HỐT 2/2': 'HOT2',
+  'VÕ THỊ THU': 'THU',
+  'HUỲNH KIM BÌNH': 'BINH',
+};
+
+/* ================================================================
+   2. DỮ LIỆU BẢN ĐỒ (sinh tự động từ file DXF — không cần sửa)
+   ================================================================ */
+const MAP_DATA = {"field":"CKOD","fieldName":"Ông Đảng — Cẩm Kim","viewW":5760.5,"viewH":3710.9,"plots":[{"farmer":"TRẦN CƯỚC","symbol":"","area":"532.2","code":"CUOC","points":[[249.7,2721.6],[589.8,2770.5],[451.6,3293.1],[120.0,3250.6]],"cx":352.8,"cy":3007.6},{"farmer":"NGUYỄN HỘ","symbol":"","area":"535.5","code":"HO","points":[[589.8,2770.5],[451.6,3293.1],[887.6,3348.9],[1003.7,2829.9]],"cx":732.2,"cy":3062.6},{"farmer":"TÔ VĂN HƯNG","symbol":"","area":"695.9","code":"HUNG","points":[[887.6,3348.9],[1293.2,3400.9],[1396.3,2762.7],[1031.2,2708.7]],"cx":1150.7,"cy":3060.7},{"farmer":"NGUYỄN SÔ","symbol":"","area":"675.2","code":"SO","points":[[1396.3,2762.7],[1847.3,2829.4],[1742.3,3255.6],[1486.0,3425.6],[1293.2,3400.9]],"cx":1551.7,"cy":3082.2},{"farmer":"TRẦN ĐÌNH CHÍNH","symbol":"","area":"612.8","code":"CHINH","points":[[1742.3,3255.6],[1967.4,2371.2],[2221.8,2405.3],[2039.6,3324.8]],"cx":1990.4,"cy":2852.6,"rot":-78.8},{"farmer":"PHẠM THỊ HƯƠNG","symbol":"","area":"1009.7","code":"HUONG","points":[[2039.6,3324.8],[2456.3,3421.9],[2630.1,2460.0],[2221.8,2405.3]],"cx":2337.8,"cy":2906.3,"rot":-79.8},{"farmer":"HUỲNH KIM LONG","symbol":"2/2","area":"496.7","code":"LONG2","points":[[2773.0,3304.7],[3060.5,3322.0],[3194.3,2535.7],[2905.4,2497.0]],"cx":2982.8,"cy":2913.7,"rot":-80.7},{"farmer":"TÔ THỊ ANH","symbol":"","area":"1043.1","code":"ANH","points":[[3218.2,2395.3],[3023.4,3548.4],[3503.4,3590.9],[3658.7,2443.9]],"cx":3349.4,"cy":3002.5},{"farmer":"ĐỖ HỮU THÁI","symbol":"","area":"603.7","code":"THAI","points":[[2630.1,2460.0],[2905.4,2497.0],[2773.0,3304.7],[2477.5,3304.7]],"cx":2694.8,"cy":2894.8,"rot":-79.8},{"farmer":"HUỲNH KIM LONG","symbol":"1/2","area":"947.1","code":"LONG1","points":[[5044.1,3348.8],[4464.8,3297.6],[4514.5,2603.8],[5101.6,2754.3]],"cx":4774.1,"cy":2998.4},{"farmer":"TRẦN SỞ","symbol":"","area":"1196.9","code":"SO","points":[[4464.8,3297.6],[4464.8,3393.8],[4247.4,3393.8],[4199.2,3552.1],[3947.6,3491.6],[4023.8,2477.9],[4514.5,2603.8]],"cx":4221.6,"cy":3005.0},{"farmer":"NGUYỄN MẠNH THẤN","symbol":"","area":"780.5","code":"THAN","points":[[5533.4,3387.6],[5640.5,2884.7],[5101.6,2754.3],[5044.1,3348.8]],"cx":5324.4,"cy":3087.3},{"farmer":"NGUYỄN ĐÌNH BÁN","symbol":"","area":"930.1","code":"BAN","points":[[4023.8,2477.9],[3658.7,2443.9],[3503.4,3590.9],[3947.6,3491.6]],"cx":3777.8,"cy":3016.0,"fs":40},{"farmer":"DƯƠNG NGUYỆN","symbol":"","area":"2029.4","code":"NGUYEN","points":[[2081.6,1924.0],[1967.4,2371.2],[3194.3,2535.7],[3284.8,1965.9],[2140.1,1662.9]],"cx":2624.5,"cy":2132.0},{"farmer":"NGUYỄN LA","symbol":"1/2","area":"1164.1","code":"LA1","points":[[2140.1,1662.9],[2207.3,1363.5],[3340.2,1663.6],[3284.8,1965.9]],"cx":2743.0,"cy":1664.2},{"farmer":"ĐỖ HỐT","symbol":"2/2","area":"611.2","code":"HOT2","points":[[1812.6,1261.8],[2207.3,1363.5],[2081.6,1924.0],[1670.9,1818.3]],"cx":1942.6,"cy":1593.8},{"farmer":"ĐỖ HỐT","symbol":"1/2","area":"686.7","code":"HOT1","points":[[1374.9,1136.4],[1225.6,1703.8],[1670.9,1818.3],[1812.6,1261.8]],"cx":1520.1,"cy":1480.3},{"farmer":"NGUYỄN LA","symbol":"2/2","area":"762.5","code":"LA2","points":[[1555.1,451.3],[1976.7,646.7],[1812.6,1261.8],[1374.9,1136.4]],"cx":1676.1,"cy":872.4},{"farmer":"VÕ THỊ THU","symbol":"","area":"977.8","code":"THU","points":[[1976.7,646.7],[2277.2,786.1],[2221.4,1091.4],[2794.3,1239.3],[2736.4,1499.9],[1812.6,1261.8]],"cx":2236.8,"cy":1136.4,"lx":2100.0,"ly":1180.0},{"farmer":"HUỲNH KIM BÌNH","symbol":"","area":"765","code":"BINH","points":[[737.6,547.8],[840.6,120.0],[1555.1,451.3],[1468.2,766.5]],"cx":1133.0,"cy":464.2}],"zones":[{"text":"ĐẤT MÀU","x":2995.5,"y":1457.0},{"text":"ĐẤT MÀU","x":1841.1,"y":362.9},{"text":"ĐẤT MÀU","x":1043.7,"y":1122.9},{"text":"ĐẤT MÀU","x":1598.0,"y":2304.4},{"text":"KHU DÂN CƯ","x":1183.8,"y":3542.8},{"text":"KHU DÂN CƯ","x":4825.0,"y":3598.4}]};
+
+/* ================================================================
+   3. LOGIC — không cần sửa từ đây trở xuống
+   ================================================================ */
+let notionPlots = {};      // maNongDan -> {productCode, organic, area}
+let thuaDangChon = null;
+let zoomLv = 1;
+const $ = id => document.getElementById(id);
+
+function nhanThua(p){ return (p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim(); }
+
+/* ---------- vẽ bản đồ ---------- */
+function veBanDo(){
+  const d = MAP_DATA;
+  let s = `<svg viewBox="0 0 ${d.viewW} ${d.viewH}" xmlns="http://www.w3.org/2000/svg">`;
+  d.plots.forEach((p,i)=>{
+    const pts = p.points.map(pt=>pt.join(',')).join(' ');
+    s += `<polygon id="thua${i}" class="thua chua-ro" points="${pts}" stroke-width="7" onclick="chonThua(${i})"/>`;
+  });
+  d.plots.forEach(p=>{
+    const nhan = nhanThua(p);
+    const lx = p.lx || p.cx, ly = p.ly || p.cy;
+    const f1 = p.fs || 46, f2 = (p.fs ? p.fs-2 : 42);
+    const g = p.rot ? ` transform="rotate(${p.rot} ${lx} ${ly})"` : '';
+    s += `<g${g}>`;
+    s += `<text class="ten-nd" x="${lx}" y="${ly-12}" font-size="${f1}" text-anchor="middle">${nhan}</text>`;
+    s += `<text class="dt-nd" x="${lx}" y="${ly+44}" font-size="${f2}" text-anchor="middle">${p.area}</text>`;
+    s += `</g>`;
+  });
+  d.zones.forEach(z=>{
+    s += `<text class="vung" x="${z.x}" y="${z.y}" font-size="86" text-anchor="middle">${z.text}</text>`;
+  });
+  s += '</svg>';
+  $('svgwrap').innerHTML = s;
+}
+
+function zoom(f){
+  zoomLv = Math.min(6, Math.max(1, zoomLv*f));
+  $('svgwrap').style.width = (zoomLv*100)+'%';
+  const svg = document.querySelector('#svgwrap svg');
+  if(svg) svg.style.maxHeight = (zoomLv > 1) ? 'none' : '72vh';
+}
+
+/* ---------- gọi API ---------- */
+async function goiAPI(body){
+  const res = await fetch(API_URL, {method:'POST', body: JSON.stringify(body)});
+  return res.json();
+}
+
+/* ---------- nạp dữ liệu Notion & tô màu ---------- */
+async function napNotion(){
+  const tt = $('trangthai');
+  tt.className=''; tt.textContent = 'Đang tải dữ liệu Notion…';
+  try{
+    const r = await goiAPI({action:'getMapData', field: MAP_DATA.field, season: $('selVu').value});
+    if(!r.ok) throw r.error;
+    notionPlots = {};
+    r.plots.forEach(pl=>{
+      const parts = (pl.productCode||'').split('-');
+      if(parts.length >= 2) notionPlots[parts[1].toUpperCase()] = pl;
+    });
+    let khop = 0;
+    MAP_DATA.plots.forEach((p,i)=>{
+      const ma = (MA_NONG_DAN[nhanThua(p)]||'').toUpperCase();
+      const nd = notionPlots[ma];
+      const el = $('thua'+i);
+      el.classList.remove('huu-co','khong-huu-co','chua-ro');
+      if(nd){ khop++; el.classList.add(nd.organic ? 'huu-co' : 'khong-huu-co'); }
+      else el.classList.add('chua-ro');
+    });
+    tt.textContent = `Đã khớp ${khop}/${MAP_DATA.plots.length} thửa với Notion (vụ ${$('selVu').value}).`;
+  }catch(e){
+    tt.className='loi';
+    tt.textContent = 'Không tải được dữ liệu Notion: ' + e + ' — bản đồ vẫn xem được, màu sắc chưa cập nhật.';
+  }
+}
+
+/* ---------- chọn thửa ---------- */
+function chonThua(i){
+  thuaDangChon = i;
+  document.querySelectorAll('.thua').forEach(e=>e.classList.remove('chon-active'));
+  $('thua'+i).classList.add('chon-active');
+  const p = MAP_DATA.plots[i];
+  const ma = (MA_NONG_DAN[nhanThua(p)]||'').toUpperCase();
+  const nd = notionPlots[ma];
+  $('tThua').textContent = nhanThua(p) + ' — ' + p.area + ' m²';
+  $('tMa').textContent = nd ? nd.productCode : 'Chưa khớp được mã sản phẩm trong Notion';
+  $('tBadge').innerHTML = nd
+    ? (nd.organic ? '<span class="badge hc">Canh tác hữu cơ</span>' : '<span class="badge khc">Không hữu cơ</span>')
+    : '<span class="badge cr">Chưa có dữ liệu Notion</span>';
+  moModal('mpThua');
+}
+
+/* ---------- nhật ký ---------- */
+async function moNhatKy(){
+  const p = MAP_DATA.plots[thuaDangChon];
+  const nd = notionPlots[(MA_NONG_DAN[nhanThua(p)]||'').toUpperCase()];
+  if(!nd){ alert('Thửa này chưa khớp mã sản phẩm trong Notion nên chưa xem được nhật ký.'); return; }
+  dongModal('mpThua'); moModal('mpNK');
+  $('nkMa').textContent = nd.productCode;
+  $('nkDS').innerHTML = '<div class="trong">Đang tải…</div>';
+  try{
+    const r = await goiAPI({action:'getHistory', productCode: nd.productCode});
+    if(!r.ok) throw r.error;
+    if(!r.entries.length){ $('nkDS').innerHTML = '<div class="trong">Chưa có bản ghi nào cho thửa này trong vụ này.</div>'; return; }
+    $('nkDS').innerHTML = r.entries.map(e=>`
+      <div class="nkmuc">
+        <div class="nk-ngay">${e.date||''}</div>
+        <div class="nk-tieude">${e.title}</div>
+        ${e.status?`<span class="nk-tt">${e.status}</span>`:''}
+        ${e.url?` <a href="${e.url}" target="_blank" rel="noopener">Mở trong Notion ↗</a>`:''}
+      </div>`).join('');
+  }catch(e){ $('nkDS').innerHTML = '<div class="trong">Lỗi tải nhật ký: '+e+'</div>'; }
+}
+
+/* ---------- đăng nhập ---------- */
+function phienHienTai(){
+  try{ return JSON.parse(localStorage.getItem('htx_phien')||'null'); }catch(e){ return null; }
+}
+function veUserBox(){
+  const ph = phienHienTai();
+  $('userBox').innerHTML = ph
+    ? `👤 ${ph.username} <button onclick="dangXuat()">Đăng xuất</button>`
+    : `<button onclick="moModal('mpDN')">Đăng nhập</button>`;
+}
+async function dangNhap(){
+  $('dnLoi').textContent=''; $('dnGui').disabled = true;
+  try{
+    const r = await goiAPI({action:'login', username:$('dnUser').value.trim(), password:$('dnPass').value});
+    if(!r.ok) throw r.error;
+    localStorage.setItem('htx_phien', JSON.stringify({token:r.token, username:r.username}));
+    veUserBox(); dongModal('mpDN');
+    if(thuaDangChon !== null) moNhapLieu();
+  }catch(e){ $('dnLoi').textContent = e; }
+  $('dnGui').disabled = false;
+}
+function dangXuat(){ localStorage.removeItem('htx_phien'); veUserBox(); }
+
+/* ---------- nhập liệu ---------- */
+let anhDaChon = [];
+function moNhapLieu(){
+  const ph = phienHienTai();
+  if(!ph){ dongModal('mpThua'); moModal('mpDN'); return; }
+  const p = MAP_DATA.plots[thuaDangChon];
+  const nd = notionPlots[(MA_NONG_DAN[nhanThua(p)]||'').toUpperCase()];
+  if(!nd){ alert('Thửa này chưa khớp mã sản phẩm trong Notion nên chưa nhập liệu được.'); return; }
+  dongModal('mpThua'); moModal('mpNhap');
+  $('nlMa').textContent = nd.productCode;
+  $('nlNgay').value = new Date().toISOString().slice(0,10);
+  $('nlTieuDe').value=''; $('nlNoiDung').value=''; $('nlAnh').value='';
+  $('nlXemAnh').innerHTML=''; $('nlLoi').textContent=''; anhDaChon=[];
+}
+
+// nén ảnh phía trình duyệt (tối đa cạnh 1600px, JPEG 80%)
+$('nlAnh') && $('nlAnh').addEventListener('change', async function(){
+  anhDaChon = []; $('nlXemAnh').innerHTML='';
+  for(const f of this.files){
+    const b64 = await nenAnh(f);
+    anhDaChon.push({name: f.name.replace(/\.[^.]+$/,'')+'.jpg', mimeType:'image/jpeg', base64: b64});
+    const img = document.createElement('img');
+    img.src = 'data:image/jpeg;base64,'+b64;
+    $('nlXemAnh').appendChild(img);
+  }
+});
+function nenAnh(file){
+  return new Promise((res, rej)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const MAX = 1600;
+      let w = img.width, h = img.height;
+      if(Math.max(w,h) > MAX){ const k = MAX/Math.max(w,h); w=Math.round(w*k); h=Math.round(h*k); }
+      const c = document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      res(c.toDataURL('image/jpeg',0.8).split(',')[1]);
+    };
+    img.onerror = rej;
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+async function guiNhapLieu(){
+  const ph = phienHienTai();
+  if(!ph){ moModal('mpDN'); return; }
+  const tieude = $('nlTieuDe').value.trim();
+  if(!tieude){ $('nlLoi').textContent = 'Vui lòng nhập tiêu đề.'; return; }
+  const p = MAP_DATA.plots[thuaDangChon];
+  const nd = notionPlots[(MA_NONG_DAN[nhanThua(p)]||'').toUpperCase()];
+  $('nlGui').disabled = true; $('nlGui').textContent='Đang lưu…'; $('nlLoi').textContent='';
+  try{
+    const r = await goiAPI({action:'createEntry', token: ph.token,
+      productCode: nd.productCode, title: tieude,
+      content: $('nlNoiDung').value.trim(), date: $('nlNgay').value,
+      images: anhDaChon});
+    if(!r.ok) throw r.error;
+    $('nlGui').textContent='✓ Đã lưu vào Notion';
+    setTimeout(()=>{ dongModal('mpNhap'); $('nlGui').disabled=false; $('nlGui').textContent='Lưu vào Notion'; }, 1200);
+  }catch(e){
+    $('nlLoi').textContent = e;
+    if(String(e).includes('hết hạn') || String(e).includes('đăng nhập')){ dangXuat(); moModal('mpDN'); }
+    $('nlGui').disabled=false; $('nlGui').textContent='Lưu vào Notion';
+  }
+}
+
+/* ---------- modal ---------- */
+function moModal(id){ $(id).classList.add('mo'); }
+function dongModal(id){ $(id).classList.remove('mo'); }
+document.querySelectorAll('.modal-phu').forEach(m=>{
+  m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('mo'); });
+});
+
+/* ---------- khởi động ---------- */
+veBanDo(); veUserBox();
+$('selVu').addEventListener('change', napNotion);
+if(API_URL.startsWith('http')) napNotion();
+else $('trangthai').textContent = 'Chưa cấu hình API_URL — bản đồ hiển thị được nhưng chưa kết nối Notion.';
+</script>
+
+
+</body></html>

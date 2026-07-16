@@ -97,6 +97,8 @@ svg{display:block;width:100%;height:auto;max-height:72vh}
 .bao-loi{color:var(--do);font-size:13px;margin-top:8px;min-height:16px}
 .anh-xem{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .anh-xem img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1.5px solid #ddd}
+.anh-xem .anh-o{position:relative;display:inline-block}
+.anh-x{position:absolute;top:-7px;right:-7px;width:22px;height:22px;border-radius:50%;border:2px solid #fff;background:#c0392b;color:#fff;font-size:13px;font-weight:700;line-height:1;cursor:pointer;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.35)}
 
 .nkmuc{border-bottom:1px solid #ece5d2;padding:12px 2px}
 .nkmuc .nk-ngay{font-size:11.5px;color:#8a9180;font-family:ui-monospace,monospace}
@@ -581,15 +583,32 @@ function moNhapLieu(){
 
 // nén ảnh phía trình duyệt (tối đa cạnh 1600px, JPEG 80%)
 $('nlAnh') && $('nlAnh').addEventListener('change', async function(){
-  anhDaChon = []; $('nlXemAnh').innerHTML='';
+  // Cộng dồn vào danh sách (chụp camera từng tấm vẫn giữ đủ, không đè tấm trước)
   for(const f of this.files){
     const b64 = await nenAnh(f);
-    anhDaChon.push({name: f.name.replace(/\.[^.]+$/,'')+'.jpg', mimeType:'image/jpeg', base64: b64});
-    const img = document.createElement('img');
-    img.src = 'data:image/jpeg;base64,'+b64;
-    $('nlXemAnh').appendChild(img);
+    const ten = (f.name || 'anh').replace(/\.[^.]+$/,'') + '_' + Date.now() + '.jpg';
+    anhDaChon.push({name: ten, mimeType:'image/jpeg', base64: b64});
   }
+  this.value = '';   // xóa lựa chọn của ô input để lần bấm sau luôn nhận ảnh mới
+  veXemAnh();
 });
+
+// Vẽ lại dàn ảnh xem trước, mỗi ảnh có nút × để bỏ
+function veXemAnh(){
+  const kho = $('nlXemAnh');
+  kho.innerHTML = '';
+  anhDaChon.forEach((a, i)=>{
+    const o = document.createElement('div');
+    o.className = 'anh-o';
+    o.innerHTML = '<img src="data:image/jpeg;base64,' + a.base64 + '">'
+      + '<button type="button" class="anh-x" aria-label="Bỏ ảnh này" onclick="boAnh(' + i + ')">×</button>';
+    kho.appendChild(o);
+  });
+}
+function boAnh(i){
+  anhDaChon.splice(i, 1);
+  veXemAnh();
+}
 function nenAnh(file){
   return new Promise((res, rej)=>{
     const img = new Image();

@@ -340,8 +340,12 @@ function nhanThua(p){ return (p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim(
 
 /* Điện thoại: đổi link sang notion:// để mở thẳng app */
 function linkNotion(u){
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
-    ? u.replace(/^https?:\/\//, 'notion://') : u;
+  if(!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return u;
+  // Rút mã trang 32 ký tự ở cuối link — đưa app đường dẫn trần thì nó
+  // mở đúng trang task; để nguyên link có tiêu đề dài app hay bị lạc.
+  const m = u.match(/([0-9a-f]{32})(?:[?#].*)?$/i);
+  return m ? 'notion://www.notion.so/' + m[1]
+           : u.replace(/^https?:\/\//, 'notion://');
 }
 
 /* ---------- vẽ bản đồ ---------- */

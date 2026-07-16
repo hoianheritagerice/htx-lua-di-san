@@ -338,6 +338,12 @@ const $ = id => document.getElementById(id);
 
 function nhanThua(p){ return (p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim(); }
 
+/* Điện thoại: đổi link sang notion:// để mở thẳng app */
+function linkNotion(u){
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+    ? u.replace(/^https?:\/\//, 'notion://') : u;
+}
+
 /* ---------- vẽ bản đồ ---------- */
 function veBanDo(){
   const d = MAP_DATA;
@@ -385,36 +391,56 @@ async function goiAPI(body){
 }
 
 /* ---------- nạp dữ liệu Notion & tô màu ---------- */
+const EP_MOI = new URLSearchParams(location.search).get('moi') === '1'; // ?moi=1 = bỏ qua đệm
+
+function apDungKetQua(r){
+  const tt = $('trangthai');
+  notionPlots = {};
+  r.plots.forEach(pl=>{
+    const parts = (pl.productCode||'').split('-');
+    if(parts.length >= 2) notionPlots[parts[1].toUpperCase()] = pl;
+  });
+  let khop = 0;
+  const hoHuuCo = new Set();   // 1 người 2 thửa (LONG1/LONG2…) chỉ tính 1 hộ
+  MAP_DATA.plots.forEach((p,i)=>{
+    const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
+    const nd = notionPlots[ma];
+    const el = $('thua'+i);
+    el.classList.remove('huu-co','khong-huu-co','chua-ro');
+    if(nd){
+      khop++;
+      el.classList.add(nd.organic ? 'huu-co' : 'khong-huu-co');
+      if(nd.organic) hoHuuCo.add(p.farmer.trim().toUpperCase());
+    }
+    else el.classList.add('chua-ro');
+  });
+  tt.textContent = `Đã khớp ${khop}/${MAP_DATA.plots.length} thửa (vụ ${$('selVu').value}).`;
+  veVuPanel(r.season, hoHuuCo.size);
+}
+
 async function napNotion(){
   const tt = $('trangthai');
-  tt.className=''; tt.textContent = 'Đang tải dữ liệu…';
+  tt.className='';
+  const khoaDem = 'htxmap_' + MAP_DATA.field + '_' + $('selVu').value;
+  // Hiện ngay bằng dữ liệu lần trước (nếu có) rồi âm thầm tải bản mới
+  let coDem = false;
+  if(!EP_MOI){
+    try{
+      const dem = localStorage.getItem(khoaDem);
+      if(dem){ apDungKetQua(JSON.parse(dem)); coDem = true; }
+    }catch(e){}
+  }
+  if(!coDem) tt.textContent = 'Đang tải dữ liệu…';
   try{
-    const r = await goiAPI({action:'getMapData', field: MAP_DATA.field, season: $('selVu').value});
+    const r = await goiAPI({action:'getMapData', field: MAP_DATA.field, season: $('selVu').value, fresh: EP_MOI ? 1 : 0});
     if(!r.ok) throw r.error;
-    notionPlots = {};
-    r.plots.forEach(pl=>{
-      const parts = (pl.productCode||'').split('-');
-      if(parts.length >= 2) notionPlots[parts[1].toUpperCase()] = pl;
-    });
-    let khop = 0;
-    const hoHuuCo = new Set();   // 1 người 2 thửa (LONG1/LONG2…) chỉ tính 1 hộ
-    MAP_DATA.plots.forEach((p,i)=>{
-      const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
-      const nd = notionPlots[ma];
-      const el = $('thua'+i);
-      el.classList.remove('huu-co','khong-huu-co','chua-ro');
-      if(nd){
-        khop++;
-        el.classList.add(nd.organic ? 'huu-co' : 'khong-huu-co');
-        if(nd.organic) hoHuuCo.add(p.farmer.trim().toUpperCase());
-      }
-      else el.classList.add('chua-ro');
-    });
-    tt.textContent = `Đã khớp ${khop}/${MAP_DATA.plots.length} thửa (vụ ${$('selVu').value}).`;
-    veVuPanel(r.season, hoHuuCo.size);
+    apDungKetQua(r);
+    try{ localStorage.setItem(khoaDem, JSON.stringify(r)); }catch(e){}
   }catch(e){
-    tt.className='loi';
-    tt.textContent = 'Không tải được dữ liệu: ' + e + ' — bản đồ vẫn xem được, màu sắc chưa cập nhật.';
+    if(!coDem){
+      tt.className='loi';
+      tt.textContent = 'Không tải được dữ liệu: ' + e + ' — bản đồ vẫn xem được, màu sắc chưa cập nhật.';
+    }
   }
 }
 
@@ -505,7 +531,7 @@ async function moNhatKy(){
         <div class="nk-ngay">${e.date||''}</div>
         <div class="nk-tieude">${e.title}</div>
         ${e.status?`<span class="nk-tt">${e.status}</span>`:''}
-        ${e.url?` <a href="${e.url}" target="_blank" rel="noopener">Xem chi tiết ↗</a>`:''}
+        ${e.url?` <a href="${linkNotion(e.url)}" target="_blank" rel="noopener">Xem chi tiết ↗</a>`:''}
       </div>`).join('');
   }catch(e){ $('nkDS').innerHTML = '<div class="trong">Lỗi tải nhật ký: '+e+'</div>'; }
 }

@@ -491,7 +491,7 @@ function chonThua(i){
 /* ---------- nhật ký ---------- */
 async function moNhatKy(){
   const p = MAP_DATA.plots[thuaDangChon];
-  const nd = notionPlots[(MA_NONG_DAN[nhanThua(p)]||'').toUpperCase()];
+  const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
   if(!nd){ alert('Thửa này chưa có dữ liệu nên chưa xem được nhật ký.'); return; }
   dongModal('mpThua'); moModal('mpNK');
   $('nkMa').textContent = nd.productCode;
@@ -539,7 +539,7 @@ function moNhapLieu(){
   const ph = phienHienTai();
   if(!ph){ dongModal('mpThua'); moModal('mpDN'); return; }
   const p = MAP_DATA.plots[thuaDangChon];
-  const nd = notionPlots[(MA_NONG_DAN[nhanThua(p)]||'').toUpperCase()];
+  const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
   if(!nd){ alert('Thửa này chưa khớp mã sản phẩm trong Notion nên chưa nhập liệu được.'); return; }
   dongModal('mpThua'); moModal('mpNhap');
   $('nlMa').textContent = nd.productCode;
@@ -582,7 +582,7 @@ async function guiNhapLieu(){
   const tieude = $('nlTieuDe').value.trim();
   if(!tieude){ $('nlLoi').textContent = 'Vui lòng nhập tiêu đề.'; return; }
   const p = MAP_DATA.plots[thuaDangChon];
-  const nd = notionPlots[(MA_NONG_DAN[nhanThua(p)]||'').toUpperCase()];
+  const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
   $('nlGui').disabled = true; $('nlGui').textContent='Đang lưu…'; $('nlLoi').textContent='';
   try{
     const r = await goiAPI({action:'createEntry', token: ph.token,

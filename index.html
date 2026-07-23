@@ -122,6 +122,8 @@ svg{display:block;width:100%;height:auto;max-height:72vh}
 .nkmuc .nk-dinhkem-ds{display:flex;gap:7px;flex-wrap:wrap}
 .nkmuc a.nk-media{display:inline-block;padding:5px 11px;background:#fff;border:1.5px solid #e0b84a;border-radius:7px;color:#8a5a00;font-size:12px;font-weight:600;text-decoration:none}
 .nkmuc a.nk-media:hover{background:#ffe9b0}
+.nk-khoa{background:#f0ede4;border:1.5px dashed #c9c2b0;border-radius:9px;padding:10px 12px;font-size:12.5px;color:#6d675c;margin-bottom:10px;line-height:1.5}
+.nk-khoa button{border:none;background:var(--xanh-dam);color:#fff;border-radius:7px;padding:5px 12px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;margin-left:4px}
 .trong{color:#8a9180;font-size:13.5px;text-align:center;padding:22px 0}
 </style>
 </head>
@@ -603,6 +605,7 @@ function nhapNhieuThua(){
   if(!thuaDaChonNhieu.size){ alert('Anh chưa chọn thửa nào. Chạm vào các thửa trên bản đồ để chọn.'); return; }
   const ph = phienHienTai();
   if(!ph){ moModal('mpDN'); return; }
+  if(ph.role === 'khach'){ alert('Tài khoản khách chỉ xem chi tiết nhật ký, không nhập liệu được.'); return; }
   // Gom mã Notion của các thửa đã tick; thửa chưa khớp mã sẽ bị bỏ khi lưu (server báo lại)
   maNhieuThua = [];
   const tenBoQua = [];
@@ -634,17 +637,22 @@ async function moNhatKy(){
   $('nkMa').textContent = nd.productCode;
   $('nkDS').innerHTML = '<div class="trong">Đang tải…</div>';
   try{
-    const r = await goiAPI({action:'getHistory', productCode: nd.productCode});
+    const phNK = phienHienTai();
+    const r = await goiAPI({action:'getHistory', productCode: nd.productCode,
+      token: phNK ? phNK.token : ''});
     if(!r.ok) throw r.error;
     if(!r.entries.length){ $('nkDS').innerHTML = '<div class="trong">Chưa có bản ghi nào cho thửa này trong vụ này.</div>'; return; }
-    $('nkDS').innerHTML = r.entries.map((e,idx)=>`
+    const khoa = !phNK;   // chưa đăng nhập → chi tiết bị khóa từ máy chủ
+    const dongKhoa = khoa
+      ? `<div class="nk-khoa">🔒 Mô tả chi tiết và ảnh/video chỉ dành cho tài khoản xã viên hoặc khách hàng của HTX. <button onclick="dongModal('mpNK');moModal('mpDN')">Đăng nhập</button></div>`
+      : '';
+    $('nkDS').innerHTML = dongKhoa + r.entries.map((e,idx)=>`
       <div class="nkmuc">
         <div class="nk-ngay">${e.date||''}</div>
         <div class="nk-tieude">${e.title}</div>
         ${e.status?`<span class="nk-tt">${e.status}</span>`:''}
-        ${e.desc?`<div class="nk-mota" id="nkmt${idx}" style="display:none">${escHtml(e.desc)}</div>
+        ${(e.desc || (e.media && e.media.count))?`<div class="nk-mota" id="nkmt${idx}" style="display:none">${e.desc?escHtml(e.desc):''}${dinhKemHtml(e.media)}</div>
            <button class="nk-xemthem" onclick="toggleMota(${idx})" id="nkbtn${idx}">Xem thêm ▾</button>`:''}
-        ${dinhKemHtml(e.media)}
         ${e.url?`<div><a href="${linkNotion(e.url)}" target="_blank" rel="noopener">Xem chi tiết trên Notion ↗</a></div>`:''}
       </div>`).join('');
   }catch(e){ $('nkDS').innerHTML = '<div class="trong">Lỗi tải nhật ký: '+e+'</div>'; }
@@ -665,11 +673,11 @@ function dinhKemHtml(media){
   const tong = [];
   if(media.anh)   tong.push(media.anh + ' ảnh');
   if(media.video) tong.push(media.video + ' video');
-  let s = '<div class="nk-dinhkem-box"><div class="nk-dinhkem-tit">📎 Đính kèm: ' + tong.join(' · ') + '</div><div class="nk-dinhkem-ds">';
+  let s = '<div class="nk-dinhkem-box"><div class="nk-dinhkem-tit">📎 Đính kèm: ' + tong.join(', ') + '</div><div class="nk-dinhkem-ds">';
   let sa = 0, sv = 0;
   (media.items || []).forEach(it=>{
     if(!it.url){ return; }
-    const nhan = it.video ? ('🎬 Video ' + (++sv)) : ('🖼 Ảnh ' + (++sa));
+    const nhan = it.video ? ('Video ' + (++sv)) : ('Ảnh ' + (++sa));
     s += '<a class="nk-media" href="' + it.url + '" target="_blank" rel="noopener">' + nhan + '</a>';
   });
   s += '</div></div>';
@@ -683,7 +691,7 @@ function phienHienTai(){
 function veUserBox(){
   const ph = phienHienTai();
   $('userBox').innerHTML = ph
-    ? `👤 ${ph.username} <button onclick="dangXuat()">Đăng xuất</button>`
+    ? `👤 ${ph.username}${(ph.role==='khach')?' (khách xem)':''} <button onclick="dangXuat()">Đăng xuất</button>`
     : `<button onclick="moModal('mpDN')">Đăng nhập</button>`;
 }
 async function dangNhap(){
@@ -691,7 +699,7 @@ async function dangNhap(){
   try{
     const r = await goiAPI({action:'login', username:$('dnUser').value.trim(), password:$('dnPass').value});
     if(!r.ok) throw r.error;
-    localStorage.setItem('htx_phien', JSON.stringify({token:r.token, username:r.username}));
+    localStorage.setItem('htx_phien', JSON.stringify({token:r.token, username:r.username, role:r.role||'admin'}));
     veUserBox(); dongModal('mpDN');
     if(thuaDangChon !== null) moNhapLieu();
   }catch(e){ $('dnLoi').textContent = e; }
@@ -708,6 +716,7 @@ function moNhapLieu(){
   dangNhapNhieu = false;   // luồng 1 thửa
   const ph = phienHienTai();
   if(!ph){ dongModal('mpThua'); moModal('mpDN'); return; }
+  if(ph.role === 'khach'){ alert('Tài khoản khách chỉ xem chi tiết nhật ký, không nhập liệu được.'); return; }
   const p = MAP_DATA.plots[thuaDangChon];
   const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
   if(!nd){ alert('Thửa này chưa khớp mã sản phẩm trong Notion nên chưa nhập liệu được.'); return; }

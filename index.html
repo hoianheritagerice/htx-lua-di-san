@@ -35,6 +35,12 @@ svg{display:block;width:100%;height:auto;max-height:72vh}
 .thua{cursor:pointer;transition:filter .12s}
 .thua:hover{filter:brightness(1.08)}
 .thua.chon-active{stroke:var(--vang) !important}
+.thua.dachon-nhieu{fill:#ffd54f !important;stroke:#f57f17 !important}
+#thanhChonNhieu{position:absolute;left:10px;right:10px;bottom:10px;z-index:6;background:rgba(30,77,43,.96);color:#fff;border-radius:11px;padding:10px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+#thanhChonNhieu #cnSoLuong{font-size:13px;font-weight:600;flex:1;min-width:120px}
+#thanhChonNhieu button{border:none;border-radius:8px;padding:9px 13px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;background:#8bc34a;color:#1b2a14}
+#thanhChonNhieu button.cn-huy{background:transparent;border:1.5px solid rgba(255,255,255,.5);color:#fff}
+#btnChonNhieu.dang-bat{background:#8bc34a;border-color:#33691e}
 .thua.huu-co{fill:#9ccc65;stroke:var(--xanh-vien)}
 .thua.khong-huu-co{fill:#e6dcc6;stroke:#a1887f}
 .thua.chua-ro{fill:#eceff1;stroke:#b0bec5;stroke-dasharray:22 14}
@@ -109,6 +115,8 @@ svg{display:block;width:100%;height:auto;max-height:72vh}
 .nkmuc .nk-tieude{font-weight:600;font-size:14.5px;margin:2px 0}
 .nkmuc .nk-tt{display:inline-block;font-size:11px;padding:2px 9px;border-radius:12px;background:#e6f2d8;color:#33691e}
 .nkmuc a{font-size:12px;color:var(--xanh-dam)}
+.nkmuc .nk-mota{font-size:13px;color:#41503a;margin:6px 0;padding:8px 10px;background:#f7f4ea;border-radius:8px;line-height:1.5;white-space:pre-wrap}
+.nkmuc .nk-xemthem{display:inline-block;margin:2px 8px 2px 0;background:none;border:none;color:var(--xanh-dam);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;padding:0}
 .trong{color:#8a9180;font-size:13.5px;text-align:center;padding:22px 0}
 </style>
 </head>
@@ -153,6 +161,12 @@ svg{display:block;width:100%;height:auto;max-height:72vh}
     <button onclick="zoom(0.8)">−</button>
     <button onclick="xoay(-15)" aria-label="Xoay trái" style="font-size:15px">⟲</button>
     <button onclick="xoay(15)" aria-label="Xoay phải" style="font-size:15px">⟳</button>
+    <button id="btnChonNhieu" onclick="toggleChonNhieu()" aria-label="Chọn nhiều thửa" style="font-size:15px" title="Chọn nhiều thửa">☑️</button>
+  </div>
+  <div id="thanhChonNhieu" style="display:none">
+    <span id="cnSoLuong">Đã chọn 0 thửa</span>
+    <button onclick="nhapNhieuThua()">✏️ Nhập liệu cho các thửa đã chọn</button>
+    <button onclick="huyChonNhieu()" class="cn-huy">Hủy</button>
   </div>
   <div id="svgwrap"><svg viewBox="0 0 5760.5 3710.9" xmlns="http://www.w3.org/2000/svg"><polygon id="thua0" class="thua chua-ro" points="249.7,2721.6 589.8,2770.5 451.6,3293.1 120,3250.6" stroke-width="7" onclick="chonThua(0)"></polygon><polygon id="thua1" class="thua chua-ro" points="589.8,2770.5 451.6,3293.1 887.6,3348.9 1003.7,2829.9" stroke-width="7" onclick="chonThua(1)"></polygon><polygon id="thua2" class="thua chua-ro" points="887.6,3348.9 1293.2,3400.9 1396.3,2762.7 1031.2,2708.7" stroke-width="7" onclick="chonThua(2)"></polygon><polygon id="thua3" class="thua chua-ro" points="1396.3,2762.7 1847.3,2829.4 1742.3,3255.6 1486,3425.6 1293.2,3400.9" stroke-width="7" onclick="chonThua(3)"></polygon><polygon id="thua4" class="thua chua-ro" points="1742.3,3255.6 1967.4,2371.2 2221.8,2405.3 2039.6,3324.8" stroke-width="7" onclick="chonThua(4)"></polygon><polygon id="thua5" class="thua chua-ro" points="2039.6,3324.8 2456.3,3421.9 2630.1,2460 2221.8,2405.3" stroke-width="7" onclick="chonThua(5)"></polygon><polygon id="thua6" class="thua chua-ro" points="2773,3304.7 3060.5,3322 3194.3,2535.7 2905.4,2497" stroke-width="7" onclick="chonThua(6)"></polygon><polygon id="thua7" class="thua chua-ro" points="3218.2,2395.3 3023.4,3548.4 3503.4,3590.9 3658.7,2443.9" stroke-width="7" onclick="chonThua(7)"></polygon><polygon id="thua8" class="thua chua-ro" points="2630.1,2460 2905.4,2497 2773,3304.7 2477.5,3304.7" stroke-width="7" onclick="chonThua(8)"></polygon><polygon id="thua9" class="thua chua-ro" points="5044.1,3348.8 4464.8,3297.6 4514.5,2603.8 5101.6,2754.3" stroke-width="7" onclick="chonThua(9)"></polygon><polygon id="thua10" class="thua chua-ro" points="4464.8,3297.6 4464.8,3393.8 4247.4,3393.8 4199.2,3552.1 3947.6,3491.6 4023.8,2477.9 4514.5,2603.8" stroke-width="7" onclick="chonThua(10)"></polygon><polygon id="thua11" class="thua chua-ro" points="5533.4,3387.6 5640.5,2884.7 5101.6,2754.3 5044.1,3348.8" stroke-width="7" onclick="chonThua(11)"></polygon><polygon id="thua12" class="thua chua-ro" points="4023.8,2477.9 3658.7,2443.9 3503.4,3590.9 3947.6,3491.6" stroke-width="7" onclick="chonThua(12)"></polygon><polygon id="thua13" class="thua chua-ro" points="2081.6,1924 1967.4,2371.2 3194.3,2535.7 3284.8,1965.9 2140.1,1662.9" stroke-width="7" onclick="chonThua(13)"></polygon><polygon id="thua14" class="thua chua-ro" points="2140.1,1662.9 2207.3,1363.5 3340.2,1663.6 3284.8,1965.9" stroke-width="7" onclick="chonThua(14)"></polygon><polygon id="thua15" class="thua chua-ro" points="1812.6,1261.8 2207.3,1363.5 2081.6,1924 1670.9,1818.3" stroke-width="7" onclick="chonThua(15)"></polygon><polygon id="thua16" class="thua chua-ro" points="1374.9,1136.4 1225.6,1703.8 1670.9,1818.3 1812.6,1261.8" stroke-width="7" onclick="chonThua(16)"></polygon><polygon id="thua17" class="thua chua-ro" points="1555.1,451.3 1976.7,646.7 1812.6,1261.8 1374.9,1136.4" stroke-width="7" onclick="chonThua(17)"></polygon><polygon id="thua18" class="thua chua-ro" points="1976.7,646.7 2277.2,786.1 2221.4,1091.4 2794.3,1239.3 2736.4,1499.9 1812.6,1261.8" stroke-width="7" onclick="chonThua(18)"></polygon><polygon id="thua19" class="thua chua-ro" points="737.6,547.8 840.6,120 1555.1,451.3 1468.2,766.5" stroke-width="7" onclick="chonThua(19)"></polygon><g><text class="ten-nd" x="352.8" y="2995.6" font-size="46" text-anchor="middle">TRẦN CƯỚC</text><text class="dt-nd" x="352.8" y="3051.6" font-size="42" text-anchor="middle">532.2</text></g><g><text class="ten-nd" x="732.2" y="3050.6" font-size="46" text-anchor="middle">NGUYỄN HỘ</text><text class="dt-nd" x="732.2" y="3106.6" font-size="42" text-anchor="middle">535.5</text></g><g><text class="ten-nd" x="1150.7" y="3048.7" font-size="46" text-anchor="middle">NGUYỄN THỊ MỪNG</text><text class="dt-nd" x="1150.7" y="3104.7" font-size="42" text-anchor="middle">695.9</text></g><g><text class="ten-nd" x="1551.7" y="3070.2" font-size="46" text-anchor="middle">NGUYỄN SÔ</text><text class="dt-nd" x="1551.7" y="3126.2" font-size="42" text-anchor="middle">675.2</text></g><g transform="rotate(-78.8 1990.4 2852.6)"><text class="ten-nd" x="1990.4" y="2840.6" font-size="46" text-anchor="middle">NGUYỄN THỊ SÁU</text><text class="dt-nd" x="1990.4" y="2896.6" font-size="42" text-anchor="middle">612.8</text></g><g transform="rotate(-79.8 2337.8 2906.3)"><text class="ten-nd" x="2337.8" y="2894.3" font-size="46" text-anchor="middle">PHẠM THỊ HƯƠNG</text><text class="dt-nd" x="2337.8" y="2950.3" font-size="42" text-anchor="middle">1009.7</text></g><g transform="rotate(-80.7 2982.8 2913.7)"><text class="ten-nd" x="2982.8" y="2901.7" font-size="46" text-anchor="middle">HUỲNH KIM LONG 2/2</text><text class="dt-nd" x="2982.8" y="2957.7" font-size="42" text-anchor="middle">496.7</text></g><g><text class="ten-nd" x="3349.4" y="2990.5" font-size="46" text-anchor="middle">TÔ THỊ ANH</text><text class="dt-nd" x="3349.4" y="3046.5" font-size="42" text-anchor="middle">1043.1</text></g><g transform="rotate(-79.8 2694.8 2894.8)"><text class="ten-nd" x="2694.8" y="2882.8" font-size="46" text-anchor="middle">ĐỖ HỮU THÁI</text><text class="dt-nd" x="2694.8" y="2938.8" font-size="42" text-anchor="middle">603.7</text></g><g><text class="ten-nd" x="4774.1" y="2986.4" font-size="46" text-anchor="middle">HUỲNH KIM LONG 1/2</text><text class="dt-nd" x="4774.1" y="3042.4" font-size="42" text-anchor="middle">947.1</text></g><g><text class="ten-nd" x="4221.6" y="2993" font-size="46" text-anchor="middle">TRẦN SỞ</text><text class="dt-nd" x="4221.6" y="3049" font-size="42" text-anchor="middle">1196.9</text></g><g><text class="ten-nd" x="5324.4" y="3075.3" font-size="46" text-anchor="middle">NGUYỄN MẠNH THẤN</text><text class="dt-nd" x="5324.4" y="3131.3" font-size="42" text-anchor="middle">780.5</text></g><g><text class="ten-nd" x="3777.8" y="3004" font-size="40" text-anchor="middle">NGUYỄN ĐÌNH BÁN</text><text class="dt-nd" x="3777.8" y="3060" font-size="38" text-anchor="middle">930.1</text></g><g><text class="ten-nd" x="2624.5" y="2120" font-size="46" text-anchor="middle">DƯƠNG NGUYỆN</text><text class="dt-nd" x="2624.5" y="2176" font-size="42" text-anchor="middle">2029.4</text></g><g><text class="ten-nd" x="2743" y="1652.2" font-size="46" text-anchor="middle">NGUYỄN LA 1/2</text><text class="dt-nd" x="2743" y="1708.2" font-size="42" text-anchor="middle">1164.1</text></g><g><text class="ten-nd" x="1942.6" y="1581.8" font-size="46" text-anchor="middle">ĐỖ HỐT 2/2</text><text class="dt-nd" x="1942.6" y="1637.8" font-size="42" text-anchor="middle">611.2</text></g><g><text class="ten-nd" x="1520.1" y="1468.3" font-size="46" text-anchor="middle">ĐỖ HỐT 1/2</text><text class="dt-nd" x="1520.1" y="1524.3" font-size="42" text-anchor="middle">686.7</text></g><g><text class="ten-nd" x="1676.1" y="860.4" font-size="46" text-anchor="middle">NGUYỄN LA 2/2</text><text class="dt-nd" x="1676.1" y="916.4" font-size="42" text-anchor="middle">762.5</text></g><g><text class="ten-nd" x="2100" y="1168" font-size="46" text-anchor="middle">VÕ THỊ THU</text><text class="dt-nd" x="2100" y="1224" font-size="42" text-anchor="middle">977.8</text></g><g><text class="ten-nd" x="1133" y="452.2" font-size="46" text-anchor="middle">HUỲNH KIM BÌNH</text><text class="dt-nd" x="1133" y="508.2" font-size="42" text-anchor="middle">765</text></g><text class="vung" x="2995.5" y="1457" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1841.1" y="362.9" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1043.7" y="1122.9" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1598" y="2304.4" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1183.8" y="3542.8" font-size="86" text-anchor="middle">KHU DÂN CƯ</text><text class="vung" x="4825" y="3598.4" font-size="86" text-anchor="middle">KHU DÂN CƯ</text></svg></div>
 </div>
@@ -344,6 +358,8 @@ let MAP_DATA = ALL_FIELDS.CKOD;
    ================================================================ */
 let notionPlots = {};      // maNongDan -> {productCode, organic, area}
 let thuaDangChon = null;
+let cheDoChonNhieu = false;
+let thuaDaChonNhieu = new Set();   // chỉ số các thửa đã tick
 let zoomLv = 1;
 let xoayLv = 0;
 const $ = id => document.getElementById(id);
@@ -540,6 +556,7 @@ function veVuPanel(s, soHoDem){
 
 /* ---------- chọn thửa ---------- */
 function chonThua(i){
+  if(cheDoChonNhieu){ tickThua(i); return; }   // đang chọn nhiều → chạm là tick
   thuaDangChon = i;
   document.querySelectorAll('.thua').forEach(e=>e.classList.remove('chon-active'));
   $('thua'+i).classList.add('chon-active');
@@ -554,6 +571,55 @@ function chonThua(i){
   moModal('mpThua');
 }
 
+/* ---------- chọn nhiều thửa ---------- */
+function toggleChonNhieu(){
+  cheDoChonNhieu = !cheDoChonNhieu;
+  $('btnChonNhieu').classList.toggle('dang-bat', cheDoChonNhieu);
+  $('thanhChonNhieu').style.display = cheDoChonNhieu ? 'flex' : 'none';
+  if(!cheDoChonNhieu) xoaTickTatCa();
+}
+function tickThua(i){
+  if(thuaDaChonNhieu.has(i)){ thuaDaChonNhieu.delete(i); $('thua'+i).classList.remove('dachon-nhieu'); }
+  else { thuaDaChonNhieu.add(i); $('thua'+i).classList.add('dachon-nhieu'); }
+  $('cnSoLuong').textContent = 'Đã chọn ' + thuaDaChonNhieu.size + ' thửa';
+}
+function xoaTickTatCa(){
+  thuaDaChonNhieu.forEach(i=>{ const el=$('thua'+i); if(el) el.classList.remove('dachon-nhieu'); });
+  thuaDaChonNhieu.clear();
+  $('cnSoLuong').textContent = 'Đã chọn 0 thửa';
+}
+function huyChonNhieu(){
+  cheDoChonNhieu = false;
+  $('btnChonNhieu').classList.remove('dang-bat');
+  $('thanhChonNhieu').style.display = 'none';
+  xoaTickTatCa();
+}
+function nhapNhieuThua(){
+  if(!thuaDaChonNhieu.size){ alert('Anh chưa chọn thửa nào. Chạm vào các thửa trên bản đồ để chọn.'); return; }
+  const ph = phienHienTai();
+  if(!ph){ moModal('mpDN'); return; }
+  // Gom mã Notion của các thửa đã tick; thửa chưa khớp mã sẽ bị bỏ khi lưu (server báo lại)
+  maNhieuThua = [];
+  const tenBoQua = [];
+  thuaDaChonNhieu.forEach(i=>{
+    const p = MAP_DATA.plots[i];
+    const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
+    if(nd) maNhieuThua.push(nd.productCode);
+    else tenBoQua.push(nhanThua(p));
+  });
+  if(!maNhieuThua.length){ alert('Các thửa đã chọn đều chưa có mã sản phẩm trong Notion nên chưa nhập liệu được.'); return; }
+  // Mở form ở chế độ nhiều thửa
+  dangNhapNhieu = true;
+  moModal('mpNhap');
+  $('nlMa').innerHTML = '<b>' + maNhieuThua.length + ' thửa</b> sẽ được ghi cùng nội dung này'
+    + (tenBoQua.length ? ' <span style="color:#c0392b">(bỏ qua ' + tenBoQua.length + ' thửa chưa có mã: ' + tenBoQua.join(', ') + ')</span>' : '');
+  $('nlNgay').value = new Date().toISOString().slice(0,10);
+  $('nlTieuDe').value=''; $('nlNoiDung').value=''; $('nlAnh').value='';
+  $('nlTrangThai').value='Hoàn thành';
+  $('nlXemAnh').innerHTML=''; $('nlLoi').textContent=''; anhDaChon=[];
+  $('nlVideo').value=''; $('nlXemVideo').innerHTML=''; videoDaChon=[];
+}
+
 /* ---------- nhật ký ---------- */
 async function moNhatKy(){
   const p = MAP_DATA.plots[thuaDangChon];
@@ -566,14 +632,25 @@ async function moNhatKy(){
     const r = await goiAPI({action:'getHistory', productCode: nd.productCode});
     if(!r.ok) throw r.error;
     if(!r.entries.length){ $('nkDS').innerHTML = '<div class="trong">Chưa có bản ghi nào cho thửa này trong vụ này.</div>'; return; }
-    $('nkDS').innerHTML = r.entries.map(e=>`
+    $('nkDS').innerHTML = r.entries.map((e,idx)=>`
       <div class="nkmuc">
         <div class="nk-ngay">${e.date||''}</div>
         <div class="nk-tieude">${e.title}</div>
         ${e.status?`<span class="nk-tt">${e.status}</span>`:''}
-        ${e.url?` <a href="${linkNotion(e.url)}" target="_blank" rel="noopener">Xem chi tiết ↗</a>`:''}
+        ${e.desc?`<div class="nk-mota" id="nkmt${idx}" style="display:none">${escHtml(e.desc)}</div>
+           <button class="nk-xemthem" onclick="toggleMota(${idx})" id="nkbtn${idx}">Xem thêm ▾</button>`:''}
+        ${e.url?` <a href="${linkNotion(e.url)}" target="_blank" rel="noopener">Xem chi tiết trên Notion ↗</a>`:''}
       </div>`).join('');
   }catch(e){ $('nkDS').innerHTML = '<div class="trong">Lỗi tải nhật ký: '+e+'</div>'; }
+}
+function escHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+function toggleMota(i){
+  const m = $('nkmt'+i), b = $('nkbtn'+i);
+  const an = m.style.display === 'none';
+  m.style.display = an ? 'block' : 'none';
+  b.textContent = an ? 'Thu gọn ▴' : 'Xem thêm ▾';
 }
 
 /* ---------- đăng nhập ---------- */
@@ -602,7 +679,10 @@ function dangXuat(){ localStorage.removeItem('htx_phien'); veUserBox(); }
 /* ---------- nhập liệu ---------- */
 let anhDaChon = [];
 let videoDaChon = [];
+let dangNhapNhieu = false;      // form đang ở chế độ nhiều thửa?
+let maNhieuThua = [];           // danh sách mã Notion khi nhập nhiều thửa
 function moNhapLieu(){
+  dangNhapNhieu = false;   // luồng 1 thửa
   const ph = phienHienTai();
   if(!ph){ dongModal('mpThua'); moModal('mpDN'); return; }
   const p = MAP_DATA.plots[thuaDangChon];
@@ -705,20 +785,41 @@ async function guiNhapLieu(){
   if(!ph){ moModal('mpDN'); return; }
   const tieude = $('nlTieuDe').value.trim();
   if(!tieude){ $('nlLoi').textContent = 'Vui lòng nhập tiêu đề.'; return; }
-  const p = MAP_DATA.plots[thuaDangChon];
-  const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
+
+  // Gói dữ liệu chung; 1 thửa gửi productCode, nhiều thửa gửi productCodes[]
+  const goi = {action:'createEntry', token: ph.token, title: tieude,
+    content: $('nlNoiDung').value.trim(), date: $('nlNgay').value,
+    status: $('nlTrangThai').value,
+    images: anhDaChon.concat(videoDaChon)};
+  if(dangNhapNhieu){
+    goi.productCodes = maNhieuThua;
+  }else{
+    const p = MAP_DATA.plots[thuaDangChon];
+    const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
+    if(!nd){ $('nlLoi').textContent = 'Thửa này chưa có mã sản phẩm.'; return; }
+    goi.productCode = nd.productCode;
+  }
+
   $('nlGui').disabled = true; $('nlGui').textContent='Đang lưu…'; $('nlLoi').textContent='';
   try{
-    const r = await goiAPI({action:'createEntry', token: ph.token,
-      productCode: nd.productCode, title: tieude,
-      content: $('nlNoiDung').value.trim(), date: $('nlNgay').value,
-      status: $('nlTrangThai').value,
-      images: anhDaChon.concat(videoDaChon)});
+    const r = await goiAPI(goi);
     if(!r.ok) throw r.error;
-    $('nlGui').textContent='✓ Đã lưu vào Notion';
-    setTimeout(()=>{ dongModal('mpNhap'); $('nlGui').disabled=false; $('nlGui').textContent='Lưu vào Notion'; }, 1200);
+    const soTask = r.soTask || 1;
+    $('nlGui').textContent = '✓ Đã lưu ' + soTask + ' bản ghi';
+    // Nếu có thửa bị bỏ qua (chưa khớp mã) → báo lại cho anh
+    if(r.boQua && r.boQua.length){
+      $('nlLoi').style.color = '#b26a00';
+      $('nlLoi').textContent = 'Đã bỏ qua ' + r.boQua.length + ' thửa chưa khớp mã: ' + r.boQua.join(', ');
+    }
+    const cho = (r.boQua && r.boQua.length) ? 2600 : 1200;
+    setTimeout(()=>{
+      dongModal('mpNhap');
+      $('nlGui').disabled=false; $('nlGui').textContent='Lưu vào Notion';
+      $('nlLoi').style.color=''; 
+      if(dangNhapNhieu) huyChonNhieu();   // xong đợt nhiều thửa thì tắt chế độ, xóa tick
+    }, cho);
   }catch(e){
-    $('nlLoi').textContent = e;
+    $('nlLoi').style.color=''; $('nlLoi').textContent = e;
     if(String(e).includes('hết hạn') || String(e).includes('đăng nhập')){ dangXuat(); moModal('mpDN'); }
     $('nlGui').disabled=false; $('nlGui').textContent='Lưu vào Notion';
   }
@@ -779,6 +880,7 @@ kbando.addEventListener('touchmove', function(e){
 kbando.addEventListener('touchend', function(){ veo2ngon = 0; veoGoc = null; });
 $('selVu').addEventListener('change', napNotion);
 $('selDong').addEventListener('change', function(){
+  if(cheDoChonNhieu) huyChonNhieu();   // đổi đồng thì bỏ chọn nhiều (chỉ số thửa khác nhau)
   MAP_DATA = ALL_FIELDS[this.value];
   zoomLv = 1; $('svgwrap').style.width = '100%';
   veBanDo();

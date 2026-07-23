@@ -117,6 +117,9 @@ svg{display:block;width:100%;height:auto;max-height:72vh}
 .nkmuc a{font-size:12px;color:var(--xanh-dam)}
 .nkmuc .nk-mota{font-size:13px;color:#41503a;margin:6px 0;padding:8px 10px;background:#f7f4ea;border-radius:8px;line-height:1.5;white-space:pre-wrap}
 .nkmuc .nk-xemthem{display:inline-block;margin:2px 8px 2px 0;background:none;border:none;color:var(--xanh-dam);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;padding:0}
+.nkmuc .nk-dinhkem{display:inline-flex;align-items:center;gap:4px;margin:8px 0 4px;padding:7px 12px;background:#fff3d6;border:1.5px solid #e0b84a;border-radius:9px;color:#8a5a00;font-size:12.5px;font-weight:600;text-decoration:none}
+.nkmuc a.nk-dinhkem:hover{background:#ffe9b0}
+.nkmuc .nk-dinhkem-tinh{background:#f0ede4;border-color:#d8d2c2;color:#7a746a}
 .trong{color:#8a9180;font-size:13.5px;text-align:center;padding:22px 0}
 </style>
 </head>
@@ -639,7 +642,8 @@ async function moNhatKy(){
         ${e.status?`<span class="nk-tt">${e.status}</span>`:''}
         ${e.desc?`<div class="nk-mota" id="nkmt${idx}" style="display:none">${escHtml(e.desc)}</div>
            <button class="nk-xemthem" onclick="toggleMota(${idx})" id="nkbtn${idx}">Xem thêm ▾</button>`:''}
-        ${e.url?` <a href="${linkNotion(e.url)}" target="_blank" rel="noopener">Xem chi tiết trên Notion ↗</a>`:''}
+        ${dinhKemHtml(e.media)}
+        ${e.url?`<div><a href="${linkNotion(e.url)}" target="_blank" rel="noopener">Xem chi tiết trên Notion ↗</a></div>`:''}
       </div>`).join('');
   }catch(e){ $('nkDS').innerHTML = '<div class="trong">Lỗi tải nhật ký: '+e+'</div>'; }
 }
@@ -651,6 +655,17 @@ function toggleMota(i){
   const an = m.style.display === 'none';
   m.style.display = an ? 'block' : 'none';
   b.textContent = an ? 'Thu gọn ▴' : 'Xem thêm ▾';
+}
+// Nhãn "đính kèm N ảnh, M video" — bấm mở file đầu ở Drive (Drive có sẵn next để lướt tiếp)
+function dinhKemHtml(media){
+  if(!media || !media.count) return '';
+  const parts = [];
+  if(media.anh)   parts.push('🖼 ' + media.anh + ' ảnh');
+  if(media.video) parts.push('🎬 ' + media.video + ' video');
+  const nhan = parts.join(' · ');
+  const link = (media.items && media.items[0] && media.items[0].url) ? media.items[0].url : '';
+  if(!link) return '<div class="nk-dinhkem nk-dinhkem-tinh">📎 ' + nhan + '</div>';
+  return '<a class="nk-dinhkem" href="' + link + '" target="_blank" rel="noopener">📎 ' + nhan + ' — bấm để xem ›</a>';
 }
 
 /* ---------- đăng nhập ---------- */

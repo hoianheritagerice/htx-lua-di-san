@@ -316,7 +316,12 @@ if(nhom.navId) document.getElementById(nhom.navId).classList.add('active');
 
 // hero
 const hero = document.getElementById('ctHero');
-if(m.anh) hero.style.setProperty('--anh-nen', "url('" + m.anh + "')");
+if(m.anh){
+  const bg = document.createElement('img');
+  bg.className = 'hero-bg'; bg.src = m.anh; bg.alt = '';
+  bg.addEventListener('error', function(){ bg.classList.add('loi'); });
+  hero.insertBefore(bg, hero.firstChild);
+}
 document.getElementById('ctLoai').textContent = nhom.nhan + (m.phu ? ' · ' + m.phu : '');
 document.getElementById('ctTen').textContent  = m.ten;
 document.getElementById('ctDan').textContent  = m.dan || '';

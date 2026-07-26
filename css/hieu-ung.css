@@ -106,27 +106,44 @@
  **********************************************************************/
 
 /* ====== 9. ẢNH NỀN LỚN CHO ĐẦU MỖI MỤC ======
-   Cách dùng trong HTML:
-     <section class="hero hero-anh" style="--anh-nen:url('img/hero-trang-chu.jpg')">
-   Nếu chưa có ảnh, tự động hiện nền xanh sọc như cũ — không vỡ trang. */
+   Cách dùng trong HTML — đặt thẻ img ngay đầu section:
+     <section class="hero hero-anh">
+       <img class="hero-bg" src="img/hero-trang-chu.jpg" alt="">
+       ... nội dung ...
+     </section>
+   Dùng thẻ <img> thật (không dùng biến CSS) để đường dẫn luôn tính
+   từ trang html — tránh lỗi trình duyệt tìm ảnh trong thư mục css/.
+   Chưa có ảnh thì tự hiện nền xanh sọc, không vỡ trang. */
 .hero-anh{position:relative;overflow:hidden;background:#1e4d2b}
+
+/* lớp nền sọc dự phòng — nằm dưới cùng */
 .hero-anh::before{
-  content:"";position:absolute;inset:-2.5%;z-index:0;
-  background:
-    var(--anh-nen, none) center/cover no-repeat,
-    repeating-linear-gradient(115deg,#3c6b3a 0 3px,#437043 3px 26px);
-  animation:heroTho 24s ease-in-out infinite alternate;
+  content:"";position:absolute;inset:0;z-index:0;
+  background:repeating-linear-gradient(115deg,#3c6b3a 0 3px,#437043 3px 26px);
 }
-@keyframes heroTho{from{transform:scale(1)}to{transform:scale(1.07)}}
-/* lớp phủ tối để chữ trắng luôn đọc rõ dù ảnh sáng hay tối */
+/* ảnh nền thật */
+.hero-anh .hero-bg{
+  position:absolute;inset:0;z-index:1;
+  width:100%;height:100%;object-fit:cover;
+  animation:heroTho 26s ease-in-out infinite alternate;
+}
+.hero-anh .hero-bg.loi{display:none}   /* ảnh lỗi/chưa có → ẩn, lộ nền sọc */
+@keyframes heroTho{from{transform:scale(1.02)}to{transform:scale(1.09)}}
+
+/* lớp phủ tối để chữ trắng đọc rõ — nhạt dần sang phải cho thấy ảnh */
 .hero-anh::after{
-  content:"";position:absolute;inset:0;z-index:1;
-  background:linear-gradient(115deg,
-     rgba(18,44,24,.90) 0%,
-     rgba(22,54,29,.72) 45%,
-     rgba(26,62,34,.45) 100%);
+  content:"";position:absolute;inset:0;z-index:2;
+  background:linear-gradient(112deg,
+     rgba(14,36,19,.84) 0%,
+     rgba(18,46,25,.60) 46%,
+     rgba(22,56,30,.30) 100%);
 }
-.hero-anh > *{position:relative;z-index:2}
+/* nội dung nổi trên cùng — CHỈ tác động .wrap, không đụng phần trang trí
+   khác trong hero (ví dụ chữ 禾 vốn được đặt tuyệt đối ở góc) */
+.hero-anh > .wrap{position:relative;z-index:4}
+.hero-anh .hero-note{z-index:3}
+/* chữ có viền bóng nhẹ để đọc rõ trên ảnh sáng */
+.hero-anh h1,.hero-anh p,.hero-anh .eyebrow{text-shadow:0 1px 12px rgba(10,26,14,.45)}
 
 /* ====== 10. THẺ NỔI BẬT KHI RÊ CHUỘT ====== */
 .the-noi{

@@ -83,6 +83,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
 @media(max-width:820px){.grid2,.gia-tri,.cong-dong{grid-template-columns:1fr}}
 @media(max-width:680px){.nav .menu,.nav .acts .dangnhap span{display:none}.burger{display:block}}
 </style>
+<link rel="stylesheet" href="css/hieu-ung.css">
 </head>
 <body>
 
@@ -101,7 +102,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
       <a href="canh-dong.html">Cánh Đồng</a>
     </nav>
     <div class="acts">
-      <button class="dangnhap" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
+      <button class="dangnhap nut-noi" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
       <a href="#" class="icon" onclick="return false">🛒<span class="dem">0</span></a>
       <button class="burger" onclick="alert('Menu di động — hoàn thiện sau.')">☰</button>
     </div>
@@ -110,7 +111,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
 
 <div class="mau-banner">✎ Bản nháp — toàn bộ chữ dưới đây là <b>nội dung mẫu</b>. Anh Quân gửi dòng giới thiệu &amp; câu chuyện thật, tôi sẽ thay vào đúng khung này.</div>
 
-<section class="vhero">
+<section class="vhero hero-anh" style="--anh-nen:url('img/hero-ve-chung-toi.jpg')">
   <div class="wrap">
     <div class="eyebrow" style="color:var(--vang)">Về chúng tôi</div>
     <h1>Giữ hạt gạo quê, giữ một vùng di sản</h1>
@@ -127,7 +128,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
       <p>Những cánh đồng của HTX nằm bên dòng Thu Bồn, nơi phù sa bồi đắp cho hạt lúa vị ngọt riêng. Trước áp lực của phân bón và thuốc hóa học, một nhóm nông dân đã chọn quay lại cách canh tác thuận tự nhiên.</p>
       <p>Từ đó, hợp tác xã hình thành — không chỉ để bán gạo, mà để giữ lại một cách sống gắn với ruộng đồng, và để người ăn biết rõ hạt gạo mình dùng đến từ đâu.</p>
     </div>
-    <div class="anh-ph">[ Ảnh mẫu — cánh đồng / nông dân HTX ]</div>
+    <div class="anh-ph khung-anh ti-le-4-3"><span class="goi-y">Đặt ảnh vào img/ve-chung-toi.jpg</span><img class="anh-that" src="img/ve-chung-toi.jpg" alt="Đặt ảnh vào img/ve-chung-toi.jpg"></div>
   </div>
 </section>
 
@@ -138,9 +139,9 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
       <h2>Ba giá trị cốt lõi</h2>
     </div>
     <div class="gia-tri">
-      <div class="gt-o"><div class="gt-ic">🌱</div><h3>Canh tác thuận tự nhiên</h3><p><i>(mẫu)</i> Hạn chế tối đa hóa chất, nuôi dưỡng đất và giữ hệ sinh thái đồng ruộng khỏe mạnh.</p></div>
-      <div class="gt-o"><div class="gt-ic">🔍</div><h3>Minh bạch nguồn gốc</h3><p><i>(mẫu)</i> Mỗi lô ruộng có mã riêng, gắn tên nông dân và nhật ký sản xuất công khai.</p></div>
-      <div class="gt-o"><div class="gt-ic">🤝</div><h3>Cùng nhau bền vững</h3><p><i>(mẫu)</i> Hợp tác xã chia sẻ lợi ích với xã viên, giữ nghề nông sống được với chính đồng đất quê.</p></div>
+      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=thuan-tu-nhien"><div class="gt-ic">🌱</div><h3>Canh tác thuận tự nhiên</h3><p><i>(mẫu)</i> Hạn chế tối đa hóa chất, nuôi dưỡng đất và giữ hệ sinh thái đồng ruộng khỏe mạnh.</p><span class="dau-bam">→</span></a>
+      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=minh-bach"><div class="gt-ic">🔍</div><h3>Minh bạch nguồn gốc</h3><p><i>(mẫu)</i> Mỗi lô ruộng có mã riêng, gắn tên nông dân và nhật ký sản xuất công khai.</p><span class="dau-bam">→</span></a>
+      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=ben-vung"><div class="gt-ic">🤝</div><h3>Cùng nhau bền vững</h3><p><i>(mẫu)</i> Hợp tác xã chia sẻ lợi ích với xã viên, giữ nghề nông sống được với chính đồng đất quê.</p><span class="dau-bam">→</span></a>
     </div>
   </div>
 </section>
@@ -152,9 +153,9 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
       <h2>Ba cánh đồng di sản</h2>
     </div>
     <div class="cong-dong">
-      <div class="cd-o f1"><span>Cẩm Kim</span><h3>Ông Đảng</h3></div>
-      <div class="cd-o f2"><span>Cẩm Thanh</span><h3>Đồng Cao</h3></div>
-      <div class="cd-o f3"><span>Cẩm Thanh</span><h3>Đồng Mẫu</h3></div>
+      <a class="cd-o f1 the-noi" href="chi-tiet.html?loai=canh-dong&ma=ong-dang"><span>Cẩm Kim</span><h3>Ông Đảng</h3><span class="dau-bam">→</span></a>
+      <a class="cd-o f2 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-cao"><span>Cẩm Thanh</span><h3>Đồng Cao</h3><span class="dau-bam">→</span></a>
+      <a class="cd-o f3 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-mau"><span>Cẩm Thanh</span><h3>Đồng Mẫu</h3><span class="dau-bam">→</span></a>
     </div>
     <div style="text-align:center;margin-top:26px">
       <a href="canh-dong.html" style="display:inline-block;background:var(--xanh-dam);color:#fff;padding:13px 26px;border-radius:26px;font-weight:600;font-size:14.5px">Khám phá Cánh Đồng →</a>
@@ -180,7 +181,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
     <p class="sub">Xã viên đăng nhập để nhập liệu. Khách đã mua đăng nhập bằng Mã KH để xem nhật ký thửa của mình.</p>
     <div class="form-o"><label>Tên đăng nhập / Mã KH</label><input id="dnUser"></div>
     <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password"></div>
-    <button class="nut-gui" onclick="alert('Bản nháp — sẽ dùng dangNhap() trong js/chung.js.')">Đăng nhập</button>
+    <button class="nut-gui nut-noi" onclick="alert('Bản nháp — sẽ dùng dangNhap() trong js/chung.js.')">Đăng nhập</button>
     <button class="dong" onclick="dongModal('mpDN')">Đóng</button>
   </div>
 </div>
@@ -190,5 +191,6 @@ function moModal(id){ document.getElementById(id).classList.add('mo'); }
 function dongModal(id){ document.getElementById(id).classList.remove('mo'); }
 document.querySelectorAll('.modal-phu').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('mo');});});
 </script>
+<script src="js/hieu-ung.js"></script>
 </body>
 </html>

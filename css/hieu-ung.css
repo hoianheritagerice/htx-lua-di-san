@@ -1,0 +1,188 @@
+/**********************************************************************
+ * css/hieu-ung.css — HIỆU ỨNG DÙNG CHUNG cho mọi trang
+ * Nạp SAU css/chung.css (nếu có) và trước js/hieu-ung.js.
+ * Nguyên tắc: chuyển động nhẹ, chậm, có độ trễ so le — không bay nhảy.
+ **********************************************************************/
+
+/* ====== 1. HIỆN DẦN KHI CUỘN TỚI ====== */
+/* js/hieu-ung.js sẽ tự gắn class .hien vào khi phần tử lọt vào màn hình */
+[data-hien]{
+  opacity:0;
+  transition:opacity .85s cubic-bezier(.22,.61,.36,1),
+             transform .85s cubic-bezier(.22,.61,.36,1),
+             filter .85s ease;
+  will-change:opacity,transform;
+}
+[data-hien="len"]   {transform:translateY(26px)}
+[data-hien="xuong"] {transform:translateY(-20px)}
+[data-hien="trai"]  {transform:translateX(-30px)}
+[data-hien="phai"]  {transform:translateX(30px)}
+[data-hien="no"]    {transform:scale(.94)}
+[data-hien="mo"]    {filter:blur(6px)}
+[data-hien].hien{
+  opacity:1;
+  transform:none;
+  filter:none;
+}
+
+/* ====== 2. ẢNH — KHUNG, NỞ NHẸ, DỰ PHÒNG KHI THIẾU ====== */
+/* Khung ảnh: đặt div.khung-anh bọc <img class="anh-that">.
+   Nếu ảnh chưa có / lỗi tải, js sẽ ẩn img và lộ ra nền gradient + chữ gợi ý. */
+.khung-anh{
+  position:relative;
+  overflow:hidden;
+  border-radius:16px;
+  background:linear-gradient(135deg,#e3d9c4,#cdbf9d);
+  border:1px solid #d8cdb0;
+  display:flex;align-items:center;justify-content:center;
+}
+.khung-anh .goi-y{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:20px;
+  color:#9a8a63;font-size:13px;line-height:1.5;
+  z-index:1;pointer-events:none;
+}
+.khung-anh img.anh-that{
+  position:relative;z-index:2;
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform 1.4s cubic-bezier(.22,.61,.36,1), opacity .6s ease;
+}
+.khung-anh img.anh-that.loi{display:none}          /* ảnh lỗi → ẩn, lộ gợi ý */
+.khung-anh:hover img.anh-that{transform:scale(1.05)}
+
+/* ảnh "thở" rất chậm khi vừa hiện ra (Ken Burns nhẹ) */
+[data-hien].hien .khung-anh img.anh-that{animation:tho 14s ease-in-out infinite alternate}
+@keyframes tho{from{transform:scale(1)}to{transform:scale(1.06)}}
+.khung-anh:hover img.anh-that{animation-play-state:paused}
+
+/* tỉ lệ khung dùng sẵn */
+.ti-le-4-3{aspect-ratio:4/3}
+.ti-le-5-4{aspect-ratio:5/4}
+.ti-le-1-1{aspect-ratio:1/1}
+.ti-le-16-9{aspect-ratio:16/9}
+
+/* ====== 3. CHỮ TIÊU ĐỀ TRÔI LÊN THEO TỪNG DÒNG ====== */
+.chu-troi{display:inline-block;overflow:hidden;vertical-align:bottom}
+.chu-troi > span{
+  display:inline-block;
+  transform:translateY(105%);
+  transition:transform 1s cubic-bezier(.22,.61,.36,1);
+}
+.chu-troi.hien > span{transform:translateY(0)}
+
+/* ====== 4. SO LE — con hiện lần lượt, không cùng lúc ====== */
+/* js gắn --tre (thời gian trễ) cho từng con */
+[data-hien]{transition-delay:var(--tre,0s)}
+.chu-troi > span{transition-delay:var(--tre,0s)}
+
+/* ====== 5. GẠCH CHÂN MỀM CHO LIÊN KẾT & NÚT ====== */
+.nut-muot{transition:transform .25s cubic-bezier(.34,1.4,.64,1), box-shadow .25s ease, background .25s ease}
+.nut-muot:hover{transform:translateY(-2px)}
+.nut-muot:active{transform:translateY(0)}
+
+/* ====== 6. THẺ NÂNG NHẸ KHI RÊ CHUỘT ====== */
+.the-muot{transition:transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s ease}
+.the-muot:hover{transform:translateY(-5px)}
+
+/* ====== 7. SỐ ĐẾM DẦN (mục Tác động) ====== */
+.so-dem{font-variant-numeric:tabular-nums}
+
+/* ====== 8. CUỘN MƯỢT + TÔN TRỌNG NGƯỜI TẮT CHUYỂN ĐỘNG ====== */
+@media (prefers-reduced-motion: reduce){
+  [data-hien],[data-hien].hien,.chu-troi > span{
+    transition:none !important;
+    animation:none !important;
+    opacity:1 !important;
+    transform:none !important;
+    filter:none !important;
+  }
+  .khung-anh img.anh-that{animation:none !important}
+  html{scroll-behavior:auto}
+}
+
+/**********************************************************************
+ * PHẦN BỔ SUNG: ẢNH NỀN LỚN + HIỆU ỨNG NỔI BẬT KHI RÊ CHUỘT
+ **********************************************************************/
+
+/* ====== 9. ẢNH NỀN LỚN CHO ĐẦU MỖI MỤC ======
+   Cách dùng trong HTML:
+     <section class="hero hero-anh" style="--anh-nen:url('img/hero-trang-chu.jpg')">
+   Nếu chưa có ảnh, tự động hiện nền xanh sọc như cũ — không vỡ trang. */
+.hero-anh{position:relative;overflow:hidden;background:#1e4d2b}
+.hero-anh::before{
+  content:"";position:absolute;inset:-2.5%;z-index:0;
+  background:
+    var(--anh-nen, none) center/cover no-repeat,
+    repeating-linear-gradient(115deg,#3c6b3a 0 3px,#437043 3px 26px);
+  animation:heroTho 24s ease-in-out infinite alternate;
+}
+@keyframes heroTho{from{transform:scale(1)}to{transform:scale(1.07)}}
+/* lớp phủ tối để chữ trắng luôn đọc rõ dù ảnh sáng hay tối */
+.hero-anh::after{
+  content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(115deg,
+     rgba(18,44,24,.90) 0%,
+     rgba(22,54,29,.72) 45%,
+     rgba(26,62,34,.45) 100%);
+}
+.hero-anh > *{position:relative;z-index:2}
+
+/* ====== 10. THẺ NỔI BẬT KHI RÊ CHUỘT ====== */
+.the-noi{
+  cursor:pointer;
+  transition:transform .38s cubic-bezier(.22,.61,.36,1),
+             box-shadow .38s ease, border-color .38s ease;
+}
+.the-noi:hover{
+  transform:translateY(-9px) scale(1.035);
+  box-shadow:0 24px 46px rgba(60,48,18,.20);
+  border-color:var(--xanh-la,#6f9e4b);
+  z-index:5;
+}
+.the-noi:active{transform:translateY(-4px) scale(1.01)}
+/* ảnh bên trong thẻ nở theo */
+.the-noi:hover .khung-anh img.anh-that,
+.the-noi:hover .hinh,
+.the-noi:hover .goi-hinh{transform:scale(1.07)}
+/* mũi tên gợi ý bấm được — js tự chèn */
+.dau-bam{
+  position:absolute;right:14px;bottom:14px;
+  width:32px;height:32px;border-radius:50%;
+  background:var(--xanh-dam,#1e4d2b);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;opacity:0;transform:translateX(-6px);
+  transition:opacity .3s ease,transform .3s ease;z-index:6;pointer-events:none;
+}
+.the-noi{position:relative}
+.the-noi:hover .dau-bam{opacity:1;transform:translateX(0)}
+/* thẻ cánh đồng nền tối thì mũi tên đảo màu */
+.cd-card .dau-bam,.cd-o .dau-bam{background:rgba(255,255,255,.92);color:#1e4d2b}
+
+/* ====== 11. NÚT NỔI BẬT (mua, thêm vào giỏ...) ====== */
+.nut-noi{
+  position:relative;overflow:hidden;isolation:isolate;
+  transition:transform .3s cubic-bezier(.34,1.35,.64,1),
+             box-shadow .3s ease, filter .3s ease;
+}
+.nut-noi:hover{
+  transform:translateY(-3px) scale(1.04);
+  box-shadow:0 12px 26px rgba(30,77,43,.32);
+  filter:brightness(1.06);
+}
+.nut-noi:active{transform:translateY(-1px) scale(1.01)}
+/* vệt sáng lướt qua khi rê chuột */
+.nut-noi::before{
+  content:"";position:absolute;top:0;left:-130%;width:60%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.42),transparent);
+  transform:skewX(-18deg);z-index:-1;transition:left .65s cubic-bezier(.22,.61,.36,1);
+}
+.nut-noi:hover::before{left:130%}
+/* nút vàng (CTA chính) đổ bóng ấm hơn */
+.cta.nut-noi:hover{box-shadow:0 12px 28px rgba(201,162,39,.42)}
+
+@media (prefers-reduced-motion: reduce){
+  .hero-anh::before{animation:none !important}
+  .the-noi:hover,.nut-noi:hover{transform:none !important}
+  .nut-noi::before{display:none}
+}

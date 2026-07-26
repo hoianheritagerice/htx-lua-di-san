@@ -176,6 +176,7 @@ footer ul a:hover{opacity:1;color:var(--vang)}
   .hero .cta.phu{margin-left:0;margin-top:12px}
 }
 </style>
+<link rel="stylesheet" href="css/hieu-ung.css">
 </head>
 <body>
 
@@ -194,7 +195,7 @@ footer ul a:hover{opacity:1;color:var(--vang)}
       <a href="canh-dong.html">Cánh Đồng</a>
     </nav>
     <div class="acts">
-      <button class="dangnhap" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
+      <button class="dangnhap nut-noi" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
       <a href="#" class="icon gio" onclick="alert('Giỏ hàng: bước 5 — chọn gói → điền tên/SĐT → nhận QR VietQR. Chưa bật ở bản nháp này.');return false;">🛒<span class="dem" id="gioDem">0</span></a>
       <button class="burger" onclick="alert('Menu di động — sẽ mở danh sách tab khi hoàn thiện.')">☰</button>
     </div>
@@ -204,13 +205,13 @@ footer ul a:hover{opacity:1;color:var(--vang)}
 <div class="mau-banner">✎ Đây là <b>bản nháp giao diện</b> — mọi chữ và hình đều là nội dung mẫu để anh Quân thay bằng nội dung thật của HTX.</div>
 
 <!-- ===== HERO ===== -->
-<section class="hero">
+<section class="hero hero-anh" style="--anh-nen:url('img/hero-trang-chu.jpg')">
   <div class="wrap">
     <div class="eyebrow" style="color:var(--vang)">Hợp tác xã lúa hữu cơ · Từ 3 cánh đồng di sản</div>
     <h1>Hạt gạo mang <em>câu chuyện</em> của đất và người Hội An</h1>
     <p>Từ những thửa ruộng ven sông Thu Bồn ở Cẩm Kim và Cẩm Thanh, chúng tôi canh tác lúa theo hướng hữu cơ, minh bạch từng khâu — anh có thể xem nhật ký của chính thửa ruộng làm ra hạt gạo mình ăn.</p>
-    <a href="san-pham.html" class="cta">Xem sản phẩm →</a>
-    <a href="canh-dong.html" class="cta phu">Khám phá Cánh Đồng</a>
+    <a href="san-pham.html" class="cta nut-noi">Xem sản phẩm →</a>
+    <a href="canh-dong.html" class="cta phu nut-noi">Khám phá Cánh Đồng</a>
   </div>
   <div class="hero-note">禾</div>
 </section>
@@ -218,13 +219,13 @@ footer ul a:hover{opacity:1;color:var(--vang)}
 <!-- ===== CÂU CHUYỆN ===== -->
 <section class="chuyen">
   <div class="wrap grid">
-    <div class="anh">[ Ảnh mẫu — thay bằng ảnh cánh đồng / nông dân HTX ]</div>
+    <div class="anh khung-anh ti-le-5-4"><span class="goi-y">Đặt ảnh vào img/cau-chuyen.jpg</span><img class="anh-that" src="img/cau-chuyen.jpg" alt="Đặt ảnh vào img/cau-chuyen.jpg"></div>
     <div>
       <div class="eyebrow">Câu chuyện của chúng tôi</div>
       <h2>Giữ lại giống lúa của ông cha, trên chính cánh đồng quê</h2>
       <p><i>(Nội dung mẫu)</i> Hợp tác xã Lúa Di Sản ra đời từ mong muốn giữ gìn những giống lúa bản địa và cách canh tác thuận tự nhiên trên các cánh đồng Ông Đảng, Đồng Cao, Đồng Mẫu.</p>
       <p>Mỗi lô ruộng được ghi mã riêng, gắn với tên người nông dân canh tác, ngày gieo sạ, ngày thu hoạch — tất cả công khai để người mua yên tâm về nguồn gốc.</p>
-      <a href="ve-chung-toi.html" class="doc-them">Đọc câu chuyện đầy đủ →</a>
+      <a href="ve-chung-toi.html" class="doc-them nut-noi">Đọc câu chuyện đầy đủ →</a>
     </div>
   </div>
 </section>
@@ -237,33 +238,33 @@ footer ul a:hover{opacity:1;color:var(--vang)}
       <h2>Ba cách để đồng hành cùng cánh đồng</h2>
     </div>
     <div class="sp-grid">
-      <div class="sp-card">
-        <div class="hinh">[ Ảnh gói mẫu ]</div>
+      <a class="sp-card the-noi" href="chi-tiet.html?loai=san-pham&ma=gieo-mam">
+        <div class="hinh khung-anh ti-le-1-1"><span class="goi-y">Đặt ảnh vào img/goi-1-gieo-mam.jpg</span><img class="anh-that" src="img/goi-1-gieo-mam.jpg" alt="Đặt ảnh vào img/goi-1-gieo-mam.jpg"></div>
         <div class="than">
           <div class="goi-ten">Người gieo mầm</div>
           <div class="goi-mo"><i>(Mô tả mẫu)</i> Gói cơ bản để bắt đầu trải nghiệm gạo hữu cơ Hội An — khách nhận gạo và quyền xem nhật ký sản xuất.</div>
           <div class="goi-gia">— đ <small>/ đơn vị</small></div>
-          <button class="them-gio" onclick="themGio()">Thêm vào giỏ</button>
-        </div>
-      </div>
-      <div class="sp-card">
-        <div class="hinh">[ Ảnh gói mẫu ]</div>
+          <button class="them-gio nut-noi" onclick="event.preventDefault();event.stopPropagation();themGio()">Thêm vào giỏ</button>
+        </div><span class="dau-bam">→</span>
+      </a>
+      <a class="sp-card the-noi" href="chi-tiet.html?loai=san-pham&ma=dong-kien-tao">
+        <div class="hinh khung-anh ti-le-1-1"><span class="goi-y">Đặt ảnh vào img/goi-2-dong-kien-tao.jpg</span><img class="anh-that" src="img/goi-2-dong-kien-tao.jpg" alt="Đặt ảnh vào img/goi-2-dong-kien-tao.jpg"></div>
         <div class="than">
           <div class="goi-ten">Người đồng kiến tạo</div>
           <div class="goi-mo"><i>(Mô tả mẫu)</i> Gói dành cho khách gắn bó — nhận gạo định kỳ và được gắn với một thửa ruộng cụ thể trên bản đồ.</div>
           <div class="goi-gia">— đ <small>/ đơn vị</small></div>
-          <button class="them-gio" onclick="themGio()">Thêm vào giỏ</button>
-        </div>
-      </div>
-      <div class="sp-card">
-        <div class="hinh">[ Ảnh gói mẫu ]</div>
+          <button class="them-gio nut-noi" onclick="event.preventDefault();event.stopPropagation();themGio()">Thêm vào giỏ</button>
+        </div><span class="dau-bam">→</span>
+      </a>
+      <a class="sp-card the-noi" href="chi-tiet.html?loai=san-pham&ma=doi-tac">
+        <div class="hinh khung-anh ti-le-1-1"><span class="goi-y">Đặt ảnh vào img/goi-3-doi-tac.jpg</span><img class="anh-that" src="img/goi-3-doi-tac.jpg" alt="Đặt ảnh vào img/goi-3-doi-tac.jpg"></div>
         <div class="than">
           <div class="goi-ten">Đối tác kiến tạo di sản</div>
           <div class="goi-mo"><i>(Mô tả mẫu)</i> Gói đồng hành sâu — hỗ trợ cả vụ canh tác của một thửa, tên khách hiện trên bản đồ (nếu đồng ý).</div>
           <div class="goi-gia">— đ <small>/ đơn vị</small></div>
-          <button class="them-gio" onclick="themGio()">Thêm vào giỏ</button>
-        </div>
-      </div>
+          <button class="them-gio nut-noi" onclick="event.preventDefault();event.stopPropagation();themGio()">Thêm vào giỏ</button>
+        </div><span class="dau-bam">→</span>
+      </a>
     </div>
   </div>
 </section>
@@ -276,24 +277,24 @@ footer ul a:hover{opacity:1;color:var(--vang)}
       <h2>Ba cánh đồng, một di sản</h2>
     </div>
     <div class="cd-grid">
-      <div class="cd-card f1">
+      <a class="cd-card f1 the-noi" href="chi-tiet.html?loai=canh-dong&ma=ong-dang">
         <div class="cd-vt">Cẩm Kim</div>
         <h3>Cánh đồng Ông Đảng</h3>
         <div class="cd-mo">20 thửa ruộng ven sông, nơi HTX phát triển mô hình canh tác hữu cơ và du lịch nông nghiệp.</div>
-        <a href="canh-dong.html" class="cd-link">Xem trên bản đồ →</a>
-      </div>
-      <div class="cd-card f2">
+        <span class="cd-link">Xem chi tiết →</span><span class="dau-bam">→</span>
+      </a>
+      <a class="cd-card f2 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-cao">
         <div class="cd-vt">Cẩm Thanh</div>
         <h3>Cánh đồng Đồng Cao</h3>
         <div class="cd-mo">Cánh đồng lớn nhất với hơn 40 thửa, mỗi thửa gắn tên một hộ nông dân xã viên.</div>
-        <a href="canh-dong.html" class="cd-link">Xem trên bản đồ →</a>
-      </div>
-      <div class="cd-card f3">
+        <span class="cd-link">Xem chi tiết →</span><span class="dau-bam">→</span>
+      </a>
+      <a class="cd-card f3 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-mau">
         <div class="cd-vt">Cẩm Thanh</div>
         <h3>Cánh đồng Đồng Mẫu</h3>
         <div class="cd-mo">Những thửa ruộng rộng, canh tác giống lúa bản địa theo lịch mùa vụ truyền thống.</div>
-        <a href="canh-dong.html" class="cd-link">Xem trên bản đồ →</a>
-      </div>
+        <span class="cd-link">Xem chi tiết →</span><span class="dau-bam">→</span>
+      </a>
     </div>
   </div>
 </section>
@@ -308,8 +309,8 @@ footer ul a:hover{opacity:1;color:var(--vang)}
     <div class="td-grid">
       <div class="td-o"><div class="so" id="tdDienTich">—</div><div class="nhan">diện tích canh tác<br>theo hướng hữu cơ</div></div>
       <div class="td-o"><div class="so" id="tdSoHo">—</div><div class="nhan">hộ nông dân<br>xã viên tham gia</div></div>
-      <div class="td-o"><div class="so" id="tdThua">68</div><div class="nhan">thửa ruộng<br>được ghi mã riêng</div></div>
-      <div class="td-o"><div class="so">3</div><div class="nhan">cánh đồng<br>di sản</div></div>
+      <div class="td-o"><div class="so so-dem" id="tdThua" data-so="68">0</div><div class="nhan">thửa ruộng<br>được ghi mã riêng</div></div>
+      <div class="td-o"><div class="so so-dem" data-so="3">0</div><div class="nhan">cánh đồng<br>di sản</div></div>
     </div>
     <div class="td-note">* Hai số đầu sẽ tự cập nhật theo dữ liệu thật từ hệ thống bản đồ Notion khi nối API.</div>
   </div>
@@ -375,7 +376,7 @@ footer ul a:hover{opacity:1;color:var(--vang)}
     <p class="sub">Xã viên đăng nhập để nhập liệu. Khách hàng đã mua đăng nhập để xem nhật ký thửa của mình.</p>
     <div class="form-o"><label>Tên đăng nhập / Mã KH</label><input id="dnUser" autocomplete="username"></div>
     <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password" autocomplete="current-password"></div>
-    <button class="nut-gui" onclick="alert('Bản nháp — sẽ dùng lại hàm dangNhap() trong js/chung.js khi ghép vào hệ thống thật.')">Đăng nhập</button>
+    <button class="nut-gui nut-noi" onclick="alert('Bản nháp — sẽ dùng lại hàm dangNhap() trong js/chung.js khi ghép vào hệ thống thật.')">Đăng nhập</button>
     <button class="dong" onclick="dongModal('mpDN')">Đóng</button>
   </div>
 </div>
@@ -394,5 +395,6 @@ function themGio(){
   document.getElementById('gioDem').textContent = soGio;
 }
 </script>
+<script src="js/hieu-ung.js"></script>
 </body>
 </html>

@@ -155,6 +155,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
   .river-label .t{font-size:13.5px}
 }
 </style>
+<link rel="stylesheet" href="css/hieu-ung.css">
 </head>
 <body>
 
@@ -241,7 +242,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
       <a href="canh-dong.html" class="active">Cánh Đồng</a>
     </nav>
     <div class="acts">
-      <button class="dangnhap" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
+      <button class="dangnhap nut-noi" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
       <a href="#" class="icon gio" onclick="alert('Giỏ hàng: bước 5 — VietQR chuyển khoản.');return false;">🛒<span class="dem">0</span></a>
       <button class="burger" onclick="alert('Menu di động — hoàn thiện sau.')">☰</button>
     </div>
@@ -250,7 +251,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 
 <div class="mau-banner">✎ Bản nháp — dòng thời gian dùng <b>ngày &amp; sự kiện mẫu</b>. Khi nối API, mốc nông học tự lấy từ Notion; lễ cúng &amp; trải nghiệm anh Quân nhập thêm.</div>
 
-<section class="cd-hero">
+<section class="cd-hero hero-anh" style="--anh-nen:url('img/hero-canh-dong.jpg')">
   <div class="wrap">
     <div class="eyebrow" style="color:var(--vang)">Cánh Đồng</div>
     <h1>Đi cùng cánh đồng suốt một mùa vụ</h1>
@@ -275,7 +276,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
     <div class="map-box">
       <div class="map-head">
         <h2>Bản đồ canh tác — <span id="tenDong">Ông Đảng</span></h2>
-        <button class="mo-bando" onclick="location.href='ban-do.html'">Mở bản đồ tương tác ↗</button>
+        <button class="mo-bando nut-noi" onclick="location.href='ban-do.html'">Mở bản đồ tương tác ↗</button>
       </div>
       <div class="map-placeholder">
         <div class="ic">🗺️</div>
@@ -345,7 +346,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
     <p class="sub">Xã viên đăng nhập để nhập liệu. Khách đã mua đăng nhập bằng Mã KH để xem nhật ký thửa của mình.</p>
     <div class="form-o"><label>Tên đăng nhập / Mã KH</label><input id="dnUser"></div>
     <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password"></div>
-    <button class="nut-gui" onclick="alert('Bản nháp — sẽ dùng dangNhap() trong js/chung.js.')">Đăng nhập</button>
+    <button class="nut-gui nut-noi" onclick="alert('Bản nháp — sẽ dùng dangNhap() trong js/chung.js.')">Đăng nhập</button>
     <button class="dong" onclick="dongModal('mpDN')">Đóng</button>
   </div>
 </div>
@@ -484,5 +485,6 @@ function moCT(i){
 
 veTimeline();
 </script>
+<script src="js/hieu-ung.js"></script>
 </body>
 </html>

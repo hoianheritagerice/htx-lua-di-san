@@ -1,0 +1,48 @@
+THƯ MỤC ẢNH CỦA WEBSITE HTX LÚA DI SẢN
+=======================================
+Bỏ ảnh vào ĐÚNG thư mục này (img/), đặt ĐÚNG tên dưới đây.
+Trang web tự hiện ảnh, không cần sửa code.
+
+A. ẢNH NỀN LỚN — mỗi trang một tấm to bự phía sau tiêu đề
+----------------------------------------------------------
+hero-trang-chu.jpg     - Nền đầu Trang chủ
+hero-ve-chung-toi.jpg  - Nền đầu trang Về chúng tôi
+hero-san-pham.jpg      - Nền đầu trang Sản phẩm
+hero-canh-dong.jpg     - Nền đầu trang Cánh Đồng
+  → Nên chọn ảnh NGANG, rộng 1920 px, cảnh rộng thoáng.
+  → Ảnh sẽ bị phủ một lớp xanh đậm để chữ trắng đọc rõ,
+    nên chọn ảnh không quá nhiều chi tiết rối ở bên trái.
+
+B. ẢNH TRONG NỘI DUNG
+----------------------
+cau-chuyen.jpg           - Trang chủ, mục Câu chuyện
+ve-chung-toi.jpg         - Trang Về chúng tôi, mục Câu chuyện
+goi-1-gieo-mam.jpg       - Gói Người gieo mầm
+goi-2-dong-kien-tao.jpg  - Gói Người đồng kiến tạo
+goi-3-doi-tac.jpg        - Gói Đối tác kiến tạo di sản
+
+C. ẢNH CHO CÁC TRANG CHI TIẾT (khi bấm vào từng ô)
+---------------------------------------------------
+dong-ong-dang.jpg        - Chi tiết cánh đồng Ông Đảng
+dong-dong-cao.jpg        - Chi tiết cánh đồng Đồng Cao
+dong-dong-mau.jpg        - Chi tiết cánh đồng Đồng Mẫu
+gt-thuan-tu-nhien.jpg    - Chi tiết giá trị Canh tác thuận tự nhiên
+gt-minh-bach.jpg         - Chi tiết giá trị Minh bạch nguồn gốc
+gt-ben-vung.jpg          - Chi tiết giá trị Cùng nhau bền vững
+  (3 gói sản phẩm dùng lại ảnh ở mục B, không cần ảnh mới)
+
+LƯU Ý QUAN TRỌNG
+-----------------
+1. TÊN FILE phải giống hệt: chữ thường, gạch ngang, KHÔNG dấu tiếng Việt,
+   KHÔNG khoảng trắng. Đuôi .jpg viết thường.
+
+2. PHẢI NÉN ẢNH trước khi tải lên:
+   - Ảnh nền lớn (hero-*): rộng 1920 px, dưới 400 KB
+   - Ảnh nội dung: rộng 1200-1400 px, dưới 300 KB
+   - Ảnh chụp điện thoại thường nặng 3-5 MB → bắt buộc nén,
+     nếu không khách mở trang bằng 4G sẽ rất chậm.
+   - Nén miễn phí: vào squoosh.app, kéo ảnh vào, chọn Quality ~75, tải về.
+
+3. CHƯA CÓ ẢNH cũng không sao: trang vẫn chạy bình thường.
+   Chỗ ảnh nền sẽ hiện nền xanh sọc như cũ; chỗ ảnh nội dung hiện
+   ô màu đất kèm dòng nhắc tên ảnh cần đặt. Bỏ ảnh vào lúc nào hiện lúc đó.

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cánh Đồng — HTX Lúa Di Sản Hội An</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --nen:#f5f2e8;--nen-2:#efe9d8;--muc:#2b3524;--xanh-dam:#1e4d2b;
+  --xanh-la:#6f9e4b;--xanh-rong:#8bc34a;--dat:#e3d9c4;--dat-som:#b5734a;
+  --vang:#c9a227;--trang:#fffdf8;--xam:#8a9180;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--nen);color:var(--muc);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-height:1.15;color:var(--xanh-dam)}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--dat-som)}
+
+.topbar{background:var(--xanh-dam);color:#f3ede0;font-size:12.5px;text-align:center;padding:7px 16px;letter-spacing:.4px}
+.topbar b{color:var(--vang)}
+header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1px solid #e4dcc8}
+.nav{display:flex;align-items:center;gap:20px;height:72px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .enso{width:42px;height:42px;border-radius:50%;border:3px solid var(--xanh-dam);border-right-color:transparent;transform:rotate(-25deg);flex:none}
+.brand .bname{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--xanh-dam);line-height:1.05}
+.brand .bname small{display:block;font-family:'Be Vietnam Pro',sans-serif;font-weight:400;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--xam)}
+.nav .menu{display:flex;gap:28px;margin-left:26px;flex:1}
+.nav .menu a{font-size:14.5px;font-weight:500;padding:6px 0;position:relative;color:var(--muc)}
+.nav .menu a::after{content:"";position:absolute;left:0;right:100%;bottom:-2px;height:2px;background:var(--dat-som);transition:right .25s}
+.nav .menu a:hover{color:var(--xanh-dam)}
+.nav .menu a:hover::after,.nav .menu a.active::after{right:0}
+.nav .menu a.active{color:var(--xanh-dam);font-weight:600}
+.nav .acts{display:flex;align-items:center;gap:14px}
+.nav .acts button,.nav .acts a.icon{background:none;border:none;cursor:pointer;font-family:inherit;font-size:14px;color:var(--muc);display:flex;align-items:center;gap:6px}
+.nav .acts .dangnhap{border:1.5px solid var(--xanh-dam);color:var(--xanh-dam);border-radius:22px;padding:8px 16px;font-weight:600}
+.nav .acts .dangnhap:hover{background:var(--xanh-dam);color:#fff}
+.gio{position:relative}
+.gio .dem{position:absolute;top:-8px;right:-10px;background:var(--dat-som);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.burger{display:none;background:none;border:none;font-size:24px;color:var(--xanh-dam);cursor:pointer}
+
+.cd-hero{background:linear-gradient(120deg,rgba(30,77,43,.9),rgba(30,77,43,.55)),repeating-linear-gradient(115deg,#3c6b3a 0 3px,#437043 3px 26px);color:#fff;padding:52px 0 46px}
+.cd-hero h1{color:#fff;font-size:clamp(30px,4.6vw,48px);margin:8px 0 10px}
+.cd-hero p{max-width:60ch;color:#eef3e6;font-size:16px}
+
+.chon-bar{background:var(--trang);border-bottom:1px solid #e4dcc8;position:sticky;top:72px;z-index:30}
+.chon-bar .wrap{display:flex;align-items:center;gap:16px;padding:14px 22px;flex-wrap:wrap}
+.chon-nhom{display:flex;gap:8px;flex-wrap:wrap}
+.chon-nhom .cn-lbl{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--xam);align-self:center;margin-right:4px}
+.field-tab{border:1.5px solid #cfc8b4;background:#fff;border-radius:22px;padding:8px 16px;font-family:inherit;font-size:14px;font-weight:600;color:var(--muc);cursor:pointer;transition:all .18s}
+.field-tab:hover{border-color:var(--xanh-la)}
+.field-tab.active{background:var(--xanh-dam);border-color:var(--xanh-dam);color:#fff}
+.chon-bar .vu-sel{margin-left:auto;font-family:inherit;font-size:14px;padding:8px 12px;border:1.5px solid #cfc8b4;border-radius:10px;background:#fff}
+
+.map-sec{padding:34px 0 10px}
+.map-box{background:#fbf9f1;border:1.5px solid #ddd3ba;border-radius:16px;overflow:hidden}
+.map-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #e8e0cc;flex-wrap:wrap;gap:10px}
+.map-head h2{font-size:21px}
+.map-head .mo-bando{background:var(--xanh-dam);color:#fff;border:none;font-family:inherit;font-weight:600;font-size:13.5px;padding:10px 18px;border-radius:22px;cursor:pointer}
+.map-head .mo-bando:hover{background:#163a20}
+.map-placeholder{aspect-ratio:16/8;background:radial-gradient(circle at 30% 40%,rgba(139,195,74,.25),transparent 40%),radial-gradient(circle at 70% 60%,rgba(201,162,39,.2),transparent 40%),linear-gradient(135deg,#eef0e3,#e3ddc8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#7c8468;text-align:center;padding:24px}
+.map-placeholder .ic{font-size:44px}
+.map-placeholder small{max-width:44ch;font-size:12.5px}
+
+/* ===== TIMELINE UỐN LƯỢN ===== */
+.tl-sec{padding:48px 0 90px;position:relative;overflow:hidden}
+.tl-sec::before{content:"";position:absolute;inset:0;background:
+   radial-gradient(circle at 6% 10%,rgba(139,195,74,.07),transparent 20%),
+   radial-gradient(circle at 94% 82%,rgba(201,162,39,.08),transparent 22%);pointer-events:none}
+.tl-head{text-align:center;margin-bottom:8px;position:relative}
+.tl-head h2{font-size:clamp(26px,3.4vw,38px);margin-top:8px}
+.tl-head p{max-width:56ch;margin:10px auto 0;color:#5a6350;font-size:15px}
+.phase-now{display:inline-flex;align-items:center;gap:9px;margin:18px auto 4px;background:var(--trang);border:1px solid #dcecc7;border-radius:24px;padding:8px 16px 8px 12px;font-size:13px;color:#3f5a2e;position:relative}
+.phase-now .pn-dot{width:12px;height:12px;border-radius:50%;background:var(--xanh-rong);box-shadow:0 0 0 4px rgba(139,195,74,.28);flex:none;animation:beat 1.8s ease-in-out infinite}
+.phase-now b{color:var(--xanh-dam)}
+@keyframes beat{0%,100%{box-shadow:0 0 0 4px rgba(139,195,74,.28)}50%{box-shadow:0 0 0 8px rgba(139,195,74,.12)}}
+
+.tl-legend{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin:20px 0 8px;font-size:13px;position:relative}
+.tl-legend span.lg{display:inline-flex;align-items:center;gap:8px}
+.tl-legend .chip{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
+.tl-legend .chip svg{width:17px;height:17px}
+.chip.nong{background:#e6f2d8;color:#4f7325}
+.chip.le{background:#f5e3d8;color:#9c4e28}
+.chip.trai{background:#faf0cf;color:#8a6910}
+
+.river{position:relative;max-width:600px;margin:22px auto 0}
+.river svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.river-node{position:absolute;transform:translate(-50%,-50%);z-index:3;cursor:pointer}
+.river-dot{width:56px;height:56px;border-radius:50%;background:#fff;border:2px solid #e0d7bf;
+   display:flex;align-items:center;justify-content:center;color:#b3a888;transition:transform .2s,box-shadow .2s}
+.river-dot svg{width:32px;height:32px}
+.river-node:hover .river-dot{transform:scale(1.1)}
+.river-dot.past{border:none}
+.river-dot.past.nong{background:#e6f2d8;color:#4f7325;box-shadow:0 0 0 4px #eef4e6}
+.river-dot.past.le{background:#f5e3d8;color:#9c4e28;box-shadow:0 0 0 4px #f7ede6}
+.river-dot.past.trai{background:#faf0cf;color:#8a6910;box-shadow:0 0 0 4px #f8f1de}
+.river-dot.nong{color:#8ba86e}.river-dot.le{color:#c6957a}.river-dot.trai{color:#c2a45f}
+.river-label{position:absolute;top:64px;left:50%;transform:translateX(-50%);width:158px;text-align:center;pointer-events:none}
+.river-label .t{font-family:'Playfair Display',serif;font-size:14.5px;font-weight:600;color:var(--xanh-dam);line-height:1.2}
+.river-label .d{font-size:11px;color:var(--xam);font-family:ui-monospace,monospace;margin-top:2px}
+.river-node.future .river-label .t{color:#7d8a70}
+.river-node .xem{font-size:10.5px;color:var(--dat-som);opacity:0;transition:opacity .2s;margin-top:3px}
+.river-node:hover .xem{opacity:1}
+
+.today{position:absolute;transform:translate(-50%,-50%);z-index:4;pointer-events:none}
+.today .dot{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--xanh-la);box-shadow:0 0 0 6px rgba(111,158,75,.28);animation:beat2 1.8s ease-in-out infinite}
+@keyframes beat2{0%,100%{box-shadow:0 0 0 6px rgba(111,158,75,.28)}50%{box-shadow:0 0 0 12px rgba(111,158,75,.1)}}
+.today .pill{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--xanh-la);color:#fff;font-size:11px;font-weight:700;padding:3px 11px;border-radius:12px}
+.today .pill::after{content:"";position:absolute;bottom:-4px;left:50%;transform:translateX(-50%) rotate(45deg);width:8px;height:8px;background:var(--xanh-la)}
+
+.tl-note{max-width:820px;margin:36px auto 0;font-size:12.5px;color:var(--xam);text-align:center;line-height:1.6;position:relative}
+
+/* modal chi tiết mốc */
+.modal .ct-head{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.modal .ct-ic{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+.modal .ct-ic svg{width:30px;height:30px}
+.modal .ct-loai{font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase}
+.modal .ct-ngay{font-size:12.5px;color:var(--xam);font-family:ui-monospace,monospace;margin-bottom:12px}
+.modal .ct-mo{font-size:14.5px;color:#41503a;margin-bottom:14px}
+.modal .ct-goi{font-size:13px;color:#6b5a3a;background:#faf6ea;border:1px dashed #d8c48f;border-radius:11px;padding:9px 12px;display:none;align-items:center;gap:8px}
+.modal .ct-goi svg{width:16px;height:16px;color:var(--dat-som);flex:none}
+.modal .ct-goi b{color:var(--dat-som)}
+
+footer{background:#182e1a;color:#c9d3c0;font-size:14px;padding:40px 0 24px;margin-top:20px}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+footer .fb{font-family:'Playfair Display',serif;font-size:18px;color:#fff}
+footer .fl{display:flex;gap:20px;font-size:13.5px}
+footer .fl a{opacity:.85}
+footer .fl a:hover{opacity:1;color:var(--vang)}
+
+.mau-banner{background:#fff3d6;border-bottom:1px solid #e6cf94;color:#8a5a00;font-size:12.5px;text-align:center;padding:8px 16px}
+
+.modal-phu{position:fixed;inset:0;background:rgba(20,28,15,.55);display:none;align-items:center;justify-content:center;z-index:80;padding:16px}
+.modal-phu.mo{display:flex}
+.modal{background:#fff;width:100%;max-width:430px;border-radius:18px;padding:24px 24px 26px}
+.modal h2{font-size:22px;margin-bottom:2px;line-height:1.2}
+.modal p.sub{font-size:13px;color:#6b7263;margin-bottom:16px}
+.form-o{margin-bottom:13px}
+.form-o label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:#41503a}
+.form-o input{width:100%;font-family:inherit;font-size:14px;padding:11px;border:1.5px solid #cfc8b4;border-radius:9px;background:#fdfcf8}
+.nut-gui{width:100%;padding:14px;border:none;border-radius:11px;background:var(--xanh-dam);color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px}
+.dong{display:block;margin:16px auto 0;background:none;border:none;color:#8a9180;font-size:13px;cursor:pointer;font-family:inherit}
+
+@media(max-width:720px){
+  .nav .menu,.nav .acts .dangnhap span{display:none}
+  .burger{display:block}
+  .chon-bar{top:64px}
+  .river{max-width:100%}
+  .river-label{width:130px;top:60px}
+  .river-label .t{font-size:13.5px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== BỘ ICON SVG VẼ RIÊNG CHO TỪNG MỐC MÙA VỤ ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="ic-cung" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 20h16l-1.7 5.1c-4.2 1.7-8.4 1.7-12.6 0L8 20z" fill="currentColor" fill-opacity=".14"/>
+    <path d="M12.5 20v-8.5M16 20V9M19.5 20v-8.5"/>
+    <path d="M16 9c1.6-.8 1.8-2.4 1-3.6M12.5 11c1-.6 1.1-1.8.4-2.6" stroke-width="1.3"/>
+    <circle cx="12.5" cy="11" r=".6" fill="currentColor" stroke="none"/><circle cx="16" cy="9" r=".7" fill="currentColor" stroke="none"/><circle cx="19.5" cy="11" r=".6" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="ic-gieo" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 23h20"/><path d="M16 23v-7"/>
+    <path d="M16 17c-1.2-3-4-3.6-6.2-3 .3 3 3 4.1 6.2 3z" fill="currentColor" fill-opacity=".15"/>
+    <path d="M16 16.2c1-3.4 3.9-4.1 6.4-3.4-.4 3.2-3.3 4.2-6.4 3.4z" fill="currentColor" fill-opacity=".15"/>
+    <circle cx="9" cy="26" r=".9" fill="currentColor" stroke="none" fill-opacity=".5"/><circle cx="23" cy="26" r=".9" fill="currentColor" stroke="none" fill-opacity=".5"/>
+  </symbol>
+  <symbol id="ic-ma" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 24c2.6 1.5 5.1 1.5 7 0 1.9 1.5 4.4 1.5 7 0 1.7 1.3 3.4 1.3 5 .3"/>
+    <path d="M11 22v-7M16 22V12M21 22v-7"/>
+    <path d="M11 16c-1.4-1.6-2.9-1.7-4.2-1.4M21 16c1.4-1.6 2.9-1.7 4.2-1.4M16 13c-1.5-1.8-3.2-2-4.6-1.7M16 13c1.5-1.8 3.2-2 4.6-1.7" stroke-width="1.3"/>
+  </symbol>
+  <symbol id="ic-dong" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 25c-.4-6 .2-10.5 1.6-14.6"/>
+    <path d="M16.6 10.4c1.3-2.4 3.4-3.4 5.6-3.6-.2 2.6-1.7 4.9-5.6 3.6z" fill="currentColor" fill-opacity=".16"/>
+    <path d="M15.3 18c-2-1.7-4.2-1.8-6.3-1.2 1.1 2.4 3.6 3 6.3 1.2z" fill="currentColor" fill-opacity=".16"/>
+  </symbol>
+  <symbol id="ic-bong" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 26V10"/>
+    <g fill="currentColor" fill-opacity=".18" stroke="none">
+      <ellipse cx="12.5" cy="12.5" rx="1.5" ry="2.6" transform="rotate(-30 12.5 12.5)"/>
+      <ellipse cx="19.5" cy="12.5" rx="1.5" ry="2.6" transform="rotate(30 19.5 12.5)"/>
+      <ellipse cx="13" cy="17" rx="1.5" ry="2.6" transform="rotate(-30 13 17)"/>
+      <ellipse cx="19" cy="17" rx="1.5" ry="2.6" transform="rotate(30 19 17)"/>
+      <ellipse cx="16" cy="9" rx="1.5" ry="2.8"/>
+    </g>
+    <path d="M16 6.5V9M11 9.5l1 2M21 9.5l-1 2" stroke-width="1.2"/>
+  </symbol>
+  <symbol id="ic-que" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="23" cy="9" r="3" fill="currentColor" fill-opacity=".16"/>
+    <path d="M23 3.8V5M28.2 9H27M26.7 5.3l-.9.9" stroke-width="1.2"/>
+    <path d="M4 24c3-2.4 6-2.4 9 0M4 20c3-2.4 6-2.4 9 0M16 24c3-2.4 6-2.4 9 0M16 20c3-2.4 6-2.4 9 0"/>
+  </symbol>
+  <symbol id="ic-chac" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 24c0-7 2-11 8-13"/>
+    <g fill="currentColor" fill-opacity=".18" stroke="none">
+      <ellipse cx="17.5" cy="11" rx="2.4" ry="1.4" transform="rotate(-20 17.5 11)"/>
+      <ellipse cx="14.5" cy="14" rx="2.4" ry="1.4" transform="rotate(-8 14.5 14)"/>
+      <ellipse cx="12" cy="17.5" rx="2.4" ry="1.4" transform="rotate(6 12 17.5)"/>
+      <ellipse cx="10.5" cy="21" rx="2.2" ry="1.3" transform="rotate(16 10.5 21)"/>
+    </g>
+  </symbol>
+  <symbol id="ic-gat" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 8c-6 .3-10 4.3-10.5 9.5"/>
+    <path d="M11.5 17.5 8 24" stroke-width="2.2"/>
+    <path d="M18 22v3M21 21.5v3M24 21v3" stroke-width="1.4"/>
+  </symbol>
+  <symbol id="ic-bo" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 27V17M16 17c-3-.6-5-2.6-6-6M16 17c3-.6 5-2.6 6-6M16 17V8"/>
+    <path d="M11.5 19.5h9" stroke-width="2"/>
+    <path d="M9 9.5c2-2 5-2 7 0 2-2 5-2 7 0" stroke-width="1.3"/>
+  </symbol>
+  <symbol id="ic-com" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 17h18c-.6 4.6-4.4 7.5-9 7.5S7.6 21.6 7 17z" fill="currentColor" fill-opacity=".14"/>
+    <path d="M5.5 17h21"/>
+    <path d="M10 17c.6-2 2.4-3.2 6-3.2S21.4 15 22 17" stroke-width="1.3"/>
+    <path d="M13 11c1-1 1-2.4 0-3.4M16 10.5c1-1 1-2.4 0-3.4M19 11c1-1 1-2.4 0-3.4" stroke-width="1.3"/>
+  </symbol>
+  <symbol id="ic-ve" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H6a2 2 0 0 1-2-2 2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="1 2.5"/></symbol>
+</defs></svg>
+
+<div class="topbar">🌾 Gạo hữu cơ Hội An · <b>Mỗi thửa ruộng một câu chuyện</b> · Theo dõi cả mùa vụ cùng chúng tôi</div>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <span class="enso"></span>
+      <span class="bname">HTX Lúa Di Sản<small>Hội An · Quảng Nam</small></span>
+    </a>
+    <nav class="menu">
+      <a href="index.html">Trang chủ</a>
+      <a href="ve-chung-toi.html">Về chúng tôi</a>
+      <a href="san-pham.html">Sản phẩm</a>
+      <a href="canh-dong.html" class="active">Cánh Đồng</a>
+    </nav>
+    <div class="acts">
+      <button class="dangnhap" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
+      <a href="#" class="icon gio" onclick="alert('Giỏ hàng: bước 5 — VietQR chuyển khoản.');return false;">🛒<span class="dem">0</span></a>
+      <button class="burger" onclick="alert('Menu di động — hoàn thiện sau.')">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="mau-banner">✎ Bản nháp — dòng thời gian dùng <b>ngày &amp; sự kiện mẫu</b>. Khi nối API, mốc nông học tự lấy từ Notion; lễ cúng &amp; trải nghiệm anh Quân nhập thêm.</div>
+
+<section class="cd-hero">
+  <div class="wrap">
+    <div class="eyebrow" style="color:var(--vang)">Cánh Đồng</div>
+    <h1>Đi cùng cánh đồng suốt một mùa vụ</h1>
+    <p>Xem bản đồ từng thửa ruộng, và theo dõi cả hành trình của cây lúa — từ lễ cúng xuống đồng, ngày gieo sạ, lúa trổ bông, đến ngày gặt và lễ tạ ơn cơm mới.</p>
+  </div>
+</section>
+
+<div class="chon-bar">
+  <div class="wrap">
+    <div class="chon-nhom">
+      <span class="cn-lbl">Cánh đồng</span>
+      <button class="field-tab active" onclick="chonDong(this,'Ông Đảng')">Ông Đảng · Cẩm Kim</button>
+      <button class="field-tab" onclick="chonDong(this,'Đồng Cao')">Đồng Cao · Cẩm Thanh</button>
+      <button class="field-tab" onclick="chonDong(this,'Đồng Mẫu')">Đồng Mẫu · Cẩm Thanh</button>
+    </div>
+    <select class="vu-sel"><option>Vụ Hè Thu 2026</option></select>
+  </div>
+</div>
+
+<section class="map-sec">
+  <div class="wrap">
+    <div class="map-box">
+      <div class="map-head">
+        <h2>Bản đồ canh tác — <span id="tenDong">Ông Đảng</span></h2>
+        <button class="mo-bando" onclick="location.href='ban-do.html'">Mở bản đồ tương tác ↗</button>
+      </div>
+      <div class="map-placeholder">
+        <div class="ic">🗺️</div>
+        <div>Khung bản đồ canh tác tương tác</div>
+        <small>Khi ghép thật, bản đồ SVG hiện có (zoom, xoay, chạm chọn thửa, xem nhật ký) sẽ nhúng ngay tại đây — không phải trang riêng nữa, mà là một phần của "Cánh Đồng".</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tl-sec">
+  <div class="wrap">
+    <div class="tl-head">
+      <div class="eyebrow">Dòng thời gian mùa vụ</div>
+      <h2>Một vụ lúa, từ hạt giống đến mâm cơm mới</h2>
+      <p>Chạm vào mỗi mốc để xem chi tiết. Chấm sáng cho biết mùa vụ đang ở đâu.</p>
+      <div class="phase-now" id="phaseNow"><span class="pn-dot"></span><span id="phaseTxt">…</span></div>
+    </div>
+    <div class="tl-legend">
+      <span class="lg"><span class="chip nong"><svg><use href="#ic-gieo"/></svg></span> Mốc nông học</span>
+      <span class="lg"><span class="chip le"><svg><use href="#ic-cung"/></svg></span> Lễ cúng · tâm linh</span>
+      <span class="lg"><span class="chip trai"><svg><use href="#ic-ma"/></svg></span> Trải nghiệm gắn với gói</span>
+    </div>
+    <div class="river" id="river">
+      <svg class="path" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs><linearGradient id="gRiver" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#8bc34a"/><stop offset=".55" stop-color="#c9a227"/><stop offset="1" stop-color="#b5734a"/>
+        </linearGradient></defs>
+        <path id="riverBase" fill="none" stroke="#e3d9c0" stroke-width="3" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+        <path id="riverDone" fill="none" stroke="url(#gRiver)" stroke-width="3.6" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="tl-note">Ngày và sự kiện ở trên là <b>ví dụ minh họa</b> cho vụ Hè Thu 2026. Các mốc nông học đã có trong hệ thống Notion; lễ cúng và trải nghiệm sẽ được thêm vào bảng "Hoạt động mùa vụ" để anh Quân tự cập nhật.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">HTX Lúa Di Sản Hội An</div>
+    <div class="fl">
+      <a href="index.html">Trang chủ</a>
+      <a href="ve-chung-toi.html">Về chúng tôi</a>
+      <a href="san-pham.html">Sản phẩm</a>
+      <a href="canh-dong.html">Cánh Đồng</a>
+    </div>
+  </div>
+</footer>
+
+<!-- modal chi tiết mốc -->
+<div class="modal-phu" id="mpCT">
+  <div class="modal">
+    <div class="ct-head">
+      <span class="ct-ic" id="ctIc"></span>
+      <div><div class="ct-loai" id="ctLoai"></div><h2 class="ct-ten" id="ctTen"></h2></div>
+    </div>
+    <div class="ct-ngay" id="ctNgay"></div>
+    <p class="ct-mo" id="ctMo"></p>
+    <div class="ct-goi" id="ctGoi"></div>
+    <button class="dong" onclick="dongModal('mpCT')">Đóng</button>
+  </div>
+</div>
+
+<!-- modal đăng nhập -->
+<div class="modal-phu" id="mpDN">
+  <div class="modal">
+    <h2>Đăng nhập</h2>
+    <p class="sub">Xã viên đăng nhập để nhập liệu. Khách đã mua đăng nhập bằng Mã KH để xem nhật ký thửa của mình.</p>
+    <div class="form-o"><label>Tên đăng nhập / Mã KH</label><input id="dnUser"></div>
+    <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password"></div>
+    <button class="nut-gui" onclick="alert('Bản nháp — sẽ dùng dangNhap() trong js/chung.js.')">Đăng nhập</button>
+    <button class="dong" onclick="dongModal('mpDN')">Đóng</button>
+  </div>
+</div>
+
+<script>
+function moModal(id){ document.getElementById(id).classList.add('mo'); }
+function dongModal(id){ document.getElementById(id).classList.remove('mo'); }
+document.querySelectorAll('.modal-phu').forEach(m=>{ m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('mo'); }); });
+function chonDong(btn, ten){
+  document.querySelectorAll('.field-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tenDong').textContent = ten;
+}
+
+const HOM_NAY = new Date('2026-07-25');
+const LOAI_TXT = {nong:'Mốc nông học', le:'Lễ cúng · tâm linh', trai:'Trải nghiệm'};
+const LOAI_BG  = {nong:'#e6f2d8', le:'#f5e3d8', trai:'#faf0cf'};
+const LOAI_FG  = {nong:'#4f7325', le:'#9c4e28', trai:'#8a6910'};
+const SU_KIEN = [
+  {ngay:'2026-05-15', ic:'ic-cung', loai:'le',   ten:'Lễ cúng xuống đồng', tenDay:'Lễ cúng xuống đồng (đầu mùa)',
+   mo:'Nghi lễ cầu cho mùa vụ thuận hòa, mưa gió điều hòa, trước ngày gieo sạ đầu tiên.', goi:'Đối tác kiến tạo di sản'},
+  {ngay:'2026-05-20', ic:'ic-gieo', loai:'nong', ten:'Gieo sạ', tenDay:'Ngày gieo sạ',
+   mo:'Xuống giống lúa trên các thửa ruộng của cánh đồng, mở đầu chính thức cho vụ Hè Thu.', goi:''},
+  {ngay:'2026-05-22', ic:'ic-ma',   loai:'trai', ten:'Cùng xuống giống', tenDay:'Trải nghiệm: Cùng nông dân xuống giống',
+   mo:'Khách ra đồng lội ruộng, gieo mạ cùng bà con xã viên và tìm hiểu giống lúa bản địa.', goi:'Người đồng kiến tạo · Đối tác kiến tạo di sản'},
+  {ngay:'2026-07-05', ic:'ic-dong', loai:'nong', ten:'Đón đòng', tenDay:'Đón đòng',
+   mo:'Cây lúa làm đòng — giai đoạn quyết định năng suất, cần đủ nước và dinh dưỡng.', goi:''},
+  {ngay:'2026-07-20', ic:'ic-bong', loai:'nong', ten:'Trổ bông', tenDay:'Trổ bông',
+   mo:'Lúa trổ bông, phơi màu — cả cánh đồng chuyển sắc, đẹp nhất trong mùa.', goi:''},
+  {ngay:'2026-07-24', ic:'ic-que',  loai:'trai', ten:'Thăm đồng lúa trổ', tenDay:'Trải nghiệm: Thăm đồng mùa lúa trổ',
+   mo:'Đi giữa cánh đồng lúa đang trổ bông, chụp ảnh, nghe kể về nhịp sinh trưởng của cây lúa.', goi:'Người đồng kiến tạo · Đối tác kiến tạo di sản'},
+  {ngay:'2026-08-05', ic:'ic-chac', loai:'nong', ten:'Chắc hạt', tenDay:'Chắc hạt',
+   mo:'Hạt lúa vào chắc, chuyển từ ngậm sữa sang cứng dần, chuẩn bị chín.', goi:''},
+  {ngay:'2026-09-05', ic:'ic-gat',  loai:'nong', ten:'Thu hoạch', tenDay:'Ngày thu hoạch dự kiến',
+   mo:'Gặt lúa chín trên toàn cánh đồng, khép lại một vụ canh tác.', goi:''},
+  {ngay:'2026-09-06', ic:'ic-bo',   loai:'trai', ten:'Ngày hội gặt', tenDay:'Trải nghiệm: Ngày hội gặt',
+   mo:'Cùng gặt lúa, tuốt lúa, trải nghiệm xay giã theo cách truyền thống của làng.', goi:'Tất cả các gói'},
+  {ngay:'2026-09-15', ic:'ic-com',  loai:'le',   ten:'Cúng cơm mới', tenDay:'Lễ cúng cơm mới (tạ ơn)',
+   mo:'Nấu nồi cơm từ gạo vụ mới, dâng cúng tạ ơn trời đất và tổ tiên đã cho mùa màng.', goi:'Đối tác kiến tạo di sản'},
+];
+
+const N = SU_KIEN.length;
+const river = document.getElementById('river');
+const AMP = window.matchMedia('(max-width:520px)').matches ? 24 : 30;  // biên độ uốn lượn (%)
+const CYC = 4.5;                                                        // số nhịp lượn
+const pOf = i => 0.05 + 0.90 * (i/(N-1));   // vị trí dọc 0..1 (đều theo thứ tự, dễ đọc)
+const Xf  = p => 50 + AMP * Math.sin(p * Math.PI * CYC);  // x theo % (đường lượn)
+const Yf  = p => 4 + 92 * p;                              // y theo % (chừa lề trên/dưới)
+
+function ngay(i){ return new Date(SU_KIEN[i].ngay); }
+
+// chiều cao khung theo số mốc
+river.style.height = (N * 118 + 70) + 'px';
+
+// vẽ đường uốn lượn
+(function veDuong(){
+  let d = '';
+  for(let k=0;k<=120;k++){ const p=k/120; d += (k? ' L':'M') + ' ' + Xf(p).toFixed(2) + ' ' + Yf(p).toFixed(2); }
+  document.getElementById('riverBase').setAttribute('d', d);
+  const done = document.getElementById('riverDone');
+  done.setAttribute('d', d);
+})();
+
+// vị trí "hôm nay" theo nội suy thời gian giữa 2 mốc bao quanh
+function pHomNay(){
+  if(HOM_NAY <= ngay(0)) return {p:pOf(0), truoc:-1, sau:0};
+  if(HOM_NAY >= ngay(N-1)) return {p:pOf(N-1), truoc:N-1, sau:-1};
+  for(let i=0;i<N-1;i++){
+    if(HOM_NAY >= ngay(i) && HOM_NAY < ngay(i+1)){
+      const f = (HOM_NAY - ngay(i)) / (ngay(i+1) - ngay(i));
+      return {p: pOf(i) + (pOf(i+1)-pOf(i))*f, truoc:i, sau:i+1};
+    }
+  }
+  return {p:pOf(N-1), truoc:N-1, sau:-1};
+}
+
+function veTimeline(){
+  // các mốc
+  SU_KIEN.forEach((s,i)=>{
+    const p = pOf(i);
+    const daQua = ngay(i) <= HOM_NAY;
+    const node = document.createElement('div');
+    node.className = 'river-node ' + (daQua?'past':'future');
+    node.style.left = Xf(p) + '%';
+    node.style.top  = Yf(p) + '%';
+    const [y,m,dd] = s.ngay.split('-');
+    node.innerHTML =
+      `<div class="river-dot ${daQua?'past':'future'} ${s.loai}"><svg><use href="#${s.ic}"/></svg></div>
+       <div class="river-label"><div class="t">${s.ten}</div><div class="d">${dd}/${m}</div><div class="xem">Xem chi tiết ›</div></div>`;
+    node.addEventListener('click', ()=>moCT(i));
+    river.appendChild(node);
+  });
+
+  // chấm hôm nay
+  const h = pHomNay();
+  const t = document.createElement('div');
+  t.className = 'today';
+  t.style.left = Xf(h.p) + '%';
+  t.style.top  = Yf(h.p) + '%';
+  t.innerHTML = `<div class="pill">Hôm nay</div><div class="dot"></div>`;
+  river.appendChild(t);
+
+  // tô phần đường đã đi qua tới hôm nay
+  try{
+    const path = document.getElementById('riverDone');
+    const total = path.getTotalLength();
+    const yTarget = Yf(h.p);
+    let lo=0, hi=total;
+    for(let k=0;k<26;k++){ const mid=(lo+hi)/2; (path.getPointAtLength(mid).y < yTarget) ? lo=mid : hi=mid; }
+    path.style.strokeDasharray = lo + ' ' + total;
+  }catch(e){}
+
+  // câu mô tả giai đoạn hiện tại
+  const txt = document.getElementById('phaseTxt');
+  if(h.truoc === -1)      txt.innerHTML = `Mùa vụ sắp bắt đầu — mốc đầu tiên: <b>${SU_KIEN[0].ten}</b>`;
+  else if(h.sau === -1)   txt.innerHTML = `Mùa vụ đã khép lại sau <b>${SU_KIEN[N-1].ten}</b>`;
+  else                    txt.innerHTML = `Đang ở giữa <b>${SU_KIEN[h.truoc].ten}</b> và <b>${SU_KIEN[h.sau].ten}</b>`;
+}
+
+function moCT(i){
+  const s = SU_KIEN[i];
+  const [y,m,dd] = s.ngay.split('-');
+  const ic = document.getElementById('ctIc');
+  ic.style.background = LOAI_BG[s.loai]; ic.style.color = LOAI_FG[s.loai];
+  ic.innerHTML = `<svg><use href="#${s.ic}"/></svg>`;
+  const loai = document.getElementById('ctLoai');
+  loai.textContent = LOAI_TXT[s.loai]; loai.style.color = LOAI_FG[s.loai];
+  document.getElementById('ctTen').textContent = s.tenDay;
+  document.getElementById('ctNgay').textContent = '📅 ' + dd + '/' + m + '/' + y;
+  document.getElementById('ctMo').textContent = s.mo;
+  const goi = document.getElementById('ctGoi');
+  if(s.goi){ goi.style.display='flex'; goi.innerHTML = `<svg><use href="#ic-ve"/></svg> Gói tham gia: <b>${s.goi}</b>`; }
+  else goi.style.display='none';
+  moModal('mpCT');
+}
+
+veTimeline();
+</script>
+</body>
+</html>

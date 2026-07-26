@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTX Lúa Di Sản — Bản đồ canh tác</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/chung.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">HTX LÚA DI SẢN<small>Bản đồ canh tác minh bạch</small></div>
+  <div class="spacer"></div>
+  <div id="userBox"><button onclick="moModal(&#39;mpDN&#39;)">Đăng nhập</button></div>
+</header>
+
+<div class="chon">
+  <label>Mùa vụ</label>
+  <select id="selVu"><option value="HT26">Hè Thu 2026</option></select>
+  <label>Cánh đồng</label>
+  <select id="selDong">
+    <option value="CKOD">Ông Đảng — Cẩm Kim</option>
+    <option value="CTDM">Đồng Mẫu — Cẩm Thanh</option>
+    <option value="CTDC">Đồng Cao — Cẩm Thanh</option>
+  </select>
+</div>
+
+<div id="trangthai">Đang kết nối dữ liệu…</div>
+
+<!-- Thanh tiến độ mùa vụ + thông số chung (tự hiện khi có dữ liệu Notion) -->
+<div class="vu-panel" id="vuPanel" style="display:none">
+  <h3 id="vuTen">Tiến độ mùa vụ</h3>
+  <div class="vu-giaidoan" id="vuGiaiDoan"></div>
+  <div class="tienDoKhung" id="tienDoKhung">
+    <div class="tienDoFill" id="tienDoFill" style="width:0%"></div>
+  </div>
+  <div class="vu-thongso">
+    <div class="ts-o"><div class="ts-so" id="tsDienTich">—</div><div class="ts-ten">Diện tích hữu cơ</div></div>
+    <div class="ts-o"><div class="ts-so" id="tsSoHo">—</div><div class="ts-ten">Hộ canh tác hữu cơ</div></div>
+    <div class="ts-o"><div class="ts-so" id="tsSanLuong">—</div><div class="ts-ten">Tổng sản lượng</div></div>
+  </div>
+</div>
+
+<div class="khung-bando">
+  <div class="zoombtns">
+    <button onclick="zoom(1.25)">+</button>
+    <button onclick="zoom(0.8)">−</button>
+    <button onclick="xoay(-15)" aria-label="Xoay trái" style="font-size:15px">⟲</button>
+    <button onclick="xoay(15)" aria-label="Xoay phải" style="font-size:15px">⟳</button>
+    <button id="btnChonNhieu" onclick="toggleChonNhieu()" aria-label="Chọn nhiều thửa" style="font-size:15px" title="Chọn nhiều thửa">☑️</button>
+  </div>
+  <div id="thanhChonNhieu" style="display:none">
+    <span id="cnSoLuong">Đã chọn 0 thửa</span>
+    <button onclick="nhapNhieuThua()">✏️ Nhập liệu cho các thửa đã chọn</button>
+    <button onclick="huyChonNhieu()" class="cn-huy">Hủy</button>
+  </div>
+  <div id="svgwrap"></div>
+</div>
+
+<div class="chuthich">
+  <span><i class="i-hc"></i> Canh tác hữu cơ</span>
+  <span><i class="i-khc"></i> Không hữu cơ</span>
+  <span><i class="i-cr"></i> Chưa có dữ liệu</span>
+</div>
+
+<!-- Modal chi tiết thửa -->
+<div class="modal-phu" id="mpThua">
+  <div class="modal">
+    <h2 id="tThua"></h2>
+    <div class="ma-sp" id="tMa"></div>
+    <div id="tBadge"></div>
+    <div class="hai-nut">
+      <button class="nut-xem" onclick="moNhatKy()">📖 Xem nhật ký</button>
+      <button class="nut-nhap" onclick="moNhapLieu()">✏️ Nhập liệu mới</button>
+    </div>
+    <button class="dong" onclick="dongModal(&#39;mpThua&#39;)">Đóng</button>
+  </div>
+</div>
+
+<!-- Modal nhật ký -->
+<div class="modal-phu" id="mpNK">
+  <div class="modal">
+    <h2>Nhật ký canh tác</h2>
+    <div class="ma-sp" id="nkMa"></div>
+    <div id="nkDS"><div class="trong">Đang tải…</div></div>
+    <button class="dong" onclick="dongModal(&#39;mpNK&#39;)">Đóng</button>
+  </div>
+</div>
+
+<!-- Modal nhập liệu -->
+<div class="modal-phu" id="mpNhap">
+  <div class="modal">
+    <h2>Nhập liệu thăm đồng</h2>
+    <div class="ma-sp" id="nlMa"></div>
+    <div class="form-o"><label>Tiêu đề *</label><input id="nlTieuDe" placeholder="VD: Thăm đồng kiểm tra sâu bệnh"></div>
+    <div class="form-o"><label>Ngày</label><input id="nlNgay" type="date"></div>
+    <div class="form-o"><label>Trạng thái</label>
+      <select id="nlTrangThai">
+        <option value="Hoàn thành">Hoàn thành</option>
+        <option value="Kế hoạch">Kế hoạch</option>
+        <option value="Đang làm">Đang làm</option>
+        <option value="Chuẩn bị">Chuẩn bị</option>
+        <option value="Kiểm tra">Kiểm tra</option>
+      </select></div>
+    <div class="form-o"><label>Nội dung</label><textarea id="nlNoiDung" placeholder="Ghi chú tình hình lúa, nước, sâu bệnh…"></textarea></div>
+    <div class="form-o"><label>Hình ảnh</label><input id="nlAnh" type="file" accept="image/*" multiple="">
+      <div class="anh-xem" id="nlXemAnh"></div></div>
+    <div class="form-o"><label>Video (tối đa 20MB/video — nên quay 15–30 giây)</label>
+      <input id="nlVideo" type="file" accept="video/*" multiple="">
+      <div id="nlXemVideo"></div></div>
+    <button class="nut-gui" id="nlGui" onclick="guiNhapLieu()">Lưu vào Notion</button>
+    <div class="bao-loi" id="nlLoi"></div>
+    <button class="dong" onclick="dongModal(&#39;mpNhap&#39;)">Đóng</button>
+  </div>
+</div>
+
+<!-- Modal đăng nhập -->
+<div class="modal-phu" id="mpDN">
+  <div class="modal">
+    <h2>Đăng nhập xã viên</h2>
+    <p style="font-size:13px;color:#6b7263;margin:4px 0 14px">Chỉ xã viên có tài khoản mới được nhập liệu. Khách vẫn xem bản đồ và nhật ký bình thường.</p>
+    <div class="form-o"><label>Tên đăng nhập</label><input id="dnUser" autocomplete="username"></div>
+    <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password" autocomplete="current-password"></div>
+    <button class="nut-gui" id="dnGui" onclick="dangNhap()">Đăng nhập</button>
+    <div class="bao-loi" id="dnLoi"></div>
+    <button class="dong" onclick="dongModal(&#39;mpDN&#39;)">Đóng</button>
+  </div>
+</div>
+
+<script src="js/chung.js"></script>
+<script src="js/ban-do.js"></script>
+</body>
+</html>

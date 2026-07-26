@@ -1,926 +1,398 @@
 <!DOCTYPE html>
-<!-- saved from url=(0045)file:///C:/Users/Admin/Downloads/index_4.html -->
-<html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HTX Lúa Di Sản — Bản đồ canh tác</title>
+<title>HTX Lúa Di Sản Hội An — Gạo hữu cơ, truy xuất từng thửa ruộng</title>
 <link rel="preconnect" href="https://fonts.googleapis.com/">
-<link href="./Giao diện_files/css2" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <style>
+/* ============================================================
+   BẢN NHÁP TRANG CHỦ — bố cục học theo lotusfoods.com,
+   màu & font & chữ chỉnh riêng cho HTX Lúa Di Sản Hội An.
+   Ảnh/chữ đều là nội dung MẪU — anh thay bằng nội dung thật.
+   Khi chốt, phần CSS này sẽ dời vào css/chung.css.
+   ============================================================ */
 :root{
-  --nen:#f5f2e8; --muc:#26321f; --xanh-dam:#1e4d2b; --xanh-la:#8bc34a;
-  --xanh-vien:#33691e; --dat:#e3d9c4; --dat-vien:#8d6e63; --vang:#c9a227;
-  --trang:#ffffff; --xam:#90a4ae; --do:#c0392b;
+  --nen:#f5f2e8;        /* nền giấy dó */
+  --nen-2:#efe9d8;      /* nền phụ nhạt hơn */
+  --muc:#2b3524;        /* mực — chữ chính */
+  --xanh-dam:#1e4d2b;   /* xanh lá đậm — header/footer (đồng bộ bản đồ) */
+  --xanh-la:#6f9e4b;    /* xanh lá tươi */
+  --xanh-rong:#8bc34a;
+  --dat:#e3d9c4;        /* đất */
+  --dat-som:#b5734a;    /* terracotta — nhấn */
+  --vang:#c9a227;       /* vàng lúa — nhấn phụ */
+  --trang:#fffdf8;
+  --xam:#8a9180;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--nen);color:var(--muc);min-height:100vh}
+html{scroll-behavior:smooth}
+body{font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--nen);color:var(--muc);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-height:1.15;color:var(--xanh-dam)}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--dat-som)}
 
-header{background:var(--xanh-dam);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-header .logo{font-weight:700;font-size:17px;letter-spacing:.3px}
-header .logo small{display:block;font-weight:400;font-size:11px;opacity:.75;letter-spacing:1.5px;text-transform:uppercase}
-header .spacer{flex:1}
-#userBox{font-size:13px;display:flex;align-items:center;gap:8px}
-#userBox button{background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:6px;padding:5px 12px;font-size:12.5px;cursor:pointer;font-family:inherit}
+/* ---- thanh thông báo trên cùng ---- */
+.ttopbar{background:var(--xanh-dam);color:#f3ede0;font-size:12.5px;text-align:center;padding:7px 16px;letter-spacing:.4px}
+.topbar b{color:var(--vang)}
 
-.chon{display:flex;gap:10px;padding:12px 16px;flex-wrap:wrap;align-items:center}
-.chon label{font-size:12px;font-weight:600;color:var(--xanh-dam);text-transform:uppercase;letter-spacing:.5px}
-.chon select{font-family:inherit;font-size:14px;padding:8px 10px;border:1.5px solid #cfc8b4;border-radius:8px;background:#fff;color:var(--muc)}
+/* ---- header / nav ---- */
+header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1px solid #e4dcc8}
+.nav{display:flex;align-items:center;gap:20px;height:72px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .enso{width:42px;height:42px;border-radius:50%;border:3px solid var(--xanh-dam);border-right-color:transparent;transform:rotate(-25deg);flex:none}
+.brand .bname{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--xanh-dam);line-height:1.05}
+.brand .bname small{display:block;font-family:'Be Vietnam Pro',sans-serif;font-weight:400;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--xam)}
+.nav .menu{display:flex;gap:28px;margin-left:26px;flex:1}
+.nav .menu a{font-size:14.5px;font-weight:500;padding:6px 0;position:relative;color:var(--muc)}
+.nav .menu a::after{content:"";position:absolute;left:0;right:100%;bottom:-2px;height:2px;background:var(--dat-som);transition:right .25s}
+.nav .menu a:hover{color:var(--xanh-dam)}
+.nav .menu a:hover::after,.nav .menu a.active::after{right:0}
+.nav .menu a.active{color:var(--xanh-dam);font-weight:600}
+.nav .acts{display:flex;align-items:center;gap:14px}
+.nav .acts button,.nav .acts a.icon{background:none;border:none;cursor:pointer;font-family:inherit;font-size:14px;color:var(--muc);display:flex;align-items:center;gap:6px}
+.nav .acts .dangnhap{border:1.5px solid var(--xanh-dam);color:var(--xanh-dam);border-radius:22px;padding:8px 16px;font-weight:600}
+.nav .acts .dangnhap:hover{background:var(--xanh-dam);color:#fff}
+.gio{position:relative}
+.gio .dem{position:absolute;top:-8px;right:-10px;background:var(--dat-som);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.burger{display:none;background:none;border:none;font-size:24px;color:var(--xanh-dam);cursor:pointer}
 
-#trangthai{margin:0 16px 8px;font-size:12.5px;color:#6b7263;min-height:18px}
-#trangthai.loi{color:var(--do)}
+/* ---- hero ---- */
+.hero{position:relative;background:
+   linear-gradient(120deg,rgba(30,77,43,.86),rgba(30,77,43,.35)),
+   repeating-linear-gradient(115deg,#3c6b3a 0 3px,#437043 3px 26px);
+   color:#fff;overflow:hidden}
+.hero .wrap{padding:88px 22px 96px;position:relative;z-index:2}
+.hero h1{color:#fff;font-size:clamp(34px,5.4vw,60px);max-width:16ch}
+.hero h1 em{font-style:italic;color:var(--vang)}
+.hero p{max-width:52ch;margin:22px 0 30px;font-size:17px;color:#eef3e6}
+.hero .cta{display:inline-flex;align-items:center;gap:10px;background:var(--vang);color:#2b2410;font-weight:700;padding:15px 28px;border-radius:30px;font-size:15px;transition:transform .15s,background .2s}
+.hero .cta:hover{transform:translateY(-2px);background:#dcb42f}
+.hero .cta.phu{background:transparent;color:#fff;border:1.6px solid rgba(255,255,255,.6);margin-left:12px}
+.hero .cta.phu:hover{background:rgba(255,255,255,.12)}
+.hero-note{position:absolute;right:-40px;bottom:-40px;font-family:'Playfair Display',serif;font-style:italic;font-size:230px;color:rgba(255,255,255,.05);z-index:1;user-select:none}
 
-.khung-bando{position:relative;margin:0 10px 14px;background:#fbf9f1;border:1.5px solid #ddd3ba;border-radius:12px;overflow:auto;max-height:78vh}
-#svgwrap{transform-origin:0 0}
-svg{display:block;width:100%;height:auto;max-height:72vh}
-.thua{cursor:pointer;transition:filter .12s}
-.thua:hover{filter:brightness(1.08)}
-.thua.chon-active{stroke:var(--vang) !important}
-.thua.dachon-nhieu{fill:#ffd54f !important;stroke:#f57f17 !important}
-#thanhChonNhieu{position:absolute;left:10px;right:10px;bottom:10px;z-index:6;background:rgba(30,77,43,.96);color:#fff;border-radius:11px;padding:10px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 2px 10px rgba(0,0,0,.25)}
-#thanhChonNhieu #cnSoLuong{font-size:13px;font-weight:600;flex:1;min-width:120px}
-#thanhChonNhieu button{border:none;border-radius:8px;padding:9px 13px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;background:#8bc34a;color:#1b2a14}
-#thanhChonNhieu button.cn-huy{background:transparent;border:1.5px solid rgba(255,255,255,.5);color:#fff}
-#btnChonNhieu.dang-bat{background:#8bc34a;border-color:#33691e}
-.thua.huu-co{fill:#9ccc65;stroke:var(--xanh-vien)}
-.thua.khong-huu-co{fill:#e6dcc6;stroke:#a1887f}
-.thua.chua-ro{fill:#eceff1;stroke:#b0bec5;stroke-dasharray:22 14}
-.kenh{fill:#cfe9f5;stroke:#8fc3da;stroke-width:6;pointer-events:none}
-.duong{fill:#efede7;stroke:#c2beb2;pointer-events:none}
-.ten-nd{font-weight:600;fill:#1b2a14;pointer-events:none}
-.dt-nd{fill:#3c4a33;pointer-events:none}
-.vung{fill:#a8b0a0;font-weight:600;letter-spacing:6px;pointer-events:none;opacity:.8}
+/* ---- dải mẫu nhắc nhở ---- */
+.mau-banner{background:#fff3d6;border-bottom:1px solid #e6cf94;color:#8a5a00;font-size:12.5px;text-align:center;padding:8px 16px}
 
-.zoombtns{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px;z-index:5}
-.zoombtns button{width:38px;height:38px;border-radius:9px;border:1.5px solid #cfc8b4;background:#fff;font-size:19px;cursor:pointer;color:var(--xanh-dam);font-weight:700}
+/* ---- câu chuyện ---- */
+.chuyen{padding:76px 0}
+.chuyen .grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center}
+.chuyen .anh{aspect-ratio:5/4;border-radius:16px;background:
+   linear-gradient(135deg,var(--dat) 0%,#cdbf9d 100%);
+   display:flex;align-items:center;justify-content:center;color:#9a8a63;font-size:14px;text-align:center;padding:20px;border:1px solid #d8cdb0}
+.chuyen h2{font-size:clamp(28px,3.6vw,40px);margin:10px 0 16px}
+.chuyen p{margin-bottom:16px;font-size:15.5px}
+.chuyen .doc-them{display:inline-flex;align-items:center;gap:8px;margin-top:6px;font-weight:600;color:var(--dat-som);border-bottom:2px solid var(--dat-som);padding-bottom:2px}
 
-.chuthich{display:flex;gap:16px;padding:0 16px 18px;font-size:12.5px;flex-wrap:wrap}
-.chuthich span{display:inline-flex;align-items:center;gap:6px}
-.chuthich i{width:16px;height:16px;border-radius:4px;display:inline-block;border:1.5px solid}
-.i-hc{background:#9ccc65;border-color:var(--xanh-vien)}
-.i-khc{background:#e6dcc6;border-color:#a1887f}
-.i-cr{background:#eceff1;border-color:#b0bec5}
+/* ---- sản phẩm nổi bật ---- */
+.sanpham{padding:70px 0;background:var(--nen-2)}
+.sec-head{text-align:center;margin-bottom:44px}
+.sec-head h2{font-size:clamp(28px,3.6vw,40px);margin-top:8px}
+.sp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.sp-card{background:var(--trang);border:1px solid #e6ddc8;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
+.sp-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(60,50,20,.12)}
+.sp-card .hinh{aspect-ratio:1;background:linear-gradient(150deg,#e8dfc7,#d7c9a6);display:flex;align-items:center;justify-content:center;color:#9a8a63;font-size:13px}
+.sp-card .than{padding:20px 20px 22px;display:flex;flex-direction:column;flex:1}
+.sp-card .goi-ten{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--xanh-dam);margin-bottom:6px}
+.sp-card .goi-mo{font-size:13.5px;color:#5a6350;flex:1;margin-bottom:16px}
+.sp-card .goi-gia{font-weight:700;color:var(--dat-som);font-size:17px;margin-bottom:14px}
+.sp-card .goi-gia small{font-weight:400;color:var(--xam);font-size:12px}
+.sp-card .them-gio{background:var(--xanh-dam);color:#fff;border:none;font-family:inherit;font-weight:600;font-size:14px;padding:12px;border-radius:10px;cursor:pointer;transition:background .2s}
+.sp-card .them-gio:hover{background:#163a20}
 
-/* ---------- thanh tiến độ mùa vụ + thông số ---------- */
-.vu-panel{margin:0 16px 14px;background:#fff;border:1.5px solid #ddd3ba;border-radius:12px;padding:14px 16px 8px}
-.vu-panel h3{font-size:14px;color:var(--xanh-dam);margin-bottom:2px}
-.vu-giaidoan{font-size:12.5px;color:#5d6b52;margin-bottom:12px}
-.vu-giaidoan b{color:var(--xanh-dam)}
-.tienDoKhung{position:relative;height:10px;background:#e8e2d0;border-radius:6px;margin:6px 52px 46px}
-.tienDoFill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#8bc34a,#33691e);border-radius:6px;transition:width .6s}
-.moc{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid #b0bec5;transform:translate(-50%,-50%);z-index:2}
-.moc.qua{border-color:#33691e;background:#8bc34a}
-.moc-nhan{position:absolute;top:16px;transform:translateX(-50%);font-size:10.5px;color:#78826b;white-space:nowrap;text-align:center;line-height:1.25}
-.moc-nhan.qua{color:#33691e;font-weight:600}
-.moc-nhan small{display:block;font-size:9.5px;opacity:.75}
-.vu-thongso{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 8px}
-.ts-o{background:#f7f4ea;border-radius:9px;padding:9px 6px;text-align:center}
-.ts-o .ts-so{font-size:16px;font-weight:700;color:var(--xanh-dam)}
-.ts-o .ts-ten{font-size:10.5px;color:#78826b;margin-top:2px}
-@media(max-width:420px){.ts-o .ts-so{font-size:14px}}
+/* ---- cộng đồng canh tác ---- */
+.congdong{padding:76px 0}
+.cd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:8px}
+.cd-card{border-radius:16px;overflow:hidden;position:relative;min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;padding:22px;border:1px solid #d8cdb0}
+.cd-card.f1{background:linear-gradient(180deg,rgba(30,77,43,.15),rgba(30,77,43,.82)),linear-gradient(135deg,#7fae57,#3c6b3a)}
+.cd-card.f2{background:linear-gradient(180deg,rgba(30,77,43,.15),rgba(30,77,43,.82)),linear-gradient(135deg,#c9a227,#8a6d1c)}
+.cd-card.f3{background:linear-gradient(180deg,rgba(30,77,43,.15),rgba(30,77,43,.82)),linear-gradient(135deg,#b5734a,#7d4a2b)}
+.cd-card h3{color:#fff;font-size:23px;margin-bottom:4px}
+.cd-card .cd-vt{font-size:12.5px;letter-spacing:1px;text-transform:uppercase;opacity:.85;margin-bottom:8px}
+.cd-card .cd-mo{font-size:13.5px;opacity:.95;margin-bottom:14px}
+.cd-card .cd-link{align-self:flex-start;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.5);color:#fff;font-size:13px;font-weight:600;padding:8px 15px;border-radius:20px;backdrop-filter:blur(2px)}
+.cd-card .cd-link:hover{background:rgba(255,255,255,.28)}
 
-/* ---------- modal ---------- */
-.modal-phu{position:fixed;inset:0;background:rgba(20,28,15,.55);display:none;align-items:flex-end;justify-content:center;z-index:50}
+/* ---- tác động (số liệu thật từ Notion) ---- */
+.tacdong{padding:74px 0;background:var(--xanh-dam);color:#eef3e6}
+.tacdong .sec-head h2{color:#fff}
+.tacdong .eyebrow{color:var(--vang)}
+.td-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:10px}
+.td-o{text-align:center;padding:14px}
+.td-o .so{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,48px);font-weight:700;color:var(--vang);line-height:1}
+.td-o .nhan{font-size:13px;margin-top:10px;opacity:.9;line-height:1.4}
+.td-note{text-align:center;margin-top:26px;font-size:12.5px;opacity:.7}
+
+/* ---- CTA cuối ---- */
+.dangky{padding:70px 0;text-align:center}
+.dangky h2{font-size:clamp(26px,3.4vw,36px);margin-bottom:12px}
+.dangky p{max-width:46ch;margin:0 auto 26px;color:#5a6350}
+.dangky .form{display:flex;gap:10px;max-width:440px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+.dangky input{flex:1;min-width:220px;font-family:inherit;font-size:15px;padding:14px 16px;border:1.5px solid #cfc8b4;border-radius:28px;background:#fff}
+.dangky .form button{background:var(--dat-som);color:#fff;border:none;font-family:inherit;font-weight:700;font-size:15px;padding:14px 28px;border-radius:28px;cursor:pointer}
+.dangky .form button:hover{background:#9c5f3c}
+
+/* ---- footer ---- */
+footer{background:#182e1a;color:#c9d3c0;font-size:14px;padding:56px 0 26px}
+.ft-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px;margin-bottom:36px}
+.ft-brand .bname{font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin-bottom:10px}
+.ft-brand p{font-size:13.5px;opacity:.8;max-width:32ch}
+footer h4{color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
+footer ul{list-style:none}
+footer ul li{margin-bottom:9px}
+footer ul a{font-size:13.5px;opacity:.85}
+footer ul a:hover{opacity:1;color:var(--vang)}
+.ft-duoi{border-top:1px solid #2c4430;padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12.5px;opacity:.7}
+
+/* ---- modal đăng nhập (rút gọn cho bản nháp) ---- */
+.modal-phu{position:fixed;inset:0;background:rgba(20,28,15,.55);display:none;align-items:center;justify-content:center;z-index:80;padding:16px}
 .modal-phu.mo{display:flex}
-.modal{background:#fff;width:100%;max-width:560px;border-radius:18px 18px 0 0;max-height:88vh;overflow-y:auto;padding:20px 20px 28px}
-@media(min-width:640px){.modal-phu{align-items:center}.modal{border-radius:18px}}
-.modal h2{font-size:18px;color:var(--xanh-dam)}
-.modal .ma-sp{font-size:12.5px;color:#6b7263;margin:2px 0 4px;font-family:ui-monospace,monospace}
-.badge{display:inline-block;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:14px}
-.badge.hc{background:#e6f2d8;color:#33691e}
-.badge.khc{background:#efe7d8;color:#795548}
-.badge.cr{background:#eceff1;color:#607d8b}
-.hai-nut{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
-.hai-nut button{padding:14px 10px;border-radius:11px;border:none;font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer}
-.nut-xem{background:#eef2e6;color:var(--xanh-dam)}
-.nut-nhap{background:var(--xanh-dam);color:#fff}
-.dong{display:block;margin:16px auto 0;background:none;border:none;color:#8a9180;font-size:13px;cursor:pointer;font-family:inherit}
-
+.modal{background:#fff;width:100%;max-width:420px;border-radius:18px;padding:26px 24px 30px}
+.modal h2{font-size:22px;margin-bottom:6px}
+.modal p.sub{font-size:13px;color:#6b7263;margin-bottom:16px}
 .form-o{margin-bottom:13px}
 .form-o label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:#41503a}
-.form-o input,.form-o textarea,.form-o select{width:100%;font-family:inherit;font-size:14px;padding:10px;border:1.5px solid #cfc8b4;border-radius:9px;background:#fdfcf8}
-.form-o textarea{min-height:90px;resize:vertical}
+.form-o input{width:100%;font-family:inherit;font-size:14px;padding:11px;border:1.5px solid #cfc8b4;border-radius:9px;background:#fdfcf8}
 .nut-gui{width:100%;padding:14px;border:none;border-radius:11px;background:var(--xanh-dam);color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px}
-.nut-gui:disabled{opacity:.55}
-.bao-loi{color:var(--do);font-size:13px;margin-top:8px;min-height:16px}
-.anh-xem{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.anh-xem img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1.5px solid #ddd}
-.anh-xem .anh-o{position:relative;display:inline-block}
-.anh-x{position:absolute;top:-7px;right:-7px;width:22px;height:22px;border-radius:50%;border:2px solid #fff;background:#c0392b;color:#fff;font-size:13px;font-weight:700;line-height:1;cursor:pointer;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.35)}
-.vid-chip{display:inline-flex;align-items:center;gap:8px;background:#eef2e6;border:1.5px solid #cfc8b4;border-radius:9px;padding:7px 11px;font-size:12.5px;margin:8px 8px 0 0;max-width:100%}
-.vid-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.vid-chip button{border:none;background:#c0392b;color:#fff;border-radius:50%;width:20px;height:20px;font-size:12px;font-weight:700;cursor:pointer;line-height:1;flex:none;padding:0}
+.dong{display:block;margin:14px auto 0;background:none;border:none;color:#8a9180;font-size:13px;cursor:pointer;font-family:inherit}
 
-.nkmuc{border-bottom:1px solid #ece5d2;padding:12px 2px}
-.nkmuc .nk-ngay{font-size:11.5px;color:#8a9180;font-family:ui-monospace,monospace}
-.nkmuc .nk-tieude{font-weight:600;font-size:14.5px;margin:2px 0}
-.nkmuc .nk-tt{display:inline-block;font-size:11px;padding:2px 9px;border-radius:12px;background:#e6f2d8;color:#33691e}
-.nkmuc a{font-size:12px;color:var(--xanh-dam)}
-.nkmuc .nk-mota{font-size:13px;color:#41503a;margin:6px 0;padding:8px 10px;background:#f7f4ea;border-radius:8px;line-height:1.5;white-space:pre-wrap}
-.nkmuc .nk-xemthem{display:inline-block;margin:2px 8px 2px 0;background:none;border:none;color:var(--xanh-dam);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;padding:0}
-.nkmuc .nk-dinhkem-box{margin:8px 0 4px;padding:8px 12px;background:#fff3d6;border:1.5px solid #e0b84a;border-radius:9px}
-.nkmuc .nk-dinhkem-tit{font-size:12.5px;font-weight:600;color:#8a5a00;margin-bottom:6px}
-.nkmuc .nk-dinhkem-ds{display:flex;gap:7px;flex-wrap:wrap}
-.nkmuc a.nk-media{display:inline-block;padding:5px 11px;background:#fff;border:1.5px solid #e0b84a;border-radius:7px;color:#8a5a00;font-size:12px;font-weight:600;text-decoration:none}
-.nkmuc a.nk-media:hover{background:#ffe9b0}
-.nk-khoa{background:#f0ede4;border:1.5px dashed #c9c2b0;border-radius:9px;padding:10px 12px;font-size:12.5px;color:#6d675c;margin-bottom:10px;line-height:1.5}
-.nk-khoa button{border:none;background:var(--xanh-dam);color:#fff;border-radius:7px;padding:5px 12px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;margin-left:4px}
-.trong{color:#8a9180;font-size:13.5px;text-align:center;padding:22px 0}
+/* ---- responsive ---- */
+@media(max-width:900px){
+  .chuyen .grid,.sp-grid,.cd-grid{grid-template-columns:1fr}
+  .td-grid{grid-template-columns:repeat(2,1fr)}
+  .ft-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:680px){
+  .nav .menu,.nav .acts .dangnhap span{display:none}
+  .burger{display:block}
+  .nav{gap:12px}
+  .ft-grid{grid-template-columns:1fr}
+  .hero .wrap{padding:64px 22px 70px}
+  .hero .cta.phu{margin-left:0;margin-top:12px}
+}
 </style>
 </head>
 <body>
 
+<div class="topbar">🌾 Gạo hữu cơ Hội An · <b>Truy xuất nguồn gốc tới từng thửa ruộng</b> · Giao tận nơi khu vực Quảng Nam – Đà Nẵng</div>
+
 <header>
-  <div class="logo">HTX LÚA DI SẢN<small>Bản đồ canh tác minh bạch</small></div>
-  <div class="spacer"></div>
-  <div id="userBox"><button onclick="moModal(&#39;mpDN&#39;)">Đăng nhập</button></div>
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <span class="enso"></span>
+      <span class="bname">HTX Lúa Di Sản<small>Hội An · Quảng Nam</small></span>
+    </a>
+    <nav class="menu">
+      <a href="index.html" class="active">Trang chủ</a>
+      <a href="ve-chung-toi.html">Về chúng tôi</a>
+      <a href="san-pham.html">Sản phẩm</a>
+      <a href="canh-dong.html">Cánh Đồng</a>
+    </nav>
+    <div class="acts">
+      <button class="dangnhap" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
+      <a href="#" class="icon gio" onclick="alert('Giỏ hàng: bước 5 — chọn gói → điền tên/SĐT → nhận QR VietQR. Chưa bật ở bản nháp này.');return false;">🛒<span class="dem" id="gioDem">0</span></a>
+      <button class="burger" onclick="alert('Menu di động — sẽ mở danh sách tab khi hoàn thiện.')">☰</button>
+    </div>
+  </div>
 </header>
 
-<div class="chon">
-  <label>Mùa vụ</label>
-  <select id="selVu"><option value="HT26">Hè Thu 2026</option></select>
-  <label>Cánh đồng</label>
-  <select id="selDong">
-    <option value="CKOD">Ông Đảng — Cẩm Kim</option>
-    <option value="CTDM">Đồng Mẫu — Cẩm Thanh</option>
-    <option value="CTDC">Đồng Cao — Cẩm Thanh</option>
-  </select>
-</div>
+<div class="mau-banner">✎ Đây là <b>bản nháp giao diện</b> — mọi chữ và hình đều là nội dung mẫu để anh Quân thay bằng nội dung thật của HTX.</div>
 
-<div id="trangthai">Đang kết nối dữ liệu…</div>
-
-<!-- Thanh tiến độ mùa vụ + thông số chung (tự hiện khi có dữ liệu Notion) -->
-<div class="vu-panel" id="vuPanel" style="display:none">
-  <h3 id="vuTen">Tiến độ mùa vụ</h3>
-  <div class="vu-giaidoan" id="vuGiaiDoan"></div>
-  <div class="tienDoKhung" id="tienDoKhung">
-    <div class="tienDoFill" id="tienDoFill" style="width:0%"></div>
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow" style="color:var(--vang)">Hợp tác xã lúa hữu cơ · Từ 3 cánh đồng di sản</div>
+    <h1>Hạt gạo mang <em>câu chuyện</em> của đất và người Hội An</h1>
+    <p>Từ những thửa ruộng ven sông Thu Bồn ở Cẩm Kim và Cẩm Thanh, chúng tôi canh tác lúa theo hướng hữu cơ, minh bạch từng khâu — anh có thể xem nhật ký của chính thửa ruộng làm ra hạt gạo mình ăn.</p>
+    <a href="san-pham.html" class="cta">Xem sản phẩm →</a>
+    <a href="canh-dong.html" class="cta phu">Khám phá Cánh Đồng</a>
   </div>
-  <div class="vu-thongso">
-    <div class="ts-o"><div class="ts-so" id="tsDienTich">—</div><div class="ts-ten">Diện tích hữu cơ</div></div>
-    <div class="ts-o"><div class="ts-so" id="tsSoHo">—</div><div class="ts-ten">Hộ canh tác hữu cơ</div></div>
-    <div class="ts-o"><div class="ts-so" id="tsSanLuong">—</div><div class="ts-ten">Tổng sản lượng</div></div>
-  </div>
-</div>
+  <div class="hero-note">禾</div>
+</section>
 
-<div class="khung-bando">
-  <div class="zoombtns">
-    <button onclick="zoom(1.25)">+</button>
-    <button onclick="zoom(0.8)">−</button>
-    <button onclick="xoay(-15)" aria-label="Xoay trái" style="font-size:15px">⟲</button>
-    <button onclick="xoay(15)" aria-label="Xoay phải" style="font-size:15px">⟳</button>
-    <button id="btnChonNhieu" onclick="toggleChonNhieu()" aria-label="Chọn nhiều thửa" style="font-size:15px" title="Chọn nhiều thửa">☑️</button>
-  </div>
-  <div id="thanhChonNhieu" style="display:none">
-    <span id="cnSoLuong">Đã chọn 0 thửa</span>
-    <button onclick="nhapNhieuThua()">✏️ Nhập liệu cho các thửa đã chọn</button>
-    <button onclick="huyChonNhieu()" class="cn-huy">Hủy</button>
-  </div>
-  <div id="svgwrap"><svg viewBox="0 0 5760.5 3710.9" xmlns="http://www.w3.org/2000/svg"><polygon id="thua0" class="thua chua-ro" points="249.7,2721.6 589.8,2770.5 451.6,3293.1 120,3250.6" stroke-width="7" onclick="chonThua(0)"></polygon><polygon id="thua1" class="thua chua-ro" points="589.8,2770.5 451.6,3293.1 887.6,3348.9 1003.7,2829.9" stroke-width="7" onclick="chonThua(1)"></polygon><polygon id="thua2" class="thua chua-ro" points="887.6,3348.9 1293.2,3400.9 1396.3,2762.7 1031.2,2708.7" stroke-width="7" onclick="chonThua(2)"></polygon><polygon id="thua3" class="thua chua-ro" points="1396.3,2762.7 1847.3,2829.4 1742.3,3255.6 1486,3425.6 1293.2,3400.9" stroke-width="7" onclick="chonThua(3)"></polygon><polygon id="thua4" class="thua chua-ro" points="1742.3,3255.6 1967.4,2371.2 2221.8,2405.3 2039.6,3324.8" stroke-width="7" onclick="chonThua(4)"></polygon><polygon id="thua5" class="thua chua-ro" points="2039.6,3324.8 2456.3,3421.9 2630.1,2460 2221.8,2405.3" stroke-width="7" onclick="chonThua(5)"></polygon><polygon id="thua6" class="thua chua-ro" points="2773,3304.7 3060.5,3322 3194.3,2535.7 2905.4,2497" stroke-width="7" onclick="chonThua(6)"></polygon><polygon id="thua7" class="thua chua-ro" points="3218.2,2395.3 3023.4,3548.4 3503.4,3590.9 3658.7,2443.9" stroke-width="7" onclick="chonThua(7)"></polygon><polygon id="thua8" class="thua chua-ro" points="2630.1,2460 2905.4,2497 2773,3304.7 2477.5,3304.7" stroke-width="7" onclick="chonThua(8)"></polygon><polygon id="thua9" class="thua chua-ro" points="5044.1,3348.8 4464.8,3297.6 4514.5,2603.8 5101.6,2754.3" stroke-width="7" onclick="chonThua(9)"></polygon><polygon id="thua10" class="thua chua-ro" points="4464.8,3297.6 4464.8,3393.8 4247.4,3393.8 4199.2,3552.1 3947.6,3491.6 4023.8,2477.9 4514.5,2603.8" stroke-width="7" onclick="chonThua(10)"></polygon><polygon id="thua11" class="thua chua-ro" points="5533.4,3387.6 5640.5,2884.7 5101.6,2754.3 5044.1,3348.8" stroke-width="7" onclick="chonThua(11)"></polygon><polygon id="thua12" class="thua chua-ro" points="4023.8,2477.9 3658.7,2443.9 3503.4,3590.9 3947.6,3491.6" stroke-width="7" onclick="chonThua(12)"></polygon><polygon id="thua13" class="thua chua-ro" points="2081.6,1924 1967.4,2371.2 3194.3,2535.7 3284.8,1965.9 2140.1,1662.9" stroke-width="7" onclick="chonThua(13)"></polygon><polygon id="thua14" class="thua chua-ro" points="2140.1,1662.9 2207.3,1363.5 3340.2,1663.6 3284.8,1965.9" stroke-width="7" onclick="chonThua(14)"></polygon><polygon id="thua15" class="thua chua-ro" points="1812.6,1261.8 2207.3,1363.5 2081.6,1924 1670.9,1818.3" stroke-width="7" onclick="chonThua(15)"></polygon><polygon id="thua16" class="thua chua-ro" points="1374.9,1136.4 1225.6,1703.8 1670.9,1818.3 1812.6,1261.8" stroke-width="7" onclick="chonThua(16)"></polygon><polygon id="thua17" class="thua chua-ro" points="1555.1,451.3 1976.7,646.7 1812.6,1261.8 1374.9,1136.4" stroke-width="7" onclick="chonThua(17)"></polygon><polygon id="thua18" class="thua chua-ro" points="1976.7,646.7 2277.2,786.1 2221.4,1091.4 2794.3,1239.3 2736.4,1499.9 1812.6,1261.8" stroke-width="7" onclick="chonThua(18)"></polygon><polygon id="thua19" class="thua chua-ro" points="737.6,547.8 840.6,120 1555.1,451.3 1468.2,766.5" stroke-width="7" onclick="chonThua(19)"></polygon><g><text class="ten-nd" x="352.8" y="2995.6" font-size="46" text-anchor="middle">TRẦN CƯỚC</text><text class="dt-nd" x="352.8" y="3051.6" font-size="42" text-anchor="middle">532.2</text></g><g><text class="ten-nd" x="732.2" y="3050.6" font-size="46" text-anchor="middle">NGUYỄN HỘ</text><text class="dt-nd" x="732.2" y="3106.6" font-size="42" text-anchor="middle">535.5</text></g><g><text class="ten-nd" x="1150.7" y="3048.7" font-size="46" text-anchor="middle">NGUYỄN THỊ MỪNG</text><text class="dt-nd" x="1150.7" y="3104.7" font-size="42" text-anchor="middle">695.9</text></g><g><text class="ten-nd" x="1551.7" y="3070.2" font-size="46" text-anchor="middle">NGUYỄN SÔ</text><text class="dt-nd" x="1551.7" y="3126.2" font-size="42" text-anchor="middle">675.2</text></g><g transform="rotate(-78.8 1990.4 2852.6)"><text class="ten-nd" x="1990.4" y="2840.6" font-size="46" text-anchor="middle">NGUYỄN THỊ SÁU</text><text class="dt-nd" x="1990.4" y="2896.6" font-size="42" text-anchor="middle">612.8</text></g><g transform="rotate(-79.8 2337.8 2906.3)"><text class="ten-nd" x="2337.8" y="2894.3" font-size="46" text-anchor="middle">PHẠM THỊ HƯƠNG</text><text class="dt-nd" x="2337.8" y="2950.3" font-size="42" text-anchor="middle">1009.7</text></g><g transform="rotate(-80.7 2982.8 2913.7)"><text class="ten-nd" x="2982.8" y="2901.7" font-size="46" text-anchor="middle">HUỲNH KIM LONG 2/2</text><text class="dt-nd" x="2982.8" y="2957.7" font-size="42" text-anchor="middle">496.7</text></g><g><text class="ten-nd" x="3349.4" y="2990.5" font-size="46" text-anchor="middle">TÔ THỊ ANH</text><text class="dt-nd" x="3349.4" y="3046.5" font-size="42" text-anchor="middle">1043.1</text></g><g transform="rotate(-79.8 2694.8 2894.8)"><text class="ten-nd" x="2694.8" y="2882.8" font-size="46" text-anchor="middle">ĐỖ HỮU THÁI</text><text class="dt-nd" x="2694.8" y="2938.8" font-size="42" text-anchor="middle">603.7</text></g><g><text class="ten-nd" x="4774.1" y="2986.4" font-size="46" text-anchor="middle">HUỲNH KIM LONG 1/2</text><text class="dt-nd" x="4774.1" y="3042.4" font-size="42" text-anchor="middle">947.1</text></g><g><text class="ten-nd" x="4221.6" y="2993" font-size="46" text-anchor="middle">TRẦN SỞ</text><text class="dt-nd" x="4221.6" y="3049" font-size="42" text-anchor="middle">1196.9</text></g><g><text class="ten-nd" x="5324.4" y="3075.3" font-size="46" text-anchor="middle">NGUYỄN MẠNH THẤN</text><text class="dt-nd" x="5324.4" y="3131.3" font-size="42" text-anchor="middle">780.5</text></g><g><text class="ten-nd" x="3777.8" y="3004" font-size="40" text-anchor="middle">NGUYỄN ĐÌNH BÁN</text><text class="dt-nd" x="3777.8" y="3060" font-size="38" text-anchor="middle">930.1</text></g><g><text class="ten-nd" x="2624.5" y="2120" font-size="46" text-anchor="middle">DƯƠNG NGUYỆN</text><text class="dt-nd" x="2624.5" y="2176" font-size="42" text-anchor="middle">2029.4</text></g><g><text class="ten-nd" x="2743" y="1652.2" font-size="46" text-anchor="middle">NGUYỄN LA 1/2</text><text class="dt-nd" x="2743" y="1708.2" font-size="42" text-anchor="middle">1164.1</text></g><g><text class="ten-nd" x="1942.6" y="1581.8" font-size="46" text-anchor="middle">ĐỖ HỐT 2/2</text><text class="dt-nd" x="1942.6" y="1637.8" font-size="42" text-anchor="middle">611.2</text></g><g><text class="ten-nd" x="1520.1" y="1468.3" font-size="46" text-anchor="middle">ĐỖ HỐT 1/2</text><text class="dt-nd" x="1520.1" y="1524.3" font-size="42" text-anchor="middle">686.7</text></g><g><text class="ten-nd" x="1676.1" y="860.4" font-size="46" text-anchor="middle">NGUYỄN LA 2/2</text><text class="dt-nd" x="1676.1" y="916.4" font-size="42" text-anchor="middle">762.5</text></g><g><text class="ten-nd" x="2100" y="1168" font-size="46" text-anchor="middle">VÕ THỊ THU</text><text class="dt-nd" x="2100" y="1224" font-size="42" text-anchor="middle">977.8</text></g><g><text class="ten-nd" x="1133" y="452.2" font-size="46" text-anchor="middle">HUỲNH KIM BÌNH</text><text class="dt-nd" x="1133" y="508.2" font-size="42" text-anchor="middle">765</text></g><text class="vung" x="2995.5" y="1457" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1841.1" y="362.9" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1043.7" y="1122.9" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1598" y="2304.4" font-size="86" text-anchor="middle">ĐẤT MÀU</text><text class="vung" x="1183.8" y="3542.8" font-size="86" text-anchor="middle">KHU DÂN CƯ</text><text class="vung" x="4825" y="3598.4" font-size="86" text-anchor="middle">KHU DÂN CƯ</text></svg></div>
-</div>
-
-<div class="chuthich">
-  <span><i class="i-hc"></i> Canh tác hữu cơ</span>
-  <span><i class="i-khc"></i> Không hữu cơ</span>
-  <span><i class="i-cr"></i> Chưa có dữ liệu</span>
-</div>
-
-<!-- Modal chi tiết thửa -->
-<div class="modal-phu" id="mpThua">
-  <div class="modal">
-    <h2 id="tThua"></h2>
-    <div class="ma-sp" id="tMa"></div>
-    <div id="tBadge"></div>
-    <div class="hai-nut">
-      <button class="nut-xem" onclick="moNhatKy()">📖 Xem nhật ký</button>
-      <button class="nut-nhap" onclick="moNhapLieu()">✏️ Nhập liệu mới</button>
+<!-- ===== CÂU CHUYỆN ===== -->
+<section class="chuyen">
+  <div class="wrap grid">
+    <div class="anh">[ Ảnh mẫu — thay bằng ảnh cánh đồng / nông dân HTX ]</div>
+    <div>
+      <div class="eyebrow">Câu chuyện của chúng tôi</div>
+      <h2>Giữ lại giống lúa của ông cha, trên chính cánh đồng quê</h2>
+      <p><i>(Nội dung mẫu)</i> Hợp tác xã Lúa Di Sản ra đời từ mong muốn giữ gìn những giống lúa bản địa và cách canh tác thuận tự nhiên trên các cánh đồng Ông Đảng, Đồng Cao, Đồng Mẫu.</p>
+      <p>Mỗi lô ruộng được ghi mã riêng, gắn với tên người nông dân canh tác, ngày gieo sạ, ngày thu hoạch — tất cả công khai để người mua yên tâm về nguồn gốc.</p>
+      <a href="ve-chung-toi.html" class="doc-them">Đọc câu chuyện đầy đủ →</a>
     </div>
-    <button class="dong" onclick="dongModal(&#39;mpThua&#39;)">Đóng</button>
   </div>
-</div>
+</section>
 
-<!-- Modal nhật ký -->
-<div class="modal-phu" id="mpNK">
-  <div class="modal">
-    <h2>Nhật ký canh tác</h2>
-    <div class="ma-sp" id="nkMa"></div>
-    <div id="nkDS"><div class="trong">Đang tải…</div></div>
-    <button class="dong" onclick="dongModal(&#39;mpNK&#39;)">Đóng</button>
+<!-- ===== SẢN PHẨM NỔI BẬT ===== -->
+<section class="sanpham">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Sản phẩm</div>
+      <h2>Ba cách để đồng hành cùng cánh đồng</h2>
+    </div>
+    <div class="sp-grid">
+      <div class="sp-card">
+        <div class="hinh">[ Ảnh gói mẫu ]</div>
+        <div class="than">
+          <div class="goi-ten">Người gieo mầm</div>
+          <div class="goi-mo"><i>(Mô tả mẫu)</i> Gói cơ bản để bắt đầu trải nghiệm gạo hữu cơ Hội An — khách nhận gạo và quyền xem nhật ký sản xuất.</div>
+          <div class="goi-gia">— đ <small>/ đơn vị</small></div>
+          <button class="them-gio" onclick="themGio()">Thêm vào giỏ</button>
+        </div>
+      </div>
+      <div class="sp-card">
+        <div class="hinh">[ Ảnh gói mẫu ]</div>
+        <div class="than">
+          <div class="goi-ten">Người đồng kiến tạo</div>
+          <div class="goi-mo"><i>(Mô tả mẫu)</i> Gói dành cho khách gắn bó — nhận gạo định kỳ và được gắn với một thửa ruộng cụ thể trên bản đồ.</div>
+          <div class="goi-gia">— đ <small>/ đơn vị</small></div>
+          <button class="them-gio" onclick="themGio()">Thêm vào giỏ</button>
+        </div>
+      </div>
+      <div class="sp-card">
+        <div class="hinh">[ Ảnh gói mẫu ]</div>
+        <div class="than">
+          <div class="goi-ten">Đối tác kiến tạo di sản</div>
+          <div class="goi-mo"><i>(Mô tả mẫu)</i> Gói đồng hành sâu — hỗ trợ cả vụ canh tác của một thửa, tên khách hiện trên bản đồ (nếu đồng ý).</div>
+          <div class="goi-gia">— đ <small>/ đơn vị</small></div>
+          <button class="them-gio" onclick="themGio()">Thêm vào giỏ</button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- Modal nhập liệu -->
-<div class="modal-phu" id="mpNhap">
-  <div class="modal">
-    <h2>Nhập liệu thăm đồng</h2>
-    <div class="ma-sp" id="nlMa"></div>
-    <div class="form-o"><label>Tiêu đề *</label><input id="nlTieuDe" placeholder="VD: Thăm đồng kiểm tra sâu bệnh"></div>
-    <div class="form-o"><label>Ngày</label><input id="nlNgay" type="date"></div>
-    <div class="form-o"><label>Trạng thái</label>
-      <select id="nlTrangThai">
-        <option value="Hoàn thành">Hoàn thành</option>
-        <option value="Kế hoạch">Kế hoạch</option>
-        <option value="Đang làm">Đang làm</option>
-        <option value="Chuẩn bị">Chuẩn bị</option>
-        <option value="Kiểm tra">Kiểm tra</option>
-      </select></div>
-    <div class="form-o"><label>Nội dung</label><textarea id="nlNoiDung" placeholder="Ghi chú tình hình lúa, nước, sâu bệnh…"></textarea></div>
-    <div class="form-o"><label>Hình ảnh</label><input id="nlAnh" type="file" accept="image/*" multiple="">
-      <div class="anh-xem" id="nlXemAnh"></div></div>
-    <div class="form-o"><label>Video (tối đa 20MB/video — nên quay 15–30 giây)</label>
-      <input id="nlVideo" type="file" accept="video/*" multiple="">
-      <div id="nlXemVideo"></div></div>
-    <button class="nut-gui" id="nlGui" onclick="guiNhapLieu()">Lưu vào Notion</button>
-    <div class="bao-loi" id="nlLoi"></div>
-    <button class="dong" onclick="dongModal(&#39;mpNhap&#39;)">Đóng</button>
+<!-- ===== CỘNG ĐỒNG CANH TÁC ===== -->
+<section class="congdong">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Cộng đồng canh tác</div>
+      <h2>Ba cánh đồng, một di sản</h2>
+    </div>
+    <div class="cd-grid">
+      <div class="cd-card f1">
+        <div class="cd-vt">Cẩm Kim</div>
+        <h3>Cánh đồng Ông Đảng</h3>
+        <div class="cd-mo">20 thửa ruộng ven sông, nơi HTX phát triển mô hình canh tác hữu cơ và du lịch nông nghiệp.</div>
+        <a href="canh-dong.html" class="cd-link">Xem trên bản đồ →</a>
+      </div>
+      <div class="cd-card f2">
+        <div class="cd-vt">Cẩm Thanh</div>
+        <h3>Cánh đồng Đồng Cao</h3>
+        <div class="cd-mo">Cánh đồng lớn nhất với hơn 40 thửa, mỗi thửa gắn tên một hộ nông dân xã viên.</div>
+        <a href="canh-dong.html" class="cd-link">Xem trên bản đồ →</a>
+      </div>
+      <div class="cd-card f3">
+        <div class="cd-vt">Cẩm Thanh</div>
+        <h3>Cánh đồng Đồng Mẫu</h3>
+        <div class="cd-mo">Những thửa ruộng rộng, canh tác giống lúa bản địa theo lịch mùa vụ truyền thống.</div>
+        <a href="canh-dong.html" class="cd-link">Xem trên bản đồ →</a>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- Modal đăng nhập -->
+<!-- ===== TÁC ĐỘNG ===== -->
+<section class="tacdong">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Tác động của chúng tôi</div>
+      <h2>Những con số từ cánh đồng thật</h2>
+    </div>
+    <div class="td-grid">
+      <div class="td-o"><div class="so" id="tdDienTich">—</div><div class="nhan">diện tích canh tác<br>theo hướng hữu cơ</div></div>
+      <div class="td-o"><div class="so" id="tdSoHo">—</div><div class="nhan">hộ nông dân<br>xã viên tham gia</div></div>
+      <div class="td-o"><div class="so" id="tdThua">68</div><div class="nhan">thửa ruộng<br>được ghi mã riêng</div></div>
+      <div class="td-o"><div class="so">3</div><div class="nhan">cánh đồng<br>di sản</div></div>
+    </div>
+    <div class="td-note">* Hai số đầu sẽ tự cập nhật theo dữ liệu thật từ hệ thống bản đồ Notion khi nối API.</div>
+  </div>
+</section>
+
+<!-- ===== ĐĂNG KÝ ===== -->
+<section class="dangky">
+  <div class="wrap">
+    <div class="eyebrow">Giữ liên lạc</div>
+    <h2>Nhận tin về mùa vụ &amp; sản phẩm mới</h2>
+    <p>Để lại thông tin để HTX liên hệ khi có gạo vụ mới, hoặc khi mở nhận đặt hàng theo thửa.</p>
+    <div class="form">
+      <input type="text" placeholder="Số điện thoại hoặc email của anh/chị">
+      <button onclick="alert('Bản nháp — chỗ này sẽ lưu liên hệ vào DB Khách hàng tiềm năng trên Notion.')">Đăng ký</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="ft-grid">
+      <div class="ft-brand">
+        <div class="bname">HTX Lúa Di Sản Hội An</div>
+        <p>Hợp tác xã lúa hữu cơ tại Hội An, Quảng Nam — canh tác minh bạch, truy xuất nguồn gốc tới từng thửa ruộng.</p>
+      </div>
+      <div>
+        <h4>Sản phẩm</h4>
+        <ul>
+          <li><a href="san-pham.html">Các gói sản phẩm</a></li>
+          <li><a href="canh-dong.html">Cánh Đồng</a></li>
+          <li><a href="san-pham.html">Nhật ký sản xuất</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Về HTX</h4>
+        <ul>
+          <li><a href="ve-chung-toi.html">Câu chuyện</a></li>
+          <li><a href="ve-chung-toi.html">Cộng đồng nông dân</a></li>
+          <li><a href="ve-chung-toi.html">Tác động</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Liên hệ</h4>
+        <ul>
+          <li><a href="#">Hội An, Quảng Nam</a></li>
+          <li><a href="#">Điện thoại: (mẫu)</a></li>
+          <li><a href="#">Facebook · YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ft-duoi">
+      <span>© 2026 HTX Lúa Di Sản Hội An. Nội dung mẫu — bản nháp giao diện.</span>
+      <span>Thiết kế bố cục tham khảo phong cách trang nông sản quốc tế, tùy chỉnh riêng cho HTX.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Modal đăng nhập (dùng chung cơ chế với bản đồ) -->
 <div class="modal-phu" id="mpDN">
   <div class="modal">
-    <h2>Đăng nhập xã viên</h2>
-    <p style="font-size:13px;color:#6b7263;margin:4px 0 14px">Chỉ xã viên có tài khoản mới được nhập liệu. Khách vẫn xem bản đồ và nhật ký bình thường.</p>
-    <div class="form-o"><label>Tên đăng nhập</label><input id="dnUser" autocomplete="username"></div>
+    <h2>Đăng nhập</h2>
+    <p class="sub">Xã viên đăng nhập để nhập liệu. Khách hàng đã mua đăng nhập để xem nhật ký thửa của mình.</p>
+    <div class="form-o"><label>Tên đăng nhập / Mã KH</label><input id="dnUser" autocomplete="username"></div>
     <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password" autocomplete="current-password"></div>
-    <button class="nut-gui" id="dnGui" onclick="dangNhap()">Đăng nhập</button>
-    <div class="bao-loi" id="dnLoi"></div>
-    <button class="dong" onclick="dongModal(&#39;mpDN&#39;)">Đóng</button>
+    <button class="nut-gui" onclick="alert('Bản nháp — sẽ dùng lại hàm dangNhap() trong js/chung.js khi ghép vào hệ thống thật.')">Đăng nhập</button>
+    <button class="dong" onclick="dongModal('mpDN')">Đóng</button>
   </div>
 </div>
 
 <script>
-/* ================================================================
-   1. CẤU HÌNH — CHỈ CẦN SỬA 2 CHỖ NÀY
-   ================================================================ */
-// (a) Dán URL Web App của Apps Script (Triển khai → Ứng dụng web → URL /exec)
-const API_URL = 'https://script.google.com/macros/s/AKfycbxkBLw-2LGnKPrc0m8cjogwqyv1kCyP5D1hN8A7Pt2IQ6n8QwRGQhD8ea8PAQzOVwjy/exec';
-
-// (b) Mã nông dân trong Mã sản phẩm Notion (CKOD-<MÃ>-HT26-…)
-//     Sửa vế phải cho khớp CHÍNH XÁC với mã trong Notion của anh.
-const MA_NONG_DAN = {
-  // ----- Ông Đảng — Cẩm Kim -----
-  CKOD: {
-    'TRẦN CƯỚC': 'CUOC',
-    'NGUYỄN HỘ': 'HO',
-    'NGUYỄN THỊ MỪNG': 'MUNG',   // đổi từ Tô Văn Hưng (HUNG) — lô Notion đã đổi theo
-    'NGUYỄN SÔ': 'NGSO',          // ⚠ trùng với TRẦN SỞ — sửa theo Notion
-    'NGUYỄN THỊ SÁU': 'SAU',   // đổi từ Trần Đình Chính (CHINH) — lô Notion đã đổi theo
-    'PHẠM THỊ HƯƠNG': 'HUONG',
-    'HUỲNH KIM LONG 1/2': 'LONG1',
-    'HUỲNH KIM LONG 2/2': 'LONG2',
-    'TÔ THỊ ANH': 'ANH',
-    'ĐỖ HỮU THÁI': 'THAI',
-    'TRẦN SỞ': 'TRANSO',            // ⚠ trùng với NGUYỄN SÔ — sửa theo Notion
-    'NGUYỄN MẠNH THẤN': 'THAN',
-    'NGUYỄN ĐÌNH BÁN': 'BAN',
-    'DƯƠNG NGUYỆN': 'NGUYEN',
-    'NGUYỄN LA 1/2': 'LA1',
-    'NGUYỄN LA 2/2': 'LA2',
-    'ĐỖ HỐT 1/2': 'HOT1',
-    'ĐỖ HỐT 2/2': 'HOT2',
-    'VÕ THỊ THU': 'THU',
-    'HUỲNH KIM BÌNH': 'BINH',
-  },
-  // ----- Đồng Cao — Cẩm Thanh -----
-  CTDC: {
-    'LÊ VĂN CẬY': 'CAY',
-    'PHÚC': 'PHUC',
-    'TRẦN LỆ 1/2': 'LE1',   // thửa lớn 1/2, thửa nhỏ 2/2 (đã sửa theo xác nhận)
-    'TRANG CHÂU': 'CHAU',
-    'LÊ PHÓ': 'PHO',
-    'TRẦN BÉ 1/2': 'BE1',
-    'LÊ HẢI TRIỀU 1/2': 'TRIEU1',
-    'TRẦN VĂN CƯ 1/2': 'CU1',
-    'VÕ THÀ 1/2': 'THA1',
-    'TRẦN LỆ 2/2': 'LE2',   // thửa lớn 1/2, thửa nhỏ 2/2 (đã sửa theo xác nhận)
-    'TRẦN THỊ HỦ 1/2': 'HU1',
-    'TRẦN THỊ HỦ 2/2': 'HU2',
-    'NGUYỄN VĂN KHÁNH 1/2': 'KHANH1',
-    'PHẠM VĂN BẰNG': 'BANG',
-    'LÊ VĂN THỨC 1/2': 'THUC1',
-    'TRẦN HÒA': 'HOA',
-    'LÊ THỊ BỐN': 'LBON',
-    'HUỲNH PHƯỚC LONG': 'LONG',
-    'ĐINH THỊ MỸ HẠNH': 'HANH',
-    'PHẠM THỊ SÁU': 'SAU',
-    'TRẦN BÉ 2/2': 'BE2',
-    'ĐINH VĂN PHiÊN': 'PHIEN',
-    'NGÔ BỐN': 'NBON',
-    'NHÂN': 'NHAN',
-    'TRẦN TRỌNG': 'TRONG',
-    'ĐINH ĐỘ 1/2': 'DO1',
-    'NGUYỄN VĂN MAI': 'MAI',
-    'PHAN TUẤN VÂN': 'VAN',
-    'VÕ THÀ 2/2': 'THA2',
-    'NGUYỄN THỊ NGUYỆT': 'NGUYET',
-    'NGUYỄN VĂN KHÁNH 2/2': 'KHANH2',
-    'TRẦN VĂN CƯ 2/2': 'CU2',
-    'TRẦN THỊ MỸ': 'MY',
-    'NGUYỄN THỊ YẾN': 'YEN',
-    'TRẦN THỊ HUỆ': 'HUE',
-    'QUẢNG THỊ THÀNH': 'THANH',
-    'ĐINH ĐỘ 2/2': 'DO2',
-    'LÊ HẢI TRIỀU 2/2': 'TRIEU2',
-    'PHAN THỊ TÁM': 'TAM',
-    'NGUYỄN VĂN SƠN': 'SON',
-    'LÊ VĂN THỨC 2/2': 'THUC2',
-  },
-  // ----- Đồng Mẫu — Cẩm Thanh -----
-  CTDM: {
-    'PHẠM TRỌNG': 'TRONG',
-    'TOÀN': 'TOAN',
-    'BÙI CƯ': 'CU',
-    'PHẠM HẬU': 'HAU',
-    'NGUYỄN BÉ': 'BE',
-    'TRẦN VĂN HỘI 1/2': 'HOI1',
-    'NGUYỄN THỊ XÊ': 'XE',
-    'NGUYỄN QUANG': 'QUANG',
-    'LÊ HẢI': 'HAI',
-    'LÊ THỊ HÀ': 'HA',
-    'HUỲNH TƯ': 'TU7',   // ⚠ HUỲNH TƯ=TU, HUỲNH TỨ=HTU — 2 hộ khác nhau, để ý khi tạo lô
-    'ĐỖ VĂN TÂM': 'TAM',
-    'HUỲNH THÔNG': 'HTHONG',
-    'TRẦN VĂN HỘI 2/2': 'HOI2',
-    'VÕ THỊ NGỌC': 'NGOC',
-    'HUỲNH TỨ': 'TU5',   // ⚠ HUỲNH TƯ=TU, HUỲNH TỨ=HTU — 2 hộ khác nhau, để ý khi tạo lô
-    'TRƯƠNG THỊ SƯƠNG': 'SUONG',
-    'NGUYỄN THỊ BÀN': 'BAN',
-    'PHỔ': 'PHO',
-    'PHẠM THÔNG': 'PTHONG',   // PHẠM THÔNG (phân biệt HUỲNH THÔNG=THONG)
-  },
-};
-
-/* ================================================================
-   2. DỮ LIỆU BẢN ĐỒ (sinh tự động từ file DXF — không cần sửa)
-   ================================================================ */
-const ALL_FIELDS = {
-  CKOD: {"field": "CKOD", "fieldName": "Ông Đảng — Cẩm Kim", "viewW": 5726.6, "viewH": 4686.4, "plots": [{"farmer": "TRẦN CƯỚC", "symbol": "", "area": "532.2", "code": "CUOC", "points": [[249.7, 2721.6], [589.8, 2770.5], [451.6, 3293.1], [120.0, 3250.6]], "cx": 352.8, "cy": 3007.6}, {"farmer": "NGUYỄN HỘ", "symbol": "", "area": "535.5", "code": "HO", "points": [[589.8, 2770.5], [451.6, 3293.1], [887.6, 3348.9], [1003.7, 2829.9]], "cx": 732.2, "cy": 3062.6}, {"farmer": "NGUYỄN THỊ MỪNG", "symbol": "", "area": "695.9", "code": "MUNG", "points": [[887.6, 3348.9], [1293.2, 3400.9], [1396.3, 2762.7], [1031.2, 2708.7]], "cx": 1150.7, "cy": 3060.7, "nl": ["NGUYỄN THỊ", "MỪNG"]}, {"farmer": "NGUYỄN SÔ", "symbol": "", "area": "675.2", "code": "SO", "points": [[1396.3, 2762.7], [1847.3, 2829.4], [1742.3, 3255.6], [1486.0, 3425.6], [1293.2, 3400.9]], "cx": 1551.7, "cy": 3082.2}, {"farmer": "NGUYỄN THỊ SÁU", "symbol": "", "area": "612.8", "code": "SAU", "points": [[1742.3, 3255.6], [1967.4, 2371.2], [2221.8, 2405.3], [2039.6, 3324.8]], "cx": 1990.4, "cy": 2852.6, "rot": -78.8}, {"farmer": "PHẠM THỊ HƯƠNG", "symbol": "", "area": "1009.7", "code": "HUONG", "points": [[2039.6, 3324.8], [2456.3, 3421.9], [2630.1, 2460.0], [2221.8, 2405.3]], "cx": 2337.8, "cy": 2906.3, "rot": -79.8}, {"farmer": "HUỲNH KIM LONG", "symbol": "2/2", "area": "496.7", "code": "LONG2", "points": [[2773.0, 3304.7], [3060.5, 3322.0], [3194.3, 2535.7], [2905.4, 2497.0]], "cx": 2982.8, "cy": 2913.7, "rot": -80.7}, {"farmer": "TÔ THỊ ANH", "symbol": "", "area": "1043.1", "code": "ANH", "points": [[3218.2, 2395.3], [3023.4, 3548.4], [3503.4, 3590.9], [3658.7, 2443.9]], "cx": 3349.4, "cy": 3002.5}, {"farmer": "ĐỖ HỮU THÁI", "symbol": "", "area": "603.7", "code": "THAI", "points": [[2630.1, 2460.0], [2905.4, 2497.0], [2773.0, 3304.7], [2477.5, 3304.7]], "cx": 2694.8, "cy": 2894.8, "rot": -79.8}, {"farmer": "HUỲNH KIM LONG", "symbol": "1/2", "area": "947.1", "code": "LONG1", "points": [[5044.1, 3348.8], [4464.8, 3297.6], [4514.5, 2603.8], [5101.6, 2754.3]], "cx": 4774.1, "cy": 2998.4}, {"farmer": "TRẦN SỞ", "symbol": "", "area": "1196.9", "code": "SO", "points": [[4464.8, 3297.6], [4464.8, 3393.8], [4247.4, 3393.8], [4199.2, 3552.1], [3947.6, 3491.6], [4023.8, 2477.9], [4514.5, 2603.8]], "cx": 4221.6, "cy": 3005.0}, {"farmer": "NGUYỄN MẠNH THẤN", "symbol": "", "area": "780.5", "code": "THAN", "points": [[5533.4, 3387.6], [5640.5, 2884.7], [5101.6, 2754.3], [5044.1, 3348.8]], "cx": 5324.4, "cy": 3087.3}, {"farmer": "NGUYỄN ĐÌNH BÁN", "symbol": "", "area": "930.1", "code": "BAN", "points": [[4023.8, 2477.9], [3658.7, 2443.9], [3503.4, 3590.9], [3947.6, 3491.6]], "cx": 3777.8, "cy": 3016.0, "fs": 40}, {"farmer": "DƯƠNG NGUYỆN", "symbol": "", "area": "2029.4", "code": "NGUYEN", "points": [[2081.6, 1924.0], [1967.4, 2371.2], [3194.3, 2535.7], [3284.8, 1965.9], [2140.1, 1662.9]], "cx": 2624.5, "cy": 2132.0}, {"farmer": "NGUYỄN LA", "symbol": "1/2", "area": "1164.1", "code": "LA1", "points": [[2140.1, 1662.9], [2207.3, 1363.5], [3340.2, 1663.6], [3284.8, 1965.9]], "cx": 2743.0, "cy": 1664.2}, {"farmer": "ĐỖ HỐT", "symbol": "2/2", "area": "611.2", "code": "HOT2", "points": [[1812.6, 1261.8], [2207.3, 1363.5], [2081.6, 1924.0], [1670.9, 1818.3]], "cx": 1942.6, "cy": 1593.8}, {"farmer": "ĐỖ HỐT", "symbol": "1/2", "area": "686.7", "code": "HOT1", "points": [[1374.9, 1136.4], [1225.6, 1703.8], [1670.9, 1818.3], [1812.6, 1261.8]], "cx": 1520.1, "cy": 1480.3}, {"farmer": "NGUYỄN LA", "symbol": "2/2", "area": "762.5", "code": "LA2", "points": [[1555.1, 451.3], [1976.7, 646.7], [1812.6, 1261.8], [1374.9, 1136.4]], "cx": 1676.1, "cy": 872.4}, {"farmer": "VÕ THỊ THU", "symbol": "", "area": "977.8", "code": "THU", "points": [[1976.7, 646.7], [2277.2, 786.1], [2221.4, 1091.4], [2794.3, 1239.3], [2736.4, 1499.9], [1812.6, 1261.8]], "cx": 2236.8, "cy": 1136.4, "lx": 2100.0, "ly": 1180.0}, {"farmer": "HUỲNH KIM BÌNH", "symbol": "", "area": "765", "code": "BINH", "points": [[737.6, 547.8], [840.6, 120.0], [1555.1, 451.3], [1468.2, 766.5]], "cx": 1133.0, "cy": 464.2}], "zones": [{"text": "ĐẤT MÀU", "x": 2995.5, "y": 1457.0}, {"text": "ĐẤT MÀU", "x": 1841.1, "y": 362.9}, {"text": "ĐẤT MÀU", "x": 1043.7, "y": 1122.9}, {"text": "ĐẤT MÀU", "x": 1598.0, "y": 2304.4}, {"text": "KHU DÂN CƯ", "x": 1183.8, "y": 3542.8}, {"text": "KHU DÂN CƯ", "x": 4825.0, "y": 3598.4}, {"text": "SÔNG THU BỒN", "x": 3433.8, "y": 782.9, "fs": 96, "rot": 42.0}, {"text": "ĐƯỜNG BÊ TÔNG", "x": 3036.7, "y": 993.4, "fs": 60, "rot": 43.8}, {"text": "XƯỞNG GHE BẦU", "x": 3646.8, "y": 2174.1, "fs": 60, "rot": 7.2}], "canals": [], "roads": [[[1162.9, -624.0], [1682.1, -231.2], [2059.8, 61.1], [2466.9, 388.5], [2734.4, 613.8], [2997.9, 845.9], [3256.3, 1086.0], [3524.2, 1350.9], [3967.9, 1812.5], [4106.5, 1941.8], [4238.9, 2049.8], [4364.3, 2136.4], [4508.7, 2221.0], [4661.8, 2297.1], [4822.9, 2366.0], [4973.1, 2422.3], [5181.1, 2491.2], [5726.6, 2645.3], [5706.4, 2778.5], [5284.7, 2662.0], [5077.4, 2598.4], [4874.3, 2528.4], [4676.7, 2449.9], [4486.1, 2360.7], [4393.9, 2311.5], [4216.4, 2202.3], [4131.5, 2141.8], [3951.5, 1993.0], [3781.1, 1829.4], [3451.4, 1483.7], [3172.8, 1204.1], [2885.7, 935.4], [2591.4, 676.2], [2291.0, 424.8], [1985.8, 179.7], [1677.0, -60.7], [1053.3, -533.6]]], "viewX0": 60.0, "viewY0": -684.0},
-  CTDC: {"field": "CTDC", "fieldName": "Đồng Cao — Cẩm Thanh", "viewW": 8337.3, "viewH": 6369.9, "plots": [{"farmer": "LÊ VĂN CẬY", "symbol": "", "area": "616", "code": "CAY", "points": [[2912.1, 2434.3], [4000.5, 2434.3], [4029.8, 4416.6], [2912.1, 3604.8]], "cx": 3460.6, "cy": 3019.6, "lx": 3459.9, "ly": 3138.3, "fs": 70, "rot": -1.0}, {"farmer": "PHÚC", "symbol": "", "area": "749", "code": "PHUC", "points": [[5280.3, 1284.5], [6764.8, 1284.5], [6794.4, 2434.3], [5315.1, 2434.3]], "cx": 6038.6, "cy": 1859.4, "lx": 6030.9, "ly": 1798.2, "fs": 70, "rot": -1.0}, {"farmer": "TRẦN LỆ", "symbol": "1/2", "area": "711", "code": "LE1", "points": [[2034.3, 1284.5], [2034.3, 128.4], [3439.1, 128.4], [3439.1, 1284.5]], "cx": 2736.7, "cy": 706.4, "lx": 2728.5, "ly": 655.0, "fs": 70, "rot": -1.0}, {"farmer": "TRANG CHÂU", "symbol": "", "area": "508", "code": "CHAU", "points": [[5802.2, 4253.3], [5787.5, 3621.2], [6824.6, 3649.8], [6848.4, 4818.1], [5802.2, 4793.3]], "cx": 6313.0, "cy": 3951.5, "lx": 6297.0, "ly": 4187.0, "fs": 70, "rot": -1.0}, {"farmer": "LÊ PHÓ", "symbol": "", "area": "530", "code": "PHO", "points": [[5737.2, 1284.5], [5711.3, 128.4], [6739.9, 128.4], [6764.8, 1284.5]], "cx": 6238.3, "cy": 706.4, "lx": 6270.9, "ly": 655.0, "fs": 70, "rot": -1.0}, {"farmer": "TRẦN BÉ", "symbol": "1/2", "area": "536", "code": "BE1", "points": [[6840.6, 4291.6], [8136.3, 4339.4], [8173.0, 5225.4], [6858.7, 5176.3]], "cx": 7501.9, "cy": 4757.8, "lx": 7424.6, "ly": 4775.8, "fs": 70, "rot": -1.0}, {"farmer": "LÊ HẢI TRIỀU", "symbol": "1/2", "area": "501", "code": "TRIEU1", "points": [[4773.5, 1284.5], [4733.8, 128.4], [5711.3, 128.4], [5737.2, 1284.5]], "cx": 5238.9, "cy": 706.4, "lx": 5191.0, "ly": 663.1, "fs": 70, "rot": -1.0}, {"farmer": "TRẦN VĂN CƯ", "symbol": "1/2", "area": "509", "code": "CU1", "points": [[6819.2, 3430.4], [8100.2, 3468.2], [8136.3, 4339.4], [6840.6, 4291.6]], "cx": 7473.8, "cy": 3879.9, "lx": 7452.4, "ly": 3874.9, "fs": 70, "rot": -1.0}, {"farmer": "VÕ THÀ", "symbol": "1/2", "area": "504", "code": "THA1", "points": [[4824.8, 2434.3], [5759.9, 2434.3], [5787.5, 3621.2], [4867.3, 3621.2]], "cx": 5309.9, "cy": 3027.8, "lx": 5327.8, "ly": 3019.9, "fs": 70, "rot": -1.0}, {"farmer": "TRẦN LỆ", "symbol": "2/2", "area": "502", "code": "LE2", "points": [[6777.0, 1735.4], [8008.9, 1735.4], [8055.5, 2620.0], [6799.0, 2620.0]], "cx": 7410.1, "cy": 2177.7, "lx": 7399.2, "ly": 2204.9, "fs": 70, "rot": -1.0}, {"farmer": "TRẦN THỊ HỦ", "symbol": "1/2", "area": "464", "code": "HU1", "points": [[6759.0, 1014.5], [6739.9, 128.4], [7945.8, 128.4], [7980.6, 1014.5]], "cx": 7356.3, "cy": 571.4, "lx": 7332.3, "ly": 603.1, "fs": 70, "rot": -1.0}, {"farmer": "TRẦN THỊ HỦ", "symbol": "2/2", "area": "467", "code": "HU2", "points": [[137.2, 1281.9], [120.0, 120.0], [1040.7, 124.0], [1044.7, 1284.5]], "cx": 585.7, "cy": 702.9, "lx": 591.9, "ly": 668.1, "fs": 70, "rot": -1.0}, {"farmer": "NGUYỄN VĂN KHÁNH", "symbol": "1/2", "area": "484", "code": "KHANH1", "points": [[6799.0, 2620.0], [8055.5, 2620.0], [8100.2, 3468.2], [6819.2, 3430.4]], "cx": 7443.0, "cy": 3025.2, "lx": 7428.9, "ly": 2987.5, "fs": 70, "rot": -1.0}, {"farmer": "PHẠM VĂN BẰNG", "symbol": "", "area": "499", "code": "BANG", "points": [[3865.8, 1284.5], [3865.8, 128.4], [4733.8, 128.4], [4773.5, 1284.5]], "cx": 4309.7, "cy": 706.4, "lx": 4307.5, "ly": 679.5, "fs": 70, "rot": -1.0}, {"farmer": "LÊ VĂN THỨC", "symbol": "1/2", "area": "375", "code": "THUC1", "points": [[6858.7, 5176.3], [8173.0, 5225.4], [8209.0, 6057.4], [6877.5, 5825.4]], "cx": 7527.4, "cy": 5525.4, "lx": 7510.1, "ly": 5530.8, "fs": 70, "rot": -1.0}, {"farmer": "TRẦN HÒA", "symbol": "", "area": "360", "code": "HOA", "points": [[5828.2, 5642.6], [5802.2, 4793.3], [6848.4, 4818.1], [6853.7, 5176.1], [6877.5, 5825.4]], "cx": 6341.6, "cy": 5409.4, "lx": 6286.6, "ly": 5213.7, "fs": 70, "rot": -1.0}, {"farmer": "LÊ THỊ BỐN", "symbol": "", "area": "473", "code": "BON", "points": [[2034.3, 2434.3], [2912.1, 2434.3], [2912.1, 3604.8], [2034.3, 3429.9]], "cx": 2473.2, "cy": 2932.1, "lx": 2510.7, "ly": 2816.3, "fs": 70, "rot": -1.0}, {"farmer": "HUỲNH PHƯỚC LONG", "symbol": "", "area": "471", "code": "LONG", "points": [[3985.3, 1284.5], [4773.5, 1284.5], [4824.8, 2434.3], [4000.5, 2434.3]], "cx": 4396.0, "cy": 1859.4, "lx": 4393.0, "ly": 1866.7, "fs": 70, "rot": -1.0}, {"farmer": "ĐINH THỊ MỸ HẠNH", "symbol": "", "area": "414", "code": "HANH", "points": [[1042.1, 3268.7], [996.9, 2434.3], [2034.3, 2434.3], [2034.3, 3429.9]], "cx": 1526.9, "cy": 2851.5, "lx": 1505.3, "ly": 2799.4, "fs": 70, "rot": -1.0}, {"farmer": "PHẠM THỊ SÁU", "symbol": "", "area": "468", "code": "SAU", "points": [[6759.0, 1014.5], [7980.6, 1014.5], [8008.9, 1735.4], [6777.0, 1735.4]], "cx": 7381.4, "cy": 1374.9, "lx": 7326.2, "ly": 1326.2, "fs": 70, "rot": -1.0}, {"farmer": "TRẦN BÉ", "symbol": "2/2", "area": "415", "code": "BE2", "points": [[4026.4, 4191.3], [4012.9, 3275.9], [4855.0, 3275.9], [4888.8, 4219.6]], "cx": 4445.5, "cy": 3733.6, "lx": 4420.3, "ly": 3685.9, "fs": 70, "rot": -1.0}, {"farmer": "ĐINH VĂN PHiÊN", "symbol": "", "area": "338", "code": "PHIEN", "points": [[4000.5, 2434.3], [4824.8, 2434.3], [4855.0, 3275.9], [4012.9, 3275.9]], "cx": 4423.3, "cy": 2855.1, "lx": 4411.8, "ly": 2858.5, "fs": 70, "rot": -1.0}, {"farmer": "NGÔ BỐN", "symbol": "", "area": "273", "code": "NBON", "points": [[4930.6, 5385.5], [4909.3, 4793.3], [5802.2, 4793.3], [5828.2, 5642.6], [5057.2, 5521.7]], "cx": 5365.6, "cy": 5089.4, "lx": 5375.8, "ly": 5089.7, "fs": 70, "rot": -1.0}, {"farmer": "NHÂN", "symbol": "", "area": "227", "code": "NHAN", "points": [[1487.9, 1284.5], [1460.3, 125.8], [2034.3, 128.4], [2034.3, 1284.5]], "cx": 1754.2, "cy": 706.4, "lx": 1747.2, "ly": 668.7, "fs": 70, "rot": -1.0}, {"farmer": "TRẦN TRỌNG", "symbol": "", "area": "306", "code": "TRONG", "points": [[3439.1, 1284.5], [3985.3, 1284.5], [4000.5, 2434.3], [3439.1, 2434.3]], "cx": 3716.0, "cy": 1859.4, "lx": 3650.1, "ly": 1897.9, "fs": 70, "rot": -91.0}, {"farmer": "ĐINH ĐỘ", "symbol": "1/2", "area": "247", "code": "DO1", "points": [[5774.2, 3049.5], [5759.9, 2434.3], [6794.4, 2434.3], [6809.7, 3049.5]], "cx": 6284.6, "cy": 2741.9, "lx": 6271.1, "ly": 2731.1, "fs": 70, "rot": -1.0}, {"farmer": "NGUYỄN VĂN MAI", "symbol": "", "area": "260", "code": "MAI", "points": [[1508.8, 2434.3], [1487.9, 1284.5], [2034.3, 1284.5], [2034.3, 2434.3]], "cx": 1766.4, "cy": 1859.4, "lx": 1719.8, "ly": 1866.4, "fs": 70, "rot": -91.0}, {"farmer": "PHAN TUẤN VÂN", "symbol": "", "area": "275", "code": "VAN", "points": [[934.5, 1284.7], [1487.9, 1284.5], [1508.8, 2434.3], [996.9, 2434.3]], "cx": 1232.0, "cy": 1859.5, "lx": 1207.9, "ly": 1850.6, "fs": 70, "rot": -91.0}, {"farmer": "VÕ THÀ", "symbol": "2/2", "area": "238", "code": "THA2", "points": [[6809.7, 3049.5], [6824.6, 3649.8], [5787.5, 3621.2], [5774.2, 3049.5]], "cx": 6298.8, "cy": 3335.4, "lx": 6254.7, "ly": 3289.7, "fs": 70, "rot": -1.0}, {"farmer": "NGUYỄN THỊ NGUYỆT", "symbol": "", "area": "270", "code": "NGUYET", "points": [[2912.1, 1284.5], [3439.1, 1284.5], [3439.1, 2434.3], [2912.1, 2434.3]], "cx": 3175.6, "cy": 1859.4, "lx": 3165.1, "ly": 1882.2, "fs": 70, "rot": -91.0}, {"farmer": "NGUYỄN VĂN KHÁNH", "symbol": "2/2", "area": "275", "code": "KHANH2", "points": [[4029.8, 4416.6], [4026.4, 4191.3], [4888.8, 4219.6], [4930.6, 5385.5]], "cx": 4696.7, "cy": 4901.0, "lx": 4510.0, "ly": 4438.5, "fs": 70, "rot": -1.0, "nl": ["NGUYỄN VĂN", "KHÁNH 2/2"]}, {"farmer": "TRẦN VĂN CƯ", "symbol": "2/2", "area": "262", "code": "CU2", "points": [[4773.5, 1284.5], [5280.3, 1284.5], [5315.1, 2434.3], [4824.8, 2434.3]], "cx": 5048.4, "cy": 1859.4, "lx": 5042.3, "ly": 1826.2, "fs": 65, "rot": -1.0, "nl": ["TRẦN VĂN", "CƯ 2/2"]}, {"farmer": "TRẦN THỊ MỸ", "symbol": "", "area": "239", "code": "MY", "points": [[4888.8, 4219.6], [4867.3, 3621.2], [5787.5, 3621.2], [5802.2, 4253.3]], "cx": 5336.2, "cy": 3920.4, "lx": 5344.4, "ly": 3860.0, "fs": 70, "rot": -1.0}, {"farmer": "NGUYỄN THỊ YẾN", "symbol": "", "area": "211", "code": "YEN", "points": [[267.2, 1282.3], [548.7, 1283.3], [653.7, 3262.3], [372.5, 3262.6]], "cx": 460.5, "cy": 2272.8, "lx": 492.0, "ly": 2267.6, "fs": 70, "rot": -91.0}, {"farmer": "TRẦN THỊ HUỆ", "symbol": "", "area": "262", "code": "HUE", "points": [[2445.2, 1284.5], [2912.1, 1284.5], [2912.1, 2434.3], [2445.2, 2434.3]], "cx": 2678.7, "cy": 1859.4, "lx": 2645.7, "ly": 1897.9, "fs": 70, "rot": -91.0}, {"farmer": "QUẢNG THỊ THÀNH", "symbol": "", "area": "226", "code": "THANH", "points": [[4909.3, 4793.3], [4888.8, 4219.6], [5802.2, 4253.3], [5802.2, 4793.3]], "cx": 5350.9, "cy": 4523.3, "lx": 5323.9, "ly": 4441.3, "fs": 70, "rot": -1.0}, {"farmer": "ĐINH ĐỘ", "symbol": "2/2", "area": "223", "code": "DO2", "points": [[1044.7, 1284.5], [1040.7, 124.0], [1460.3, 125.8], [1487.9, 1283.6]], "cx": 1258.4, "cy": 704.7, "lx": 1243.2, "ly": 703.0, "fs": 70, "rot": -91.0}, {"farmer": "LÊ HẢI TRIỀU", "symbol": "2/2", "area": "196", "code": "TRIEU2", "points": [[3439.1, 1284.5], [3439.1, 128.4], [3865.8, 128.4], [3865.8, 1284.5]], "cx": 3652.5, "cy": 706.4, "lx": 3661.7, "ly": 784.3, "fs": 70, "rot": -91.0}, {"farmer": "PHAN THỊ TÁM", "symbol": "", "area": "257", "code": "TAM", "points": [[2034.3, 1284.5], [2445.2, 1284.5], [2445.2, 2434.3], [2034.3, 2434.3]], "cx": 2239.8, "cy": 1859.4, "lx": 2240.1, "ly": 1892.7, "fs": 70, "rot": -91.0}, {"farmer": "NGUYỄN VĂN SƠN", "symbol": "", "area": "177", "code": "SON", "points": [[548.7, 1283.3], [749.3, 1284.1], [848.3, 3265.5], [653.7, 3262.3]], "cx": 700.0, "cy": 2273.2, "lx": 722.8, "ly": 2275.1, "fs": 70, "rot": -91.0}, {"farmer": "LÊ VĂN THỨC", "symbol": "2/2", "area": "161", "code": "THUC2", "points": [[749.3, 1284.1], [934.5, 1284.7], [1042.1, 3268.7], [848.3, 3265.5]], "cx": 893.5, "cy": 2275.1, "lx": 912.1, "ly": 2294.0, "fs": 70, "rot": -91.0}], "canals": [[[2912.1, 3604.8], [4029.8, 4416.6], [5057.2, 5521.7], [8209.0, 6057.4], [8217.3, 6249.9], [4976.2, 5691.6], [3936.8, 4584.2], [2912.1, 3824.6]]], "zones": [{"text": "ĐƯỜNG TỐNG VĂN SƯƠNG", "x": 8603.8, "y": 3522.7, "fs": 180, "rot": 87.8}, {"text": "NHÀ HÀNG THE FIELD", "x": 82.0, "y": 2573.5, "fs": 180, "rot": 87.8}, {"text": "SÔNG", "x": 2316.1, "y": 4647.8, "fs": 240, "rot": 28.2}, {"text": "ĐƯỜNG BÊ TÔNG", "x": 4032.4, "y": -376.3, "fs": 180, "rot": 0.7}, {"text": "KÊNH THỦY LỢI", "x": 6898.6, "y": 5967.1, "fs": 107, "rot": 9.5}, {"text": "KÊNH THỦY LỢI", "x": 3462.6, "y": 4164.4, "fs": 107, "rot": 37.5}]},
-  CTDM: {"field": "CTDM", "fieldName": "Đồng Mẫu — Cẩm Thanh", "viewW": 9910.7, "viewH": 16745.3, "plots": [{"farmer": "PHẠM TRỌNG", "symbol": "", "area": "1365", "code": "TRONG", "points": [[350.0, 11954.5], [4864.2, 12164.5], [4864.2, 14775.6], [350.0, 14476.1]], "cx": 2607.1, "cy": 13320.3, "lx": 2553.7, "ly": 13297.0, "fs": 200, "rot": 2.0}, {"farmer": "TOÀN", "symbol": "", "area": "1077", "code": "TOAN", "points": [[9555.5, 12193.7], [5130.3, 11998.2], [5130.3, 9659.2], [9555.5, 9757.7]], "cx": 7342.9, "cy": 10877.9, "lx": 7262.7, "ly": 10742.4, "fs": 200, "rot": 2.0}, {"farmer": "BÙI CƯ", "symbol": "", "area": "1017", "code": "CU", "points": [[5130.3, 11998.2], [9555.5, 12193.7], [9555.5, 14530.3], [5130.3, 14302.2]], "cx": 7342.9, "cy": 13247.9, "lx": 7188.6, "ly": 13038.4, "fs": 200, "rot": 2.0}, {"farmer": "PHẠM HẬU", "symbol": "", "area": "1027", "code": "HAU", "points": [[350.0, 3067.2], [4864.2, 3199.6], [4864.2, 5209.0], [350.0, 5143.8]], "cx": 2607.1, "cy": 4171.7, "lx": 2587.3, "ly": 4091.1, "fs": 200, "rot": 2.0}, {"farmer": "NGUYỄN BÉ", "symbol": "", "area": "1036", "code": "BE", "points": [[350.0, 5143.8], [4864.2, 5209.0], [4864.2, 7133.9], [350.0, 6990.9]], "cx": 2607.1, "cy": 6100.0, "lx": 2575.6, "ly": 6051.1, "fs": 200, "rot": 2.0}, {"farmer": "TRẦN VĂN HỘI", "symbol": "1/2", "area": "734", "code": "HOI1", "points": [[5130.3, 14302.2], [9555.5, 14530.3], [9555.5, 16395.3], [5130.3, 15977.7]], "cx": 7342.9, "cy": 15254.0, "lx": 7219.7, "ly": 15058.7, "fs": 200, "rot": 2.0}, {"farmer": "NGUYỄN THỊ XÊ", "symbol": "", "area": "735", "code": "XE", "points": [[9555.5, 614.2], [9555.5, 2343.1], [5130.3, 2343.1], [5130.3, 614.2]], "cx": 7342.9, "cy": 1478.6, "lx": 7284.6, "ly": 1506.8, "fs": 200, "rot": 2.0}, {"farmer": "NGUYỄN QUANG", "symbol": "", "area": "668", "code": "QUANG", "points": [[5130.3, 3648.0], [9555.5, 3648.0], [9555.5, 5267.4], [5130.3, 5267.4]], "cx": 7342.9, "cy": 4457.7, "lx": 7237.7, "ly": 4435.7, "fs": 200, "rot": 2.0}, {"farmer": "LÊ HẢI", "symbol": "", "area": "691", "code": "HAI", "points": [[5130.3, 6539.7], [9555.5, 6539.7], [9555.5, 8165.8], [5130.3, 8117.4]], "cx": 7342.9, "cy": 7328.6, "lx": 7219.7, "ly": 7201.5, "fs": 200, "rot": 2.0}, {"farmer": "LÊ THỊ HÀ", "symbol": "", "area": "713", "code": "HA", "points": [[9555.5, 9757.7], [5130.3, 9659.2], [5130.3, 8117.4], [9555.5, 8165.8]], "cx": 7342.9, "cy": 8912.5, "lx": 7226.3, "ly": 8764.6, "fs": 200, "rot": 2.0}, {"farmer": "HUỲNH TƯ", "symbol": "", "area": "758", "code": "TU", "points": [[350.0, 2029.9], [350.0, 613.7], [4864.2, 614.2], [4864.2, 2171.2]], "cx": 2607.1, "cy": 1322.0, "lx": 2539.9, "ly": 1153.7, "fs": 200, "rot": 2.0}, {"farmer": "ĐỖ VĂN TÂM", "symbol": "", "area": "572", "code": "TAM", "points": [[5130.3, 2343.1], [9555.5, 2343.1], [9555.5, 3648.0], [5130.3, 3648.0]], "cx": 7342.9, "cy": 2995.5, "lx": 7293.9, "ly": 2955.6, "fs": 200, "rot": 2.0}, {"farmer": "HUỲNH THÔNG", "symbol": "", "area": "584", "code": "THONG", "points": [[5130.3, 5267.4], [9555.5, 5267.4], [9555.5, 6539.7], [5130.3, 6539.7]], "cx": 7342.9, "cy": 5903.5, "lx": 7301.8, "ly": 5754.6, "fs": 200, "rot": 2.0}, {"farmer": "TRẦN VĂN HỘI", "symbol": "2/2", "area": "524", "code": "HOI2", "points": [[350.0, 14476.1], [4864.2, 14775.6], [4864.2, 15961.1], [350.0, 15530.9]], "cx": 2607.1, "cy": 15153.3, "lx": 2639.7, "ly": 15076.5, "fs": 200, "rot": 2.0}, {"farmer": "VÕ THỊ NGỌC", "symbol": "", "area": "512", "code": "NGOC", "points": [[350.0, 6990.9], [4864.2, 7133.9], [4864.2, 8230.9], [350.0, 8002.0]], "cx": 2607.1, "cy": 7567.9, "lx": 2596.1, "ly": 7478.9, "fs": 200, "rot": 2.0}, {"farmer": "HUỲNH TỨ", "symbol": "", "area": "530", "code": "HTU", "points": [[350.0, 2029.9], [4864.2, 2171.2], [4864.2, 3199.6], [350.0, 3067.2]], "cx": 2607.1, "cy": 2619.2, "lx": 2538.3, "ly": 2511.0, "fs": 200, "rot": 2.0}, {"farmer": "TRƯƠNG THỊ SƯƠNG", "symbol": "", "area": "525", "code": "SUONG", "points": [[350.0, 10957.7], [4864.2, 11116.0], [4864.2, 12164.5], [350.0, 11954.5]], "cx": 2607.1, "cy": 11535.3, "lx": 2465.7, "ly": 11512.1, "fs": 200, "rot": 2.0}, {"farmer": "NGUYỄN THỊ BÀN", "symbol": "", "area": "482", "code": "BAN", "points": [[350.0, 9907.0], [4864.2, 10136.9], [4864.2, 11116.0], [350.0, 10957.7]], "cx": 2607.1, "cy": 10547.3, "lx": 2488.8, "ly": 10412.9, "fs": 200, "rot": 2.0}, {"farmer": "PHỔ", "symbol": "", "area": "506", "code": "PHO", "points": [[350.0, 8911.6], [4864.2, 9152.2], [4864.2, 10136.9], [350.0, 9907.0]], "cx": 2607.1, "cy": 9529.6, "lx": 2479.9, "ly": 9449.7, "fs": 200, "rot": 2.0}, {"farmer": "PHẠM THÔNG", "symbol": "", "area": "530", "code": "PTHONG", "points": [[350.0, 8002.0], [4864.2, 8230.9], [4864.2, 9152.2], [350.0, 8911.6]], "cx": 2607.1, "cy": 8571.2, "lx": 2558.6, "ly": 8494.6, "fs": 200, "rot": 2.0}], "canals": [[[9555.5, 614.2], [5125.1, 613.7], [5130.3, 15977.7], [4869.4, 15953.1], [4869.4, 614.2], [355.2, 613.7], [355.2, 350.0], [9560.7, 350.0]]], "zones": [{"text": "ĐƯỜNG TỐNG VĂN SƯƠNG", "x": 10493.0, "y": 7272.2, "fs": 360, "rot": 90.2}, {"text": "ĐƯỜNG BÊ TÔNG", "x": 22.3, "y": 8327.2, "fs": 240, "rot": 90.7}, {"text": "ĐƯỜNG BÊ TÔNG", "x": 5009.8, "y": 16527.8, "fs": 240, "rot": 5.1}, {"text": "KÊNH THỦY LỢI", "x": 4944.1, "y": 7102.1, "fs": 158, "rot": 90.2}, {"text": "KÊNH THỦY LỢI", "x": 5151.6, "y": 536.7, "fs": 161}]},
-};
-let MAP_DATA = ALL_FIELDS.CKOD;
-
-/* ================================================================
-   3. LOGIC — không cần sửa từ đây trở xuống
-   ================================================================ */
-let notionPlots = {};      // maNongDan -> {productCode, organic, area}
-let thuaDangChon = null;
-let cheDoChonNhieu = false;
-let thuaDaChonNhieu = new Set();   // chỉ số các thửa đã tick
-let zoomLv = 1;
-let xoayLv = 0;
-const $ = id => document.getElementById(id);
-
-function nhanThua(p){ return (p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim(); }
-
-/* Điện thoại: đổi link sang notion:// để mở thẳng app */
-function linkNotion(u){
-  if(!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return u;
-  // Rút mã trang 32 ký tự ở cuối link — đưa app đường dẫn trần thì nó
-  // mở đúng trang task; để nguyên link có tiêu đề dài app hay bị lạc.
-  const m = u.match(/([0-9a-f]{32})(?:[?#].*)?$/i);
-  return m ? 'notion://www.notion.so/' + m[1]
-           : u.replace(/^https?:\/\//, 'notion://');
-}
-
-/* ---------- vẽ bản đồ ---------- */
-function veBanDo(){
-  const d = MAP_DATA;
-  xoayLv = 0;   // đổi bản đồ thì trả hướng về mặc định
-  const x0 = d.viewX0 || 0, y0 = d.viewY0 || 0;
-  let s = `<svg id="svgBanDo" viewBox="${x0} ${y0} ${d.viewW} ${d.viewH}" xmlns="http://www.w3.org/2000/svg"><g id="gXoay">`;
-  const netVien = Math.max(12, Math.round(Math.max(d.viewW, d.viewH) * 0.0021));
-  (d.canals||[]).forEach(c=>{
-    s += `<polygon class="kenh" points="${c.map(pt=>pt.join(',')).join(' ')}" stroke-width="${netVien}"/>`;
-  });
-  (d.roads||[]).forEach(c=>{
-    s += `<polygon class="duong" points="${c.map(pt=>pt.join(',')).join(' ')}" stroke-width="${netVien}"/>`;
-  });
-  d.plots.forEach((p,i)=>{
-    const pts = p.points.map(pt=>pt.join(',')).join(' ');
-    s += `<polygon id="thua${i}" class="thua chua-ro" points="${pts}" stroke-width="${netVien}" data-sw="${netVien}" onclick="chonThua(${i})"/>`;
-  });
-  d.plots.forEach(p=>{
-    const nhan = nhanThua(p);
-    const lx = p.lx || p.cx, ly = p.ly || p.cy;
-    const f1 = p.fs || 46, f2 = (p.fs ? p.fs-2 : 42);
-    const g = p.rot ? ` transform="rotate(${p.rot} ${lx} ${ly})"` : '';
-    s += `<g${g}>`;
-    const dongTen = p.nl || [nhan];
-    dongTen.forEach((t,k)=>{
-      s += `<text class="ten-nd" x="${lx}" y="${(ly - f1*0.26 + k*f1*1.1).toFixed(1)}" font-size="${f1}" text-anchor="middle">${t}</text>`;
-    });
-    s += `<text class="dt-nd" x="${lx}" y="${(ly + f1*0.96 + (dongTen.length-1)*f1*1.1).toFixed(1)}" font-size="${f2}" text-anchor="middle">${p.area}</text>`;
-    s += `</g>`;
-  });
-  d.zones.forEach(z=>{
-    const zr = z.rot ? ` transform="rotate(${z.rot} ${z.x} ${z.y})"` : '';
-    s += `<text class="vung" x="${z.x}" y="${z.y}" font-size="${z.fs||86}" text-anchor="middle"${zr}>${z.text}</text>`;
-  });
-  s += '</g></svg>';
-  $('svgwrap').innerHTML = s;
-}
-
-/* ---------- xoay bản đồ ---------- */
-function xoay(delta){
-  xoayLv = (xoayLv + delta) % 360;
-  capNhatXoay();
-}
-function capNhatXoay(){
-  const d = MAP_DATA;
-  const svg = $('svgBanDo'), g = $('gXoay');
-  if(!svg || !g) return;
-  const x0 = d.viewX0 || 0, y0 = d.viewY0 || 0;
-  const cx = x0 + d.viewW/2, cy = y0 + d.viewH/2;
-  const rad = xoayLv * Math.PI/180;
-  const c = Math.abs(Math.cos(rad)), si = Math.abs(Math.sin(rad));
-  // nới khung nhìn theo góc để 4 góc bản đồ không bị cắt khi xoay
-  const W = d.viewW*c + d.viewH*si, H = d.viewW*si + d.viewH*c;
-  svg.setAttribute('viewBox', `${(cx - W/2).toFixed(1)} ${(cy - H/2).toFixed(1)} ${W.toFixed(1)} ${H.toFixed(1)}`);
-  g.setAttribute('transform', `rotate(${xoayLv.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)})`);
-}
-
-function zoom(f){
-  zoomLv = Math.min(6, Math.max(1, zoomLv*f));
-  $('svgwrap').style.width = (zoomLv*100)+'%';
-  const svg = document.querySelector('#svgwrap svg');
-  if(svg) svg.style.maxHeight = (zoomLv > 1) ? 'none' : '72vh';
-}
-
-/* ---------- gọi API ---------- */
-async function goiAPI(body){
-  const res = await fetch(API_URL, {method:'POST', body: JSON.stringify(body)});
-  return res.json();
-}
-
-/* ---------- nạp dữ liệu Notion & tô màu ---------- */
-const EP_MOI = new URLSearchParams(location.search).get('moi') === '1'; // ?moi=1 = bỏ qua đệm
-
-function apDungKetQua(r){
-  const tt = $('trangthai');
-  notionPlots = {};
-  r.plots.forEach(pl=>{
-    const parts = (pl.productCode||'').split('-');
-    if(parts.length >= 2) notionPlots[parts[1].toUpperCase()] = pl;
-  });
-  let khop = 0;
-  const hoHuuCo = new Set();   // 1 người 2 thửa (LONG1/LONG2…) chỉ tính 1 hộ
-  MAP_DATA.plots.forEach((p,i)=>{
-    const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
-    const nd = notionPlots[ma];
-    const el = $('thua'+i);
-    el.classList.remove('huu-co','khong-huu-co','chua-ro');
-    if(nd){
-      khop++;
-      el.classList.add(nd.organic ? 'huu-co' : 'khong-huu-co');
-      if(nd.organic) hoHuuCo.add(p.farmer.trim().toUpperCase());
-    }
-    else el.classList.add('chua-ro');
-  });
-  tt.textContent = `Đã khớp ${khop}/${MAP_DATA.plots.length} thửa (vụ ${$('selVu').value}).`;
-  veVuPanel(r.season, hoHuuCo.size);
-}
-
-async function napNotion(){
-  const tt = $('trangthai');
-  tt.className='';
-  const khoaDem = 'htxmap_' + MAP_DATA.field + '_' + $('selVu').value;
-  // Hiện ngay bằng dữ liệu lần trước (nếu có) rồi âm thầm tải bản mới
-  let coDem = false;
-  if(!EP_MOI){
-    try{
-      const dem = localStorage.getItem(khoaDem);
-      if(dem){ apDungKetQua(JSON.parse(dem)); coDem = true; }
-    }catch(e){}
-  }
-  if(!coDem) tt.textContent = 'Đang tải dữ liệu…';
-  try{
-    const r = await goiAPI({action:'getMapData', field: MAP_DATA.field, season: $('selVu').value, fresh: EP_MOI ? 1 : 0});
-    if(!r.ok) throw r.error;
-    apDungKetQua(r);
-    try{ localStorage.setItem(khoaDem, JSON.stringify(r)); }catch(e){}
-  }catch(e){
-    if(!coDem){
-      tt.className='loi';
-      tt.textContent = 'Không tải được dữ liệu: ' + e + ' — bản đồ vẫn xem được, màu sắc chưa cập nhật.';
-    }
-  }
-}
-
-/* ---------- thanh tiến độ mùa vụ ---------- */
-function veVuPanel(s, soHoDem){
-  const panel = $('vuPanel');
-  if(!s || !s.gieoSa || !s.thuHoach){ panel.style.display='none'; return; }
-  panel.style.display='block';
-  $('vuTen').textContent = 'Tiến độ mùa vụ — ' + (s.name || $('selVu').options[$('selVu').selectedIndex].text);
-
-  const D = 86400000;
-  const start = new Date(s.gieoSa+'T00:00:00');
-  const end   = new Date(s.thuHoach+'T00:00:00');
-  const nay   = new Date(); nay.setHours(0,0,0,0);
-  const tongNgay = Math.max(1, Math.round((end-start)/D));
-  const quaNgay  = Math.round((nay-start)/D);
-  const pct = Math.min(100, Math.max(0, quaNgay/tongNgay*100));
-
-  // Các mốc: chỉ hiện mốc đã có ngày trong Notion
-  const mocs = [
-    {ten:'Gieo sạ',   ngay:s.gieoSa},
-    {ten:'Đón đòng',  ngay:s.donDong},
-    {ten:'Trổ bông',  ngay:s.troBong},
-    {ten:'Chắc hạt',  ngay:s.chacHat},
-    {ten:'Thu hoạch', ngay:s.thuHoach},
-  ].filter(m=>m.ngay);
-
-  let html = `<div class="tienDoFill" style="width:${pct}%"></div>`;
-  let giaiDoanHT = 'Gieo sạ';
-  mocs.forEach(m=>{
-    const d = new Date(m.ngay+'T00:00:00');
-    const p = Math.min(100, Math.max(0, (d-start)/(end-start)*100));
-    const qua = d <= nay;
-    if(qua) giaiDoanHT = m.ten;
-    const [y,mo,da] = m.ngay.split('-');
-    html += `<div class="moc${qua?' qua':''}" style="left:${p}%"></div>`;
-    html += `<div class="moc-nhan${qua?' qua':''}" style="left:${p}%">${m.ten}<small>${da}/${mo}</small></div>`;
-  });
-  $('tienDoKhung').innerHTML = html;
-
-  $('vuGiaiDoan').innerHTML = (quaNgay >= 0 && nay <= end)
-    ? `🌾 Đang giai đoạn: <b>${giaiDoanHT}</b> — ngày thứ <b>${quaNgay}</b> sau gieo sạ (${Math.round(pct)}%)`
-    : (nay > end ? `✅ Vụ đã kết thúc — tổng ${tongNgay} ngày canh tác` : `🌱 Vụ chưa bắt đầu — gieo sạ ngày ${s.gieoSa}`);
-
-  // 3 thông số tổng
-  $('tsDienTich').textContent = s.tongDienTich != null
-    ? (s.tongDienTich >= 10000
-        ? (s.tongDienTich/10000).toFixed(2).replace('.',',') + ' ha'
-        : Math.round(s.tongDienTich).toLocaleString('vi-VN') + ' m²')
-    : '—';
-  $('tsSoHo').textContent = (soHoDem > 0) ? soHoDem + ' hộ'
-    : (s.soHo != null ? s.soHo + ' hộ' : '—');
-  $('tsSanLuong').textContent = (s.tongSanLuong != null && s.tongSanLuong > 0)
-    ? Math.round(s.tongSanLuong).toLocaleString('vi-VN') + ' kg'
-    : 'Chưa thu hoạch';
-}
-
-/* ---------- chọn thửa ---------- */
-function chonThua(i){
-  if(cheDoChonNhieu){ tickThua(i); return; }   // đang chọn nhiều → chạm là tick
-  thuaDangChon = i;
-  document.querySelectorAll('.thua').forEach(e=>e.classList.remove('chon-active'));
-  $('thua'+i).classList.add('chon-active');
-  const p = MAP_DATA.plots[i];
-  const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
-  const nd = notionPlots[ma];
-  $('tThua').textContent = nhanThua(p) + ' — ' + p.area + ' m²';
-  $('tMa').textContent = nd ? nd.productCode : 'Chưa có mã sản phẩm';
-  $('tBadge').innerHTML = nd
-    ? (nd.organic ? '<span class="badge hc">Canh tác hữu cơ</span>' : '<span class="badge khc">Không hữu cơ</span>')
-    : '<span class="badge cr">Chưa có dữ liệu</span>';
-  moModal('mpThua');
-}
-
-/* ---------- chọn nhiều thửa ---------- */
-function toggleChonNhieu(){
-  cheDoChonNhieu = !cheDoChonNhieu;
-  $('btnChonNhieu').classList.toggle('dang-bat', cheDoChonNhieu);
-  $('thanhChonNhieu').style.display = cheDoChonNhieu ? 'flex' : 'none';
-  if(!cheDoChonNhieu) xoaTickTatCa();
-}
-function tickThua(i){
-  if(thuaDaChonNhieu.has(i)){ thuaDaChonNhieu.delete(i); $('thua'+i).classList.remove('dachon-nhieu'); }
-  else { thuaDaChonNhieu.add(i); $('thua'+i).classList.add('dachon-nhieu'); }
-  $('cnSoLuong').textContent = 'Đã chọn ' + thuaDaChonNhieu.size + ' thửa';
-}
-function xoaTickTatCa(){
-  thuaDaChonNhieu.forEach(i=>{ const el=$('thua'+i); if(el) el.classList.remove('dachon-nhieu'); });
-  thuaDaChonNhieu.clear();
-  $('cnSoLuong').textContent = 'Đã chọn 0 thửa';
-}
-function huyChonNhieu(){
-  cheDoChonNhieu = false;
-  $('btnChonNhieu').classList.remove('dang-bat');
-  $('thanhChonNhieu').style.display = 'none';
-  xoaTickTatCa();
-}
-function nhapNhieuThua(){
-  if(!thuaDaChonNhieu.size){ alert('Anh chưa chọn thửa nào. Chạm vào các thửa trên bản đồ để chọn.'); return; }
-  const ph = phienHienTai();
-  if(!ph){ moModal('mpDN'); return; }
-  if(ph.role === 'khach'){ alert('Tài khoản khách chỉ xem chi tiết nhật ký, không nhập liệu được.'); return; }
-  // Gom mã Notion của các thửa đã tick; thửa chưa khớp mã sẽ bị bỏ khi lưu (server báo lại)
-  maNhieuThua = [];
-  const tenBoQua = [];
-  thuaDaChonNhieu.forEach(i=>{
-    const p = MAP_DATA.plots[i];
-    const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
-    if(nd) maNhieuThua.push(nd.productCode);
-    else tenBoQua.push(nhanThua(p));
-  });
-  if(!maNhieuThua.length){ alert('Các thửa đã chọn đều chưa có mã sản phẩm trong Notion nên chưa nhập liệu được.'); return; }
-  // Mở form ở chế độ nhiều thửa
-  dangNhapNhieu = true;
-  moModal('mpNhap');
-  $('nlMa').innerHTML = '<b>' + maNhieuThua.length + ' thửa</b> sẽ được ghi cùng nội dung này'
-    + (tenBoQua.length ? ' <span style="color:#c0392b">(bỏ qua ' + tenBoQua.length + ' thửa chưa có mã: ' + tenBoQua.join(', ') + ')</span>' : '');
-  $('nlNgay').value = new Date().toISOString().slice(0,10);
-  $('nlTieuDe').value=''; $('nlNoiDung').value=''; $('nlAnh').value='';
-  $('nlTrangThai').value='Hoàn thành';
-  $('nlXemAnh').innerHTML=''; $('nlLoi').textContent=''; anhDaChon=[];
-  $('nlVideo').value=''; $('nlXemVideo').innerHTML=''; videoDaChon=[];
-}
-
-/* ---------- nhật ký ---------- */
-async function moNhatKy(){
-  const p = MAP_DATA.plots[thuaDangChon];
-  const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
-  if(!nd){ alert('Thửa này chưa có dữ liệu nên chưa xem được nhật ký.'); return; }
-  dongModal('mpThua'); moModal('mpNK');
-  $('nkMa').textContent = nd.productCode;
-  $('nkDS').innerHTML = '<div class="trong">Đang tải…</div>';
-  try{
-    const phNK = phienHienTai();
-    const r = await goiAPI({action:'getHistory', productCode: nd.productCode,
-      token: phNK ? phNK.token : ''});
-    if(!r.ok) throw r.error;
-    if(!r.entries.length){ $('nkDS').innerHTML = '<div class="trong">Chưa có bản ghi nào cho thửa này trong vụ này.</div>'; return; }
-    const khoa = !phNK;   // chưa đăng nhập → chi tiết bị khóa từ máy chủ
-    const dongKhoa = khoa
-      ? `<div class="nk-khoa">🔒 Mô tả chi tiết và ảnh/video chỉ dành cho tài khoản xã viên hoặc khách hàng của HTX. <button onclick="dongModal('mpNK');moModal('mpDN')">Đăng nhập</button></div>`
-      : '';
-    $('nkDS').innerHTML = dongKhoa + r.entries.map((e,idx)=>`
-      <div class="nkmuc">
-        <div class="nk-ngay">${e.date||''}</div>
-        <div class="nk-tieude">${e.title}</div>
-        ${e.status?`<span class="nk-tt">${e.status}</span>`:''}
-        ${(e.desc || (e.media && e.media.count))?`<div class="nk-mota" id="nkmt${idx}" style="display:none">${e.desc?escHtml(e.desc):''}${dinhKemHtml(e.media)}</div>
-           <button class="nk-xemthem" onclick="toggleMota(${idx})" id="nkbtn${idx}">Xem thêm ▾</button>`:''}
-        ${e.url?`<div><a href="${linkNotion(e.url)}" target="_blank" rel="noopener">Xem chi tiết trên Notion ↗</a></div>`:''}
-      </div>`).join('');
-  }catch(e){ $('nkDS').innerHTML = '<div class="trong">Lỗi tải nhật ký: '+e+'</div>'; }
-}
-function escHtml(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-}
-function toggleMota(i){
-  const m = $('nkmt'+i), b = $('nkbtn'+i);
-  const an = m.style.display === 'none';
-  m.style.display = an ? 'block' : 'none';
-  b.textContent = an ? 'Thu gọn ▴' : 'Xem thêm ▾';
-}
-// Nhãn đính kèm: liệt kê từng ảnh/video thành link riêng — bấm cái nào mở cái đó,
-// xem được hết mọi file, không phụ thuộc mũi tên của Drive.
-function dinhKemHtml(media){
-  if(!media || !media.count) return '';
-  const tong = [];
-  if(media.anh)   tong.push(media.anh + ' ảnh');
-  if(media.video) tong.push(media.video + ' video');
-  let s = '<div class="nk-dinhkem-box"><div class="nk-dinhkem-tit">📎 Đính kèm: ' + tong.join(', ') + '</div><div class="nk-dinhkem-ds">';
-  let sa = 0, sv = 0;
-  (media.items || []).forEach(it=>{
-    if(!it.url){ return; }
-    const nhan = it.video ? ('Video ' + (++sv)) : ('Ảnh ' + (++sa));
-    s += '<a class="nk-media" href="' + it.url + '" target="_blank" rel="noopener">' + nhan + '</a>';
-  });
-  s += '</div></div>';
-  return s;
-}
-
-/* ---------- đăng nhập ---------- */
-function phienHienTai(){
-  try{ return JSON.parse(localStorage.getItem('htx_phien')||'null'); }catch(e){ return null; }
-}
-function veUserBox(){
-  const ph = phienHienTai();
-  $('userBox').innerHTML = ph
-    ? `👤 ${ph.username}${(ph.role==='khach')?' (khách xem)':''} <button onclick="dangXuat()">Đăng xuất</button>`
-    : `<button onclick="moModal('mpDN')">Đăng nhập</button>`;
-}
-async function dangNhap(){
-  $('dnLoi').textContent=''; $('dnGui').disabled = true;
-  try{
-    const r = await goiAPI({action:'login', username:$('dnUser').value.trim(), password:$('dnPass').value});
-    if(!r.ok) throw r.error;
-    localStorage.setItem('htx_phien', JSON.stringify({token:r.token, username:r.username, role:r.role||'admin'}));
-    veUserBox(); dongModal('mpDN');
-    if(thuaDangChon !== null) moNhapLieu();
-  }catch(e){ $('dnLoi').textContent = e; }
-  $('dnGui').disabled = false;
-}
-function dangXuat(){ localStorage.removeItem('htx_phien'); veUserBox(); }
-
-/* ---------- nhập liệu ---------- */
-let anhDaChon = [];
-let videoDaChon = [];
-let dangNhapNhieu = false;      // form đang ở chế độ nhiều thửa?
-let maNhieuThua = [];           // danh sách mã Notion khi nhập nhiều thửa
-function moNhapLieu(){
-  dangNhapNhieu = false;   // luồng 1 thửa
-  const ph = phienHienTai();
-  if(!ph){ dongModal('mpThua'); moModal('mpDN'); return; }
-  if(ph.role === 'khach'){ alert('Tài khoản khách chỉ xem chi tiết nhật ký, không nhập liệu được.'); return; }
-  const p = MAP_DATA.plots[thuaDangChon];
-  const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
-  if(!nd){ alert('Thửa này chưa khớp mã sản phẩm trong Notion nên chưa nhập liệu được.'); return; }
-  dongModal('mpThua'); moModal('mpNhap');
-  $('nlMa').textContent = nd.productCode;
-  $('nlNgay').value = new Date().toISOString().slice(0,10);
-  $('nlTieuDe').value=''; $('nlNoiDung').value=''; $('nlAnh').value='';
-  $('nlTrangThai').value='Hoàn thành';
-  $('nlXemAnh').innerHTML=''; $('nlLoi').textContent=''; anhDaChon=[];
-  $('nlVideo').value=''; $('nlXemVideo').innerHTML=''; videoDaChon=[];
-}
-
-// nén ảnh phía trình duyệt (tối đa cạnh 1600px, JPEG 80%)
-$('nlAnh') && $('nlAnh').addEventListener('change', async function(){
-  // Cộng dồn vào danh sách (chụp camera từng tấm vẫn giữ đủ, không đè tấm trước)
-  for(const f of this.files){
-    const b64 = await nenAnh(f);
-    const ten = (f.name || 'anh').replace(/\.[^.]+$/,'') + '_' + Date.now() + '.jpg';
-    anhDaChon.push({name: ten, mimeType:'image/jpeg', base64: b64});
-  }
-  this.value = '';   // xóa lựa chọn của ô input để lần bấm sau luôn nhận ảnh mới
-  veXemAnh();
-});
-
-// Vẽ lại dàn ảnh xem trước, mỗi ảnh có nút × để bỏ
-function veXemAnh(){
-  const kho = $('nlXemAnh');
-  kho.innerHTML = '';
-  anhDaChon.forEach((a, i)=>{
-    const o = document.createElement('div');
-    o.className = 'anh-o';
-    o.innerHTML = '<img src="data:image/jpeg;base64,' + a.base64 + '">'
-      + '<button type="button" class="anh-x" aria-label="Bỏ ảnh này" onclick="boAnh(' + i + ')">×</button>';
-    kho.appendChild(o);
-  });
-}
-function boAnh(i){
-  anhDaChon.splice(i, 1);
-  veXemAnh();
-}
-
-// ---- video: đọc nguyên file (không nén), giới hạn 20MB/video ----
-$('nlVideo') && $('nlVideo').addEventListener('change', async function(){
-  for(const f of this.files){
-    if(f.size > 20*1024*1024){
-      alert('Video "' + f.name + '" nặng ' + (f.size/1048576).toFixed(1) +
-            'MB — vượt 20MB nên bị bỏ qua. Anh quay clip ngắn 15–30 giây nhé.');
-      continue;
-    }
-    const b64 = await docFileB64(f);
-    const duoi = (f.name.match(/\.[^.]+$/) || ['.mp4'])[0];
-    videoDaChon.push({
-      name: f.name.replace(/\.[^.]+$/,'') + '_' + Date.now() + duoi,
-      mimeType: f.type || 'video/mp4',
-      base64: b64,
-      mb: (f.size/1048576).toFixed(1),
-    });
-  }
-  this.value = '';
-  veXemVideo();
-});
-function docFileB64(f){
-  return new Promise((res, rej)=>{
-    const r = new FileReader();
-    r.onload = ()=>res(r.result.split(',')[1]);
-    r.onerror = rej;
-    r.readAsDataURL(f);
-  });
-}
-function veXemVideo(){
-  $('nlXemVideo').innerHTML = videoDaChon.map((v,i)=>
-    '<div class="vid-chip">🎬 <span>' + v.name + '</span> (' + v.mb + 'MB)' +
-    '<button type="button" aria-label="Bỏ video này" onclick="boVideo(' + i + ')">×</button></div>'
-  ).join('');
-}
-function boVideo(i){
-  videoDaChon.splice(i, 1);
-  veXemVideo();
-}
-function nenAnh(file){
-  return new Promise((res, rej)=>{
-    const img = new Image();
-    img.onload = ()=>{
-      const MAX = 1600;
-      let w = img.width, h = img.height;
-      if(Math.max(w,h) > MAX){ const k = MAX/Math.max(w,h); w=Math.round(w*k); h=Math.round(h*k); }
-      const c = document.createElement('canvas'); c.width=w; c.height=h;
-      c.getContext('2d').drawImage(img,0,0,w,h);
-      res(c.toDataURL('image/jpeg',0.8).split(',')[1]);
-    };
-    img.onerror = rej;
-    img.src = URL.createObjectURL(file);
-  });
-}
-
-async function guiNhapLieu(){
-  const ph = phienHienTai();
-  if(!ph){ moModal('mpDN'); return; }
-  const tieude = $('nlTieuDe').value.trim();
-  if(!tieude){ $('nlLoi').textContent = 'Vui lòng nhập tiêu đề.'; return; }
-
-  // Gói dữ liệu chung; 1 thửa gửi productCode, nhiều thửa gửi productCodes[]
-  const goi = {action:'createEntry', token: ph.token, title: tieude,
-    content: $('nlNoiDung').value.trim(), date: $('nlNgay').value,
-    status: $('nlTrangThai').value,
-    images: anhDaChon.concat(videoDaChon)};
-  if(dangNhapNhieu){
-    goi.productCodes = maNhieuThua;
-  }else{
-    const p = MAP_DATA.plots[thuaDangChon];
-    const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
-    if(!nd){ $('nlLoi').textContent = 'Thửa này chưa có mã sản phẩm.'; return; }
-    goi.productCode = nd.productCode;
-  }
-
-  $('nlGui').disabled = true; $('nlGui').textContent='Đang lưu…'; $('nlLoi').textContent='';
-  try{
-    const r = await goiAPI(goi);
-    if(!r.ok) throw r.error;
-    const soTask = r.soTask || 1;
-    $('nlGui').textContent = '✓ Đã lưu ' + soTask + ' bản ghi';
-    // Nếu có thửa bị bỏ qua (chưa khớp mã) → báo lại cho anh
-    if(r.boQua && r.boQua.length){
-      $('nlLoi').style.color = '#b26a00';
-      $('nlLoi').textContent = 'Đã bỏ qua ' + r.boQua.length + ' thửa chưa khớp mã: ' + r.boQua.join(', ');
-    }
-    const cho = (r.boQua && r.boQua.length) ? 2600 : 1200;
-    setTimeout(()=>{
-      dongModal('mpNhap');
-      $('nlGui').disabled=false; $('nlGui').textContent='Lưu vào Notion';
-      $('nlLoi').style.color=''; 
-      if(dangNhapNhieu) huyChonNhieu();   // xong đợt nhiều thửa thì tắt chế độ, xóa tick
-    }, cho);
-  }catch(e){
-    $('nlLoi').style.color=''; $('nlLoi').textContent = e;
-    if(String(e).includes('hết hạn') || String(e).includes('đăng nhập')){ dangXuat(); moModal('mpDN'); }
-    $('nlGui').disabled=false; $('nlGui').textContent='Lưu vào Notion';
-  }
-}
-
-/* ---------- modal ---------- */
-function moModal(id){ $(id).classList.add('mo'); }
-function dongModal(id){ $(id).classList.remove('mo'); }
+/* Bản nháp: chỉ vài hàm tối thiểu để anh bấm thử.
+   Khi ghép thật, đăng nhập/giỏ hàng sẽ dùng js/chung.js. */
+function moModal(id){ document.getElementById(id).classList.add('mo'); }
+function dongModal(id){ document.getElementById(id).classList.remove('mo'); }
 document.querySelectorAll('.modal-phu').forEach(m=>{
   m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('mo'); });
 });
-
-/* ---------- khởi động ---------- */
-veBanDo(); veUserBox();
-
-/* ---- zoom bằng lăn chuột & véo 2 ngón ---- */
-const kbando = document.querySelector('.khung-bando');
-kbando.addEventListener('wheel', function(e){
-  e.preventDefault();
-  const rect = kbando.getBoundingClientRect();
-  const mx = e.clientX - rect.left + kbando.scrollLeft;
-  const my = e.clientY - rect.top  + kbando.scrollTop;
-  const cu = zoomLv;
-  zoom(e.deltaY < 0 ? 1.07 : 1/1.07);
-  const r = zoomLv / cu;
-  if(r !== 1){
-    kbando.scrollLeft = mx*r - (e.clientX - rect.left);
-    kbando.scrollTop  = my*r - (e.clientY - rect.top);
-  }
-}, {passive:false});
-
-let veo2ngon = 0, veoGoc = null;
-function goc2ngon(e){
-  return Math.atan2(e.touches[1].clientY - e.touches[0].clientY,
-                    e.touches[1].clientX - e.touches[0].clientX) * 180/Math.PI;
+let soGio = 0;
+function themGio(){
+  soGio++;
+  document.getElementById('gioDem').textContent = soGio;
 }
-kbando.addEventListener('touchstart', function(e){
-  if(e.touches.length === 2){
-    veo2ngon = Math.hypot(e.touches[0].clientX - e.touches[1].clientX,
-                          e.touches[0].clientY - e.touches[1].clientY);
-    veoGoc = goc2ngon(e);
-  }
-}, {passive:true});
-kbando.addEventListener('touchmove', function(e){
-  if(e.touches.length === 2 && veo2ngon){
-    e.preventDefault();
-    const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX,
-                         e.touches[0].clientY - e.touches[1].clientY);
-    zoom(d / veo2ngon);
-    veo2ngon = d;
-    const g = goc2ngon(e);       // vặn 2 ngón = xoay bản đồ theo tay
-    let dg = g - veoGoc;
-    if(dg > 180) dg -= 360; if(dg < -180) dg += 360;
-    xoay(dg);
-    veoGoc = g;
-  }
-}, {passive:false});
-kbando.addEventListener('touchend', function(){ veo2ngon = 0; veoGoc = null; });
-$('selVu').addEventListener('change', napNotion);
-$('selDong').addEventListener('change', function(){
-  if(cheDoChonNhieu) huyChonNhieu();   // đổi đồng thì bỏ chọn nhiều (chỉ số thửa khác nhau)
-  MAP_DATA = ALL_FIELDS[this.value];
-  zoomLv = 1; $('svgwrap').style.width = '100%';
-  veBanDo();
-  if(API_URL.startsWith('http')) napNotion();
-});
-if(API_URL.startsWith('http')) napNotion();
-else $('trangthai').textContent = 'Đang kết nối dữ liệu…';
 </script>
-
-
-</body></html>
+</body>
+</html>

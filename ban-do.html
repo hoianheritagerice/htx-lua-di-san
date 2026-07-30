@@ -244,30 +244,280 @@ body.nhung #trangthai{padding-top:10px}
 </script>
 
 <script>
-/* Tự kiểm phiên bản js/ban-do.js. Nếu lệch, hiện dải đỏ kèm nút nạp lại
-   bằng địa chỉ mới hoàn toàn — xử lý được cả trường hợp trình duyệt đã
-   lưu nhầm nội dung cũ ở địa chỉ có sẵn số phiên bản. */
+/* ======================================================================
+   FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html
+   ----------------------------------------------------------------------
+   Vì sao đặt ở đây thay vì trong js/ban-do.js:
+   Ba lần liên tiếp form không bấm được, đều do ban-do.html và
+   js/ban-do.js lệch phiên bản nhau. Đặt trọn logic vào chính file HTML
+   thì không còn hai file phải khớp — cập nhật ban-do.html là chạy, dù
+   js/ban-do.js đang là bản nào.
+
+   Toàn bộ nằm trong một hàm bọc kín, KHÔNG khai báo let/const ở phạm vi
+   toàn cục, nên không thể đụng độ tên biến với js/ban-do.js (dù bản cũ
+   hay bản mới). Các hàm cần thiết được gán đè lên window ở cuối.
+   ====================================================================== */
 (function () {
-  var can = '2.1';
-  if (typeof BANDO_VER !== 'undefined' && BANDO_VER === can) return;
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
 
-  var dang = (typeof BANDO_VER === 'undefined') ? 'bản cũ (không rõ số)' : 'bản ' + BANDO_VER;
-  var d = document.createElement('div');
-  d.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#c0392b;'
-    + 'color:#fff;font:14px/1.6 system-ui,sans-serif;padding:14px 16px;text-align:center';
-  d.innerHTML =
-      '⚠️ Trình duyệt đang dùng <b>js/ban-do.js ' + dang + '</b>, cần <b>bản ' + can + '</b>. '
-    + 'Form nhập liệu sẽ không bấm được.<br>'
-    + '<button id="btnNapLai" style="margin-top:9px;padding:9px 20px;border:0;border-radius:20px;'
-    + 'background:#fff;color:#c0392b;font:600 14px system-ui,sans-serif;cursor:pointer">'
-    + '↻ Nạp lại bản mới nhất</button>';
-  document.body.appendChild(d);
-
-  document.getElementById('btnNapLai').onclick = function () {
-    var q = new URLSearchParams(location.search);
-    q.set('cb', String(Date.now()));   // địa chỉ chưa từng tồn tại → chắc chắn tải mới
-    location.replace(location.pathname + '?' + q.toString());
+  /* Danh sách option — phải khớp TỪNG KÝ TỰ với Notion và với
+     CONFIG.WL trong Apps Script. Sai một dấu là dữ liệu bị chặn. */
+  var OPT = {
+    hoatDong: ['Làm đất','Ngâm ủ giống','Gieo/Cấy','Dặm - cấy lại','Bón phân',
+               'Điều tiết nước','Làm cỏ','Cắt bông cỏ','Rào chuột',
+               'Phun sinh học','Thu hoạch'],
+    vanDe: ['Cỏ chát','Cỏ mật','Cỏ lồng vực','Cỏ khác','Chuột','Ốc bươu vàng',
+            'Chim','Sâu cuốn lá','Rầy nâu','Đạo ôn','Khô vằn','Sâu đục thân',
+            'Khô nước','Ngập úng','Nhiễm mặn','Đổ ngã','Vàng lá'],
+    mucDo: ['Nhẹ (<10%)','Vừa (10-30%)','Nặng (>30%)'],
+    viTri: ['Giữa đám','Sát bờ','Giáp đất màu','Giáp đất ở','Giáp đống rơm',
+            'Giáp mương','Giáp chuồng bò'],
+    xuLy:  ['Rào ni lông','Bơm nước','Tháo nước','Cắt bông cỏ','Thuê công','Đặt bẫy']
   };
+
+  var nlNhom = '';
+  var nlChon = { hoatDong:'', vanDe:[], mucDo:'', viTri:[], xuLy:[] };
+
+  function hienKhoi(id, hien) {
+    var e = $(id); if (e) e.classList.toggle('nl-an', !hien);
+  }
+
+  function capNhatOHoatDong() {
+    hienKhoi('khoiPhan', nlChon.hoatDong === 'Bón phân');
+    hienKhoi('khoiNuoc', nlChon.hoatDong === 'Điều tiết nước');
+  }
+
+  function veChip(idHop, ds, khoa, nhieu, lopThem) {
+    var hop = $(idHop); if (!hop) return;
+    hop.innerHTML = ds.map(function (v, i) {
+      var lop = lopThem ? (' ' + lopThem[i]) : '';
+      return '<button type="button" class="chip' + lop + '" data-v="' + v + '">' + v + '</button>';
+    }).join('');
+    Array.prototype.forEach.call(hop.querySelectorAll('.chip'), function (b) {
+      b.onclick = function () {
+        var v = b.getAttribute('data-v');
+        if (nhieu) {
+          var ds2 = nlChon[khoa], i = ds2.indexOf(v);
+          if (i === -1) ds2.push(v); else ds2.splice(i, 1);
+          b.classList.toggle('dachon');
+        } else {
+          var bat = (nlChon[khoa] !== v);
+          Array.prototype.forEach.call(hop.querySelectorAll('.chip'), function (x) {
+            x.classList.remove('dachon');
+          });
+          nlChon[khoa] = bat ? v : '';
+          if (bat) b.classList.add('dachon');
+          if (khoa === 'hoatDong') capNhatOHoatDong();
+        }
+      };
+    });
+  }
+
+  function chonNhom(nhom) {
+    nlNhom = nhom;
+    $('nhomCT').classList.toggle('dachon', nhom === 'Canh tác');
+    $('nhomVD').classList.toggle('dachon', nhom === 'Vấn đề');
+    $('nhomQS').classList.toggle('dachon', nhom === 'Quan sát');
+    hienKhoi('khoiCanhTac', nhom === 'Canh tác');
+    hienKhoi('khoiVanDe',   nhom === 'Vấn đề');
+    hienKhoi('khoiQuanSat', nhom === 'Quan sát');
+    hienKhoi('khoiChung',   true);
+    if (nhom === 'Canh tác') capNhatOHoatDong();
+    var td = $('nlTieuDe');
+    if (td && !td.value) {
+      if (nhom === 'Canh tác' && nlChon.hoatDong) td.value = nlChon.hoatDong;
+      if (nhom === 'Quan sát') td.value = 'Thăm đồng';
+    }
+  }
+
+  function resetFormNhatKy() {
+    nlNhom = '';
+    nlChon = { hoatDong:'', vanDe:[], mucDo:'', viTri:[], xuLy:[] };
+    veChip('hopHoatDong', OPT.hoatDong, 'hoatDong', false);
+    veChip('hopVanDe',    OPT.vanDe,    'vanDe',    true);
+    veChip('hopMucDo',    OPT.mucDo,    'mucDo',    false, ['md-nhe','md-vua','md-nang']);
+    veChip('hopViTri',    OPT.viTri,    'viTri',    true);
+    veChip('hopViTriQS',  OPT.viTri,    'viTri',    true);
+    veChip('hopXuLy',     OPT.xuLy,     'xuLy',     true);
+    ['nhomCT','nhomVD','nhomQS'].forEach(function (id) {
+      var e = $(id); if (e) e.classList.remove('dachon');
+    });
+    ['khoiCanhTac','khoiVanDe','khoiQuanSat','khoiPhan','khoiNuoc']
+      .forEach(function (id) { hienKhoi(id, false); });
+    hienKhoi('khoiChung', true);   // tiêu đề, ngày, mô tả, ảnh, nút Lưu: luôn hiện
+    ['nlTieuDe','nlNoiDung','nlVatTu','nlSoLuong','nlMucNuoc','nlTyLe','nlAnh','nlVideo']
+      .forEach(function (id) { var e = $(id); if (e) e.value = ''; });
+    if ($('nlDonVi'))   $('nlDonVi').value = '';
+    if ($('nlCanXuLy')) $('nlCanXuLy').checked = false;
+    $('nlNgay').value = new Date().toISOString().slice(0, 10);
+    $('nlXemAnh').innerHTML = ''; $('nlXemVideo').innerHTML = '';
+    $('nlLoi').textContent = ''; $('nlLoi').style.color = '';
+    if ($('nlGui')) { $('nlGui').disabled = false; $('nlGui').textContent = 'Lưu vào Notion'; }
+    /* anhDaChon / videoDaChon khai báo trong js/ban-do.js — gán lại qua
+       phạm vi toàn cục, có ở cả bản cũ lẫn bản mới */
+    try { anhDaChon.length = 0; videoDaChon.length = 0; } catch (e) {}
+  }
+
+  function nhanNhatKy(e) {
+    var ds = [];
+    if (e.hoatDong) ds.push('<span class="nk-tt">' + escHtml(e.hoatDong) + '</span>');
+    (e.vanDe  || []).forEach(function (v) { ds.push('<span class="nk-tt">' + escHtml(v) + '</span>'); });
+    if (e.mucDo) ds.push('<span class="nk-tt">' + escHtml(e.mucDo) + '</span>');
+    (e.viTri  || []).forEach(function (v) { ds.push('<span class="nk-tt">' + escHtml(v) + '</span>'); });
+    (e.daXuLy || []).forEach(function (v) { ds.push('<span class="nk-tt">✔ ' + escHtml(v) + '</span>'); });
+    if (!ds.length && e.status) ds.push('<span class="nk-tt">' + escHtml(e.status) + '</span>');
+    return ds.join(' ');
+  }
+
+  /* --- lấy mã sản phẩm của thửa đang chọn --- */
+  function maThuaDangChon() {
+    var p  = MAP_DATA.plots[thuaDangChon];
+    var ma = ((MA_NONG_DAN[MAP_DATA.field] || {})[(p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim()] || '').toUpperCase();
+    return notionPlots[ma];
+  }
+
+  function moNhapLieu() {
+    dangNhapNhieu = false;
+    var ph = phienHienTai();
+    if (!ph) { dongModal('mpThua'); moModal('mpDN'); return; }
+    if (ph.role === 'khach') { alert('Tài khoản khách chỉ xem chi tiết nhật ký, không nhập liệu được.'); return; }
+    var nd = maThuaDangChon();
+    if (!nd) { alert('Thửa này chưa khớp mã sản phẩm trong Notion nên chưa nhập liệu được.'); return; }
+    dongModal('mpThua'); moModal('mpNhap');
+    $('nlMa').textContent = nd.productCode;
+    resetFormNhatKy();
+  }
+
+  function nhapNhieuThua() {
+    if (!thuaDaChonNhieu.size) { alert('Anh chưa chọn thửa nào. Chạm vào các thửa trên bản đồ để chọn.'); return; }
+    var ph = phienHienTai();
+    if (!ph) { moModal('mpDN'); return; }
+    if (ph.role === 'khach') { alert('Tài khoản khách chỉ xem chi tiết nhật ký, không nhập liệu được.'); return; }
+    maNhieuThua = [];
+    var boQua = [];
+    thuaDaChonNhieu.forEach(function (i) {
+      var p  = MAP_DATA.plots[i];
+      var ma = ((MA_NONG_DAN[MAP_DATA.field] || {})[(p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim()] || '').toUpperCase();
+      var nd = notionPlots[ma];
+      if (nd) maNhieuThua.push(nd.productCode);
+      else boQua.push((p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim());
+    });
+    if (!maNhieuThua.length) { alert('Các thửa đã chọn đều chưa có mã sản phẩm trong Notion.'); return; }
+    dangNhapNhieu = true;
+    moModal('mpNhap');
+    $('nlMa').innerHTML = '<b>' + maNhieuThua.length + ' thửa</b> sẽ được ghi cùng nội dung này'
+      + (boQua.length ? ' <span style="color:#c0392b">(bỏ qua ' + boQua.length + ' thửa chưa có mã: ' + boQua.join(', ') + ')</span>' : '');
+    resetFormNhatKy();
+  }
+
+  function guiNhapLieu() {
+    var ph = phienHienTai();
+    if (!ph) { moModal('mpDN'); return; }
+    if (!nlNhom) { $('nlLoi').textContent = 'Chọn "hôm nay ghi gì" ở bước 1 trước đã.'; return; }
+    var tieude = $('nlTieuDe').value.trim();
+    if (!tieude) { $('nlLoi').textContent = 'Vui lòng nhập tiêu đề.'; return; }
+    if (nlNhom === 'Canh tác' && !nlChon.hoatDong) { $('nlLoi').textContent = 'Chọn việc đã làm ở bước 2.'; return; }
+    if (nlNhom === 'Vấn đề'  && !nlChon.vanDe.length) { $('nlLoi').textContent = 'Chọn ít nhất một vấn đề ở bước 2.'; return; }
+
+    /* KHÔNG gửi status — máy chủ suy ra từ Nhóm. */
+    var goi = {
+      action: 'createEntry', token: ph.token,
+      title: tieude, content: $('nlNoiDung').value.trim(), date: $('nlNgay').value,
+      images: anhDaChon.concat(videoDaChon),
+      nhom: nlNhom, hoatDong: nlChon.hoatDong || '', vanDe: nlChon.vanDe,
+      mucDo: nlChon.mucDo || '', viTri: nlChon.viTri, daXuLy: nlChon.xuLy,
+      canXuLy: !!($('nlCanXuLy') && $('nlCanXuLy').checked),
+      tyLe: $('nlTyLe').value || '', mucNuoc: $('nlMucNuoc').value || '',
+      vatTu: $('nlVatTu').value.trim(), soLuong: $('nlSoLuong').value || '',
+      donVi: $('nlDonVi').value || ''
+    };
+    if (dangNhapNhieu) { goi.productCodes = maNhieuThua; }
+    else {
+      var nd = maThuaDangChon();
+      if (!nd) { $('nlLoi').textContent = 'Thửa này chưa có mã sản phẩm.'; return; }
+      goi.productCode = nd.productCode;
+    }
+
+    $('nlGui').disabled = true; $('nlGui').textContent = 'Đang lưu…'; $('nlLoi').textContent = '';
+    goiAPI(goi).then(function (r) {
+      if (!r.ok) throw r.error;
+      $('nlGui').textContent = '✓ Đã lưu ' + (r.soTask || 1) + ' bản ghi';
+      if (r.boQua && r.boQua.length) {
+        $('nlLoi').style.color = '#b26a00';
+        $('nlLoi').textContent = 'Đã bỏ qua ' + r.boQua.length + ' thửa chưa khớp mã: ' + r.boQua.join(', ');
+      }
+      setTimeout(function () {
+        dongModal('mpNhap');
+        $('nlGui').disabled = false; $('nlGui').textContent = 'Lưu vào Notion';
+        $('nlLoi').style.color = '';
+        try {
+          localStorage.removeItem('htxmap_v2_' + MAP_DATA.field + '_' + $('selVu').value);
+          localStorage.removeItem('htxmap_'    + MAP_DATA.field + '_' + $('selVu').value);
+        } catch (e) {}
+        if (dangNhapNhieu && typeof huyChonNhieu === 'function') huyChonNhieu();
+      }, (r.boQua && r.boQua.length) ? 2600 : 1200);
+    }).catch(function (e) {
+      $('nlLoi').style.color = ''; $('nlLoi').textContent = e;
+      if (String(e).indexOf('hết hạn') !== -1 || String(e).indexOf('đăng nhập') !== -1) { dangXuat(); moModal('mpDN'); }
+      $('nlGui').disabled = false; $('nlGui').textContent = 'Lưu vào Notion';
+    });
+  }
+
+  function moNhatKy() {
+    var nd = maThuaDangChon();
+    if (!nd) { alert('Thửa này chưa có dữ liệu nên chưa xem được nhật ký.'); return; }
+    dongModal('mpThua'); moModal('mpNK');
+    $('nkMa').textContent = nd.productCode;
+    $('nkDS').innerHTML = '<div class="trong">Đang tải…</div>';
+    var phNK = phienHienTai();
+    goiAPI({ action: 'getHistory', productCode: nd.productCode, token: phNK ? phNK.token : '' })
+      .then(function (r) {
+        if (!r.ok) throw r.error;
+        if (!r.entries.length) { $('nkDS').innerHTML = '<div class="trong">Chưa có bản ghi nào cho thửa này trong vụ này.</div>'; return; }
+        var dongKhoa = !phNK
+          ? '<div class="nk-khoa">🔒 Mô tả chi tiết và ảnh/video chỉ dành cho tài khoản xã viên hoặc khách hàng của HTX. '
+            + '<button onclick="dongModal(\'mpNK\');moModal(\'mpDN\')">Đăng nhập</button></div>'
+          : '';
+        $('nkDS').innerHTML = dongKhoa + r.entries.map(function (e, idx) {
+          var dongNgay = (e.date || '')
+            + ((e.nss !== null && e.nss !== undefined) ? ' · NSS ' + e.nss : '')
+            + (e.giaiDoan ? ' · ' + escHtml(e.giaiDoan) : '');
+          var them = (e.desc || (e.media && e.media.count))
+            ? '<div class="nk-mota" id="nkmt' + idx + '" style="display:none">'
+              + (e.desc ? escHtml(e.desc) : '') + dinhKemHtml(e.media) + '</div>'
+              + '<button class="nk-xemthem" onclick="toggleMota(' + idx + ')" id="nkbtn' + idx + '">Xem thêm ▾</button>'
+            : '';
+          var lnk = e.url ? '<div><a href="' + linkNotion(e.url) + '" target="_blank" rel="noopener">Xem chi tiết trên Notion ↗</a></div>' : '';
+          return '<div class="nkmuc"><div class="nk-ngay">' + dongNgay + '</div>'
+               + '<div class="nk-tieude">' + e.title + '</div>'
+               + '<div>' + nhanNhatKy(e) + '</div>' + them + lnk + '</div>';
+        }).join('');
+      })
+      .catch(function (e) { $('nkDS').innerHTML = '<div class="trong">Lỗi tải nhật ký: ' + e + '</div>'; });
+  }
+
+  /* --- Gán đè lên window: thắng mọi định nghĩa cùng tên trong js/ban-do.js --- */
+  window.chonNhom        = chonNhom;
+  window.resetFormNhatKy = resetFormNhatKy;
+  window.veChip          = veChip;
+  window.hienKhoi        = hienKhoi;
+  window.nhanNhatKy      = nhanNhatKy;
+  window.moNhapLieu      = moNhapLieu;
+  window.nhapNhieuThua   = nhapNhieuThua;
+  window.guiNhapLieu     = guiNhapLieu;
+  window.moNhatKy        = moNhatKy;
+
+  /* --- Tham số URL: chạy được cả khi js/ban-do.js là bản cũ --- */
+  var q = new URLSearchParams(location.search);
+  if (q.get('nhung') === '1') document.body.classList.add('nhung');
+  var dong = (q.get('dong') || '').toUpperCase();
+  if (dong && typeof ALL_FIELDS !== 'undefined' && ALL_FIELDS[dong] && $('selDong').value !== dong) {
+    $('selDong').value = dong;
+    $('selDong').dispatchEvent(new Event('change'));
+  }
+
+  console.log('[HTX] form nhật ký 2.2 — nạp trực tiếp từ ban-do.html');
 })();
 </script>
 </body>

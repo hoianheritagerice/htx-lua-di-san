@@ -10,7 +10,7 @@
    ban-do.html tự kiểm biến này. Nếu trình duyệt còn giữ file JS cũ,
    trang sẽ hiện dải đỏ báo ngay thay vì im lặng không bấm được.
    ================================================================ */
-const BANDO_VER = '2.1';
+const BANDO_VER = '2.4';
 
 /* ================================================================
    1b. FORM NHẬT KÝ CÓ CẤU TRÚC
@@ -22,10 +22,8 @@ const BANDO_VER = '2.1';
    bên Apps Script. Sai một dấu là dữ liệu rơi mất (bị whitelist chặn). */
 const OPT = {
   hoatDong: ['Làm đất','Ngâm ủ giống','Gieo/Cấy','Dặm - cấy lại','Bón phân',
-             'Điều tiết nước','Làm cỏ','Cắt bông cỏ','Rào chuột',
-             'Phun sinh học','Thu hoạch'],
-  vanDe: ['Cỏ chát','Cỏ mật','Cỏ lồng vực','Cỏ khác','Chuột','Ốc bươu vàng',
-          'Chim','Sâu cuốn lá','Rầy nâu','Đạo ôn','Khô vằn','Sâu đục thân',
+             'Điều tiết nước','Làm cỏ','Cắt bông cỏ','Rào chuột','Thu hoạch'],
+  vanDe: ['Cỏ','Chuột','Ốc bươu vàng','Sâu','Đạo ôn','Khô vằn',
           'Khô nước','Ngập úng','Nhiễm mặn','Đổ ngã','Vàng lá'],
   mucDo: ['Nhẹ (<10%)','Vừa (10-30%)','Nặng (>30%)'],
   viTri: ['Giữa đám','Sát bờ','Giáp đất màu','Giáp đất ở','Giáp đống rơm',

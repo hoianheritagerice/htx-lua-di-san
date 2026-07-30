@@ -285,7 +285,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
            nguyên vẹn trong môi trường của nó — không phải sao chép logic
            sang trang này, nên không có chỗ nào lệch nhau về sau. -->
       <iframe id="khungBanDo" class="bando-nhung"
-              src="ban-do.html?nhung=1&amp;dong=CKOD&amp;cb=2.1"
+              src="ban-do.html?nhung=1&amp;dong=CKOD&amp;cb=2.4"
               title="Bản đồ canh tác" loading="lazy"></iframe>
     </div>
   </div>
@@ -359,14 +359,18 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 function moModal(id){ document.getElementById(id).classList.add('mo'); }
 function dongModal(id){ document.getElementById(id).classList.remove('mo'); }
 document.querySelectorAll('.modal-phu').forEach(m=>{ m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('mo'); }); });
+/* MỘT chỗ duy nhất khai báo phiên bản bản đồ. Trước đây tôi để cb=2.1 rải
+   ở hai nơi rồi quên nâng, khiến trình duyệt giữ bản HTML cũ. */
+const VER_BANDO = '2.4';
 let DONG_HIEN_TAI = 'CKOD';
+function srcBanDo(ma){ return 'ban-do.html?nhung=1&dong=' + ma + '&cb=' + VER_BANDO; }
 function chonDong(btn, ten, ma){
   if(ma) DONG_HIEN_TAI = ma;
   document.querySelectorAll('.field-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tenDong').textContent = ten;
   const khung = document.getElementById('khungBanDo');
-  if(khung && ma) khung.src = 'ban-do.html?nhung=1&dong=' + ma + '&cb=2.1';
+  if(khung && ma) khung.src = srcBanDo(ma);
   if(ma && typeof napMocThat === 'function') napMocThat(ma);
 }
 
@@ -528,13 +532,27 @@ async function napMocThat(ma){
       if(khoa && r.season[khoa]){ sk.ngay = r.season[khoa]; doi++; }
       else sk.ngay = NGAY_MAU[i];
     });
-    if(!doi) return;
     SU_KIEN.sort((a,b) => a.ngay.localeCompare(b.ngay));
-    document.querySelector('.tl-note').innerHTML =
-      'Mốc nông học lấy trực tiếp từ Notion (vụ Hè Thu 2026). '
-      + 'Lễ cúng và trải nghiệm là ngày dự kiến, sẽ chuyển sang bảng "Hoạt động mùa vụ" để cập nhật riêng.';
+
+    /* Nói thẳng mốc nào là số thật, mốc nào còn là ngày mẫu — để không ai
+       tưởng cả dòng thời gian đã lấy từ Notion. */
+    const thieu = Object.keys(MOC_NOTION).filter(t => {
+      const k = MOC_NOTION[t];
+      return !r.season[k];
+    });
+    const note = document.querySelector('.tl-note');
+    if(note){
+      note.innerHTML = doi + '/' + Object.keys(MOC_NOTION).length
+        + ' mốc nông học lấy trực tiếp từ Notion (' + (r.season.name || 'vụ hiện tại') + ').'
+        + (thieu.length
+            ? ' <b>Chưa có trong Notion, đang dùng ngày mẫu:</b> ' + thieu.join(' · ')
+              + ' — điền vào trang Vụ Mùa là dòng thời gian tự đúng.'
+            : '')
+        + ' Lễ cúng và trải nghiệm là ngày dự kiến, chưa có nguồn trong Notion.';
+    }
+    // Chỉ ẩn banner "bản nháp" khi TẤT CẢ mốc nông học đã là số thật
     const bn = document.querySelector('.mau-banner');
-    if(bn) bn.style.display = 'none';
+    if(bn) bn.style.display = thieu.length ? '' : 'none';
     veTimeline();
   }catch(e){ /* giữ ngày mẫu */ }
 }

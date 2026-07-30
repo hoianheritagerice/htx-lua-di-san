@@ -178,7 +178,7 @@ body.nhung #trangthai{padding-top:10px}
   <div class="nl-buoc">4 · Ở chỗ nào trong thửa</div>
   <div class="chip-hop" id="hopViTri"></div>
 
-  <div class="nl-buoc">5 · Đã xử lý gì tại chỗ chưa</div>
+  <div class="nl-buoc">5 · Hướng xử lý</div>
   <div class="chip-hop" id="hopXuLy"></div>
 
   <div class="nl-congtac">
@@ -230,18 +230,79 @@ body.nhung #trangthai{padding-top:10px}
 </div>
 </div>
 
+<script src="js/chung.js?v=2.4"></script>
 <script>
-/* Bộ nạp script.
-   Bình thường nạp theo số phiên bản (?v=2.1). Nếu địa chỉ đó lỡ bị trình
-   duyệt lưu nhầm nội dung cũ, dải cảnh báo bên dưới cho bấm một nút để
-   nạp lại bằng địa chỉ hoàn toàn mới (?v=<mốc thời gian>) — luôn tươi. */
+/* ======================================================================
+   CỔNG CHẶN CÁNH ĐỒNG — chạy GIỮA chung.js và ban-do.js
+   ----------------------------------------------------------------------
+   LƯU Ý: ba thẻ script quanh đây phải là thẻ TĨNH, không dùng
+   document.write. Bản trước tôi dùng document.write để tự ghép số phiên
+   bản, nhưng nó KHÔNG bảo đảm thứ tự chạy — ban-do.js chạy sau khối form,
+   khiến khối form không đổi được MAP_DATA. Chrome cũng chủ động chặn
+   script chèn bằng document.write khi mạng chậm.
+   ----------------------------------------------------------------------
+   Đây là lỗ hổng thật của bản trước. Trình tự cũ:
+     1. ban-do.js khởi động, MAP_DATA = CKOD (bản cũ đóng cứng), gọi
+        napNotion() → đọc đệm CKOD → apDungKetQua(CKOD). Lúc đó MAP_DATA
+        ĐANG là CKOD nên chốt kiểm "prefix === MAP_DATA.field" cho qua,
+        panel bị vẽ thành Ông Đảng.
+     2. Khối inline mới đổi sang CTDM. Nhưng nếu yêu cầu CTDM về chậm
+        hoặc lỗi, panel Ông Đảng ở bước 1 vẫn nằm đó.
+   Chặn ở đây thì bước 1 không bao giờ xảy ra: mọi truy vấn getMapData
+   không đúng cánh đồng đang cần đều bị dừng trước khi ra mạng.
+   Mốc so sánh là <select id="selDong"> — trình duyệt cập nhật giá trị này
+   TRƯỚC khi phát sự kiện change, nên nó luôn là cánh đồng thật sự muốn xem.
+   ====================================================================== */
 (function () {
-  var q  = new URLSearchParams(location.search);
-  var v  = q.get('cb') || '2.1';
-  document.write('<scr' + 'ipt src="js/chung.js?v='  + v + '"></scr' + 'ipt>');
-  document.write('<scr' + 'ipt src="js/ban-do.js?v=' + v + '"></scr' + 'ipt>');
+  var q = new URLSearchParams(location.search);
+  var dong = (q.get('dong') || '').toUpperCase();
+  var sel = document.getElementById('selDong');
+
+  // Chốt ô chọn theo URL NGAY, trước khi ban-do.js chạy
+  if (dong && sel) {
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === dong) { sel.value = dong; break; }
+    }
+  }
+
+  function dongDangCan() {
+    var s = document.getElementById('selDong');
+    return s ? String(s.value).toUpperCase() : '';
+  }
+  window.__HTX_DONG_CAN = dongDangCan;
+
+  /* Chặn cả đường ĐỌC ĐỆM. napNotion() đọc localStorage NGAY (đồng bộ,
+     trước await) rồi gọi apDungKetQua — việc này xảy ra TRƯỚC khi chốt kiểm
+     ở khối form kịp cài. Đó là lỗ hổng còn lại: chặn mạng thôi không đủ,
+     vì dữ liệu cũ của Ông Đảng nằm sẵn trong đệm máy anh. */
+  var lsGoc = Storage.prototype.getItem;
+  Storage.prototype.getItem = function (k) {
+    if (typeof k === 'string' && k.indexOf('htxmap') === 0) {
+      var can = dongDangCan();
+      if (can && String(k).toUpperCase().indexOf('_' + can + '_') === -1) {
+        console.warn('[HTX] Bỏ đệm ' + k + ' — đang cần ' + can);
+        return null;
+      }
+    }
+    return lsGoc.call(this, k);
+  };
+
+  var apiGoc = window.goiAPI;
+  if (typeof apiGoc === 'function') {
+    window.goiAPI = function (goi) {
+      if (goi && goi.action === 'getMapData') {
+        var can = dongDangCan();
+        if (can && String(goi.field).toUpperCase() !== can) {
+          console.warn('[HTX] Chặn truy vấn ' + goi.field + ' — đang cần ' + can);
+          return new Promise(function () {});   // không bao giờ trả về
+        }
+      }
+      return apiGoc.apply(this, arguments);
+    };
+  }
 })();
 </script>
+<script src="js/ban-do.js?v=2.4"></script>
 
 <script>
 /* ======================================================================
@@ -265,15 +326,12 @@ body.nhung #trangthai{padding-top:10px}
      CONFIG.WL trong Apps Script. Sai một dấu là dữ liệu bị chặn. */
   var OPT = {
     hoatDong: ['Làm đất','Ngâm ủ giống','Gieo/Cấy','Dặm - cấy lại','Bón phân',
-               'Điều tiết nước','Làm cỏ','Cắt bông cỏ','Rào chuột',
-               'Phun sinh học','Thu hoạch'],
-    vanDe: ['Cỏ chát','Cỏ mật','Cỏ lồng vực','Cỏ khác','Chuột','Ốc bươu vàng',
-            'Chim','Sâu cuốn lá','Rầy nâu','Đạo ôn','Khô vằn','Sâu đục thân',
+               'Điều tiết nước','Làm cỏ','Cắt bông cỏ','Rào chuột','Thu hoạch'],
+    vanDe: ['Cỏ','Chuột','Ốc bươu vàng','Sâu','Đạo ôn','Khô vằn',
             'Khô nước','Ngập úng','Nhiễm mặn','Đổ ngã','Vàng lá'],
     mucDo: ['Nhẹ (<10%)','Vừa (10-30%)','Nặng (>30%)'],
-    viTri: ['Giữa đám','Sát bờ','Giáp đất màu','Giáp đất ở','Giáp đống rơm',
-            'Giáp mương','Giáp chuồng bò'],
-    xuLy:  ['Rào ni lông','Bơm nước','Tháo nước','Cắt bông cỏ','Thuê công','Đặt bẫy']
+    viTri: ['Giữa đám','Sát bờ','Giáp đất màu','Giáp đất ở','Giáp mương'],
+    xuLy:  ['Rào ni lông','Thêm nước','Tháo nước','Cắt bông cỏ','Thuê công','Đặt bẫy']
   };
 
   var nlNhom = '';
@@ -528,8 +586,10 @@ body.nhung #trangthai{padding-top:10px}
       for (var i = 0; i < ds.length; i++) {
         var tienTo = String(ds[i].productCode || '').split('-')[0].toUpperCase();
         if (!tienTo) continue;
-        if (tienTo !== String(MAP_DATA.field).toUpperCase()) {
-          console.warn('[HTX] Bỏ dữ liệu của ' + tienTo + ' vì đang xem ' + MAP_DATA.field);
+        var can = (window.__HTX_DONG_CAN && window.__HTX_DONG_CAN())
+                  || String(MAP_DATA.field).toUpperCase();
+        if (tienTo !== can) {
+          console.warn('[HTX] Bỏ dữ liệu của ' + tienTo + ' vì đang cần ' + can);
           return;                      // đến muộn / sai cánh đồng → không áp dụng
         }
         break;                          // tiền tố khớp → cho qua
@@ -549,12 +609,13 @@ body.nhung #trangthai{padding-top:10px}
       && String(MAP_DATA.field).toUpperCase() !== dong) {
     MAP_DATA = ALL_FIELDS[dong];
     $('selDong').value = dong;
+    var vp = $('vuPanel'); if (vp) vp.style.display = 'none';   // xoá số liệu cánh đồng trước
     try { zoomLv = 1; $('svgwrap').style.width = '100%'; } catch (e) {}
     veBanDo();
     napNotion();
   }
 
-  console.log('[HTX] form nhật ký 2.3 — nạp trực tiếp từ ban-do.html');
+  console.log('[HTX] form nhật ký 2.4 — nạp trực tiếp từ ban-do.html');
 })();
 </script>
 </body>

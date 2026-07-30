@@ -16,14 +16,14 @@
 .nl-nhom button{padding:14px 6px;border:1.5px solid #d8dcd0;background:#fff;border-radius:12px;
          font:inherit;font-size:14px;font-weight:600;color:#5c6352;cursor:pointer;line-height:1.35}
 .nl-nhom button small{display:block;font-weight:400;font-size:11px;color:#98a08c;margin-top:3px}
-.nl-nhom button.chon{background:#eef4e4;border-color:#7a9c46;color:#3f5a1c}
+.nl-nhom button.dachon{background:#eef4e4;border-color:#7a9c46;color:#3f5a1c}
 .chip-hop{display:flex;flex-wrap:wrap;gap:7px}
 .chip{padding:9px 13px;border:1.5px solid #d8dcd0;background:#fff;border-radius:20px;
       font:inherit;font-size:13.5px;color:#5c6352;cursor:pointer}
-.chip.chon{background:#eef4e4;border-color:#7a9c46;color:#3f5a1c;font-weight:600}
-.chip.md-nhe.chon{background:#e8f3e0;border-color:#6f9b3f}
-.chip.md-vua.chon{background:#fbf2d8;border-color:#c9a227;color:#7a5f00}
-.chip.md-nang.chon{background:#f9e2de;border-color:#c0392b;color:#8c2318}
+.chip.dachon{background:#eef4e4;border-color:#7a9c46;color:#3f5a1c;font-weight:600}
+.chip.md-nhe.dachon{background:#e8f3e0;border-color:#6f9b3f}
+.chip.md-vua.dachon{background:#fbf2d8;border-color:#c9a227;color:#7a5f00}
+.chip.md-nang.dachon{background:#f9e2de;border-color:#c0392b;color:#8c2318}
 .nl-doi{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .nl-ba{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:8px}
 .nl-an{display:none}
@@ -32,6 +32,12 @@
 .nl-congtac input{width:20px;height:20px;accent-color:#c0392b}
 .nl-congtac label{font-size:13.5px;color:#7a5a2e;margin:0;font-weight:500}
 .nl-goiy{font-size:12px;color:#98a08c;margin-top:5px;line-height:1.45}
+
+/* Chế độ nhúng trong canh-dong.html: ban-do.html?nhung=1&dong=CKOD */
+body.nhung header,
+body.nhung .chuthich > span:last-child{display:none}
+body.nhung .chon{display:none}
+body.nhung #trangthai{padding-top:10px}
 </style>
 </head>
 <body>
@@ -188,7 +194,7 @@
 </div>
 
 <!-- LUÔN HIỆN — phần cuối -->
-<div id="khoiChung" class="nl-an">
+<div id="khoiChung">
   <div class="nl-buoc">Tiêu đề &amp; ngày</div>
   <div class="form-o"><input id="nlTieuDe" placeholder="VD: Chuột phá giáp đống rơm"></div>
   <div class="form-o"><input id="nlNgay" type="date"></div>
@@ -224,7 +230,7 @@
 </div>
 </div>
 
-<script src="js/chung.js"></script>
-<script src="js/ban-do.js"></script>
+<script src="js/chung.js?v=2"></script>
+<script src="js/ban-do.js?v=2"></script>
 </body>
 </html>

@@ -109,7 +109,15 @@ const ALL_FIELDS = {
   CTDM: {"field": "CTDM", "fieldName": "Đồng Mẫu — Cẩm Thanh", "viewW": 9910.7, "viewH": 16745.3, "plots": [{"farmer": "PHẠM TRỌNG", "symbol": "", "area": "1365", "code": "TRONG", "points": [[350.0, 11954.5], [4864.2, 12164.5], [4864.2, 14775.6], [350.0, 14476.1]], "cx": 2607.1, "cy": 13320.3, "lx": 2553.7, "ly": 13297.0, "fs": 200, "rot": 2.0}, {"farmer": "TOÀN", "symbol": "", "area": "1077", "code": "TOAN", "points": [[9555.5, 12193.7], [5130.3, 11998.2], [5130.3, 9659.2], [9555.5, 9757.7]], "cx": 7342.9, "cy": 10877.9, "lx": 7262.7, "ly": 10742.4, "fs": 200, "rot": 2.0}, {"farmer": "BÙI CƯ", "symbol": "", "area": "1017", "code": "CU", "points": [[5130.3, 11998.2], [9555.5, 12193.7], [9555.5, 14530.3], [5130.3, 14302.2]], "cx": 7342.9, "cy": 13247.9, "lx": 7188.6, "ly": 13038.4, "fs": 200, "rot": 2.0}, {"farmer": "PHẠM HẬU", "symbol": "", "area": "1027", "code": "HAU", "points": [[350.0, 3067.2], [4864.2, 3199.6], [4864.2, 5209.0], [350.0, 5143.8]], "cx": 2607.1, "cy": 4171.7, "lx": 2587.3, "ly": 4091.1, "fs": 200, "rot": 2.0}, {"farmer": "NGUYỄN BÉ", "symbol": "", "area": "1036", "code": "BE", "points": [[350.0, 5143.8], [4864.2, 5209.0], [4864.2, 7133.9], [350.0, 6990.9]], "cx": 2607.1, "cy": 6100.0, "lx": 2575.6, "ly": 6051.1, "fs": 200, "rot": 2.0}, {"farmer": "TRẦN VĂN HỘI", "symbol": "1/2", "area": "734", "code": "HOI1", "points": [[5130.3, 14302.2], [9555.5, 14530.3], [9555.5, 16395.3], [5130.3, 15977.7]], "cx": 7342.9, "cy": 15254.0, "lx": 7219.7, "ly": 15058.7, "fs": 200, "rot": 2.0}, {"farmer": "NGUYỄN THỊ XÊ", "symbol": "", "area": "735", "code": "XE", "points": [[9555.5, 614.2], [9555.5, 2343.1], [5130.3, 2343.1], [5130.3, 614.2]], "cx": 7342.9, "cy": 1478.6, "lx": 7284.6, "ly": 1506.8, "fs": 200, "rot": 2.0}, {"farmer": "NGUYỄN QUANG", "symbol": "", "area": "668", "code": "QUANG", "points": [[5130.3, 3648.0], [9555.5, 3648.0], [9555.5, 5267.4], [5130.3, 5267.4]], "cx": 7342.9, "cy": 4457.7, "lx": 7237.7, "ly": 4435.7, "fs": 200, "rot": 2.0}, {"farmer": "LÊ HẢI", "symbol": "", "area": "691", "code": "HAI", "points": [[5130.3, 6539.7], [9555.5, 6539.7], [9555.5, 8165.8], [5130.3, 8117.4]], "cx": 7342.9, "cy": 7328.6, "lx": 7219.7, "ly": 7201.5, "fs": 200, "rot": 2.0}, {"farmer": "LÊ THỊ HÀ", "symbol": "", "area": "713", "code": "HA", "points": [[9555.5, 9757.7], [5130.3, 9659.2], [5130.3, 8117.4], [9555.5, 8165.8]], "cx": 7342.9, "cy": 8912.5, "lx": 7226.3, "ly": 8764.6, "fs": 200, "rot": 2.0}, {"farmer": "HUỲNH TƯ", "symbol": "", "area": "758", "code": "TU7", "points": [[350.0, 2029.9], [350.0, 613.7], [4864.2, 614.2], [4864.2, 2171.2]], "cx": 2607.1, "cy": 1322.0, "lx": 2539.9, "ly": 1153.7, "fs": 200, "rot": 2.0}, {"farmer": "ĐỖ VĂN TÂM", "symbol": "", "area": "572", "code": "TAM", "points": [[5130.3, 2343.1], [9555.5, 2343.1], [9555.5, 3648.0], [5130.3, 3648.0]], "cx": 7342.9, "cy": 2995.5, "lx": 7293.9, "ly": 2955.6, "fs": 200, "rot": 2.0}, {"farmer": "HUỲNH THÔNG", "symbol": "", "area": "584", "code": "HTHONG", "points": [[5130.3, 5267.4], [9555.5, 5267.4], [9555.5, 6539.7], [5130.3, 6539.7]], "cx": 7342.9, "cy": 5903.5, "lx": 7301.8, "ly": 5754.6, "fs": 200, "rot": 2.0}, {"farmer": "TRẦN VĂN HỘI", "symbol": "2/2", "area": "524", "code": "HOI2", "points": [[350.0, 14476.1], [4864.2, 14775.6], [4864.2, 15961.1], [350.0, 15530.9]], "cx": 2607.1, "cy": 15153.3, "lx": 2639.7, "ly": 15076.5, "fs": 200, "rot": 2.0}, {"farmer": "VÕ THỊ NGỌC", "symbol": "", "area": "512", "code": "NGOC", "points": [[350.0, 6990.9], [4864.2, 7133.9], [4864.2, 8230.9], [350.0, 8002.0]], "cx": 2607.1, "cy": 7567.9, "lx": 2596.1, "ly": 7478.9, "fs": 200, "rot": 2.0}, {"farmer": "HUỲNH TỨ", "symbol": "", "area": "530", "code": "TU5", "points": [[350.0, 2029.9], [4864.2, 2171.2], [4864.2, 3199.6], [350.0, 3067.2]], "cx": 2607.1, "cy": 2619.2, "lx": 2538.3, "ly": 2511.0, "fs": 200, "rot": 2.0}, {"farmer": "TRƯƠNG THỊ SƯƠNG", "symbol": "", "area": "525", "code": "SUONG", "points": [[350.0, 10957.7], [4864.2, 11116.0], [4864.2, 12164.5], [350.0, 11954.5]], "cx": 2607.1, "cy": 11535.3, "lx": 2465.7, "ly": 11512.1, "fs": 200, "rot": 2.0}, {"farmer": "NGUYỄN THỊ BÀN", "symbol": "", "area": "482", "code": "BAN", "points": [[350.0, 9907.0], [4864.2, 10136.9], [4864.2, 11116.0], [350.0, 10957.7]], "cx": 2607.1, "cy": 10547.3, "lx": 2488.8, "ly": 10412.9, "fs": 200, "rot": 2.0}, {"farmer": "PHỔ", "symbol": "", "area": "506", "code": "PHO", "points": [[350.0, 8911.6], [4864.2, 9152.2], [4864.2, 10136.9], [350.0, 9907.0]], "cx": 2607.1, "cy": 9529.6, "lx": 2479.9, "ly": 9449.7, "fs": 200, "rot": 2.0}, {"farmer": "PHẠM THÔNG", "symbol": "", "area": "530", "code": "PTHONG", "points": [[350.0, 8002.0], [4864.2, 8230.9], [4864.2, 9152.2], [350.0, 8911.6]], "cx": 2607.1, "cy": 8571.2, "lx": 2558.6, "ly": 8494.6, "fs": 200, "rot": 2.0}], "canals": [[[9555.5, 614.2], [5125.1, 613.7], [5130.3, 15977.7], [4869.4, 15953.1], [4869.4, 614.2], [355.2, 613.7], [355.2, 350.0], [9560.7, 350.0]]], "zones": [{"text": "ĐƯỜNG TỐNG VĂN SƯƠNG", "x": 10493.0, "y": 7272.2, "fs": 360, "rot": 90.2}, {"text": "ĐƯỜNG BÊ TÔNG", "x": 22.3, "y": 8327.2, "fs": 240, "rot": 90.7}, {"text": "ĐƯỜNG BÊ TÔNG", "x": 5009.8, "y": 16527.8, "fs": 240, "rot": 5.1}, {"text": "KÊNH THỦY LỢI", "x": 4944.1, "y": 7102.1, "fs": 158, "rot": 90.2}, {"text": "KÊNH THỦY LỢI", "x": 5151.6, "y": 536.7, "fs": 161}]},
 };
 
-let MAP_DATA = ALL_FIELDS.CKOD;
+/* Nhận tham số URL — dùng khi nhúng trong canh-dong.html:
+      ban-do.html?nhung=1&dong=CTDC
+   nhung=1 : ẩn header + thanh chọn (CSS trong ban-do.html lo phần này)
+   dong=   : chọn sẵn cánh đồng                                            */
+const THAM_SO = new URLSearchParams(location.search);
+if(THAM_SO.get('nhung') === '1') document.body.classList.add('nhung');
+const DONG_URL = (THAM_SO.get('dong') || '').toUpperCase();
+
+let MAP_DATA = ALL_FIELDS[DONG_URL] || ALL_FIELDS.CKOD;
 
 /* ================================================================
    3. LOGIC — không cần sửa từ đây trở xuống
@@ -600,6 +608,7 @@ async function guiNhapLieu(){
 }
 
 /* ---------- khởi động ---------- */
+if(ALL_FIELDS[DONG_URL]) $('selDong').value = DONG_URL;
 veBanDo();
 
 /* ---- zoom bằng lăn chuột & véo 2 ngón ---- */
@@ -698,12 +707,12 @@ function veChip(idHop, ds, khoa, nhieu, lopThem){
         const ds2 = nlChon[khoa];
         const i = ds2.indexOf(v);
         if(i === -1) ds2.push(v); else ds2.splice(i, 1);
-        b.classList.toggle('chon');
+        b.classList.toggle('dachon');
       }else{
         const bat = (nlChon[khoa] !== v);
-        hop.querySelectorAll('.chip').forEach(function(x){ x.classList.remove('chon'); });
+        hop.querySelectorAll('.chip').forEach(function(x){ x.classList.remove('dachon'); });
         nlChon[khoa] = bat ? v : '';
-        if(bat) b.classList.add('chon');
+        if(bat) b.classList.add('dachon');
         if(khoa === 'hoatDong') capNhatOHoatDong();
       }
     };
@@ -723,9 +732,9 @@ function hienKhoi(id, hien){
 
 function chonNhom(nhom){
   nlNhom = nhom;
-  $('nhomCT').classList.toggle('chon', nhom === 'Canh tác');
-  $('nhomVD').classList.toggle('chon', nhom === 'Vấn đề');
-  $('nhomQS').classList.toggle('chon', nhom === 'Quan sát');
+  $('nhomCT').classList.toggle('dachon', nhom === 'Canh tác');
+  $('nhomVD').classList.toggle('dachon', nhom === 'Vấn đề');
+  $('nhomQS').classList.toggle('dachon', nhom === 'Quan sát');
 
   hienKhoi('khoiCanhTac', nhom === 'Canh tác');
   hienKhoi('khoiVanDe',   nhom === 'Vấn đề');
@@ -753,10 +762,13 @@ function resetFormNhatKy(){
   veChip('hopXuLy',     OPT.xuLy,     'xuLy',     true);
 
   ['nhomCT','nhomVD','nhomQS'].forEach(function(id){
-    const e = $(id); if(e) e.classList.remove('chon');
+    const e = $(id); if(e) e.classList.remove('dachon');
   });
-  ['khoiCanhTac','khoiVanDe','khoiQuanSat','khoiChung','khoiPhan','khoiNuoc']
+  // khoiChung KHÔNG bị ẩn: tiêu đề, ngày, mô tả, ảnh và nút Lưu luôn hiện.
+  // Nếu bước 1 có trục trặc gì thì người ghi vẫn viết và lưu được như cũ.
+  ['khoiCanhTac','khoiVanDe','khoiQuanSat','khoiPhan','khoiNuoc']
     .forEach(function(id){ hienKhoi(id, false); });
+  hienKhoi('khoiChung', true);
 
   ['nlTieuDe','nlNoiDung','nlVatTu','nlSoLuong','nlMucNuoc','nlTyLe','nlAnh','nlVideo']
     .forEach(function(id){ const e = $(id); if(e) e.value = ''; });

@@ -63,6 +63,8 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .map-head h2{font-size:21px}
 .map-head .mo-bando{background:var(--xanh-dam);color:#fff;border:none;font-family:inherit;font-weight:600;font-size:13.5px;padding:10px 18px;border-radius:22px;cursor:pointer}
 .map-head .mo-bando:hover{background:#163a20}
+.bando-nhung{width:100%;height:78vh;min-height:460px;border:0;display:block;background:#f6f5ee}
+@media(max-width:640px){.bando-nhung{height:70vh;min-height:380px}}
 .map-placeholder{aspect-ratio:16/8;background:radial-gradient(circle at 30% 40%,rgba(139,195,74,.25),transparent 40%),radial-gradient(circle at 70% 60%,rgba(201,162,39,.2),transparent 40%),linear-gradient(135deg,#eef0e3,#e3ddc8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#7c8468;text-align:center;padding:24px}
 .map-placeholder .ic{font-size:44px}
 .map-placeholder small{max-width:44ch;font-size:12.5px}
@@ -264,9 +266,9 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
   <div class="wrap">
     <div class="chon-nhom">
       <span class="cn-lbl">Cánh đồng</span>
-      <button class="field-tab active" onclick="chonDong(this,'Ông Đảng')">Ông Đảng · Cẩm Kim</button>
-      <button class="field-tab" onclick="chonDong(this,'Đồng Cao')">Đồng Cao · Cẩm Thanh</button>
-      <button class="field-tab" onclick="chonDong(this,'Đồng Mẫu')">Đồng Mẫu · Cẩm Thanh</button>
+      <button class="field-tab active" onclick="chonDong(this,'Ông Đảng','CKOD')">Ông Đảng · Cẩm Kim</button>
+      <button class="field-tab" onclick="chonDong(this,'Đồng Cao','CTDC')">Đồng Cao · Cẩm Thanh</button>
+      <button class="field-tab" onclick="chonDong(this,'Đồng Mẫu','CTDM')">Đồng Mẫu · Cẩm Thanh</button>
     </div>
     <select class="vu-sel"><option>Vụ Hè Thu 2026</option></select>
   </div>
@@ -277,13 +279,14 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
     <div class="map-box">
       <div class="map-head">
         <h2>Bản đồ canh tác — <span id="tenDong">Ông Đảng</span></h2>
-        <button class="mo-bando nut-noi" onclick="location.href='ban-do.html'">Mở bản đồ tương tác ↗</button>
+        <button class="mo-bando nut-noi" onclick="location.href='ban-do.html'">Mở toàn màn hình ↗</button>
       </div>
-      <div class="map-placeholder">
-        <div class="ic">🗺️</div>
-        <div>Khung bản đồ canh tác tương tác</div>
-        <small>Khi ghép thật, bản đồ SVG hiện có (zoom, xoay, chạm chọn thửa, xem nhật ký) sẽ nhúng ngay tại đây — không phải trang riêng nữa, mà là một phần của "Cánh Đồng".</small>
-      </div>
+      <!-- Bản đồ thật, nhúng thẳng vào đây. Dùng iframe để ban-do.js chạy
+           nguyên vẹn trong môi trường của nó — không phải sao chép logic
+           sang trang này, nên không có chỗ nào lệch nhau về sau. -->
+      <iframe id="khungBanDo" class="bando-nhung"
+              src="ban-do.html?nhung=1&amp;dong=CKOD"
+              title="Bản đồ canh tác" loading="lazy"></iframe>
     </div>
   </div>
 </section>
@@ -356,10 +359,12 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 function moModal(id){ document.getElementById(id).classList.add('mo'); }
 function dongModal(id){ document.getElementById(id).classList.remove('mo'); }
 document.querySelectorAll('.modal-phu').forEach(m=>{ m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('mo'); }); });
-function chonDong(btn, ten){
+function chonDong(btn, ten, ma){
   document.querySelectorAll('.field-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tenDong').textContent = ten;
+  const khung = document.getElementById('khungBanDo');
+  if(khung && ma) khung.src = 'ban-do.html?nhung=1&dong=' + ma;
 }
 
 const HOM_NAY = new Date('2026-07-25');

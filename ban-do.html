@@ -508,16 +508,53 @@ body.nhung #trangthai{padding-top:10px}
   window.guiNhapLieu     = guiNhapLieu;
   window.moNhatKy        = moNhatKy;
 
-  /* --- Tham số URL: chạy được cả khi js/ban-do.js là bản cũ --- */
+  /* ====================================================================
+     CHỐNG LẪN DỮ LIỆU GIỮA CÁC CÁNH ĐỒNG
+     --------------------------------------------------------------------
+     napNotion() trong js/ban-do.js không có cơ chế chống tranh chấp: nếu
+     hai yêu cầu chạy song song (ví dụ trang khởi động với Ông Đảng rồi
+     lập tức đổi sang Đồng Mẫu), cái nào về sau thì thắng — bất kể nó
+     thuộc cánh đồng nào. Kết quả: SVG vẽ Đồng Mẫu nhưng số liệu là
+     Ông Đảng.
+
+     Bản vá: chặn ngay tại apDungKetQua. Mã sản phẩm luôn bắt đầu bằng mã
+     cánh đồng (CTDM-BAN-HT26-VNR20), nên chỉ cần so tiền tố với cánh
+     đồng đang xem; lệch thì bỏ cả lô dữ liệu đó.
+     ==================================================================== */
+  var apDungGoc = window.apDungKetQua;
+  window.apDungKetQua = function (r) {
+    try {
+      var ds = (r && r.plots) || [];
+      for (var i = 0; i < ds.length; i++) {
+        var tienTo = String(ds[i].productCode || '').split('-')[0].toUpperCase();
+        if (!tienTo) continue;
+        if (tienTo !== String(MAP_DATA.field).toUpperCase()) {
+          console.warn('[HTX] Bỏ dữ liệu của ' + tienTo + ' vì đang xem ' + MAP_DATA.field);
+          return;                      // đến muộn / sai cánh đồng → không áp dụng
+        }
+        break;                          // tiền tố khớp → cho qua
+      }
+    } catch (e) {}
+    return apDungGoc.apply(this, arguments);
+  };
+
+  /* --- Tham số URL: chạy được cả khi js/ban-do.js là bản cũ ---
+     Đổi cánh đồng bằng cách gán thẳng MAP_DATA, KHÔNG phát sự kiện
+     'change' — sự kiện đó kéo theo huyChonNhieu() và một lần napNotion()
+     nữa, chính là nguồn gây tranh chấp. */
   var q = new URLSearchParams(location.search);
   if (q.get('nhung') === '1') document.body.classList.add('nhung');
   var dong = (q.get('dong') || '').toUpperCase();
-  if (dong && typeof ALL_FIELDS !== 'undefined' && ALL_FIELDS[dong] && $('selDong').value !== dong) {
+  if (dong && typeof ALL_FIELDS !== 'undefined' && ALL_FIELDS[dong]
+      && String(MAP_DATA.field).toUpperCase() !== dong) {
+    MAP_DATA = ALL_FIELDS[dong];
     $('selDong').value = dong;
-    $('selDong').dispatchEvent(new Event('change'));
+    try { zoomLv = 1; $('svgwrap').style.width = '100%'; } catch (e) {}
+    veBanDo();
+    napNotion();
   }
 
-  console.log('[HTX] form nhật ký 2.2 — nạp trực tiếp từ ban-do.html');
+  console.log('[HTX] form nhật ký 2.3 — nạp trực tiếp từ ban-do.html');
 })();
 </script>
 </body>

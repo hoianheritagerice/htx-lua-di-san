@@ -279,7 +279,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
     <div class="map-box">
       <div class="map-head">
         <h2>Bản đồ canh tác — <span id="tenDong">Ông Đảng</span></h2>
-        <button class="mo-bando nut-noi" onclick="location.href='ban-do.html'">Mở toàn màn hình ↗</button>
+        <button class="mo-bando nut-noi" onclick="location.href='ban-do.html?dong='+DONG_HIEN_TAI">Mở toàn màn hình ↗</button>
       </div>
       <!-- Bản đồ thật, nhúng thẳng vào đây. Dùng iframe để ban-do.js chạy
            nguyên vẹn trong môi trường của nó — không phải sao chép logic
@@ -359,7 +359,9 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 function moModal(id){ document.getElementById(id).classList.add('mo'); }
 function dongModal(id){ document.getElementById(id).classList.remove('mo'); }
 document.querySelectorAll('.modal-phu').forEach(m=>{ m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('mo'); }); });
+let DONG_HIEN_TAI = 'CKOD';
 function chonDong(btn, ten, ma){
+  if(ma) DONG_HIEN_TAI = ma;
   document.querySelectorAll('.field-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tenDong').textContent = ten;

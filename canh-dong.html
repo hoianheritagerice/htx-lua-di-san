@@ -365,13 +365,16 @@ function chonDong(btn, ten, ma){
   document.getElementById('tenDong').textContent = ten;
   const khung = document.getElementById('khungBanDo');
   if(khung && ma) khung.src = 'ban-do.html?nhung=1&dong=' + ma;
+  if(ma && typeof napMocThat === 'function') napMocThat(ma);
 }
 
-const HOM_NAY = new Date('2026-07-25');
+/* HÔM NAY lấy thời gian thật của máy — trước đây bị đóng cứng 25/07/2026
+   nên chấm "Hôm nay" đứng yên mãi ở khoảng 24/07. */
+let HOM_NAY = new Date(); HOM_NAY.setHours(0,0,0,0);
 const LOAI_TXT = {nong:'Mốc nông học', le:'Lễ cúng · tâm linh', trai:'Trải nghiệm'};
 const LOAI_BG  = {nong:'#e6f2d8', le:'#f5e3d8', trai:'#faf0cf'};
 const LOAI_FG  = {nong:'#4f7325', le:'#9c4e28', trai:'#8a6910'};
-const SU_KIEN = [
+let SU_KIEN = [
   {ngay:'2026-05-15', ic:'ic-cung', loai:'le',   ten:'Lễ cúng xuống đồng', tenDay:'Lễ cúng xuống đồng (đầu mùa)',
    mo:'Nghi lễ cầu cho mùa vụ thuận hòa, mưa gió điều hòa, trước ngày gieo sạ đầu tiên.', goi:'Đối tác kiến tạo di sản'},
   {ngay:'2026-05-20', ic:'ic-gieo', loai:'nong', ten:'Gieo sạ', tenDay:'Ngày gieo sạ',
@@ -394,7 +397,7 @@ const SU_KIEN = [
    mo:'Nấu nồi cơm từ gạo vụ mới, dâng cúng tạ ơn trời đất và tổ tiên đã cho mùa màng.', goi:'Đối tác kiến tạo di sản'},
 ];
 
-const N = SU_KIEN.length;
+let N = SU_KIEN.length;
 const river = document.getElementById('river');
 const AMP = window.matchMedia('(max-width:520px)').matches ? 24 : 30;  // biên độ uốn lượn (%)
 const CYC = 4.5;                                                        // số nhịp lượn
@@ -430,6 +433,9 @@ function pHomNay(){
 }
 
 function veTimeline(){
+  // xoá mốc của lần vẽ trước (giữ nguyên thẻ <svg> đường sông)
+  river.querySelectorAll('.river-node, .today').forEach(e=>e.remove());
+  N = SU_KIEN.length;
   // các mốc
   SU_KIEN.forEach((s,i)=>{
     const p = pOf(i);
@@ -490,6 +496,47 @@ function moCT(i){
 }
 
 veTimeline();
+
+/* ================================================================
+   Lấy mốc nông học THẬT từ Notion thay cho ngày mẫu.
+   Nếu API lỗi hoặc chưa điền ngày, timeline giữ nguyên ngày mẫu —
+   trang không bao giờ trắng vì chuyện này.
+   ================================================================ */
+const API_URL_TL = 'https://script.google.com/macros/s/AKfycbxkBLw-2LGnKPrc0m8cjogwqyv1kCyP5D1hN8A7Pt2IQ6n8QwRGQhD8ea8PAQzOVwjy/exec';
+const NGAY_MAU = SU_KIEN.map(x => x.ngay);          // giữ bản gốc để lùi lại khi cần
+const MOC_NOTION = {                                 // tên mốc ↔ trường trong Notion
+  'Gieo sạ':   'gieoSa',
+  'Đón đòng':  'donDong',
+  'Trổ bông':  'troBong',
+  'Chắc hạt':  'chacHat',
+  'Thu hoạch': 'thuHoach'
+};
+
+async function napMocThat(ma){
+  try{
+    const res = await fetch(API_URL_TL, {
+      method:'POST',
+      body: JSON.stringify({action:'getMapData', field: ma, season:'HT26'})
+    });
+    const r = await res.json();
+    if(!r.ok || !r.season) return;
+    let doi = 0;
+    SU_KIEN.forEach((sk, i) => {
+      const khoa = MOC_NOTION[sk.ten];
+      if(khoa && r.season[khoa]){ sk.ngay = r.season[khoa]; doi++; }
+      else sk.ngay = NGAY_MAU[i];
+    });
+    if(!doi) return;
+    SU_KIEN.sort((a,b) => a.ngay.localeCompare(b.ngay));
+    document.querySelector('.tl-note').innerHTML =
+      'Mốc nông học lấy trực tiếp từ Notion (vụ Hè Thu 2026). '
+      + 'Lễ cúng và trải nghiệm là ngày dự kiến, sẽ chuyển sang bảng "Hoạt động mùa vụ" để cập nhật riêng.';
+    const bn = document.querySelector('.mau-banner');
+    if(bn) bn.style.display = 'none';
+    veTimeline();
+  }catch(e){ /* giữ ngày mẫu */ }
+}
+napMocThat('CKOD');
 </script>
 <script src="js/hieu-ung.js"></script>
 </body>

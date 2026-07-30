@@ -5,6 +5,138 @@
  * veUserBox, moModal, dongModal, linkNotion, escHtml).
  **********************************************************************/
 
+/* ================================================================
+   1a. DẤU PHIÊN BẢN
+   ban-do.html tự kiểm biến này. Nếu trình duyệt còn giữ file JS cũ,
+   trang sẽ hiện dải đỏ báo ngay thay vì im lặng không bấm được.
+   ================================================================ */
+const BANDO_VER = '2.1';
+
+/* ================================================================
+   1b. FORM NHẬT KÝ CÓ CẤU TRÚC
+   Nguyên tắc: chọn Nhóm trước, các ô còn lại mới hiện theo.
+   Ngoài đồng tay bẩn sóng yếu — mỗi bản ghi xong trong 3–4 lần chạm.
+   ================================================================ */
+
+/* Danh sách option: PHẢI khớp TỪNG KÝ TỰ với Notion và với CONFIG.WL
+   bên Apps Script. Sai một dấu là dữ liệu rơi mất (bị whitelist chặn). */
+const OPT = {
+  hoatDong: ['Làm đất','Ngâm ủ giống','Gieo/Cấy','Dặm - cấy lại','Bón phân',
+             'Điều tiết nước','Làm cỏ','Cắt bông cỏ','Rào chuột',
+             'Phun sinh học','Thu hoạch'],
+  vanDe: ['Cỏ chát','Cỏ mật','Cỏ lồng vực','Cỏ khác','Chuột','Ốc bươu vàng',
+          'Chim','Sâu cuốn lá','Rầy nâu','Đạo ôn','Khô vằn','Sâu đục thân',
+          'Khô nước','Ngập úng','Nhiễm mặn','Đổ ngã','Vàng lá'],
+  mucDo: ['Nhẹ (<10%)','Vừa (10-30%)','Nặng (>30%)'],
+  viTri: ['Giữa đám','Sát bờ','Giáp đất màu','Giáp đất ở','Giáp đống rơm',
+          'Giáp mương','Giáp chuồng bò'],
+  xuLy:  ['Rào ni lông','Bơm nước','Tháo nước','Cắt bông cỏ','Thuê công','Đặt bẫy']
+};
+
+let nlNhom = '';                       // Canh tác | Vấn đề | Quan sát
+let nlChon = { hoatDong:'', vanDe:[], mucDo:'', viTri:[], xuLy:[] };
+
+function veChip(idHop, ds, khoa, nhieu, lopThem){
+  const hop = $(idHop);
+  if(!hop) return;
+  hop.innerHTML = ds.map(function(v, i){
+    const lop = lopThem ? (' ' + lopThem[i]) : '';
+    return '<button type="button" class="chip' + lop + '" data-v="' + v + '">' + v + '</button>';
+  }).join('');
+  hop.querySelectorAll('.chip').forEach(function(b){
+    b.onclick = function(){
+      const v = b.dataset.v;
+      if(nhieu){
+        const ds2 = nlChon[khoa];
+        const i = ds2.indexOf(v);
+        if(i === -1) ds2.push(v); else ds2.splice(i, 1);
+        b.classList.toggle('dachon');
+      }else{
+        const bat = (nlChon[khoa] !== v);
+        hop.querySelectorAll('.chip').forEach(function(x){ x.classList.remove('dachon'); });
+        nlChon[khoa] = bat ? v : '';
+        if(bat) b.classList.add('dachon');
+        if(khoa === 'hoatDong') capNhatOHoatDong();
+      }
+    };
+  });
+}
+
+/* Chỉ Bón phân mới cần ô lượng, chỉ Điều tiết nước mới cần mực nước */
+function capNhatOHoatDong(){
+  hienKhoi('khoiPhan', nlChon.hoatDong === 'Bón phân');
+  hienKhoi('khoiNuoc', nlChon.hoatDong === 'Điều tiết nước');
+}
+
+function hienKhoi(id, hien){
+  const e = $(id);
+  if(e) e.classList.toggle('nl-an', !hien);
+}
+
+function chonNhom(nhom){
+  nlNhom = nhom;
+  $('nhomCT').classList.toggle('dachon', nhom === 'Canh tác');
+  $('nhomVD').classList.toggle('dachon', nhom === 'Vấn đề');
+  $('nhomQS').classList.toggle('dachon', nhom === 'Quan sát');
+
+  hienKhoi('khoiCanhTac', nhom === 'Canh tác');
+  hienKhoi('khoiVanDe',   nhom === 'Vấn đề');
+  hienKhoi('khoiQuanSat', nhom === 'Quan sát');
+  hienKhoi('khoiChung',   true);
+
+  if(nhom === 'Canh tác') capNhatOHoatDong();
+
+  const td = $('nlTieuDe');
+  if(td && !td.value){
+    if(nhom === 'Canh tác' && nlChon.hoatDong) td.value = nlChon.hoatDong;
+    if(nhom === 'Quan sát') td.value = 'Thăm đồng';
+  }
+}
+
+function resetFormNhatKy(){
+  nlNhom = '';
+  nlChon = { hoatDong:'', vanDe:[], mucDo:'', viTri:[], xuLy:[] };
+
+  veChip('hopHoatDong', OPT.hoatDong, 'hoatDong', false);
+  veChip('hopVanDe',    OPT.vanDe,    'vanDe',    true);
+  veChip('hopMucDo',    OPT.mucDo,    'mucDo',    false, ['md-nhe','md-vua','md-nang']);
+  veChip('hopViTri',    OPT.viTri,    'viTri',    true);
+  veChip('hopViTriQS',  OPT.viTri,    'viTri',    true);
+  veChip('hopXuLy',     OPT.xuLy,     'xuLy',     true);
+
+  ['nhomCT','nhomVD','nhomQS'].forEach(function(id){
+    const e = $(id); if(e) e.classList.remove('dachon');
+  });
+  // khoiChung KHÔNG bị ẩn: tiêu đề, ngày, mô tả, ảnh và nút Lưu luôn hiện.
+  // Nếu bước 1 có trục trặc gì thì người ghi vẫn viết và lưu được như cũ.
+  ['khoiCanhTac','khoiVanDe','khoiQuanSat','khoiPhan','khoiNuoc']
+    .forEach(function(id){ hienKhoi(id, false); });
+  hienKhoi('khoiChung', true);
+
+  ['nlTieuDe','nlNoiDung','nlVatTu','nlSoLuong','nlMucNuoc','nlTyLe','nlAnh','nlVideo']
+    .forEach(function(id){ const e = $(id); if(e) e.value = ''; });
+  const dv = $('nlDonVi');   if(dv) dv.value = '';
+  const cx = $('nlCanXuLy'); if(cx) cx.checked = false;
+
+  $('nlNgay').value = new Date().toISOString().slice(0,10);
+  $('nlXemAnh').innerHTML = ''; $('nlXemVideo').innerHTML = '';
+  $('nlLoi').textContent = ''; $('nlLoi').style.color = '';
+  anhDaChon = []; videoDaChon = [];
+}
+
+/* Dãy nhãn cấu trúc hiển thị trong danh sách nhật ký */
+function nhanNhatKy(e){
+  const ds = [];
+  if(e.hoatDong) ds.push('<span class="nk-tt">'+escHtml(e.hoatDong)+'</span>');
+  (e.vanDe||[]).forEach(function(v){ ds.push('<span class="nk-tt">'+escHtml(v)+'</span>'); });
+  if(e.mucDo) ds.push('<span class="nk-tt">'+escHtml(e.mucDo)+'</span>');
+  (e.viTri||[]).forEach(function(v){ ds.push('<span class="nk-tt">'+escHtml(v)+'</span>'); });
+  (e.daXuLy||[]).forEach(function(v){ ds.push('<span class="nk-tt">✔ '+escHtml(v)+'</span>'); });
+  if(!ds.length && e.status) ds.push('<span class="nk-tt">'+escHtml(e.status)+'</span>');
+  return ds.join(' ');
+}
+
+
 // (b) Mã nông dân trong Mã sản phẩm Notion (CKOD-<MÃ>-HT26-…)
 //     Sửa vế phải cho khớp CHÍNH XÁC với mã trong Notion của anh.
 const MA_NONG_DAN = {
@@ -666,129 +798,3 @@ $('selDong').addEventListener('change', function(){
 });
 if(API_URL.startsWith('http')) napNotion();
 else $('trangthai').textContent = 'Đang kết nối dữ liệu…';
-
-
-
-/* ================================================================
-   9. FORM NHẬT KÝ CÓ CẤU TRÚC  (thêm 29/07/2026)
-   Nguyên tắc: chọn Nhóm trước, các ô còn lại mới hiện theo.
-   Ngoài đồng tay bẩn sóng yếu — mỗi bản ghi xong trong 3–4 lần chạm.
-   ================================================================ */
-
-/* Danh sách option: PHẢI khớp TỪNG KÝ TỰ với Notion và với CONFIG.WL
-   bên Apps Script. Sai một dấu là dữ liệu rơi mất (bị whitelist chặn). */
-const OPT = {
-  hoatDong: ['Làm đất','Ngâm ủ giống','Gieo/Cấy','Dặm - cấy lại','Bón phân',
-             'Điều tiết nước','Làm cỏ','Cắt bông cỏ','Rào chuột',
-             'Phun sinh học','Thu hoạch'],
-  vanDe: ['Cỏ chát','Cỏ mật','Cỏ lồng vực','Cỏ khác','Chuột','Ốc bươu vàng',
-          'Chim','Sâu cuốn lá','Rầy nâu','Đạo ôn','Khô vằn','Sâu đục thân',
-          'Khô nước','Ngập úng','Nhiễm mặn','Đổ ngã','Vàng lá'],
-  mucDo: ['Nhẹ (<10%)','Vừa (10-30%)','Nặng (>30%)'],
-  viTri: ['Giữa đám','Sát bờ','Giáp đất màu','Giáp đất ở','Giáp đống rơm',
-          'Giáp mương','Giáp chuồng bò'],
-  xuLy:  ['Rào ni lông','Bơm nước','Tháo nước','Cắt bông cỏ','Thuê công','Đặt bẫy']
-};
-
-let nlNhom = '';                       // Canh tác | Vấn đề | Quan sát
-let nlChon = { hoatDong:'', vanDe:[], mucDo:'', viTri:[], xuLy:[] };
-
-function veChip(idHop, ds, khoa, nhieu, lopThem){
-  const hop = $(idHop);
-  if(!hop) return;
-  hop.innerHTML = ds.map(function(v, i){
-    const lop = lopThem ? (' ' + lopThem[i]) : '';
-    return '<button type="button" class="chip' + lop + '" data-v="' + v + '">' + v + '</button>';
-  }).join('');
-  hop.querySelectorAll('.chip').forEach(function(b){
-    b.onclick = function(){
-      const v = b.dataset.v;
-      if(nhieu){
-        const ds2 = nlChon[khoa];
-        const i = ds2.indexOf(v);
-        if(i === -1) ds2.push(v); else ds2.splice(i, 1);
-        b.classList.toggle('dachon');
-      }else{
-        const bat = (nlChon[khoa] !== v);
-        hop.querySelectorAll('.chip').forEach(function(x){ x.classList.remove('dachon'); });
-        nlChon[khoa] = bat ? v : '';
-        if(bat) b.classList.add('dachon');
-        if(khoa === 'hoatDong') capNhatOHoatDong();
-      }
-    };
-  });
-}
-
-/* Chỉ Bón phân mới cần ô lượng, chỉ Điều tiết nước mới cần mực nước */
-function capNhatOHoatDong(){
-  hienKhoi('khoiPhan', nlChon.hoatDong === 'Bón phân');
-  hienKhoi('khoiNuoc', nlChon.hoatDong === 'Điều tiết nước');
-}
-
-function hienKhoi(id, hien){
-  const e = $(id);
-  if(e) e.classList.toggle('nl-an', !hien);
-}
-
-function chonNhom(nhom){
-  nlNhom = nhom;
-  $('nhomCT').classList.toggle('dachon', nhom === 'Canh tác');
-  $('nhomVD').classList.toggle('dachon', nhom === 'Vấn đề');
-  $('nhomQS').classList.toggle('dachon', nhom === 'Quan sát');
-
-  hienKhoi('khoiCanhTac', nhom === 'Canh tác');
-  hienKhoi('khoiVanDe',   nhom === 'Vấn đề');
-  hienKhoi('khoiQuanSat', nhom === 'Quan sát');
-  hienKhoi('khoiChung',   true);
-
-  if(nhom === 'Canh tác') capNhatOHoatDong();
-
-  const td = $('nlTieuDe');
-  if(td && !td.value){
-    if(nhom === 'Canh tác' && nlChon.hoatDong) td.value = nlChon.hoatDong;
-    if(nhom === 'Quan sát') td.value = 'Thăm đồng';
-  }
-}
-
-function resetFormNhatKy(){
-  nlNhom = '';
-  nlChon = { hoatDong:'', vanDe:[], mucDo:'', viTri:[], xuLy:[] };
-
-  veChip('hopHoatDong', OPT.hoatDong, 'hoatDong', false);
-  veChip('hopVanDe',    OPT.vanDe,    'vanDe',    true);
-  veChip('hopMucDo',    OPT.mucDo,    'mucDo',    false, ['md-nhe','md-vua','md-nang']);
-  veChip('hopViTri',    OPT.viTri,    'viTri',    true);
-  veChip('hopViTriQS',  OPT.viTri,    'viTri',    true);
-  veChip('hopXuLy',     OPT.xuLy,     'xuLy',     true);
-
-  ['nhomCT','nhomVD','nhomQS'].forEach(function(id){
-    const e = $(id); if(e) e.classList.remove('dachon');
-  });
-  // khoiChung KHÔNG bị ẩn: tiêu đề, ngày, mô tả, ảnh và nút Lưu luôn hiện.
-  // Nếu bước 1 có trục trặc gì thì người ghi vẫn viết và lưu được như cũ.
-  ['khoiCanhTac','khoiVanDe','khoiQuanSat','khoiPhan','khoiNuoc']
-    .forEach(function(id){ hienKhoi(id, false); });
-  hienKhoi('khoiChung', true);
-
-  ['nlTieuDe','nlNoiDung','nlVatTu','nlSoLuong','nlMucNuoc','nlTyLe','nlAnh','nlVideo']
-    .forEach(function(id){ const e = $(id); if(e) e.value = ''; });
-  const dv = $('nlDonVi');   if(dv) dv.value = '';
-  const cx = $('nlCanXuLy'); if(cx) cx.checked = false;
-
-  $('nlNgay').value = new Date().toISOString().slice(0,10);
-  $('nlXemAnh').innerHTML = ''; $('nlXemVideo').innerHTML = '';
-  $('nlLoi').textContent = ''; $('nlLoi').style.color = '';
-  anhDaChon = []; videoDaChon = [];
-}
-
-/* Dãy nhãn cấu trúc hiển thị trong danh sách nhật ký */
-function nhanNhatKy(e){
-  const ds = [];
-  if(e.hoatDong) ds.push('<span class="nk-tt">'+escHtml(e.hoatDong)+'</span>');
-  (e.vanDe||[]).forEach(function(v){ ds.push('<span class="nk-tt">'+escHtml(v)+'</span>'); });
-  if(e.mucDo) ds.push('<span class="nk-tt">'+escHtml(e.mucDo)+'</span>');
-  (e.viTri||[]).forEach(function(v){ ds.push('<span class="nk-tt">'+escHtml(v)+'</span>'); });
-  (e.daXuLy||[]).forEach(function(v){ ds.push('<span class="nk-tt">✔ '+escHtml(v)+'</span>'); });
-  if(!ds.length && e.status) ds.push('<span class="nk-tt">'+escHtml(e.status)+'</span>');
-  return ds.join(' ');
-}

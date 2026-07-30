@@ -173,7 +173,7 @@ body.nhung #trangthai{padding-top:10px}
   <div class="nl-doi" style="margin-top:9px">
     <input id="nlTyLe" type="number" inputmode="decimal" placeholder="Tỷ lệ đám bị hại (%)">
   </div>
-  <div class="nl-goiy">Ước lượng cũng được — "tầm 40% đám" là đủ chính xác. Con số này để sau vài vụ so được năm nào nặng hơn năm nào.</div>
+  <div class="nl-goiy">Ước lượng là đủ. Con số này dùng để so mức độ giữa các mùa vụ.</div>
 
   <div class="nl-buoc">4 · Ở chỗ nào trong thửa</div>
   <div class="chip-hop" id="hopViTri"></div>
@@ -199,8 +199,8 @@ body.nhung #trangthai{padding-top:10px}
   <div class="form-o"><input id="nlTieuDe" placeholder="VD: Chuột phá giáp đống rơm"></div>
   <div class="form-o"><input id="nlNgay" type="date"></div>
 
-  <div class="form-o"><label>Mô tả (viết tự nhiên như trước)</label>
-    <textarea id="nlNoiDung" placeholder="Ghi thoải mái — phần này giữ nguyên cách anh vẫn viết…"></textarea></div>
+  <div class="form-o"><label>Mô tả chi tiết</label>
+    <textarea id="nlNoiDung" placeholder="Mô tả chi tiết tình hình…"></textarea></div>
 
   <div class="form-o"><label>Hình ảnh</label><input id="nlAnh" type="file" accept="image/*" multiple="">
     <div class="anh-xem" id="nlXemAnh"></div></div>
@@ -232,5 +232,23 @@ body.nhung #trangthai{padding-top:10px}
 
 <script src="js/chung.js?v=2"></script>
 <script src="js/ban-do.js?v=2"></script>
+
+<script>
+/* Tự kiểm: nếu trình duyệt còn giữ js/ban-do.js bản cũ thì báo ngay,
+   thay vì để anh bấm nút mà không có gì xảy ra. */
+(function(){
+  var can = '2.1';
+  if (typeof BANDO_VER !== 'undefined' && BANDO_VER === can) return;
+  var d = document.createElement('div');
+  d.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#c0392b;'
+    + 'color:#fff;font:14px/1.5 system-ui,sans-serif;padding:14px 16px;text-align:center';
+  d.innerHTML = (typeof BANDO_VER === 'undefined')
+    ? '⚠️ Trình duyệt đang dùng <b>js/ban-do.js bản cũ</b> nên form nhập liệu không bấm được.<br>'
+      + 'Kiểm tra đã commit file js/ban-do.js mới lên GitHub chưa, rồi tải lại trang bằng Ctrl+F5 '
+      + '(điện thoại: xoá dữ liệu duyệt web).'
+    : '⚠️ js/ban-do.js đang là bản <b>' + BANDO_VER + '</b>, cần bản <b>' + can + '</b>. Hãy cập nhật file rồi tải lại trang.';
+  document.body.appendChild(d);
+})();
+</script>
 </body>
 </html>

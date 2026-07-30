@@ -285,7 +285,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
            nguyên vẹn trong môi trường của nó — không phải sao chép logic
            sang trang này, nên không có chỗ nào lệch nhau về sau. -->
       <iframe id="khungBanDo" class="bando-nhung"
-              src="ban-do.html?nhung=1&amp;dong=CKOD"
+              src="ban-do.html?nhung=1&amp;dong=CKOD&amp;cb=2.1"
               title="Bản đồ canh tác" loading="lazy"></iframe>
     </div>
   </div>
@@ -364,7 +364,7 @@ function chonDong(btn, ten, ma){
   btn.classList.add('active');
   document.getElementById('tenDong').textContent = ten;
   const khung = document.getElementById('khungBanDo');
-  if(khung && ma) khung.src = 'ban-do.html?nhung=1&dong=' + ma;
+  if(khung && ma) khung.src = 'ban-do.html?nhung=1&dong=' + ma + '&cb=2.1';
   if(ma && typeof napMocThat === 'function') napMocThat(ma);
 }
 

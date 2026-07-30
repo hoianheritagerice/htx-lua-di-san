@@ -230,24 +230,44 @@ body.nhung #trangthai{padding-top:10px}
 </div>
 </div>
 
-<script src="js/chung.js?v=2"></script>
-<script src="js/ban-do.js?v=2"></script>
+<script>
+/* Bộ nạp script.
+   Bình thường nạp theo số phiên bản (?v=2.1). Nếu địa chỉ đó lỡ bị trình
+   duyệt lưu nhầm nội dung cũ, dải cảnh báo bên dưới cho bấm một nút để
+   nạp lại bằng địa chỉ hoàn toàn mới (?v=<mốc thời gian>) — luôn tươi. */
+(function () {
+  var q  = new URLSearchParams(location.search);
+  var v  = q.get('cb') || '2.1';
+  document.write('<scr' + 'ipt src="js/chung.js?v='  + v + '"></scr' + 'ipt>');
+  document.write('<scr' + 'ipt src="js/ban-do.js?v=' + v + '"></scr' + 'ipt>');
+})();
+</script>
 
 <script>
-/* Tự kiểm: nếu trình duyệt còn giữ js/ban-do.js bản cũ thì báo ngay,
-   thay vì để anh bấm nút mà không có gì xảy ra. */
-(function(){
+/* Tự kiểm phiên bản js/ban-do.js. Nếu lệch, hiện dải đỏ kèm nút nạp lại
+   bằng địa chỉ mới hoàn toàn — xử lý được cả trường hợp trình duyệt đã
+   lưu nhầm nội dung cũ ở địa chỉ có sẵn số phiên bản. */
+(function () {
   var can = '2.1';
   if (typeof BANDO_VER !== 'undefined' && BANDO_VER === can) return;
+
+  var dang = (typeof BANDO_VER === 'undefined') ? 'bản cũ (không rõ số)' : 'bản ' + BANDO_VER;
   var d = document.createElement('div');
-  d.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#c0392b;'
-    + 'color:#fff;font:14px/1.5 system-ui,sans-serif;padding:14px 16px;text-align:center';
-  d.innerHTML = (typeof BANDO_VER === 'undefined')
-    ? '⚠️ Trình duyệt đang dùng <b>js/ban-do.js bản cũ</b> nên form nhập liệu không bấm được.<br>'
-      + 'Kiểm tra đã commit file js/ban-do.js mới lên GitHub chưa, rồi tải lại trang bằng Ctrl+F5 '
-      + '(điện thoại: xoá dữ liệu duyệt web).'
-    : '⚠️ js/ban-do.js đang là bản <b>' + BANDO_VER + '</b>, cần bản <b>' + can + '</b>. Hãy cập nhật file rồi tải lại trang.';
+  d.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#c0392b;'
+    + 'color:#fff;font:14px/1.6 system-ui,sans-serif;padding:14px 16px;text-align:center';
+  d.innerHTML =
+      '⚠️ Trình duyệt đang dùng <b>js/ban-do.js ' + dang + '</b>, cần <b>bản ' + can + '</b>. '
+    + 'Form nhập liệu sẽ không bấm được.<br>'
+    + '<button id="btnNapLai" style="margin-top:9px;padding:9px 20px;border:0;border-radius:20px;'
+    + 'background:#fff;color:#c0392b;font:600 14px system-ui,sans-serif;cursor:pointer">'
+    + '↻ Nạp lại bản mới nhất</button>';
   document.body.appendChild(d);
+
+  document.getElementById('btnNapLai').onclick = function () {
+    var q = new URLSearchParams(location.search);
+    q.set('cb', String(Date.now()));   // địa chỉ chưa từng tồn tại → chắc chắn tải mới
+    location.replace(location.pathname + '?' + q.toString());
+  };
 })();
 </script>
 </body>

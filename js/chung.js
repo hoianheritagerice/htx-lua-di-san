@@ -39,21 +39,24 @@ function phienHienTai(){
 }
 function veUserBox(){
   const ph = phienHienTai();
-  $('userBox').innerHTML = ph
+  const box = $('userBox');
+  if(!box) return;                 // trang không có ô này thì bỏ qua
+  box.innerHTML = ph
     ? `👤 ${ph.username}${(ph.role==='khach')?' (khách xem)':''} <button onclick="dangXuat()">Đăng xuất</button>`
     : `<button onclick="moModal('mpDN')">Đăng nhập</button>`;
 }
 
 async function dangNhap(){
-  $('dnLoi').textContent=''; $('dnGui').disabled = true;
+  const oLoi = $('dnLoi'), nut = $('dnGui');
+  if(oLoi) oLoi.textContent=''; if(nut) nut.disabled = true;
   try{
     const r = await goiAPI({action:'login', username:$('dnUser').value.trim(), password:$('dnPass').value});
     if(!r.ok) throw r.error;
     localStorage.setItem('htx_phien', JSON.stringify({token:r.token, username:r.username, role:r.role||'admin'}));
     veUserBox(); dongModal('mpDN');
     if(typeof thuaDangChon !== 'undefined' && thuaDangChon !== null && typeof moNhapLieu === 'function') moNhapLieu();
-  }catch(e){ $('dnLoi').textContent = e; }
-  $('dnGui').disabled = false;
+  }catch(e){ if(oLoi) oLoi.textContent = e; else alert(e); }
+  if(nut) nut.disabled = false;
 }
 
 function dangXuat(){ localStorage.removeItem('htx_phien'); veUserBox(); }

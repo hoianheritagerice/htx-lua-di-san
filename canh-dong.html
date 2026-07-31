@@ -27,7 +27,8 @@ img{max-width:100%;display:block}
 header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1px solid #e4dcc8}
 .nav{display:flex;align-items:center;gap:20px;height:72px}
 .brand{display:flex;align-items:center;gap:12px}
-.brand .enso{width:42px;height:42px;border-radius:50%;border:3px solid var(--xanh-dam);border-right-color:transparent;transform:rotate(-25deg);flex:none}
+.brand .logo{width:46px;height:46px;flex:none;object-fit:contain;transition:transform .35s cubic-bezier(.34,1.3,.64,1)}
+.brand:hover .logo{transform:rotate(-6deg) scale(1.06)}
 .brand .bname{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--xanh-dam);line-height:1.05}
 .brand .bname small{display:block;font-family:'Be Vietnam Pro',sans-serif;font-weight:400;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--xam)}
 .nav .menu{display:flex;gap:28px;margin-left:26px;flex:1}
@@ -63,26 +64,6 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .map-head h2{font-size:21px}
 .map-head .mo-bando{background:var(--xanh-dam);color:#fff;border:none;font-family:inherit;font-weight:600;font-size:13.5px;padding:10px 18px;border-radius:22px;cursor:pointer}
 .map-head .mo-bando:hover{background:#163a20}
-.tt-so{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:0 0 18px}
-@media(max-width:760px){.tt-so{grid-template-columns:repeat(2,1fr)}}
-.tt-o{background:#f6f5ee;border-radius:12px;padding:12px 10px;text-align:center}
-.tt-so-lon{font-size:20px;font-weight:700;color:#2f4718;line-height:1.2}
-.tt-nhan{font-size:11px;color:#7b8270;margin-top:3px;line-height:1.35}
-.tt-chu{font-size:12.5px;color:#7b8270;margin-top:10px;line-height:1.55}
-.tt-trong{padding:26px;text-align:center;color:#7b8270;font-size:14px;background:#f6f5ee;border-radius:12px}
-.tt-ct{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:#5c6352;margin-top:8px}
-.tt-ct i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
-.bando-nhung{width:100%;height:78vh;min-height:460px;border:0;display:block;background:#f6f5ee}
-@media(max-width:640px){.tt-so{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:0 0 18px}
-@media(max-width:760px){.tt-so{grid-template-columns:repeat(2,1fr)}}
-.tt-o{background:#f6f5ee;border-radius:12px;padding:12px 10px;text-align:center}
-.tt-so-lon{font-size:20px;font-weight:700;color:#2f4718;line-height:1.2}
-.tt-nhan{font-size:11px;color:#7b8270;margin-top:3px;line-height:1.35}
-.tt-chu{font-size:12.5px;color:#7b8270;margin-top:10px;line-height:1.55}
-.tt-trong{padding:26px;text-align:center;color:#7b8270;font-size:14px;background:#f6f5ee;border-radius:12px}
-.tt-ct{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:#5c6352;margin-top:8px}
-.tt-ct i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
-.bando-nhung{height:70vh;min-height:380px}}
 .map-placeholder{aspect-ratio:16/8;background:radial-gradient(circle at 30% 40%,rgba(139,195,74,.25),transparent 40%),radial-gradient(circle at 70% 60%,rgba(201,162,39,.2),transparent 40%),linear-gradient(135deg,#eef0e3,#e3ddc8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#7c8468;text-align:center;padding:24px}
 .map-placeholder .ic{font-size:44px}
 .map-placeholder small{max-width:44ch;font-size:12.5px}
@@ -176,6 +157,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 }
 </style>
 <link rel="stylesheet" href="css/hieu-ung.css">
+<link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body>
 
@@ -247,12 +229,10 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
   <symbol id="ic-ve" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H6a2 2 0 0 1-2-2 2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="1 2.5"/></symbol>
 </defs></svg>
 
-<div class="topbar">🌾 Gạo hữu cơ Hội An · <b>Mỗi thửa ruộng một câu chuyện</b> · Theo dõi cả mùa vụ cùng chúng tôi</div>
-
 <header>
   <div class="wrap nav">
     <a href="index.html" class="brand">
-      <span class="enso"></span>
+      <img src="img/logo.png" class="logo" alt="Logo HTX Lúa Di Sản Hội An" width="46" height="46">
       <span class="bname">HTX Lúa Di Sản<small>Hội An · Quảng Nam</small></span>
     </a>
     <nav class="menu">
@@ -263,14 +243,12 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
     </nav>
     <div class="acts">
       <button class="dangnhap nut-noi" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
-      <a href="#" class="icon gio" onclick="alert('Giỏ hàng: bước 5 — VietQR chuyển khoản.');return false;">🛒<span class="dem">0</span></a>
       <button class="burger" onclick="alert('Menu di động — hoàn thiện sau.')">☰</button>
     </div>
   </div>
 </header>
 
-<div class="mau-banner">✎ Bản nháp — dòng thời gian dùng <b>ngày &amp; sự kiện mẫu</b>. Khi nối API, mốc nông học tự lấy từ Notion; lễ cúng &amp; trải nghiệm anh Quân nhập thêm.</div>
-
+<div class="mau-banner">Trang đang trong quá trình hoàn thiện.</div>
 <section class="cd-hero hero-anh">
   <img class="hero-bg" src="img/hero-canh-dong.jpg" alt="" onerror="this.classList.add('loi')">
   <div class="wrap">
@@ -284,9 +262,9 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
   <div class="wrap">
     <div class="chon-nhom">
       <span class="cn-lbl">Cánh đồng</span>
-      <button class="field-tab active" onclick="chonDong(this,'Ông Đảng','CKOD')">Ông Đảng · Cẩm Kim</button>
-      <button class="field-tab" onclick="chonDong(this,'Đồng Cao','CTDC')">Đồng Cao · Cẩm Thanh</button>
-      <button class="field-tab" onclick="chonDong(this,'Đồng Mẫu','CTDM')">Đồng Mẫu · Cẩm Thanh</button>
+      <button class="field-tab active" onclick="chonDong(this,'Ông Đảng')">Ông Đảng · Cẩm Kim</button>
+      <button class="field-tab" onclick="chonDong(this,'Đồng Cao')">Đồng Cao · Cẩm Thanh</button>
+      <button class="field-tab" onclick="chonDong(this,'Đồng Mẫu')">Đồng Mẫu · Cẩm Thanh</button>
     </div>
     <select class="vu-sel"><option>Vụ Hè Thu 2026</option></select>
   </div>
@@ -297,36 +275,16 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
     <div class="map-box">
       <div class="map-head">
         <h2>Bản đồ canh tác — <span id="tenDong">Ông Đảng</span></h2>
-        <button class="mo-bando nut-noi" onclick="location.href='ban-do.html?dong='+DONG_HIEN_TAI">Mở toàn màn hình ↗</button>
+        <button class="mo-bando nut-noi" onclick="location.href='ban-do.html'">Mở bản đồ tương tác ↗</button>
       </div>
-      <!-- Bản đồ thật, nhúng thẳng vào đây. Dùng iframe để ban-do.js chạy
-           nguyên vẹn trong môi trường của nó — không phải sao chép logic
-           sang trang này, nên không có chỗ nào lệch nhau về sau. -->
-      <iframe id="khungBanDo" class="bando-nhung"
-              src="ban-do.html?nhung=1&amp;dong=CKOD&amp;cb=2.4"
-              title="Bản đồ canh tác" loading="lazy"></iframe>
+      <div class="map-placeholder">
+        <div class="ic">🗺️</div>
+        <div>Khung bản đồ canh tác tương tác</div>
+        <small>Khi ghép thật, bản đồ SVG hiện có (zoom, xoay, chạm chọn thửa, xem nhật ký) sẽ nhúng ngay tại đây — không phải trang riêng nữa, mà là một phần của "Cánh Đồng".</small>
+      </div>
     </div>
   </div>
 </section>
-
-<!-- ================= THỜI TIẾT MÙA VỤ ================= -->
-<section class="doan" id="doanThoiTiet">
-  <div class="doan-dau">
-    <h2>Thời tiết mùa vụ — <span id="ttTenDong">Ông Đảng</span></h2>
-    <p class="doan-mo">Mưa từng ngày đặt cạnh việc đã làm và vấn đề đã gặp trên đồng. Nhìn một lượt là thấy đợt sâu bệnh rơi vào sau chuỗi mưa nào, đợt khô nước trùng với quãng nào không mưa.</p>
-  </div>
-  <div class="tt-so" id="ttSo"></div>
-  <div id="ttBieuDo"></div>
-  <div class="tt-ct">
-    <span><i style="background:#5b8fc9"></i>Lượng mưa (mm)</span>
-    <span><i style="background:#c94f3d"></i>Nhiệt độ cao nhất</span>
-    <span><i style="background:#6f9b3f"></i>Việc canh tác</span>
-    <span><i style="background:#c0392b"></i>Vấn đề</span>
-    <span><i style="background:#8a9db8"></i>Quan sát</span>
-  </div>
-  <div class="tt-chu" id="ttChu"></div>
-</section>
-
 
 <section class="tl-sec">
   <div class="wrap">
@@ -350,7 +308,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
         <path id="riverDone" fill="none" stroke="url(#gRiver)" stroke-width="3.6" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
       </svg>
     </div>
-    <div class="tl-note">Ngày và sự kiện ở trên là <b>ví dụ minh họa</b> cho vụ Hè Thu 2026. Các mốc nông học đã có trong hệ thống Notion; lễ cúng và trải nghiệm sẽ được thêm vào bảng "Hoạt động mùa vụ" để anh Quân tự cập nhật.</div>
+    <div class="tl-note">Dòng thời gian mùa vụ Hè Thu 2026 của HTX Lúa Di Sản Hội An.</div>
   </div>
 </section>
 
@@ -387,38 +345,23 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
     <p class="sub">Xã viên đăng nhập để nhập liệu. Khách đã mua đăng nhập bằng Mã KH để xem nhật ký thửa của mình.</p>
     <div class="form-o"><label>Tên đăng nhập / Mã KH</label><input id="dnUser"></div>
     <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password"></div>
-    <button class="nut-gui nut-noi" onclick="alert('Bản nháp — sẽ dùng dangNhap() trong js/chung.js.')">Đăng nhập</button>
+    <div class="fqt-loi" id="dnLoi" style="color:#b03c2a;font-size:13px;min-height:18px"></div><button class="nut-gui nut-noi" id="dnGui" onclick="dangNhap()">Đăng nhập</button>
     <button class="dong" onclick="dongModal('mpDN')">Đóng</button>
   </div>
 </div>
 
 <script>
-function moModal(id){ document.getElementById(id).classList.add('mo'); }
-function dongModal(id){ document.getElementById(id).classList.remove('mo'); }
-document.querySelectorAll('.modal-phu').forEach(m=>{ m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('mo'); }); });
-/* MỘT chỗ duy nhất khai báo phiên bản bản đồ. Trước đây tôi để cb=2.1 rải
-   ở hai nơi rồi quên nâng, khiến trình duyệt giữ bản HTML cũ. */
-const VER_BANDO = '2.4';
-let DONG_HIEN_TAI = 'CKOD';
-function srcBanDo(ma){ return 'ban-do.html?nhung=1&dong=' + ma + '&cb=' + VER_BANDO; }
-function chonDong(btn, ten, ma){
-  if(ma) DONG_HIEN_TAI = ma;
+function chonDong(btn, ten){
   document.querySelectorAll('.field-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tenDong').textContent = ten;
-  const khung = document.getElementById('khungBanDo');
-  if(khung && ma) khung.src = srcBanDo(ma);
-  if(ma && typeof napMocThat === 'function') napMocThat(ma);
-  if(ma && typeof napThoiTiet === 'function') napThoiTiet(ma);
 }
 
-/* HÔM NAY lấy thời gian thật của máy — trước đây bị đóng cứng 25/07/2026
-   nên chấm "Hôm nay" đứng yên mãi ở khoảng 24/07. */
-let HOM_NAY = new Date(); HOM_NAY.setHours(0,0,0,0);
+const HOM_NAY = new Date('2026-07-25');
 const LOAI_TXT = {nong:'Mốc nông học', le:'Lễ cúng · tâm linh', trai:'Trải nghiệm'};
 const LOAI_BG  = {nong:'#e6f2d8', le:'#f5e3d8', trai:'#faf0cf'};
 const LOAI_FG  = {nong:'#4f7325', le:'#9c4e28', trai:'#8a6910'};
-let SU_KIEN = [
+const SU_KIEN = [
   {ngay:'2026-05-15', ic:'ic-cung', loai:'le',   ten:'Lễ cúng xuống đồng', tenDay:'Lễ cúng xuống đồng (đầu mùa)',
    mo:'Nghi lễ cầu cho mùa vụ thuận hòa, mưa gió điều hòa, trước ngày gieo sạ đầu tiên.', goi:'Đối tác kiến tạo di sản'},
   {ngay:'2026-05-20', ic:'ic-gieo', loai:'nong', ten:'Gieo sạ', tenDay:'Ngày gieo sạ',
@@ -441,7 +384,7 @@ let SU_KIEN = [
    mo:'Nấu nồi cơm từ gạo vụ mới, dâng cúng tạ ơn trời đất và tổ tiên đã cho mùa màng.', goi:'Đối tác kiến tạo di sản'},
 ];
 
-let N = SU_KIEN.length;
+const N = SU_KIEN.length;
 const river = document.getElementById('river');
 const AMP = window.matchMedia('(max-width:520px)').matches ? 24 : 30;  // biên độ uốn lượn (%)
 const CYC = 4.5;                                                        // số nhịp lượn
@@ -477,9 +420,6 @@ function pHomNay(){
 }
 
 function veTimeline(){
-  // xoá mốc của lần vẽ trước (giữ nguyên thẻ <svg> đường sông)
-  river.querySelectorAll('.river-node, .today').forEach(e=>e.remove());
-  N = SU_KIEN.length;
   // các mốc
   SU_KIEN.forEach((s,i)=>{
     const p = pOf(i);
@@ -540,207 +480,9 @@ function moCT(i){
 }
 
 veTimeline();
-
-/* ================================================================
-   Lấy mốc nông học THẬT từ Notion thay cho ngày mẫu.
-   Nếu API lỗi hoặc chưa điền ngày, timeline giữ nguyên ngày mẫu —
-   trang không bao giờ trắng vì chuyện này.
-   ================================================================ */
-const API_URL_TL = 'https://script.google.com/macros/s/AKfycbxkBLw-2LGnKPrc0m8cjogwqyv1kCyP5D1hN8A7Pt2IQ6n8QwRGQhD8ea8PAQzOVwjy/exec';
-const NGAY_MAU = SU_KIEN.map(x => x.ngay);          // giữ bản gốc để lùi lại khi cần
-const MOC_NOTION = {                                 // tên mốc ↔ trường trong Notion
-  'Gieo sạ':   'gieoSa',
-  'Đón đòng':  'donDong',
-  'Trổ bông':  'troBong',
-  'Chắc hạt':  'chacHat',
-  'Thu hoạch': 'thuHoach'
-};
-
-async function napMocThat(ma){
-  try{
-    const res = await fetch(API_URL_TL, {
-      method:'POST',
-      body: JSON.stringify({action:'getMapData', field: ma, season:'HT26'})
-    });
-    const r = await res.json();
-    if(!r.ok || !r.season) return;
-    let doi = 0;
-    SU_KIEN.forEach((sk, i) => {
-      const khoa = MOC_NOTION[sk.ten];
-      if(khoa && r.season[khoa]){ sk.ngay = r.season[khoa]; doi++; }
-      else sk.ngay = NGAY_MAU[i];
-    });
-    SU_KIEN.sort((a,b) => a.ngay.localeCompare(b.ngay));
-
-    /* Nói thẳng mốc nào là số thật, mốc nào còn là ngày mẫu — để không ai
-       tưởng cả dòng thời gian đã lấy từ Notion. */
-    const thieu = Object.keys(MOC_NOTION).filter(t => {
-      const k = MOC_NOTION[t];
-      return !r.season[k];
-    });
-    const note = document.querySelector('.tl-note');
-    if(note){
-      note.innerHTML = doi + '/' + Object.keys(MOC_NOTION).length
-        + ' mốc nông học lấy trực tiếp từ Notion (' + (r.season.name || 'vụ hiện tại') + ').'
-        + (thieu.length
-            ? ' <b>Chưa có trong Notion, đang dùng ngày mẫu:</b> ' + thieu.join(' · ')
-              + ' — điền vào trang Vụ Mùa là dòng thời gian tự đúng.'
-            : '')
-        + ' Lễ cúng và trải nghiệm là ngày dự kiến, chưa có nguồn trong Notion.';
-    }
-    // Chỉ ẩn banner "bản nháp" khi TẤT CẢ mốc nông học đã là số thật
-    const bn = document.querySelector('.mau-banner');
-    if(bn) bn.style.display = thieu.length ? '' : 'none';
-    veTimeline();
-  }catch(e){ /* giữ ngày mẫu */ }
-}
-napMocThat('CKOD');
-napThoiTiet('CKOD');
-
-/* ==================================================================
-   BIỂU ĐỒ THỜI TIẾT MÙA VỤ
-   Trục ngang = NSS (ngày sau sạ). Dùng NSS chứ không dùng ngày dương
-   lịch để sau này chồng được nhiều vụ lên cùng một trục mà so.
-   ================================================================== */
-const GIAI_DOAN = [
-  {tu:0,  den:8,  ten:'Mạ',            mau:'#e8efdc'},
-  {tu:8,  den:21, ten:'Đẻ nhánh sớm',  mau:'#dbe8c8'},
-  {tu:21, den:41, ten:'Đẻ nhánh rộ',   mau:'#cfe2b6'},
-  {tu:41, den:56, ten:'Làm đòng',      mau:'#c2dba4'},
-  {tu:56, den:71, ten:'Trổ – phơi màu',mau:'#f2e6bd'},
-  {tu:71, den:999,ten:'Chín – gặt',    mau:'#efdcc0'}
-];
-const MAU_NHOM = {'Canh tác':'#6f9b3f','Vấn đề':'#c0392b','Quan sát':'#8a9db8'};
-
-function soNgay(a,b){ return Math.round((new Date(b)-new Date(a))/86400000); }
-function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-
-async function napThoiTiet(ma){
-  const oSo = document.getElementById('ttSo');
-  const oBd = document.getElementById('ttBieuDo');
-  const oChu= document.getElementById('ttChu');
-  document.getElementById('ttTenDong').textContent =
-    ({CKOD:'Ông Đảng',CTDC:'Đồng Cao',CTDM:'Đồng Mẫu'})[ma] || ma;
-  oSo.innerHTML=''; oChu.textContent='';
-  oBd.innerHTML = '<div class="tt-trong">Đang tải dữ liệu thời tiết…</div>';
-  try{
-    const res = await fetch(API_URL_TL, {method:'POST',
-      body: JSON.stringify({action:'getSeasonTimeline', field:ma, season:'HT26'})});
-    const r = await res.json();
-    if(!r.ok) throw r.error;
-    veThoiTiet(r);
-  }catch(e){
-    oBd.innerHTML = '<div class="tt-trong">Chưa lấy được dữ liệu thời tiết.<br>'
-      + '<small>' + esc(e) + '</small></div>';
-  }
-}
-
-function veThoiTiet(r){
-  const oSo=document.getElementById('ttSo'), oBd=document.getElementById('ttBieuDo'), oChu=document.getElementById('ttChu');
-  const tt = r.thoiTiet || [], nk = r.nhatKy || [];
-  const gieo = r.season && r.season.gieoSa;
-
-  if(!gieo){
-    oBd.innerHTML = '<div class="tt-trong">Trang Vụ Mùa chưa có <b>Ngày gieo sạ</b> nên chưa dựng được trục thời gian.</div>';
-    return;
-  }
-  if(!tt.length){
-    oBd.innerHTML = '<div class="tt-trong">Bảng <b>🌦️ THỜI TIẾT NGÀY</b> chưa có dữ liệu cho cánh đồng này.<br>'
-      + '<small>Mở Apps Script, chạy hàm <b>keoThoiTietLichSu</b> một lần để kéo về từ Open-Meteo.</small></div>';
-    return;
-  }
-
-  /* ---- 6 con số tổng hợp: thứ dùng để so giữa các vụ ---- */
-  let tong=0, nMua=0, nLon=0, khoMax=0, kho=0, tNhiet=0, dNhiet=0, nNong=0;
-  tt.forEach(d=>{ const m=d.mua||0; tong+=m;
-    if(m>=1) nMua++; if(m>=50) nLon++;
-    if(m<1){ kho++; if(kho>khoMax) khoMax=kho; } else kho=0;
-    if(d.tMax!=null&&d.tMin!=null){ tNhiet+=(d.tMax+d.tMin)/2; dNhiet++; }
-    if(d.tMax!=null&&d.tMax>=35) nNong++; });
-  const so=[
-    [Math.round(tong)+' mm','Tổng mưa cả vụ'],
-    [nMua,'Ngày có mưa'],
-    [nLon,'Ngày mưa lớn (>50mm)'],
-    [khoMax+' ngày','Chuỗi khô dài nhất'],
-    [(dNhiet?(tNhiet/dNhiet).toFixed(1):'—')+'°C','Nhiệt độ trung bình'],
-    [nNong,'Ngày nóng (>35°C)']
-  ];
-  oSo.innerHTML = so.map(x=>'<div class="tt-o"><div class="tt-so-lon">'+x[0]+'</div><div class="tt-nhan">'+x[1]+'</div></div>').join('');
-
-  /* ---- Biểu đồ ---- */
-  const W=1000,H=330, L=42,R=12,T=26,B=78;
-  const nssMax = Math.max(100, ...tt.map(d=>soNgay(gieo,d.ngay)), ...nk.map(e=>soNgay(gieo,e.ngay)));
-  const pw=W-L-R, ph=H-T-B;
-  const x = nss => L + (nss/nssMax)*pw;
-  const muaMax = Math.max(20, ...tt.map(d=>d.mua||0));
-  const yMua = mm => T+ph - (mm/muaMax)*ph;
-
-  let g='';
-  // nền giai đoạn sinh trưởng
-  GIAI_DOAN.forEach(gd=>{
-    const a=x(gd.tu), b=x(Math.min(gd.den,nssMax));
-    if(b<=a) return;
-    g+='<rect x="'+a.toFixed(1)+'" y="'+T+'" width="'+(b-a).toFixed(1)+'" height="'+ph+'" fill="'+gd.mau+'" opacity=".55"/>';
-    if(b-a>70) g+='<text x="'+((a+b)/2).toFixed(1)+'" y="'+(T-8)+'" text-anchor="middle" font-size="10.5" fill="#7b8270">'+gd.ten+'</text>';
-  });
-  // lưới mm
-  [0,.25,.5,.75,1].forEach(f=>{
-    const yy=T+ph-f*ph, v=Math.round(muaMax*f);
-    g+='<line x1="'+L+'" y1="'+yy.toFixed(1)+'" x2="'+(W-R)+'" y2="'+yy.toFixed(1)+'" stroke="#d8dcd0" stroke-width="1" stroke-dasharray="2 3"/>';
-    g+='<text x="'+(L-6)+'" y="'+(yy+3.5).toFixed(1)+'" text-anchor="end" font-size="10" fill="#98a08c">'+v+'</text>';
-  });
-  // cột mưa
-  const bw=Math.max(2,(pw/nssMax)*0.8);
-  tt.forEach(d=>{
-    const n=soNgay(gieo,d.ngay); if(n<0||n>nssMax) return;
-    const m=d.mua||0; if(m<=0) return;
-    g+='<rect x="'+(x(n)-bw/2).toFixed(1)+'" y="'+yMua(m).toFixed(1)+'" width="'+bw.toFixed(1)
-      +'" height="'+(T+ph-yMua(m)).toFixed(1)+'" fill="'+(m>=50?'#2f6ea5':'#5b8fc9')+'" rx="1"><title>'
-      +d.ngay+' · NSS '+n+' · '+m+' mm</title></rect>';
-  });
-  // đường nhiệt độ cao nhất (thang 15–40°C)
-  const yNhiet = t => T+ph - ((t-15)/25)*ph;
-  const dt = tt.filter(d=>d.tMax!=null).map(d=>[soNgay(gieo,d.ngay),d.tMax]).filter(p=>p[0]>=0&&p[0]<=nssMax);
-  if(dt.length>1){
-    g+='<polyline fill="none" stroke="#c94f3d" stroke-width="1.4" opacity=".8" points="'
-      + dt.map(p=>x(p[0]).toFixed(1)+','+yNhiet(p[1]).toFixed(1)).join(' ') + '"/>';
-  }
-  // mốc NSS trục ngang
-  for(let n=0;n<=nssMax;n+=10){
-    g+='<line x1="'+x(n).toFixed(1)+'" y1="'+(T+ph)+'" x2="'+x(n).toFixed(1)+'" y2="'+(T+ph+4)+'" stroke="#b9bfae"/>';
-    g+='<text x="'+x(n).toFixed(1)+'" y="'+(T+ph+16)+'" text-anchor="middle" font-size="10" fill="#98a08c">'+n+'</text>';
-  }
-  g+='<text x="'+(L)+'" y="'+(T+ph+32)+'" font-size="10.5" fill="#7b8270">NSS — ngày sau sạ (gieo '+gieo.slice(8,10)+'/'+gieo.slice(5,7)+')</text>';
-
-  // làn sự kiện nhật ký
-  const yE=T+ph+44;
-  g+='<line x1="'+L+'" y1="'+yE+'" x2="'+(W-R)+'" y2="'+yE+'" stroke="#e2e5da"/>';
-  nk.forEach(e=>{
-    const n=soNgay(gieo,e.ngay); if(n<0||n>nssMax) return;
-    const mau=MAU_NHOM[e.nhom]||'#b9bfae';
-    const nhan=[e.hoatDong,(e.vanDe||[]).join(', '),e.mucDo].filter(Boolean).join(' · ');
-    g+='<circle cx="'+x(n).toFixed(1)+'" cy="'+yE+'" r="4.5" fill="'+mau+'" opacity=".9"><title>'
-      +esc(e.ngay)+' · NSS '+n+'\n'+esc(e.ten)+(nhan?'\n'+esc(nhan):'')+'</title></circle>';
-  });
-
-  // vạch hôm nay
-  const nHomNay=soNgay(gieo, new Date().toISOString().slice(0,10));
-  if(nHomNay>=0&&nHomNay<=nssMax){
-    g+='<line x1="'+x(nHomNay).toFixed(1)+'" y1="'+T+'" x2="'+x(nHomNay).toFixed(1)+'" y2="'+(yE+10)
-      +'" stroke="#2f4718" stroke-width="1.5" stroke-dasharray="4 3"/>';
-    g+='<text x="'+(x(nHomNay)+5).toFixed(1)+'" y="'+(T+12)+'" font-size="10.5" fill="#2f4718" font-weight="600">Hôm nay</text>';
-  }
-
-  oBd.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img" '
-    +'aria-label="Biểu đồ lượng mưa và sự kiện đồng ruộng theo ngày sau sạ">'+g+'</svg>';
-
-  const dauTien=tt[0].ngay, cuoi=tt[tt.length-1].ngay;
-  oChu.innerHTML='Dữ liệu mưa và nhiệt độ lấy tự động từ Open-Meteo, '+tt.length+' ngày ('
-    +dauTien+' → '+cuoi+'). Chấm tròn dưới trục là bản ghi nhật ký đồng — chạm vào để xem chi tiết. '
-    +'<b>Lưới dữ liệu Open-Meteo rộng khoảng 9–11 km</b>, ba cánh đồng cách nhau chưa tới 4 km nên số liệu mưa có thể giống hệt nhau; đó là bình thường.';
-}
-
 </script>
+<script src="js/chung.js"></script>
+<script src="js/form-quan-tam.js"></script>
 <script src="js/hieu-ung.js"></script>
 </body>
 </html>

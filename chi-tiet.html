@@ -22,7 +22,8 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
 header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1px solid #e4dcc8}
 .nav{display:flex;align-items:center;gap:20px;height:72px}
 .brand{display:flex;align-items:center;gap:12px}
-.brand .enso{width:42px;height:42px;border-radius:50%;border:3px solid var(--xanh-dam);border-right-color:transparent;transform:rotate(-25deg);flex:none}
+.brand .logo{width:46px;height:46px;flex:none;object-fit:contain;transition:transform .35s cubic-bezier(.34,1.3,.64,1)}
+.brand:hover .logo{transform:rotate(-6deg) scale(1.06)}
 .brand .bname{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--xanh-dam);line-height:1.05}
 .brand .bname small{display:block;font-family:'Be Vietnam Pro',sans-serif;font-weight:400;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--xam)}
 .nav .menu{display:flex;gap:28px;margin-left:26px;flex:1}
@@ -109,15 +110,14 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
 @media(max-width:680px){.nav .menu,.nav .acts .dangnhap span{display:none}.burger{display:block}}
 </style>
 <link rel="stylesheet" href="css/hieu-ung.css">
+<link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body>
-
-<div class="topbar">🌾 Gạo hữu cơ Hội An · <b>Truy xuất nguồn gốc tới từng thửa ruộng</b></div>
 
 <header>
   <div class="wrap nav">
     <a href="index.html" class="brand">
-      <span class="enso"></span>
+      <img src="img/logo.png" class="logo" alt="Logo HTX Lúa Di Sản Hội An" width="46" height="46">
       <span class="bname">HTX Lúa Di Sản<small>Hội An · Quảng Nam</small></span>
     </a>
     <nav class="menu">
@@ -128,14 +128,12 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
     </nav>
     <div class="acts">
       <button class="dangnhap" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
-      <a href="#" class="icon" onclick="return false">🛒<span class="dem" id="gioDem">0</span></a>
       <button class="burger" onclick="alert('Menu di động — hoàn thiện sau.')">☰</button>
     </div>
   </div>
 </header>
 
-<div class="mau-banner">✎ Bản nháp — nội dung trang chi tiết là <b>chữ mẫu</b>, anh Quân gửi nội dung thật để thay vào.</div>
-
+<div class="mau-banner">Trang đang trong quá trình hoàn thiện.</div>
 <section class="ct-hero hero-anh" id="ctHero">
   <div class="wrap">
     <a class="lai" id="ctLai" href="index.html">← Quay lại</a>
@@ -175,14 +173,14 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
     <p class="sub">Xã viên đăng nhập để nhập liệu. Khách đã mua đăng nhập bằng Mã KH để xem nhật ký thửa của mình.</p>
     <div class="form-o"><label>Tên đăng nhập / Mã KH</label><input id="dnUser"></div>
     <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password"></div>
-    <button class="nut-gui" onclick="alert('Bản nháp — sẽ dùng dangNhap() trong js/chung.js.')">Đăng nhập</button>
+    <div class="fqt-loi" id="dnLoi" style="color:#b03c2a;font-size:13px;min-height:18px"></div><button class="nut-gui nut-noi" id="dnGui" onclick="dangNhap()">Đăng nhập</button>
     <button class="dong" onclick="dongModal('mpDN')">Đóng</button>
   </div>
 </div>
 
 <script>
 /* =====================================================================
-   NỘI DUNG CÁC TRANG CHI TIẾT — anh Quân sửa TRỰC TIẾP trong phần này.
+   NỘI DUNG CÁC TRANG CHI TIẾT — sửa trực tiếp trong phần này.
    Địa chỉ trang có dạng:  chi-tiet.html?loai=canh-dong&ma=ong-dang
    ===================================================================== */
 const DU_LIEU = {
@@ -197,9 +195,9 @@ const DU_LIEU = {
         dan:'Cánh đồng ven sông ở Cẩm Kim, nơi HTX phát triển mô hình canh tác hữu cơ gắn với du lịch nông nghiệp.',
         so:[['20','thửa ruộng'],['~13.500','m² diện tích'],['Hè Thu 2026','vụ đang canh tác']],
         than:[
-          {h:'Vị trí và đặc điểm đất', p:['(Nội dung mẫu) Cánh đồng nằm ở thôn Cẩm Kim, sát sông Thu Bồn, đất phù sa bồi hằng năm nên tơi xốp và giàu dinh dưỡng.','Nhờ vị trí ven sông, việc lấy nước và tiêu nước thuận lợi, phù hợp với canh tác lúa theo hướng hữu cơ.']},
+          {h:'Vị trí và đặc điểm đất', p:['Cánh đồng nằm ở thôn Cẩm Kim, sát sông Thu Bồn, đất phù sa bồi hằng năm nên tơi xốp và giàu dinh dưỡng.','Nhờ vị trí ven sông, việc lấy nước và tiêu nước thuận lợi, phù hợp với canh tác lúa theo hướng hữu cơ.']},
           {h:'Cách canh tác', ds:['Hạn chế tối đa phân bón và thuốc hóa học','Mỗi thửa có mã riêng, gắn tên hộ nông dân canh tác','Nhật ký thăm đồng ghi lại từng lần chăm sóc','Áp dụng lịch mùa vụ theo tập quán địa phương']},
-          {h:'Trải nghiệm dành cho khách', p:['(Mẫu) Đây cũng là nơi HTX đón khách tham quan: lội ruộng gieo mạ, xay lúa bằng cối đá, làm mì gạo và sữa gạo tại chỗ.']}
+          {h:'Trải nghiệm dành cho khách', p:['Đây cũng là nơi HTX đón khách tham quan: lội ruộng gieo mạ, xay lúa bằng cối đá, làm mì gạo và sữa gạo tại chỗ.']}
         ],
         nut:[['canh-dong.html','Xem bản đồ &amp; dòng thời gian'],['san-pham.html','Xem các gói sản phẩm','phu']]
       },
@@ -208,7 +206,7 @@ const DU_LIEU = {
         dan:'Cánh đồng lớn nhất của HTX với hơn 40 thửa, mỗi thửa gắn tên một hộ nông dân xã viên.',
         so:[['40+','thửa ruộng'],['Cẩm Thanh','vị trí'],['Hè Thu 2026','vụ đang canh tác']],
         than:[
-          {h:'Quy mô lớn nhất trong ba cánh đồng', p:['(Nội dung mẫu) Đồng Cao là cánh đồng rộng nhất, tập trung nhiều hộ xã viên nhất, nằm dọc đường Tống Văn Sương ở Cẩm Thanh.','Hệ thống kênh thủy lợi chạy qua giúp chủ động nước tưới suốt vụ.']},
+          {h:'Quy mô lớn nhất trong ba cánh đồng', p:['Đồng Cao là cánh đồng rộng nhất, tập trung nhiều hộ xã viên nhất, nằm dọc đường Tống Văn Sương ở Cẩm Thanh.','Hệ thống kênh thủy lợi chạy qua giúp chủ động nước tưới suốt vụ.']},
           {h:'Cách tổ chức canh tác', ds:['Chia thửa rõ ràng, nhiều hộ chia đôi thửa lớn','Lịch gieo sạ và thu hoạch thống nhất toàn cánh đồng','Ghi chép nhật ký đồng ruộng theo từng lô']}
         ],
         nut:[['canh-dong.html','Xem bản đồ &amp; dòng thời gian'],['san-pham.html','Xem các gói sản phẩm','phu']]
@@ -218,7 +216,7 @@ const DU_LIEU = {
         dan:'Những thửa ruộng rộng, canh tác giống lúa bản địa theo lịch mùa vụ truyền thống.',
         so:[['20','thửa ruộng'],['Cẩm Thanh','vị trí'],['Hè Thu 2026','vụ đang canh tác']],
         than:[
-          {h:'Cánh đồng của những thửa lớn', p:['(Nội dung mẫu) Đồng Mẫu có các thửa ruộng khổ lớn, thuận cho việc cơ giới hóa khâu làm đất và thu hoạch.','Đây là nơi HTX giữ gìn một số giống lúa bản địa theo cách canh tác truyền thống.']},
+          {h:'Cánh đồng của những thửa lớn', p:['Đồng Mẫu có các thửa ruộng khổ lớn, thuận cho việc cơ giới hóa khâu làm đất và thu hoạch.','Đây là nơi HTX giữ gìn một số giống lúa bản địa theo cách canh tác truyền thống.']},
           {h:'Điểm đáng chú ý', ds:['Thửa ruộng rộng, bố trí thẳng hàng theo kênh thủy lợi','Giữ giống lúa địa phương','Lịch mùa vụ theo tập quán lâu đời của làng']}
         ],
         nut:[['canh-dong.html','Xem bản đồ &amp; dòng thời gian'],['san-pham.html','Xem các gói sản phẩm','phu']]
@@ -235,7 +233,7 @@ const DU_LIEU = {
         ten:'Canh tác thuận tự nhiên', phu:'Giá trị 1', anh:'img/gt-thuan-tu-nhien.jpg',
         dan:'Hạn chế tối đa hóa chất, nuôi dưỡng đất và giữ hệ sinh thái đồng ruộng khỏe mạnh.',
         than:[
-          {h:'Vì sao chúng tôi chọn cách này', p:['(Nội dung mẫu) Đất khỏe thì cây lúa khỏe, hạt gạo mới thật sự lành. Việc lạm dụng phân bón và thuốc hóa học làm đất bạc màu dần, cuối cùng người trồng và người ăn đều chịu thiệt.']},
+          {h:'Vì sao chúng tôi chọn cách này', p:['Đất khỏe thì cây lúa khỏe, hạt gạo mới thật sự lành. Việc lạm dụng phân bón và thuốc hóa học làm đất bạc màu dần, cuối cùng người trồng và người ăn đều chịu thiệt.']},
           {h:'Chúng tôi làm cụ thể những gì', ds:['Ưu tiên phân hữu cơ, hạn chế phân hóa học','Không dùng thuốc diệt cỏ trên các lô hữu cơ','Giữ bờ ruộng, mương nước cho thiên địch sinh sống','Luân canh và để đất nghỉ giữa các vụ']}
         ],
         nut:[['canh-dong.html','Xem cánh đồng thực tế'],['ve-chung-toi.html','Về chúng tôi','phu']]
@@ -244,7 +242,7 @@ const DU_LIEU = {
         ten:'Minh bạch nguồn gốc', phu:'Giá trị 2', anh:'img/gt-minh-bach.jpg',
         dan:'Mỗi lô ruộng có mã riêng, gắn tên nông dân và nhật ký sản xuất công khai.',
         than:[
-          {h:'Truy xuất tới từng thửa ruộng', p:['(Nội dung mẫu) Khác với gạo đóng bao thông thường, gạo của HTX gắn với một mã lô cụ thể. Từ mã đó, người mua biết được thửa ruộng nào, ai canh tác, gieo ngày nào, gặt ngày nào.']},
+          {h:'Truy xuất tới từng thửa ruộng', p:['Khác với gạo đóng bao thông thường, gạo của HTX gắn với một mã lô cụ thể. Từ mã đó, người mua biết được thửa ruộng nào, ai canh tác, gieo ngày nào, gặt ngày nào.']},
           {h:'Hệ thống ghi chép', ds:['Bản đồ số hóa toàn bộ ba cánh đồng','Nhật ký thăm đồng có hình ảnh kèm theo','Mã sản phẩm riêng cho từng lô mỗi vụ','Khách mua được cấp tài khoản xem nhật ký thửa của mình']}
         ],
         nut:[['canh-dong.html','Xem bản đồ canh tác'],['san-pham.html','Xem các gói sản phẩm','phu']]
@@ -253,7 +251,7 @@ const DU_LIEU = {
         ten:'Cùng nhau bền vững', phu:'Giá trị 3', anh:'img/gt-ben-vung.jpg',
         dan:'Hợp tác xã chia sẻ lợi ích với xã viên, giữ nghề nông sống được với chính đồng đất quê.',
         than:[
-          {h:'Bền vững là bền vững cho cả người trồng', p:['(Nội dung mẫu) Một mô hình chỉ bền khi người nông dân sống được bằng nghề. HTX hoạt động theo hướng chia sẻ lợi ích với xã viên, thay vì ép giá thu mua.']},
+          {h:'Bền vững là bền vững cho cả người trồng', p:['Một mô hình chỉ bền khi người nông dân sống được bằng nghề. HTX hoạt động theo hướng chia sẻ lợi ích với xã viên, thay vì ép giá thu mua.']},
           {h:'Cách chúng tôi thực hiện', ds:['Thu mua lúa của xã viên với giá thỏa thuận ổn định','Hỗ trợ kỹ thuật canh tác hữu cơ cho các hộ','Phát triển du lịch nông nghiệp tạo thêm thu nhập','Giữ giống lúa bản địa và nghề làm ruộng cho lớp sau']}
         ],
         nut:[['ve-chung-toi.html','Về chúng tôi'],['san-pham.html','Đồng hành cùng HTX','phu']]
@@ -271,9 +269,9 @@ const DU_LIEU = {
         dan:'Gói khởi đầu để làm quen với gạo hữu cơ Hội An và cách canh tác minh bạch của HTX.',
         gia:'— đ', giaDv:'/ đơn vị',
         than:[
-          {h:'Anh/chị nhận được gì', ds:['Gạo hữu cơ từ cánh đồng di sản <i>(số lượng — mẫu)</i>','Quyền xem nhật ký sản xuất của lô ruộng làm ra gạo','Bản tin các mốc chính của mùa vụ']},
-          {h:'Hoạt động mùa vụ được tham gia', p:['(Mẫu) Nhận bản tin khi cánh đồng tới các mốc chính: gieo sạ, trổ bông, thu hoạch. Được mời tham dự Ngày hội gặt cuối vụ.']},
-          {h:'Phù hợp với ai', p:['(Mẫu) Người muốn thử gạo hữu cơ Hội An lần đầu, hoặc muốn tìm hiểu cách HTX canh tác trước khi gắn bó lâu dài.']}
+          {h:'Anh/chị nhận được gì', ds:['Gạo hữu cơ từ cánh đồng di sản ','Quyền xem nhật ký sản xuất của lô ruộng làm ra gạo','Bản tin các mốc chính của mùa vụ']},
+          {h:'Hoạt động mùa vụ được tham gia', p:['Nhận bản tin khi cánh đồng tới các mốc chính: gieo sạ, trổ bông, thu hoạch. Được mời tham dự Ngày hội gặt cuối vụ.']},
+          {h:'Phù hợp với ai', p:['Người muốn thử gạo hữu cơ Hội An lần đầu, hoặc muốn tìm hiểu cách HTX canh tác trước khi gắn bó lâu dài.']}
         ]
       },
       'dong-kien-tao':{
@@ -281,9 +279,9 @@ const DU_LIEU = {
         dan:'Dành cho khách muốn gắn bó lâu dài và gần hơn với cánh đồng.',
         gia:'— đ', giaDv:'/ vụ',
         than:[
-          {h:'Anh/chị nhận được gì', ds:['Toàn bộ quyền lợi của gói Người gieo mầm','Được gắn với một thửa ruộng cụ thể trên bản đồ','Nhận gạo định kỳ theo vụ <i>(mẫu)</i>','Tài khoản riêng xem nhật ký thửa của mình']},
-          {h:'Hoạt động mùa vụ được tham gia', p:['(Mẫu) Được mời tham gia trải nghiệm cùng nông dân xuống giống đầu vụ, thăm đồng mùa lúa trổ, và Ngày hội gặt.']},
-          {h:'Phù hợp với ai', p:['(Mẫu) Gia đình muốn dùng gạo sạch đều đặn và thích cho con em ra đồng trải nghiệm theo mùa.']}
+          {h:'Anh/chị nhận được gì', ds:['Toàn bộ quyền lợi của gói Người gieo mầm','Được gắn với một thửa ruộng cụ thể trên bản đồ','Nhận gạo định kỳ theo vụ ','Tài khoản riêng xem nhật ký thửa của mình']},
+          {h:'Hoạt động mùa vụ được tham gia', p:['Được mời tham gia trải nghiệm cùng nông dân xuống giống đầu vụ, thăm đồng mùa lúa trổ, và Ngày hội gặt.']},
+          {h:'Phù hợp với ai', p:['Gia đình muốn dùng gạo sạch đều đặn và thích cho con em ra đồng trải nghiệm theo mùa.']}
         ]
       },
       'doi-tac':{
@@ -291,9 +289,9 @@ const DU_LIEU = {
         dan:'Gói đồng hành sâu nhất — cùng HTX giữ gìn cả một thửa ruộng qua trọn mùa vụ.',
         gia:'— đ', giaDv:'/ vụ',
         than:[
-          {h:'Anh/chị nhận được gì', ds:['Toàn bộ quyền lợi của gói Người đồng kiến tạo','Đồng hành trọn vụ canh tác của một thửa ruộng','Tên hiện trên bản đồ thửa ruộng <i>(nếu đồng ý)</i>','Sản lượng gạo của thửa theo thỏa thuận <i>(mẫu)</i>']},
-          {h:'Hoạt động mùa vụ được tham gia', p:['(Mẫu) Được mời dự đầy đủ: lễ cúng xuống đồng đầu mùa, các trải nghiệm giữa vụ, Ngày hội gặt và lễ cúng cơm mới tạ ơn cuối vụ.']},
-          {h:'Phù hợp với ai', p:['(Mẫu) Doanh nghiệp, tổ chức hoặc cá nhân muốn đồng hành lâu dài với việc giữ gìn cánh đồng di sản Hội An.']}
+          {h:'Anh/chị nhận được gì', ds:['Toàn bộ quyền lợi của gói Người đồng kiến tạo','Đồng hành trọn vụ canh tác của một thửa ruộng','Tên hiện trên bản đồ thửa ruộng <i>(nếu đồng ý)</i>','Sản lượng gạo của thửa theo thỏa thuận ']},
+          {h:'Hoạt động mùa vụ được tham gia', p:['Được mời dự đầy đủ: lễ cúng xuống đồng đầu mùa, các trải nghiệm giữa vụ, Ngày hội gặt và lễ cúng cơm mới tạ ơn cuối vụ.']},
+          {h:'Phù hợp với ai', p:['Doanh nghiệp, tổ chức hoặc cá nhân muốn đồng hành lâu dài với việc giữ gìn cánh đồng di sản Hội An.']}
         ]
       }
     }
@@ -301,9 +299,6 @@ const DU_LIEU = {
 };
 
 /* ---------------- dựng trang ---------------- */
-function moModal(id){ document.getElementById(id).classList.add('mo'); }
-function dongModal(id){ document.getElementById(id).classList.remove('mo'); }
-document.querySelectorAll('.modal-phu').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('mo');});});
 
 const ts = new URLSearchParams(location.search);
 const loai = ts.get('loai') || 'canh-dong';
@@ -336,14 +331,13 @@ if(m.so){
 // thân bài
 let h = '';
 if(m.anh){
-  h += '<div class="anh-lon"><span class="goi-y">Đặt ảnh vào '+m.anh+'</span>'+
+  h += '<div class="anh-lon"><span class="goi-y"></span>'+
        '<img class="anh-that" src="'+m.anh+'" alt="'+m.ten+'"></div>';
 }
 if(m.gia){
   h += '<div class="mua-thanh"><div><div class="gia">'+m.gia+' <small>'+(m.giaDv||'')+'</small></div>'+
-       '<div style="font-size:12.5px;color:var(--xam)">Giá sẽ cập nhật khi anh Quân gửi thông tin</div></div>'+
-       '<div><button class="nut-mua" onclick="themGio()">Thêm vào giỏ</button>'+
-       '<button class="nut-phu" onclick="alert(\'Bản nháp — bước 5 sẽ mở luồng đặt hàng VietQR.\')">Mua ngay</button></div></div>';
+       '<div style="font-size:12.5px;color:var(--xam)">Liên hệ HTX để được tư vấn chi tiết</div></div>'+
+       '<div><button class="nut-mua nut-noi" onclick="moFormQuanTam(\''+m.ten.replace(/'/g,"")+'\')">Tôi quan tâm gói này</button></div></div>';
 }
 (m.than||[]).forEach(function(k){
   h += '<div class="khoi"><h2>'+k.h+'</h2>';
@@ -370,9 +364,9 @@ document.getElementById('khacLuoi').innerHTML = Object.keys(nhom.muc)
       '<span class="dau-bam">→</span></a>';
   }).join('');
 
-let soGio = 0;
-function themGio(){ soGio++; document.getElementById('gioDem').textContent = soGio; }
 </script>
+<script src="js/chung.js"></script>
+<script src="js/form-quan-tam.js"></script>
 <script src="js/hieu-ung.js"></script>
 </body>
 </html>

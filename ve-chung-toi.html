@@ -22,7 +22,8 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
 header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1px solid #e4dcc8}
 .nav{display:flex;align-items:center;gap:20px;height:72px}
 .brand{display:flex;align-items:center;gap:12px}
-.brand .enso{width:42px;height:42px;border-radius:50%;border:3px solid var(--xanh-dam);border-right-color:transparent;transform:rotate(-25deg);flex:none}
+.brand .logo{width:46px;height:46px;flex:none;object-fit:contain;transition:transform .35s cubic-bezier(.34,1.3,.64,1)}
+.brand:hover .logo{transform:rotate(-6deg) scale(1.06)}
 .brand .bname{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--xanh-dam);line-height:1.05}
 .brand .bname small{display:block;font-family:'Be Vietnam Pro',sans-serif;font-weight:400;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--xam)}
 .nav .menu{display:flex;gap:28px;margin-left:26px;flex:1}
@@ -84,15 +85,14 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
 @media(max-width:680px){.nav .menu,.nav .acts .dangnhap span{display:none}.burger{display:block}}
 </style>
 <link rel="stylesheet" href="css/hieu-ung.css">
+<link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body>
-
-<div class="topbar">🌾 Gạo hữu cơ Hội An · <b>Truy xuất nguồn gốc tới từng thửa ruộng</b></div>
 
 <header>
   <div class="wrap nav">
     <a href="index.html" class="brand">
-      <span class="enso"></span>
+      <img src="img/logo.png" class="logo" alt="Logo HTX Lúa Di Sản Hội An" width="46" height="46">
       <span class="bname">HTX Lúa Di Sản<small>Hội An · Quảng Nam</small></span>
     </a>
     <nav class="menu">
@@ -103,20 +103,18 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
     </nav>
     <div class="acts">
       <button class="dangnhap nut-noi" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
-      <a href="#" class="icon" onclick="return false">🛒<span class="dem">0</span></a>
       <button class="burger" onclick="alert('Menu di động — hoàn thiện sau.')">☰</button>
     </div>
   </div>
 </header>
 
-<div class="mau-banner">✎ Bản nháp — toàn bộ chữ dưới đây là <b>nội dung mẫu</b>. Anh Quân gửi dòng giới thiệu &amp; câu chuyện thật, tôi sẽ thay vào đúng khung này.</div>
-
+<div class="mau-banner">Trang đang trong quá trình hoàn thiện.</div>
 <section class="vhero hero-anh">
   <img class="hero-bg" src="img/hero-ve-chung-toi.jpg" alt="" onerror="this.classList.add('loi')">
   <div class="wrap">
     <div class="eyebrow" style="color:var(--vang)">Về chúng tôi</div>
     <h1>Giữ hạt gạo quê, giữ một vùng di sản</h1>
-    <p><i>(Dòng giới thiệu mẫu)</i> HTX Lúa Di Sản Hội An là nơi những người nông dân cùng nhau canh tác lúa theo hướng hữu cơ, gìn giữ giống lúa và cách làm ruộng của cha ông trên đất Cẩm Kim, Cẩm Thanh.</p>
+    <p>HTX Lúa Di Sản Hội An là nơi những người nông dân cùng nhau canh tác lúa theo hướng hữu cơ, gìn giữ giống lúa và cách làm ruộng của cha ông trên đất Cẩm Kim, Cẩm Thanh.</p>
   </div>
 </section>
 
@@ -125,11 +123,10 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
     <div>
       <div class="eyebrow">Câu chuyện</div>
       <h2>Bắt đầu từ những cánh đồng ven sông Thu Bồn</h2>
-      <p class="lead"><i>(Nội dung mẫu — anh Quân thay bằng câu chuyện thật)</i></p>
       <p>Những cánh đồng của HTX nằm bên dòng Thu Bồn, nơi phù sa bồi đắp cho hạt lúa vị ngọt riêng. Trước áp lực của phân bón và thuốc hóa học, một nhóm nông dân đã chọn quay lại cách canh tác thuận tự nhiên.</p>
       <p>Từ đó, hợp tác xã hình thành — không chỉ để bán gạo, mà để giữ lại một cách sống gắn với ruộng đồng, và để người ăn biết rõ hạt gạo mình dùng đến từ đâu.</p>
     </div>
-    <div class="anh-ph khung-anh ti-le-4-3"><span class="goi-y">Đặt ảnh vào img/ve-chung-toi.jpg</span><img class="anh-that" src="img/ve-chung-toi.jpg" alt="Đặt ảnh vào img/ve-chung-toi.jpg"></div>
+    <div class="anh-ph khung-anh ti-le-4-3"><span class="goi-y"></span><img class="anh-that" src="img/ve-chung-toi.jpg" alt="Nông dân HTX Lúa Di Sản trên cánh đồng ven sông Thu Bồn"></div>
   </div>
 </section>
 
@@ -140,9 +137,9 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
       <h2>Ba giá trị cốt lõi</h2>
     </div>
     <div class="gia-tri">
-      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=thuan-tu-nhien"><div class="gt-ic">🌱</div><h3>Canh tác thuận tự nhiên</h3><p><i>(mẫu)</i> Hạn chế tối đa hóa chất, nuôi dưỡng đất và giữ hệ sinh thái đồng ruộng khỏe mạnh.</p><span class="dau-bam">→</span></a>
-      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=minh-bach"><div class="gt-ic">🔍</div><h3>Minh bạch nguồn gốc</h3><p><i>(mẫu)</i> Mỗi lô ruộng có mã riêng, gắn tên nông dân và nhật ký sản xuất công khai.</p><span class="dau-bam">→</span></a>
-      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=ben-vung"><div class="gt-ic">🤝</div><h3>Cùng nhau bền vững</h3><p><i>(mẫu)</i> Hợp tác xã chia sẻ lợi ích với xã viên, giữ nghề nông sống được với chính đồng đất quê.</p><span class="dau-bam">→</span></a>
+      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=thuan-tu-nhien"><div class="gt-ic">🌱</div><h3>Canh tác thuận tự nhiên</h3><p>Hạn chế tối đa hóa chất, nuôi dưỡng đất và giữ hệ sinh thái đồng ruộng khỏe mạnh.</p><span class="dau-bam">→</span></a>
+      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=minh-bach"><div class="gt-ic">🔍</div><h3>Minh bạch nguồn gốc</h3><p>Mỗi lô ruộng có mã riêng, gắn tên nông dân và nhật ký sản xuất công khai.</p><span class="dau-bam">→</span></a>
+      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=ben-vung"><div class="gt-ic">🤝</div><h3>Cùng nhau bền vững</h3><p>Hợp tác xã chia sẻ lợi ích với xã viên, giữ nghề nông sống được với chính đồng đất quê.</p><span class="dau-bam">→</span></a>
     </div>
   </div>
 </section>
@@ -182,16 +179,15 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
     <p class="sub">Xã viên đăng nhập để nhập liệu. Khách đã mua đăng nhập bằng Mã KH để xem nhật ký thửa của mình.</p>
     <div class="form-o"><label>Tên đăng nhập / Mã KH</label><input id="dnUser"></div>
     <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password"></div>
-    <button class="nut-gui nut-noi" onclick="alert('Bản nháp — sẽ dùng dangNhap() trong js/chung.js.')">Đăng nhập</button>
+    <div class="fqt-loi" id="dnLoi" style="color:#b03c2a;font-size:13px;min-height:18px"></div><button class="nut-gui nut-noi" id="dnGui" onclick="dangNhap()">Đăng nhập</button>
     <button class="dong" onclick="dongModal('mpDN')">Đóng</button>
   </div>
 </div>
 
 <script>
-function moModal(id){ document.getElementById(id).classList.add('mo'); }
-function dongModal(id){ document.getElementById(id).classList.remove('mo'); }
-document.querySelectorAll('.modal-phu').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('mo');});});
 </script>
+<script src="js/chung.js"></script>
+<script src="js/form-quan-tam.js"></script>
 <script src="js/hieu-ung.js"></script>
 </body>
 </html>

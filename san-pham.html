@@ -21,7 +21,8 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
 header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1px solid #e4dcc8}
 .nav{display:flex;align-items:center;gap:20px;height:72px}
 .brand{display:flex;align-items:center;gap:12px}
-.brand .enso{width:42px;height:42px;border-radius:50%;border:3px solid var(--xanh-dam);border-right-color:transparent;transform:rotate(-25deg);flex:none}
+.brand .logo{width:46px;height:46px;flex:none;object-fit:contain;transition:transform .35s cubic-bezier(.34,1.3,.64,1)}
+.brand:hover .logo{transform:rotate(-6deg) scale(1.06)}
 .brand .bname{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--xanh-dam);line-height:1.05}
 .brand .bname small{display:block;font-family:'Be Vietnam Pro',sans-serif;font-weight:400;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--xam)}
 .nav .menu{display:flex;gap:28px;margin-left:26px;flex:1}
@@ -99,15 +100,14 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
 @media(max-width:680px){.nav .menu,.nav .acts .dangnhap span{display:none}.burger{display:block}.dc-cell{padding:10px 6px;font-size:12px}}
 </style>
 <link rel="stylesheet" href="css/hieu-ung.css">
+<link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 <body>
-
-<div class="topbar">🌾 Gạo hữu cơ Hội An · <b>Mua gói là đồng hành cùng cả một mùa vụ</b></div>
 
 <header>
   <div class="wrap nav">
     <a href="index.html" class="brand">
-      <span class="enso"></span>
+      <img src="img/logo.png" class="logo" alt="Logo HTX Lúa Di Sản Hội An" width="46" height="46">
       <span class="bname">HTX Lúa Di Sản<small>Hội An · Quảng Nam</small></span>
     </a>
     <nav class="menu">
@@ -118,14 +118,12 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
     </nav>
     <div class="acts">
       <button class="dangnhap nut-noi" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
-      <a href="#" class="icon" onclick="return false">🛒<span class="dem" id="gioDem">0</span></a>
       <button class="burger" onclick="alert('Menu di động — hoàn thiện sau.')">☰</button>
     </div>
   </div>
 </header>
 
-<div class="mau-banner">✎ Bản nháp — tên gói giữ theo kế hoạch, còn <b>mô tả, quyền lợi và giá là nội dung mẫu</b>. Anh Quân gửi nội dung 3 gói thật, tôi thay vào đúng khung này.</div>
-
+<div class="mau-banner">Trang đang trong quá trình hoàn thiện.</div>
 <section class="shero hero-anh">
   <img class="hero-bg" src="img/hero-san-pham.jpg" alt="" onerror="this.classList.add('loi')">
   <div class="wrap">
@@ -139,49 +137,49 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
   <div class="wrap">
 
     <div class="goi the-noi" style="cursor:default">
-      <div class="goi-hinh khung-anh ti-le-4-3"><span class="goi-y">Đặt ảnh vào img/goi-1-gieo-mam.jpg</span><img class="anh-that" src="img/goi-1-gieo-mam.jpg" alt="Đặt ảnh vào img/goi-1-gieo-mam.jpg"></div>
+      <div class="goi-hinh khung-anh ti-le-4-3"><span class="goi-y"></span><img class="anh-that" src="img/goi-1-gieo-mam.jpg" alt="Gói Người gieo mầm"></div>
       <div>
         <div class="goi-tag">Gói 1</div>
         <h2><a href="chi-tiet.html?loai=san-pham&ma=gieo-mam" style="border-bottom:2px solid transparent;transition:border-color .25s" onmouseover="this.style.borderColor='var(--dat-som)'" onmouseout="this.style.borderColor='transparent'">Người gieo mầm</a></h2>
-        <p class="mo"><i>(Mô tả mẫu)</i> Gói khởi đầu để làm quen với gạo hữu cơ Hội An và cách canh tác minh bạch của HTX.</p>
+        <p class="mo">Gói khởi đầu để làm quen với gạo hữu cơ Hội An và cách canh tác minh bạch của HTX.</p>
         <ul>
-          <li>Nhận gạo hữu cơ từ cánh đồng di sản <i>(số lượng — mẫu)</i></li>
+          <li>Nhận gạo hữu cơ từ cánh đồng di sản </li>
           <li>Xem nhật ký sản xuất của lô ruộng làm ra gạo</li>
           <li>Nhận tin về mùa vụ và sản phẩm mới</li>
         </ul>
         <div class="hoatdong">🎟️ <b>Hoạt động mùa vụ:</b> nhận bản tin các mốc chính (gieo sạ, trổ bông, thu hoạch).</div>
         <div class="gia-hang">
           <div class="gia">— đ <small>/ đơn vị</small></div>
-          <button class="them-gio nut-noi" onclick="themGio()">Thêm vào giỏ</button><a class="nut-noi" href="chi-tiet.html?loai=san-pham&ma=gieo-mam" style="display:inline-block;margin-left:10px;border:1.6px solid var(--xanh-dam);color:var(--xanh-dam);font-weight:600;font-size:14.5px;padding:13px 22px;border-radius:26px">Xem chi tiết →</a>
+          <button class="them-gio nut-noi" onclick="moFormQuanTam('Người gieo mầm')">Tôi quan tâm gói này</button><a class="nut-noi" href="chi-tiet.html?loai=san-pham&ma=gieo-mam" style="display:inline-block;margin-left:10px;border:1.6px solid var(--xanh-dam);color:var(--xanh-dam);font-weight:600;font-size:14.5px;padding:13px 22px;border-radius:26px">Xem chi tiết →</a>
         </div>
       </div>
     </div>
 
     <div class="goi the-noi" style="cursor:default">
-      <div class="goi-hinh khung-anh ti-le-4-3"><span class="goi-y">Đặt ảnh vào img/goi-2-dong-kien-tao.jpg</span><img class="anh-that" src="img/goi-2-dong-kien-tao.jpg" alt="Đặt ảnh vào img/goi-2-dong-kien-tao.jpg"></div>
+      <div class="goi-hinh khung-anh ti-le-4-3"><span class="goi-y"></span><img class="anh-that" src="img/goi-2-dong-kien-tao.jpg" alt="Gói Người đồng kiến tạo"></div>
       <div>
         <div class="goi-tag">Gói 2</div>
         <h2><a href="chi-tiet.html?loai=san-pham&ma=dong-kien-tao" style="border-bottom:2px solid transparent;transition:border-color .25s" onmouseover="this.style.borderColor='var(--dat-som)'" onmouseout="this.style.borderColor='transparent'">Người đồng kiến tạo</a></h2>
-        <p class="mo"><i>(Mô tả mẫu)</i> Dành cho khách muốn gắn bó lâu dài và gần hơn với cánh đồng.</p>
+        <p class="mo">Dành cho khách muốn gắn bó lâu dài và gần hơn với cánh đồng.</p>
         <ul>
           <li>Toàn bộ quyền lợi của gói Người gieo mầm</li>
           <li>Được gắn với một thửa ruộng cụ thể trên bản đồ</li>
-          <li>Nhận gạo định kỳ theo vụ <i>(mẫu)</i></li>
+          <li>Nhận gạo định kỳ theo vụ </li>
         </ul>
         <div class="hoatdong">🎟️ <b>Hoạt động mùa vụ:</b> mời tham gia trải nghiệm xuống giống &amp; thăm đồng mùa lúa trổ.</div>
         <div class="gia-hang">
           <div class="gia">— đ <small>/ vụ</small></div>
-          <button class="them-gio nut-noi" onclick="themGio()">Thêm vào giỏ</button><a class="nut-noi" href="chi-tiet.html?loai=san-pham&ma=dong-kien-tao" style="display:inline-block;margin-left:10px;border:1.6px solid var(--xanh-dam);color:var(--xanh-dam);font-weight:600;font-size:14.5px;padding:13px 22px;border-radius:26px">Xem chi tiết →</a>
+          <button class="them-gio nut-noi" onclick="moFormQuanTam('Người đồng kiến tạo')">Tôi quan tâm gói này</button><a class="nut-noi" href="chi-tiet.html?loai=san-pham&ma=dong-kien-tao" style="display:inline-block;margin-left:10px;border:1.6px solid var(--xanh-dam);color:var(--xanh-dam);font-weight:600;font-size:14.5px;padding:13px 22px;border-radius:26px">Xem chi tiết →</a>
         </div>
       </div>
     </div>
 
     <div class="goi the-noi" style="cursor:default">
-      <div class="goi-hinh khung-anh ti-le-4-3"><span class="goi-y">Đặt ảnh vào img/goi-3-doi-tac.jpg</span><img class="anh-that" src="img/goi-3-doi-tac.jpg" alt="Đặt ảnh vào img/goi-3-doi-tac.jpg"></div>
+      <div class="goi-hinh khung-anh ti-le-4-3"><span class="goi-y"></span><img class="anh-that" src="img/goi-3-doi-tac.jpg" alt="Gói Đối tác kiến tạo di sản"></div>
       <div>
         <div class="goi-tag">Gói 3</div>
         <h2><a href="chi-tiet.html?loai=san-pham&ma=doi-tac" style="border-bottom:2px solid transparent;transition:border-color .25s" onmouseover="this.style.borderColor='var(--dat-som)'" onmouseout="this.style.borderColor='transparent'">Đối tác kiến tạo di sản</a></h2>
-        <p class="mo"><i>(Mô tả mẫu)</i> Gói đồng hành sâu nhất — cùng HTX giữ gìn cả một thửa ruộng qua trọn mùa vụ.</p>
+        <p class="mo">Gói đồng hành sâu nhất — cùng HTX giữ gìn cả một thửa ruộng qua trọn mùa vụ.</p>
         <ul>
           <li>Toàn bộ quyền lợi của gói Người đồng kiến tạo</li>
           <li>Đồng hành trọn vụ canh tác của một thửa ruộng</li>
@@ -190,7 +188,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
         <div class="hoatdong">🎟️ <b>Hoạt động mùa vụ:</b> mời dự lễ cúng xuống đồng, ngày hội gặt và lễ cúng cơm mới.</div>
         <div class="gia-hang">
           <div class="gia">— đ <small>/ vụ</small></div>
-          <button class="them-gio nut-noi" onclick="themGio()">Thêm vào giỏ</button><a class="nut-noi" href="chi-tiet.html?loai=san-pham&ma=doi-tac" style="display:inline-block;margin-left:10px;border:1.6px solid var(--xanh-dam);color:var(--xanh-dam);font-weight:600;font-size:14.5px;padding:13px 22px;border-radius:26px">Xem chi tiết →</a>
+          <button class="them-gio nut-noi" onclick="moFormQuanTam('Đối tác kiến tạo di sản')">Tôi quan tâm gói này</button><a class="nut-noi" href="chi-tiet.html?loai=san-pham&ma=doi-tac" style="display:inline-block;margin-left:10px;border:1.6px solid var(--xanh-dam);color:var(--xanh-dam);font-weight:600;font-size:14.5px;padding:13px 22px;border-radius:26px">Xem chi tiết →</a>
         </div>
       </div>
     </div>
@@ -243,7 +241,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
         <div class="dc-cell"><span class="yes">✓</span></div>
       </div>
     </div>
-    <div class="dc-note"><i>Bảng đối chiếu mẫu</i> — anh Quân chỉnh lại quyền lợi từng gói cho đúng thực tế. Các hoạt động này khớp với <a href="canh-dong.html" style="color:var(--dat-som);font-weight:600">dòng thời gian ở trang Cánh Đồng</a>.</div>
+    <div class="dc-note">Các hoạt động này khớp với <a href="canh-dong.html" style="color:var(--dat-som);font-weight:600">dòng thời gian ở trang Cánh Đồng</a>.</div>
   </div>
 </section>
 
@@ -265,18 +263,15 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
     <p class="sub">Xã viên đăng nhập để nhập liệu. Khách đã mua đăng nhập bằng Mã KH để xem nhật ký thửa của mình.</p>
     <div class="form-o"><label>Tên đăng nhập / Mã KH</label><input id="dnUser"></div>
     <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password"></div>
-    <button class="nut-gui nut-noi" onclick="alert('Bản nháp — sẽ dùng dangNhap() trong js/chung.js.')">Đăng nhập</button>
+    <div class="fqt-loi" id="dnLoi" style="color:#b03c2a;font-size:13px;min-height:18px"></div><button class="nut-gui nut-noi" id="dnGui" onclick="dangNhap()">Đăng nhập</button>
     <button class="dong" onclick="dongModal('mpDN')">Đóng</button>
   </div>
 </div>
 
 <script>
-function moModal(id){ document.getElementById(id).classList.add('mo'); }
-function dongModal(id){ document.getElementById(id).classList.remove('mo'); }
-document.querySelectorAll('.modal-phu').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('mo');});});
-let soGio=0;
-function themGio(){ soGio++; document.getElementById('gioDem').textContent=soGio; }
 </script>
+<script src="js/chung.js"></script>
+<script src="js/form-quan-tam.js"></script>
 <script src="js/hieu-ung.js"></script>
 </body>
 </html>

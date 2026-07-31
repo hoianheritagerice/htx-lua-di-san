@@ -265,7 +265,7 @@ function veVuPanel(s, soHoDem){
   const mocs = [
     {ten:'Gieo sạ',      ngay:s.gieoSa},
     {ten:'Đẻ nhánh rộ',  ngay:s.deNhanh},
-    {ten:'Đón đòng',     ngay:s.donDong},
+    {ten:'Làm đòng',     ngay:s.donDong},
     {ten:'Trổ bông',     ngay:s.troBong},
     {ten:'Chắc hạt',     ngay:s.chacHat},
     {ten:'Chín vàng',    ngay:s.chinVang},

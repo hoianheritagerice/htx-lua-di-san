@@ -64,6 +64,12 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .map-head h2{font-size:21px}
 .map-head .mo-bando{background:var(--xanh-dam);color:#fff;border:none;font-family:inherit;font-weight:600;font-size:13.5px;padding:10px 18px;border-radius:22px;cursor:pointer}
 .map-head .mo-bando:hover{background:#163a20}
+.tt-hop{position:fixed;z-index:9999;pointer-events:none;opacity:0;transition:opacity .12s;
+  background:#2f3a26;color:#fff;font-size:12.5px;line-height:1.5;padding:8px 11px;border-radius:9px;
+  box-shadow:0 6px 20px rgba(0,0,0,.22);max-width:230px}
+.tt-hop.hien{opacity:1}
+.tt-hop .tt-phu{color:#c9d6b8}
+.tt-cham{pointer-events:none}
 .tt-so{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:0 0 18px}
 @media(max-width:760px){.tt-so{grid-template-columns:repeat(2,1fr)}}
 .tt-o{background:#f6f5ee;border-radius:12px;padding:12px 10px;text-align:center}
@@ -106,7 +112,6 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .river-dot{width:56px;height:56px;border-radius:50%;background:#fff;border:2px solid #e0d7bf;
    display:flex;align-items:center;justify-content:center;color:#b3a888;transition:transform .2s,box-shadow .2s}
 .river-dot svg{width:32px;height:32px}
-.river-node:hover .river-dot{transform:scale(1.1)}
 .river-dot.past{border:none}
 .river-dot.past.nong{background:#e6f2d8;color:#4f7325;box-shadow:0 0 0 4px #eef4e6}
 .river-dot.past.le{background:#f5e3d8;color:#9c4e28;box-shadow:0 0 0 4px #f7ede6}
@@ -116,8 +121,9 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .river-label .t{font-family:'Playfair Display',serif;font-size:14.5px;font-weight:600;color:var(--xanh-dam);line-height:1.2}
 .river-label .d{font-size:11px;color:var(--xam);font-family:ui-monospace,monospace;margin-top:2px}
 .river-node.future .river-label .t{color:#7d8a70}
-.river-node .xem{font-size:10.5px;color:var(--dat-som);opacity:0;transition:opacity .2s;margin-top:3px}
-.river-node:hover .xem{opacity:1}
+.river-node .river-dot{transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s}
+.river-node:hover .river-dot{transform:scale(1.22)}
+.river-node:active .river-dot{transform:scale(1.1)}
 
 .today{position:absolute;transform:translate(-50%,-50%);z-index:4;pointer-events:none}
 .today .dot{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--xanh-la);box-shadow:0 0 0 6px rgba(111,158,75,.28);animation:beat2 1.8s ease-in-out infinite}
@@ -416,23 +422,25 @@ let SU_KIEN = [
   {ngay:'2026-05-15', ic:'ic-cung', loai:'le',   ten:'Lễ cúng xuống đồng', tenDay:'Lễ cúng xuống đồng (đầu mùa)',
    mo:'Nghi lễ cầu cho mùa vụ thuận hòa, mưa gió điều hòa, trước ngày gieo sạ đầu tiên.', goi:'Đối tác kiến tạo di sản'},
   {ngay:'2026-05-20', ic:'ic-gieo', loai:'nong', ten:'Gieo sạ', tenDay:'Ngày gieo sạ',
-   mo:'Xuống giống lúa trên các thửa ruộng của cánh đồng, mở đầu chính thức cho vụ Hè Thu.', goi:''},
+   mo:'Những hạt giống đã được ngâm ủ cẩn thận được gieo xuống ruộng. Từ đây, hạt bắt đầu bén rễ, nảy mầm và mở ra hành trình của một vụ lúa mới.', goi:''},
   {ngay:'2026-05-22', ic:'ic-ma',   loai:'trai', ten:'Cùng xuống giống', tenDay:'Trải nghiệm: Cùng nông dân xuống giống',
    mo:'Khách ra đồng lội ruộng, gieo mạ cùng bà con xã viên và tìm hiểu giống lúa bản địa.', goi:'Người đồng kiến tạo · Đối tác kiến tạo di sản'},
+  {ngay:'2026-06-07', ic:'ic-ma',   loai:'nong', ten:'Giai đoạn mạ', tenDay:'Giai đoạn mạ',
+   mo:'Cây lúa non nhú lên khỏi mặt đất, hình thành những chiếc lá đầu tiên và từng bước phát triển bộ rễ để bám chắc vào ruộng.', goi:''},
   {ngay:'2026-06-24', ic:'ic-ma',   loai:'nong', ten:'Đẻ nhánh rộ', tenDay:'Đẻ nhánh rộ',
-   mo:'Lúa đẻ nhánh mạnh nhất — quyết định số bông trên đơn vị diện tích.', goi:''},
-  {ngay:'2026-07-05', ic:'ic-dong', loai:'nong', ten:'Đón đòng', tenDay:'Đón đòng',
-   mo:'Cây lúa làm đòng — giai đoạn quyết định năng suất, cần đủ nước và dinh dưỡng.', goi:''},
+   mo:'Cây lúa phát triển nhanh và liên tục tạo thêm nhiều nhánh mới. Những nhánh khỏe sau này sẽ mang bông, góp phần tạo nên năng suất của cả cánh đồng.', goi:''},
+  {ngay:'2026-07-05', ic:'ic-dong', loai:'nong', ten:'Làm đòng', tenDay:'Làm đòng',
+   mo:'Bên trong thân lúa, những bông lúa non đầu tiên bắt đầu hình thành. Đây là giai đoạn quan trọng, cây cần được chăm sóc và duy trì đủ nước để đòng phát triển khỏe mạnh.', goi:''},
   {ngay:'2026-07-20', ic:'ic-bong', loai:'nong', ten:'Trổ bông', tenDay:'Trổ bông',
-   mo:'Lúa trổ bông, phơi màu — cả cánh đồng chuyển sắc, đẹp nhất trong mùa.', goi:''},
+   mo:'Những bông lúa dần vươn ra khỏi thân cây. Hoa lúa nở, tung phấn và thụ tinh trong vài ngày, mở đầu quá trình hình thành hạt gạo.', goi:''},
   {ngay:'2026-07-24', ic:'ic-que',  loai:'trai', ten:'Thăm đồng lúa trổ', tenDay:'Trải nghiệm: Thăm đồng mùa lúa trổ',
    mo:'Đi giữa cánh đồng lúa đang trổ bông, chụp ảnh, nghe kể về nhịp sinh trưởng của cây lúa.', goi:'Người đồng kiến tạo · Đối tác kiến tạo di sản'},
   {ngay:'2026-08-05', ic:'ic-chac', loai:'nong', ten:'Chắc hạt', tenDay:'Chắc hạt',
-   mo:'Hạt lúa vào chắc, chuyển từ ngậm sữa sang cứng dần, chuẩn bị chín.', goi:''},
+   mo:'Sau khi hoa được thụ tinh, hạt lúa bắt đầu tích lũy dưỡng chất. Phần sữa bên trong dần đặc lại, hạt ngày càng đầy và chắc hơn.', goi:''},
   {ngay:'2026-08-25', ic:'ic-chac', loai:'nong', ten:'Chín vàng', tenDay:'Chín vàng',
-   mo:'Bông lúa ngả vàng đều, cả cánh đồng chuyển sắc — sắp tới ngày gặt.', goi:''},
+   mo:'Bông lúa dần chuyển từ xanh sang vàng, hạt trở nên cứng và nặng hơn. Cả cánh đồng khoác lên màu vàng óng, báo hiệu mùa gặt đang đến gần.', goi:''},
   {ngay:'2026-09-05', ic:'ic-gat',  loai:'nong', ten:'Thu hoạch', tenDay:'Ngày thu hoạch dự kiến',
-   mo:'Gặt lúa chín trên toàn cánh đồng, khép lại một vụ canh tác.', goi:''},
+   mo:'Khi phần lớn hạt lúa đã chín vàng, bà con bắt đầu thu hoạch. Đây là thành quả của nhiều tháng chăm sóc và cũng là lúc một hành trình mới của hạt gạo bắt đầu.', goi:''},
   {ngay:'2026-09-06', ic:'ic-bo',   loai:'trai', ten:'Ngày hội gặt', tenDay:'Trải nghiệm: Ngày hội gặt',
    mo:'Cùng gặt lúa, tuốt lúa, trải nghiệm xay giã theo cách truyền thống của làng.', goi:'Tất cả các gói'},
   {ngay:'2026-09-15', ic:'ic-com',  loai:'le',   ten:'Cúng cơm mới', tenDay:'Lễ cúng cơm mới (tạ ơn)',
@@ -489,7 +497,7 @@ function veTimeline(){
     const [y,m,dd] = s.ngay.split('-');
     node.innerHTML =
       `<div class="river-dot ${daQua?'past':'future'} ${s.loai}"><svg><use href="#${s.ic}"/></svg></div>
-       <div class="river-label"><div class="t">${s.ten}</div><div class="d">${dd}/${m}</div><div class="xem">Xem chi tiết ›</div></div>`;
+       <div class="river-label"><div class="t">${s.ten}</div><div class="d">${dd}/${m}</div></div>`;
     node.addEventListener('click', ()=>moCT(i));
     river.appendChild(node);
   });
@@ -549,7 +557,7 @@ const API_URL_TL = 'https://script.google.com/macros/s/AKfycbxkBLw-2LGnKPrc0m8cj
 const NGAY_MAU = SU_KIEN.map(x => x.ngay);
 /* 7 mốc nông học — TẤT CẢ lấy từ DB Vụ Mùa trong Notion, không ước lượng */
 const MOC_NOTION = {
-  'Gieo sạ':'gieoSa', 'Đẻ nhánh rộ':'deNhanh', 'Đón đòng':'donDong',
+  'Gieo sạ':'gieoSa', 'Đẻ nhánh rộ':'deNhanh', 'Làm đòng':'donDong',
   'Trổ bông':'troBong', 'Chắc hạt':'chacHat', 'Chín vàng':'chinVang',
   'Thu hoạch':'thuHoach'
 };
@@ -559,6 +567,7 @@ const MOC_NOTION = {
    TRƯỚC ngày trổ bông), neo chúng vào mốc nông học thật với độ lệch cố
    định. Notion đổi ngày thì chúng tự dịch theo, luôn đúng thứ tự. */
 const NEO_SU_KIEN = {
+  'Giai đoạn mạ':        ['gieoSa',    7],   // Notion không có mốc này — ước lượng
   'Lễ cúng xuống đồng':  ['gieoSa',   -5],
   'Cùng xuống giống':    ['gieoSa',    2],
   'Thăm đồng lúa trổ':   ['troBong',   4],
@@ -625,7 +634,7 @@ function bangGiaiDoan(season, gieo, nssMax){
   const nss = d => d ? soNgayTT(gieo, d) : null;
   const moc = [
     {ten:'Mạ',             nss:0,                     that:true},
-    {ten:'Đẻ nhánh sớm',   nss:10,                    that:false},  // ước lượng
+    {ten:'Đẻ nhánh sớm',   nss:15,                    that:false},  // ước lượng — Notion không có mốc này
     {ten:'Đẻ nhánh rộ',    nss:nss(season.deNhanh),   that:true},
     {ten:'Làm đòng',       nss:nss(season.donDong),   that:true},
     {ten:'Trổ – phơi màu', nss:nss(season.troBong),   that:true},
@@ -664,6 +673,35 @@ async function napThoiTiet(ma){
   }
 }
 
+/* Tooltip riêng thay cho <title> của SVG: <title> chỉ hiện sau khi rê
+   đứng yên khoảng một giây, và trên điện thoại thì không hiện gì cả. */
+function ganTooltip(khung){
+  let hop = document.getElementById('ttHop');
+  if(!hop){
+    hop = document.createElement('div');
+    hop.id = 'ttHop'; hop.className = 'tt-hop';
+    document.body.appendChild(hop);
+  }
+  const hien = (e, el) => {
+    hop.innerHTML = el.getAttribute('data-tt');
+    hop.classList.add('hien');
+    const r = hop.getBoundingClientRect();
+    let X = e.clientX + 14, Y = e.clientY - r.height - 12;
+    if(X + r.width > innerWidth - 8) X = e.clientX - r.width - 14;
+    if(Y < 8) Y = e.clientY + 18;
+    hop.style.left = X + 'px'; hop.style.top = Y + 'px';
+  };
+  const an = () => hop.classList.remove('hien');
+  khung.querySelectorAll('.tt-hit').forEach(el => {
+    el.addEventListener('mouseenter', e => hien(e, el));
+    el.addEventListener('mousemove',  e => hien(e, el));
+    el.addEventListener('mouseleave', an);
+    el.addEventListener('touchstart', e => { hien(e.touches[0], el); }, {passive:true});
+  });
+  document.addEventListener('touchend', an, {passive:true});
+  window.addEventListener('scroll', an, {passive:true});
+}
+
 function veThoiTiet(r){
   const oSo=document.getElementById('ttSo'), oBd=document.getElementById('ttBieuDo'), oChu=document.getElementById('ttChu');
   const tt=r.thoiTiet||[], nk=r.nhatKy||[], gieo=r.season&&r.season.gieoSa;
@@ -700,8 +738,10 @@ function veThoiTiet(r){
     g+='<text x="'+(L-6)+'" y="'+(yy+3.5).toFixed(1)+'" text-anchor="end" font-size="10" fill="#98a08c">'+Math.round(muaMax*f)+'</text>';});
   const bw=Math.max(2,(pw/nssMax)*0.8);
   tt.forEach(d=>{const n=soNgayTT(gieo,d.ngay); if(n<0||n>nssMax)return; const m=d.mua||0; if(m<=0)return;
-    g+='<rect x="'+(x(n)-bw/2).toFixed(1)+'" y="'+yMua(m).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(T+ph-yMua(m)).toFixed(1)
-      +'" fill="'+(m>=50?'#2f6ea5':'#5b8fc9')+'" rx="1"><title>'+d.ngay+' · NSS '+n+' · '+m+' mm</title></rect>';});
+    const dd=d.ngay.slice(8,10)+'/'+d.ngay.slice(5,7);
+    g+='<rect class="tt-hit" x="'+(x(n)-bw/2).toFixed(1)+'" y="'+yMua(m).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(T+ph-yMua(m)).toFixed(1)
+      +'" fill="'+(m>=50?'#2f6ea5':'#5b8fc9')+'" rx="1" style="cursor:pointer"'
+      +' data-tt="'+escTT('<b>'+dd+'</b> · NSS '+n+'<br>Mưa '+m+' mm')+'"></rect>';});
   const yNhiet=t=>T+ph-((t-15)/25)*ph;
   const dt=tt.filter(d=>d.tMax!=null).map(d=>[soNgayTT(gieo,d.ngay),d.tMax]).filter(p=>p[0]>=0&&p[0]<=nssMax);
   if(dt.length>1) g+='<polyline fill="none" stroke="#c94f3d" stroke-width="1.4" opacity=".8" points="'+dt.map(p=>x(p[0]).toFixed(1)+','+yNhiet(p[1]).toFixed(1)).join(' ')+'"/>';
@@ -713,13 +753,28 @@ function veThoiTiet(r){
   g+='<line x1="'+L+'" y1="'+yE+'" x2="'+(W-R)+'" y2="'+yE+'" stroke="#e2e5da"/>';
   nk.forEach(e=>{const n=soNgayTT(gieo,e.ngay); if(n<0||n>nssMax)return;
     const nhan=[e.hoatDong,(e.vanDe||[]).join(', '),e.mucDo].filter(Boolean).join(' · ');
-    g+='<circle cx="'+x(n).toFixed(1)+'" cy="'+yE+'" r="4.5" fill="'+(MAU_NHOM[e.nhom]||'#b9bfae')+'" opacity=".9"><title>'
-      +escTT(e.ngay)+' · NSS '+n+'\n'+escTT(e.ten)+(nhan?'\n'+escTT(nhan):'')+'</title></circle>';});
+    const dd=e.ngay.slice(8,10)+'/'+e.ngay.slice(5,7);
+    // vòng trắng phía sau cho chấm nổi trên nền, và vùng chạm rộng hơn nhiều
+    g+='<circle cx="'+x(n).toFixed(1)+'" cy="'+yE+'" r="5.5" fill="#fffdf7"/>';
+    g+='<circle class="tt-cham" cx="'+x(n).toFixed(1)+'" cy="'+yE+'" r="4.2" fill="'+(MAU_NHOM[e.nhom]||'#b9bfae')+'"/>';
+    g+='<circle class="tt-hit" cx="'+x(n).toFixed(1)+'" cy="'+yE+'" r="11" fill="transparent" style="cursor:pointer"'
+      +' data-tt="'+escTT('<b>'+dd+'</b> · NSS '+n+'<br>'+escTT(e.ten)+(nhan?'<br><span class=&quot;tt-phu&quot;>'+escTT(nhan)+'</span>':''))+'"></circle>';});
+  // Vạch "Hôm nay": dải mờ + đường mảnh + nhãn bo tròn, thay cho nét đứt
   const nHN=soNgayTT(gieo,new Date().toISOString().slice(0,10));
   if(nHN>=0&&nHN<=nssMax){
-    g+='<line x1="'+x(nHN).toFixed(1)+'" y1="'+T+'" x2="'+x(nHN).toFixed(1)+'" y2="'+(yE+10)+'" stroke="#2f4718" stroke-width="1.5" stroke-dasharray="4 3"/>';
-    g+='<text x="'+(x(nHN)+5).toFixed(1)+'" y="'+(T+12)+'" font-size="10.5" fill="#2f4718" font-weight="600">Hôm nay</text>';}
+    const xh=x(nHN);
+    g+='<defs><linearGradient id="gradHN" x1="0" y1="0" x2="1" y2="0">'
+      +'<stop offset="0%" stop-color="#2f4718" stop-opacity="0"/>'
+      +'<stop offset="100%" stop-color="#2f4718" stop-opacity=".13"/></linearGradient></defs>';
+    g+='<rect x="'+Math.max(L,xh-22).toFixed(1)+'" y="'+T+'" width="'+(xh-Math.max(L,xh-22)).toFixed(1)
+      +'" height="'+ph+'" fill="url(#gradHN)"/>';
+    g+='<line x1="'+xh.toFixed(1)+'" y1="'+(T-2)+'" x2="'+xh.toFixed(1)+'" y2="'+(yE+11)+'" stroke="#2f4718" stroke-width="1.25" opacity=".55"/>';
+    g+='<circle cx="'+xh.toFixed(1)+'" cy="'+yE+'" r="6.5" fill="none" stroke="#2f4718" stroke-width="1.5" opacity=".7"/>';
+    const wN=52, xN=Math.min(W-R-wN, Math.max(L, xh-wN/2));
+    g+='<rect x="'+xN.toFixed(1)+'" y="'+(T-20)+'" width="'+wN+'" height="16" rx="8" fill="#2f4718"/>';
+    g+='<text x="'+(xN+wN/2).toFixed(1)+'" y="'+(T-8.5)+'" text-anchor="middle" font-size="10" fill="#fff" font-weight="600" letter-spacing=".02em">Hôm nay</text>';}
   oBd.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img" aria-label="Biểu đồ lượng mưa và sự kiện đồng ruộng theo ngày sau sạ">'+g+'</svg>';
+  ganTooltip(oBd);
   const soThat = BANG.filter(b=>b.that && b.tu>0).length;
   oChu.innerHTML='<b>Băng giai đoạn dựng từ ngày thật trong Notion</b> ('+soThat+' ranh giới: đẻ nhánh rộ · đón đòng · trổ bông · chắc hạt · chín vàng). '
     +'Dấu <b>*</b> đánh dấu ranh giới duy nhất còn ước lượng — điểm mạ chuyển sang đẻ nhánh sớm, vì Notion không có mốc này. '

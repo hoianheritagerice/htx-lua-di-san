@@ -261,13 +261,16 @@ function veVuPanel(s, soHoDem){
   const pct = Math.min(100, Math.max(0, quaNgay/tongNgay*100));
 
   // Các mốc: chỉ hiện mốc đã có ngày trong Notion
+  // Toàn bộ mốc lấy từ DB Vụ Mùa trong Notion — không có ngưỡng nào đặt cứng
   const mocs = [
-    {ten:'Gieo sạ',   ngay:s.gieoSa},
-    {ten:'Đón đòng',  ngay:s.donDong},
-    {ten:'Trổ bông',  ngay:s.troBong},
-    {ten:'Chắc hạt',  ngay:s.chacHat},
-    {ten:'Thu hoạch', ngay:s.thuHoach},
-  ].filter(m=>m.ngay);
+    {ten:'Gieo sạ',      ngay:s.gieoSa},
+    {ten:'Đẻ nhánh rộ',  ngay:s.deNhanh},
+    {ten:'Đón đòng',     ngay:s.donDong},
+    {ten:'Trổ bông',     ngay:s.troBong},
+    {ten:'Chắc hạt',     ngay:s.chacHat},
+    {ten:'Chín vàng',    ngay:s.chinVang},
+    {ten:'Thu hoạch',    ngay:s.thuHoach},
+  ].filter(m=>m.ngay).sort((a,b)=>a.ngay.localeCompare(b.ngay));
 
   let html = `<div class="tienDoFill" style="width:${pct}%"></div>`;
   let giaiDoanHT = 'Gieo sạ';

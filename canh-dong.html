@@ -419,6 +419,8 @@ let SU_KIEN = [
    mo:'Xuống giống lúa trên các thửa ruộng của cánh đồng, mở đầu chính thức cho vụ Hè Thu.', goi:''},
   {ngay:'2026-05-22', ic:'ic-ma',   loai:'trai', ten:'Cùng xuống giống', tenDay:'Trải nghiệm: Cùng nông dân xuống giống',
    mo:'Khách ra đồng lội ruộng, gieo mạ cùng bà con xã viên và tìm hiểu giống lúa bản địa.', goi:'Người đồng kiến tạo · Đối tác kiến tạo di sản'},
+  {ngay:'2026-06-24', ic:'ic-ma',   loai:'nong', ten:'Đẻ nhánh rộ', tenDay:'Đẻ nhánh rộ',
+   mo:'Lúa đẻ nhánh mạnh nhất — quyết định số bông trên đơn vị diện tích.', goi:''},
   {ngay:'2026-07-05', ic:'ic-dong', loai:'nong', ten:'Đón đòng', tenDay:'Đón đòng',
    mo:'Cây lúa làm đòng — giai đoạn quyết định năng suất, cần đủ nước và dinh dưỡng.', goi:''},
   {ngay:'2026-07-20', ic:'ic-bong', loai:'nong', ten:'Trổ bông', tenDay:'Trổ bông',
@@ -427,6 +429,8 @@ let SU_KIEN = [
    mo:'Đi giữa cánh đồng lúa đang trổ bông, chụp ảnh, nghe kể về nhịp sinh trưởng của cây lúa.', goi:'Người đồng kiến tạo · Đối tác kiến tạo di sản'},
   {ngay:'2026-08-05', ic:'ic-chac', loai:'nong', ten:'Chắc hạt', tenDay:'Chắc hạt',
    mo:'Hạt lúa vào chắc, chuyển từ ngậm sữa sang cứng dần, chuẩn bị chín.', goi:''},
+  {ngay:'2026-08-25', ic:'ic-chac', loai:'nong', ten:'Chín vàng', tenDay:'Chín vàng',
+   mo:'Bông lúa ngả vàng đều, cả cánh đồng chuyển sắc — sắp tới ngày gặt.', goi:''},
   {ngay:'2026-09-05', ic:'ic-gat',  loai:'nong', ten:'Thu hoạch', tenDay:'Ngày thu hoạch dự kiến',
    mo:'Gặt lúa chín trên toàn cánh đồng, khép lại một vụ canh tác.', goi:''},
   {ngay:'2026-09-06', ic:'ic-bo',   loai:'trai', ten:'Ngày hội gặt', tenDay:'Trải nghiệm: Ngày hội gặt',
@@ -543,10 +547,29 @@ veTimeline();
    ================================================================== */
 const API_URL_TL = 'https://script.google.com/macros/s/AKfycbxkBLw-2LGnKPrc0m8cjogwqyv1kCyP5D1hN8A7Pt2IQ6n8QwRGQhD8ea8PAQzOVwjy/exec';
 const NGAY_MAU = SU_KIEN.map(x => x.ngay);
+/* 7 mốc nông học — TẤT CẢ lấy từ DB Vụ Mùa trong Notion, không ước lượng */
 const MOC_NOTION = {
-  'Gieo sạ':'gieoSa', 'Đón đòng':'donDong', 'Trổ bông':'troBong',
-  'Chắc hạt':'chacHat', 'Thu hoạch':'thuHoach'
+  'Gieo sạ':'gieoSa', 'Đẻ nhánh rộ':'deNhanh', 'Đón đòng':'donDong',
+  'Trổ bông':'troBong', 'Chắc hạt':'chacHat', 'Chín vàng':'chinVang',
+  'Thu hoạch':'thuHoach'
 };
+
+/* Lễ cúng và trải nghiệm KHÔNG có nguồn trong Notion. Thay vì để ngày
+   viết cứng (dễ rơi vào chỗ vô lý, ví dụ "Thăm đồng lúa trổ" lại nằm
+   TRƯỚC ngày trổ bông), neo chúng vào mốc nông học thật với độ lệch cố
+   định. Notion đổi ngày thì chúng tự dịch theo, luôn đúng thứ tự. */
+const NEO_SU_KIEN = {
+  'Lễ cúng xuống đồng':  ['gieoSa',   -5],
+  'Cùng xuống giống':    ['gieoSa',    2],
+  'Thăm đồng lúa trổ':   ['troBong',   4],
+  'Ngày hội gặt':        ['thuHoach',  1],
+  'Cúng cơm mới':        ['thuHoach', 10]
+};
+function congNgay(ngay, n){
+  const d = new Date(ngay + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  return d.toISOString().slice(0,10);
+}
 
 async function napMocThat(ma){
   try{
@@ -554,10 +577,16 @@ async function napMocThat(ma){
       body: JSON.stringify({action:'getMapData', field: ma, season:'HT26'})});
     const r = await res.json();
     if(!r.ok || !r.season) return;
-    let doi = 0;
+    let doi = 0, neo = 0;
     SU_KIEN.forEach((sk, i) => {
       const khoa = MOC_NOTION[sk.ten];
-      if(khoa && r.season[khoa]){ sk.ngay = r.season[khoa]; doi++; }
+      if(khoa){                                   // mốc nông học: lấy đúng Notion
+        if(r.season[khoa]){ sk.ngay = r.season[khoa]; doi++; }
+        else sk.ngay = NGAY_MAU[i];
+        return;
+      }
+      const n = NEO_SU_KIEN[sk.ten];              // lễ / trải nghiệm: neo theo mốc thật
+      if(n && r.season[n[0]]){ sk.ngay = congNgay(r.season[n[0]], n[1]); neo++; }
       else sk.ngay = NGAY_MAU[i];
     });
     SU_KIEN.sort((a,b) => a.ngay.localeCompare(b.ngay));
@@ -565,11 +594,12 @@ async function napMocThat(ma){
     const note = document.querySelector('.tl-note');
     if(note){
       note.innerHTML = 'Dòng thời gian mùa vụ Hè Thu 2026 của HTX Lúa Di Sản Hội An. '
-        + doi + '/' + Object.keys(MOC_NOTION).length + ' mốc nông học lấy trực tiếp từ Notion.'
+        + '<b>' + doi + '/' + Object.keys(MOC_NOTION).length + ' mốc nông học lấy trực tiếp từ Notion.</b>'
         + (thieu.length
-            ? ' <b>Chưa có trong Notion, đang dùng ngày mẫu:</b> ' + thieu.join(' · ')
-              + ' — điền vào trang Vụ Mùa là dòng thời gian tự đúng.'
-            : '');
+            ? ' Chưa có trong Notion, đang dùng ngày mẫu: ' + thieu.join(' · ')
+              + ' — điền vào trang Vụ Mùa là tự đúng.'
+            : '')
+        + ' Lễ cúng và trải nghiệm là ngày dự kiến, tính theo mốc nông học thật.';
     }
     veTimeline();
   }catch(e){ /* giữ ngày mẫu */ }
@@ -580,14 +610,38 @@ async function napMocThat(ma){
    Trục ngang = NSS (ngày sau sạ), không phải ngày dương lịch — ba cánh
    đồng gieo lệch nhau tới 30 ngày nên trục dương lịch không so được.
    ================================================================== */
-const GIAI_DOAN = [
-  {tu:0,  den:8,  ten:'Mạ',            mau:'#e8efdc'},
-  {tu:8,  den:21, ten:'Đẻ nhánh sớm',  mau:'#dbe8c8'},
-  {tu:21, den:41, ten:'Đẻ nhánh rộ',   mau:'#cfe2b6'},
-  {tu:41, den:56, ten:'Làm đòng',      mau:'#c2dba4'},
-  {tu:56, den:71, ten:'Trổ – phơi màu',mau:'#f2e6bd'},
-  {tu:71, den:999,ten:'Chín – gặt',    mau:'#efdcc0'}
-];
+/* ==================================================================
+   BĂNG GIAI ĐOẠN dựng từ NGÀY THẬT trong DB Vụ Mùa.
+   Trước đây tôi đặt cứng ngưỡng NSS 8/21/41/56/71 theo hiểu biết chung
+   về lúa ngắn ngày — và chúng sai rất xa dữ liệu thật: trổ bông thật ở
+   NSS 67 (tôi đặt 56), chín vàng thật ở NSS 98 (tôi đặt 71).
+   Nay mọi ranh giới đều lấy từ Notion. Chỉ còn ĐÚNG MỘT ranh giới ước
+   lượng: điểm mạ chuyển sang đẻ nhánh sớm (+10 ngày sau sạ), vì Notion
+   không có mốc đó.
+   ================================================================== */
+const MAU_GD = ['#e8efdc','#dbe8c8','#cfe2b6','#c2dba4','#f2e6bd','#f6e3c9','#efdcc0'];
+
+function bangGiaiDoan(season, gieo, nssMax){
+  const nss = d => d ? soNgayTT(gieo, d) : null;
+  const moc = [
+    {ten:'Mạ',             nss:0,                     that:true},
+    {ten:'Đẻ nhánh sớm',   nss:10,                    that:false},  // ước lượng
+    {ten:'Đẻ nhánh rộ',    nss:nss(season.deNhanh),   that:true},
+    {ten:'Làm đòng',       nss:nss(season.donDong),   that:true},
+    {ten:'Trổ – phơi màu', nss:nss(season.troBong),   that:true},
+    {ten:'Chắc hạt',       nss:nss(season.chacHat),   that:true},
+    {ten:'Chín – gặt',     nss:nss(season.chinVang),  that:true}
+  ].filter(m => m.nss !== null && m.nss !== undefined);
+
+  // bảo đảm tăng dần, phòng khi ngày trong Notion nhập lệch thứ tự
+  for(let i=1;i<moc.length;i++) if(moc[i].nss <= moc[i-1].nss) moc[i].nss = moc[i-1].nss + 1;
+
+  return moc.map((m,i) => ({
+    tu:  m.nss,
+    den: (i+1 < moc.length) ? moc[i+1].nss : Math.max(nssMax, m.nss+1),
+    ten: m.ten, that: m.that, mau: MAU_GD[i % MAU_GD.length]
+  }));
+}
 const MAU_NHOM = {'Canh tác':'#6f9b3f','Vấn đề':'#c0392b','Quan sát':'#8a9db8'};
 function soNgayTT(a,b){ return Math.round((new Date(b)-new Date(a))/86400000); }
 function escTT(t){ return String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
@@ -633,10 +687,14 @@ function veThoiTiet(r){
   const x=n=>L+(n/nssMax)*pw;
   const muaMax=Math.max(20,...tt.map(d=>d.mua||0));
   const yMua=mm=>T+ph-(mm/muaMax)*ph;
+  const BANG = bangGiaiDoan(r.season, gieo, nssMax);
   let g='';
-  GIAI_DOAN.forEach(gd=>{const a=x(gd.tu),b=x(Math.min(gd.den,nssMax)); if(b<=a)return;
+  BANG.forEach(gd=>{const a=x(gd.tu),b=x(Math.min(gd.den,nssMax)); if(b<=a)return;
     g+='<rect x="'+a.toFixed(1)+'" y="'+T+'" width="'+(b-a).toFixed(1)+'" height="'+ph+'" fill="'+gd.mau+'" opacity=".55"/>';
-    if(b-a>70) g+='<text x="'+((a+b)/2).toFixed(1)+'" y="'+(T-8)+'" text-anchor="middle" font-size="10.5" fill="#7b8270">'+gd.ten+'</text>';});
+    // vạch ranh giới lấy từ Notion, vẽ đậm để phân biệt với ranh giới ước lượng
+    if(gd.that && gd.tu>0) g+='<line x1="'+a.toFixed(1)+'" y1="'+T+'" x2="'+a.toFixed(1)+'" y2="'+(T+ph)+'" stroke="#a9b295" stroke-width="1"/>';
+    if(b-a>62) g+='<text x="'+((a+b)/2).toFixed(1)+'" y="'+(T-8)+'" text-anchor="middle" font-size="10.5" fill="#7b8270">'
+      +gd.ten+(gd.that?'':' *')+'</text>';});
   [0,.25,.5,.75,1].forEach(f=>{const yy=T+ph-f*ph;
     g+='<line x1="'+L+'" y1="'+yy.toFixed(1)+'" x2="'+(W-R)+'" y2="'+yy.toFixed(1)+'" stroke="#d8dcd0" stroke-dasharray="2 3"/>';
     g+='<text x="'+(L-6)+'" y="'+(yy+3.5).toFixed(1)+'" text-anchor="end" font-size="10" fill="#98a08c">'+Math.round(muaMax*f)+'</text>';});
@@ -662,7 +720,10 @@ function veThoiTiet(r){
     g+='<line x1="'+x(nHN).toFixed(1)+'" y1="'+T+'" x2="'+x(nHN).toFixed(1)+'" y2="'+(yE+10)+'" stroke="#2f4718" stroke-width="1.5" stroke-dasharray="4 3"/>';
     g+='<text x="'+(x(nHN)+5).toFixed(1)+'" y="'+(T+12)+'" font-size="10.5" fill="#2f4718" font-weight="600">Hôm nay</text>';}
   oBd.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img" aria-label="Biểu đồ lượng mưa và sự kiện đồng ruộng theo ngày sau sạ">'+g+'</svg>';
-  oChu.innerHTML='Dữ liệu mưa và nhiệt độ lấy tự động từ Open-Meteo, '+tt.length+' ngày ('+tt[0].ngay+' → '+tt[tt.length-1].ngay
+  const soThat = BANG.filter(b=>b.that && b.tu>0).length;
+  oChu.innerHTML='<b>Băng giai đoạn dựng từ ngày thật trong Notion</b> ('+soThat+' ranh giới: đẻ nhánh rộ · đón đòng · trổ bông · chắc hạt · chín vàng). '
+    +'Dấu <b>*</b> đánh dấu ranh giới duy nhất còn ước lượng — điểm mạ chuyển sang đẻ nhánh sớm, vì Notion không có mốc này. '
+    +'Dữ liệu mưa và nhiệt độ lấy tự động từ Open-Meteo, '+tt.length+' ngày ('+tt[0].ngay+' → '+tt[tt.length-1].ngay
     +'). Chấm tròn dưới trục là bản ghi nhật ký đồng — chạm vào để xem chi tiết. <b>Lưới dữ liệu Open-Meteo rộng khoảng 9–11 km</b>, ba cánh đồng cách nhau chưa tới 4 km nên số liệu mưa có thể giống hệt nhau; đó là bình thường.';
 }
 

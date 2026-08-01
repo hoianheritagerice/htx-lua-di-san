@@ -128,6 +128,15 @@
   animation:heroTho 26s ease-in-out infinite alternate;
 }
 .hero-anh .hero-bg.loi{display:none}   /* ảnh lỗi/chưa có → ẩn, lộ nền sọc */
+
+/* Nhãn nhắc tên file khi ảnh nền chưa có — tự biến mất khi bỏ ảnh vào img/ */
+.hero-anh .hero-goi-y{
+  position:absolute;right:14px;bottom:12px;z-index:5;
+  font-size:11px;letter-spacing:.3px;line-height:1;
+  color:rgba(255,255,255,.6);background:rgba(0,0,0,.26);
+  border:1px dashed rgba(255,255,255,.28);
+  padding:6px 11px;border-radius:10px;pointer-events:none;
+}
 @keyframes heroTho{from{transform:scale(1.02)}to{transform:scale(1.09)}}
 
 /* lớp phủ tối để chữ trắng đọc rõ — nhạt dần sang phải cho thấy ảnh */

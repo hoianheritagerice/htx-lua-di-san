@@ -1,48 +1,80 @@
 THƯ MỤC ẢNH CỦA WEBSITE HTX LÚA DI SẢN
 =======================================
-Bỏ ảnh vào ĐÚNG thư mục này (img/), đặt ĐÚNG tên dưới đây.
-Trang web tự hiện ảnh, không cần sửa code.
+Cập nhật: 01/08/2026
 
-A. ẢNH NỀN LỚN — mỗi trang một tấm to bự phía sau tiêu đề
-----------------------------------------------------------
-hero-trang-chu.jpg     - Nền đầu Trang chủ
-hero-ve-chung-toi.jpg  - Nền đầu trang Về chúng tôi
-hero-san-pham.jpg      - Nền đầu trang Sản phẩm
-hero-canh-dong.jpg     - Nền đầu trang Cánh Đồng
-  → Nên chọn ảnh NGANG, rộng 1920 px, cảnh rộng thoáng.
-  → Ảnh sẽ bị phủ một lớp xanh đậm để chữ trắng đọc rõ,
-    nên chọn ảnh không quá nhiều chi tiết rối ở bên trái.
+Toàn bộ trang web cần ĐÚNG 15 tấm ảnh. Bỏ vào thư mục này (img/),
+đặt đúng tên trong danh sách dưới đây. Trang web tự hiện, KHÔNG cần sửa code.
 
-B. ẢNH TRONG NỘI DUNG
-----------------------
-cau-chuyen.jpg           - Trang chủ, mục Câu chuyện
-ve-chung-toi.jpg         - Trang Về chúng tôi, mục Câu chuyện
-goi-1-gieo-mam.jpg       - Gói Người gieo mầm
-goi-2-dong-kien-tao.jpg  - Gói Người đồng kiến tạo
-goi-3-doi-tac.jpg        - Gói Đối tác kiến tạo di sản
+Ngoài 15 tấm đó, thư mục còn có logo.png và favicon.png — đã có sẵn,
+không cần đụng tới.
 
-C. ẢNH CHO CÁC TRANG CHI TIẾT (khi bấm vào từng ô)
----------------------------------------------------
-dong-ong-dang.jpg        - Chi tiết cánh đồng Ông Đảng
-dong-dong-cao.jpg        - Chi tiết cánh đồng Đồng Cao
-dong-dong-mau.jpg        - Chi tiết cánh đồng Đồng Mẫu
-gt-thuan-tu-nhien.jpg    - Chi tiết giá trị Canh tác thuận tự nhiên
-gt-minh-bach.jpg         - Chi tiết giá trị Minh bạch nguồn gốc
-gt-ben-vung.jpg          - Chi tiết giá trị Cùng nhau bền vững
-  (3 gói sản phẩm dùng lại ảnh ở mục B, không cần ảnh mới)
 
+===========================================================
+DANH SÁCH ĐẦY ĐỦ 15 ẢNH — DÙNG LÀM BẢNG KIỂM
+===========================================================
+
+--- A. 4 ẢNH NỀN LỚN (mỗi trang một tấm to phía sau tiêu đề) ---
+[ ] hero-trang-chu.jpg      Đầu Trang chủ
+[ ] hero-ve-chung-toi.jpg   Đầu trang Về chúng tôi
+[ ] hero-san-pham.jpg       Đầu trang Sản phẩm
+[ ] hero-canh-dong.jpg      Đầu trang Cánh Đồng
+    -> Ảnh NGANG, rộng 1920 px, cảnh rộng thoáng.
+    -> Sẽ bị phủ một lớp xanh đậm để chữ trắng đọc rõ, nên tránh ảnh
+       quá nhiều chi tiết rối ở nửa bên trái (chỗ đặt tiêu đề).
+
+--- B. 2 ẢNH CÂU CHUYỆN ---
+[ ] cau-chuyen.jpg          Trang chủ, mục Câu chuyện (khung 5:4)
+[ ] ve-chung-toi.jpg        Trang Về chúng tôi, mục Câu chuyện (khung 4:3)
+
+--- C. 3 ẢNH GÓI SẢN PHẨM ---
+[ ] goi-1-gieo-mam.jpg      Gói Người gieo mầm
+[ ] goi-2-dong-kien-tao.jpg Gói Người đồng kiến tạo
+[ ] goi-3-doi-tac.jpg       Gói Đối tác kiến tạo di sản
+    -> Mỗi tấm hiện ở BA chỗ: Trang chủ (khung vuông 1:1),
+       trang Sản phẩm (khung 4:3), và ảnh nền trang chi tiết gói.
+       Vì vậy chọn ảnh cắt vuông vẫn đẹp, chủ thể nằm giữa khung.
+
+--- D. 3 ẢNH CÁNH ĐỒNG (trang chi tiết, dùng làm ảnh nền lớn) ---
+[ ] dong-ong-dang.jpg       Cánh đồng Ông Đảng — Cẩm Kim
+[ ] dong-dong-cao.jpg       Cánh đồng Đồng Cao — Cẩm Thanh
+[ ] dong-dong-mau.jpg       Cánh đồng Đồng Mẫu — Cẩm Thanh
+    -> Ảnh NGANG, rộng 1920 px.
+
+--- E. 3 ẢNH GIÁ TRỊ (trang chi tiết, dùng làm ảnh nền lớn) ---
+[ ] gt-thuan-tu-nhien.jpg   Canh tác thuận tự nhiên
+[ ] gt-minh-bach.jpg        Minh bạch nguồn gốc
+[ ] gt-ben-vung.jpg         Cùng nhau bền vững
+    -> Ảnh NGANG, rộng 1920 px.
+
+
+===========================================================
 LƯU Ý QUAN TRỌNG
------------------
+===========================================================
+
 1. TÊN FILE phải giống hệt: chữ thường, gạch ngang, KHÔNG dấu tiếng Việt,
    KHÔNG khoảng trắng. Đuôi .jpg viết thường.
+   Sai một ký tự là trang không tìm thấy ảnh.
 
 2. PHẢI NÉN ẢNH trước khi tải lên:
-   - Ảnh nền lớn (hero-*): rộng 1920 px, dưới 400 KB
-   - Ảnh nội dung: rộng 1200-1400 px, dưới 300 KB
-   - Ảnh chụp điện thoại thường nặng 3-5 MB → bắt buộc nén,
-     nếu không khách mở trang bằng 4G sẽ rất chậm.
+   - Ảnh nền lớn (hero-*, dong-*, gt-*): rộng 1920 px, dưới 400 KB
+   - Ảnh nội dung (cau-chuyen, ve-chung-toi, goi-*): rộng 1200-1400 px, dưới 300 KB
+   - Ảnh chụp điện thoại thường nặng 3-5 MB -> bắt buộc nén, nếu không
+     khách mở trang bằng 4G sẽ rất chậm.
    - Nén miễn phí: vào squoosh.app, kéo ảnh vào, chọn Quality ~75, tải về.
 
-3. CHƯA CÓ ẢNH cũng không sao: trang vẫn chạy bình thường.
-   Chỗ ảnh nền sẽ hiện nền xanh sọc như cũ; chỗ ảnh nội dung hiện
-   ô màu đất kèm dòng nhắc tên ảnh cần đặt. Bỏ ảnh vào lúc nào hiện lúc đó.
+3. CHƯA CÓ ẢNH cũng không sao, trang vẫn chạy bình thường:
+   - Chỗ ảnh nền lớn: hiện nền xanh sọc, góc dưới bên phải có nhãn mờ
+     ghi "Chưa có ảnh nền: img/....jpg"
+   - Chỗ ảnh nội dung: hiện ô màu đất, giữa ô ghi tên file cần đặt
+   Nghĩa là CỨ MỞ TRANG WEB LÊN LÀ BIẾT CÒN THIẾU ẢNH NÀO — không cần
+   mở tài liệu này. Bỏ ảnh vào lúc nào hiện lúc đó, nhãn tự biến mất.
+
+4. CÁCH TẢI LÊN GITHUB (làm được cả trên điện thoại):
+   Mở repo -> bấm vào thư mục img -> Add file -> Upload files ->
+   chọn ảnh -> Commit changes.
+   Khoảng 1-2 phút sau trang tự hiện ảnh mới. Nếu vẫn thấy ảnh cũ:
+   tải lại trang bằng Ctrl+F5 (máy tính) hoặc xoá cache trình duyệt
+   (điện thoại) — GitHub Pages có đệm vài phút.
+
+5. THAY ẢNH sau này: tải lên file MỚI TRÙNG TÊN CŨ, GitHub tự ghi đè.
+   Không cần xoá file cũ, không cần sửa code.

@@ -186,7 +186,7 @@ footer ul a:hover{opacity:1;color:var(--vang)}
   <div class="wrap nav">
     <a href="index.html" class="brand">
       <img src="img/logo.png" class="logo" alt="Logo HTX Lúa Di Sản Hội An" width="46" height="46">
-      <span class="bname">HTX Lúa Di Sản<small>Hội An · Quảng Nam</small></span>
+      <span class="bname">HTX Lúa Di Sản<small>Hội An</small></span>
     </a>
     <nav class="menu">
       <a href="index.html" class="active">Trang chủ</a>
@@ -311,7 +311,7 @@ footer ul a:hover{opacity:1;color:var(--vang)}
       <div class="td-o"><div class="so so-dem" id="tdThua" data-so="68">0</div><div class="nhan">thửa ruộng<br>được ghi mã riêng</div></div>
       <div class="td-o"><div class="so so-dem" data-so="3">0</div><div class="nhan">cánh đồng<br>di sản</div></div>
     </div>
-    <div class="td-note">* Hai số đầu sẽ tự cập nhật theo dữ liệu thật từ hệ thống bản đồ Notion khi nối API.</div>
+    <div class="td-note">* Diện tích, số hộ và số thửa lấy trực tiếp từ dữ liệu Notion của vụ đang canh tác, cộng từ cả 3 cánh đồng.</div>
   </div>
 </section>
 
@@ -331,7 +331,7 @@ footer ul a:hover{opacity:1;color:var(--vang)}
     <div class="ft-grid">
       <div class="ft-brand">
         <div class="bname">HTX Lúa Di Sản Hội An</div>
-        <p>Hợp tác xã lúa hữu cơ tại Hội An, Quảng Nam — canh tác minh bạch, truy xuất nguồn gốc tới từng thửa ruộng.</p>
+        <p>Hợp tác xã lúa hữu cơ tại Hội An, TP. Đà Nẵng — canh tác minh bạch, truy xuất nguồn gốc tới từng thửa ruộng.</p>
       </div>
       <div>
         <h4>Sản phẩm</h4>
@@ -352,7 +352,7 @@ footer ul a:hover{opacity:1;color:var(--vang)}
       <div>
         <h4>Liên hệ</h4>
         <ul>
-          <li><a href="#">Hội An, Quảng Nam</a></li>
+          <li><a href="#">Hội An, TP. Đà Nẵng</a></li>
           <li><a href="#">Điện thoại: </a></li>
           <li><a href="#">Facebook · YouTube</a></li>
         </ul>
@@ -360,7 +360,7 @@ footer ul a:hover{opacity:1;color:var(--vang)}
     </div>
     <div class="ft-duoi">
       <span>© 2026 HTX Lúa Di Sản Hội An</span>
-      <span>Hội An · Quảng Nam</span>
+      <span>Hội An · TP. Đà Nẵng</span>
     </div>
   </div>
 </footer>
@@ -382,5 +382,9 @@ footer ul a:hover{opacity:1;color:var(--vang)}
 <script src="js/chung.js"></script>
 <script src="js/form-quan-tam.js"></script>
 <script src="js/hieu-ung.js"></script>
+<!-- Cộng số liệu thật của 3 cánh đồng cho mục "Những con số từ cánh đồng thật".
+     PHẢI đứng sau js/chung.js (cần goiAPI) và sau js/hieu-ung.js (để ghi đè
+     được data-so của ô "thửa ruộng"). -->
+<script src="js/so-lieu-tong.js?v=1.0"></script>
 </body>
 </html>

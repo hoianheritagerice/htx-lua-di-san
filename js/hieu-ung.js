@@ -128,8 +128,31 @@
   Array.prototype.forEach.call(document.querySelectorAll('img.anh-that'), function(img){
     img.addEventListener('error', function(){ img.classList.add('loi'); });
     if(img.complete && img.naturalWidth === 0) img.classList.add('loi');
+    /* Ô gợi ý đang để trống → tự điền TÊN FILE cần đặt. Nhờ vậy mở trang
+       lên là biết ngay phải bỏ ảnh nào vào img/, khỏi tra tài liệu. */
+    var oGoiY = img.parentNode && img.parentNode.querySelector('.goi-y');
+    if(oGoiY && !oGoiY.textContent.trim()){
+      var duongDan = img.getAttribute('src') || '';
+      oGoiY.innerHTML = 'Chưa có ảnh<br><b style="font-weight:600">' + duongDan + '</b>';
+    }
     if(!img.hasAttribute('loading')) img.setAttribute('loading','lazy');
     if(!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
+  });
+
+  /* ---------- 5b. Ảnh nền lớn: thiếu ảnh thì nhắc luôn tên file ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('.hero-anh'), function(khung){
+    var img = khung.querySelector('img.hero-bg');
+    if(!img) return;
+    var duongDan = img.getAttribute('src') || '';
+    function nhac(){
+      if(khung.querySelector('.hero-goi-y')) return;
+      var n = document.createElement('span');
+      n.className = 'hero-goi-y';
+      n.textContent = 'Chưa có ảnh nền: ' + duongDan;
+      khung.appendChild(n);
+    }
+    img.addEventListener('error', nhac);
+    if(img.complete && img.naturalWidth === 0) nhac();
   });
 
   /* ---------- 6. Nút & thẻ mượt hơn khi rê chuột ---------- */

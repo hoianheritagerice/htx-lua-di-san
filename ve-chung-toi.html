@@ -52,13 +52,34 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .anh-ph{aspect-ratio:4/3;border-radius:16px;background:linear-gradient(135deg,var(--dat),#cdbf9d);display:flex;align-items:center;justify-content:center;color:#9a8a63;font-size:13px;text-align:center;padding:20px;border:1px solid #d8cdb0}
 
 .gia-tri{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
-.gt-o{background:var(--trang);border:1px solid #e6ddc8;border-radius:14px;padding:22px}
+.gt-o{background:var(--trang);border:1px solid #e6ddc8;border-radius:14px;padding:0 22px 22px;overflow:hidden}
+/* Dải ảnh trên đầu thẻ giá trị — dùng lại đúng 3 tấm gt-*.jpg của trang
+   chi tiết, không cần thêm file ảnh mới. Thiếu ảnh thì lộ nền đất, thẻ
+   vẫn cân đối. Âm lề để ảnh chạm sát mép thẻ. */
+.gt-o .gt-anh{position:relative;margin:0 -22px 16px;aspect-ratio:16/9;overflow:hidden;
+  background:linear-gradient(135deg,#e3d9c4,#cdbf9d)}
+.gt-o .gt-anh img{width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .5s cubic-bezier(.22,.61,.36,1)}
+.gt-o .gt-anh img.loi{display:none}
+.gt-o .gt-anh .goi-y{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:14px;color:#9a8a63;font-size:12px;line-height:1.45;pointer-events:none}
+.gt-o:hover .gt-anh img{transform:scale(1.06)}
 .gt-o .gt-ic{font-size:30px;margin-bottom:10px}
 .gt-o h3{font-size:19px;margin-bottom:6px}
 .gt-o p{font-size:14px;color:#5a6350;margin:0}
 
 .cong-dong{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:26px}
-.cd-o{border-radius:14px;padding:22px;color:#fff;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end}
+.cd-o{border-radius:14px;padding:22px;color:#fff;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden}
+/* Ảnh thật của cánh đồng làm nền thẻ — cùng 3 tấm dong-*.jpg đã dùng ở
+   Trang chủ và trang chi tiết. Thiếu ảnh thì lộ gradient f1/f2/f3 như cũ. */
+.cd-o .cd-bg{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;
+  transition:transform .5s cubic-bezier(.22,.61,.36,1)}
+.cd-o .cd-bg.loi{display:none}
+.cd-o::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(20,45,25,.10) 0%,rgba(18,42,23,.48) 45%,rgba(12,32,17,.86) 100%)}
+.cd-o > *{position:relative;z-index:2}
+.cd-o > .cd-bg{z-index:0}
+.cd-o:hover .cd-bg{transform:scale(1.07)}
 .cd-o.f1{background:linear-gradient(135deg,#7fae57,#3c6b3a)}
 .cd-o.f2{background:linear-gradient(135deg,#c9a227,#8a6d1c)}
 .cd-o.f3{background:linear-gradient(135deg,#b5734a,#7d4a2b)}
@@ -128,7 +149,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
       <p data-nd="veChungToi.cauChuyen.doan1"></p>
       <p data-nd="veChungToi.cauChuyen.doan2"></p>
     </div>
-    <div class="anh-ph khung-anh ti-le-4-3"><span class="goi-y"></span><img class="anh-that" src="img/ve-chung-toi.jpg" alt="Nông dân HTX Lúa Di Sản trên cánh đồng ven sông Thu Bồn"></div>
+    <div class="anh-ph khung-anh ti-le-4-3"><span class="goi-y"></span><img class="anh-that" src="img/cau-chuyen.jpg" alt="Cánh đồng lúa của HTX Lúa Di Sản Hội An"></div>
   </div>
 </section>
 
@@ -139,9 +160,9 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
       <h2 data-nd="veChungToi.giaTriHead.tieuDe"></h2>
     </div>
     <div class="gia-tri">
-      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=thuan-tu-nhien"><div class="gt-ic" data-nd="giaTri.muc.thuan-tu-nhien.icon"></div><h3 data-nd="giaTri.muc.thuan-tu-nhien.ten"></h3><p data-nd="giaTri.muc.thuan-tu-nhien.dan"></p><span class="dau-bam">→</span></a>
-      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=minh-bach"><div class="gt-ic" data-nd="giaTri.muc.minh-bach.icon"></div><h3 data-nd="giaTri.muc.minh-bach.ten"></h3><p data-nd="giaTri.muc.minh-bach.dan"></p><span class="dau-bam">→</span></a>
-      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=ben-vung"><div class="gt-ic" data-nd="giaTri.muc.ben-vung.icon"></div><h3 data-nd="giaTri.muc.ben-vung.ten"></h3><p data-nd="giaTri.muc.ben-vung.dan"></p><span class="dau-bam">→</span></a>
+      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=thuan-tu-nhien"><div class="gt-anh"><span class="goi-y"></span><img class="anh-that" src="img/gt-thuan-tu-nhien.jpg" alt="Canh tác thuận tự nhiên"></div><div class="gt-ic" data-nd="giaTri.muc.thuan-tu-nhien.icon"></div><h3 data-nd="giaTri.muc.thuan-tu-nhien.ten"></h3><p data-nd="giaTri.muc.thuan-tu-nhien.dan"></p><span class="dau-bam">→</span></a>
+      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=minh-bach"><div class="gt-anh"><span class="goi-y"></span><img class="anh-that" src="img/gt-minh-bach.jpg" alt="Minh bạch nguồn gốc"></div><div class="gt-ic" data-nd="giaTri.muc.minh-bach.icon"></div><h3 data-nd="giaTri.muc.minh-bach.ten"></h3><p data-nd="giaTri.muc.minh-bach.dan"></p><span class="dau-bam">→</span></a>
+      <a class="gt-o the-noi" href="chi-tiet.html?loai=gia-tri&ma=ben-vung"><div class="gt-anh"><span class="goi-y"></span><img class="anh-that" src="img/gt-ben-vung.jpg" alt="Cùng nhau bền vững"></div><div class="gt-ic" data-nd="giaTri.muc.ben-vung.icon"></div><h3 data-nd="giaTri.muc.ben-vung.ten"></h3><p data-nd="giaTri.muc.ben-vung.dan"></p><span class="dau-bam">→</span></a>
     </div>
   </div>
 </section>
@@ -153,9 +174,9 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
       <h2 data-nd="veChungToi.canhDongHead.tieuDe"></h2>
     </div>
     <div class="cong-dong">
-      <a class="cd-o f1 the-noi" href="chi-tiet.html?loai=canh-dong&ma=ong-dang"><span data-nd="canhDong.muc.ong-dang.viTri"></span><h3 data-nd="canhDong.muc.ong-dang.tenNgan"></h3><span class="dau-bam">→</span></a>
-      <a class="cd-o f2 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-cao"><span data-nd="canhDong.muc.dong-cao.viTri"></span><h3 data-nd="canhDong.muc.dong-cao.tenNgan"></h3><span class="dau-bam">→</span></a>
-      <a class="cd-o f3 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-mau"><span data-nd="canhDong.muc.dong-mau.viTri"></span><h3 data-nd="canhDong.muc.dong-mau.tenNgan"></h3><span class="dau-bam">→</span></a>
+      <a class="cd-o f1 the-noi" href="chi-tiet.html?loai=canh-dong&ma=ong-dang"><img class="cd-bg anh-that" src="img/dong-ong-dang.jpg" alt="Cánh đồng Ông Đảng"><span data-nd="canhDong.muc.ong-dang.viTri"></span><h3 data-nd="canhDong.muc.ong-dang.tenNgan"></h3><span class="dau-bam">→</span></a>
+      <a class="cd-o f2 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-cao"><img class="cd-bg anh-that" src="img/dong-dong-cao.jpg" alt="Cánh đồng Đồng Cao"><span data-nd="canhDong.muc.dong-cao.viTri"></span><h3 data-nd="canhDong.muc.dong-cao.tenNgan"></h3><span class="dau-bam">→</span></a>
+      <a class="cd-o f3 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-mau"><img class="cd-bg anh-that" src="img/dong-dong-mau.jpg" alt="Cánh đồng Đồng Mẫu"><span data-nd="canhDong.muc.dong-mau.viTri"></span><h3 data-nd="canhDong.muc.dong-mau.tenNgan"></h3><span class="dau-bam">→</span></a>
     </div>
     <div style="text-align:center;margin-top:26px">
       <a href="canh-dong.html" style="display:inline-block;background:var(--xanh-dam);color:#fff;padding:13px 26px;border-radius:26px;font-weight:600;font-size:14.5px" data-nd="veChungToi.canhDongHead.nut"></a>

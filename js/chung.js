@@ -69,5 +69,89 @@ document.querySelectorAll('.modal-phu').forEach(m=>{
   m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('mo'); });
 });
 
+/* ==================================================================
+   ĐỔ CHỮ TỪ js/noi-dung.js VÀO TRANG
+   ------------------------------------------------------------------
+   Toàn bộ chữ của website nằm trong js/noi-dung.js. Trong file .html
+   chỉ còn các ô trống được đánh dấu:
+
+     data-nd="trangChu.hero.tieuDe"   → đổ 1 đoạn chữ (cho phép thẻ HTML)
+     data-nd-ds="goi.muc.gieo-mam.quyenLoi"  → đổ danh sách gạch đầu dòng
+     data-nd-gia="goi.muc.gieo-mam"   → đổ dòng giá
+     data-nd-bang="trangSanPham.doiChieu"    → đổ bảng đối chiếu
+
+   PHẦN NÀY KHÔNG PHẢI SỬA khi đổi nội dung. Chỉ sửa js/noi-dung.js.
+   ================================================================== */
+function layND(duong){
+  if(!window.NOI_DUNG) return null;
+  return duong.split('.').reduce(function(o,k){
+    return (o === null || o === undefined) ? null : o[k];
+  }, window.NOI_DUNG);
+}
+
+/* Tên gói dùng cho nút "Tôi quan tâm" — để nút luôn khớp tên đã sửa */
+function tenGoi(ma){
+  const g = layND('goi.muc.' + ma);
+  return (g && g.ten) ? g.ten : '';
+}
+
+function apDungNoiDung(){
+  /* ban-do.html không dùng ô nội dung nào — bỏ qua luôn, đừng báo lỗi
+     kẻo hiện dải đỏ ngay giữa bản đồ nhúng trong trang Cánh Đồng. */
+  if(!document.querySelector('[data-nd],[data-nd-ds],[data-nd-gia],[data-nd-bang]')) return;
+
+  if(!window.NOI_DUNG){
+    console.error('[HTX] Không nạp được js/noi-dung.js — trang sẽ thiếu chữ. ' +
+                  'File đó nhiều khả năng bị lỗi cú pháp (thiếu dấu phẩy hoặc dấu `).');
+    const bao = document.createElement('div');
+    bao.style.cssText = 'background:#b03c2a;color:#fff;padding:10px 16px;font-size:13px;text-align:center';
+    bao.textContent = 'Không nạp được nội dung trang (js/noi-dung.js). ' +
+                      'Bấm F12 → Console để xem dòng bị lỗi.';
+    document.body.insertBefore(bao, document.body.firstChild);
+    return;
+  }
+  const thieu = [];
+
+  document.querySelectorAll('[data-nd]').forEach(function(el){
+    const d = el.getAttribute('data-nd'), v = layND(d);
+    if(typeof v === 'string') el.innerHTML = v; else thieu.push(d);
+  });
+
+  document.querySelectorAll('[data-nd-ds]').forEach(function(el){
+    const d = el.getAttribute('data-nd-ds'), v = layND(d);
+    if(Array.isArray(v)) el.innerHTML = v.map(function(x){ return '<li>'+x+'</li>'; }).join('');
+    else thieu.push(d);
+  });
+
+  document.querySelectorAll('[data-nd-gia]').forEach(function(el){
+    const d = el.getAttribute('data-nd-gia'), g = layND(d);
+    if(g) el.innerHTML = (g.gia||'') + ' <small>' + (g.giaDv||'') + '</small>';
+    else thieu.push(d);
+  });
+
+  document.querySelectorAll('[data-nd-bang]').forEach(function(el){
+    const d = el.getAttribute('data-nd-bang'), b = layND(d);
+    if(!b || !b.cot || !b.hang){ thieu.push(d); return; }
+    let h = '<div class="dc-row head">' +
+            b.cot.map(function(c){ return '<div class="dc-cell">'+c+'</div>'; }).join('') +
+            '</div>';
+    b.hang.forEach(function(hang){
+      h += '<div class="dc-row"><div class="dc-cell">'+hang[0]+'</div>';
+      for(let i=1;i<hang.length;i++){
+        h += (String(hang[i]).toLowerCase() === 'co')
+           ? '<div class="dc-cell"><span class="yes">✓</span></div>'
+           : '<div class="dc-cell"><span class="no">–</span></div>';
+      }
+      h += '</div>';
+    });
+    el.innerHTML = h;
+  });
+
+  if(thieu.length){
+    console.warn('[HTX] Không tìm thấy trong js/noi-dung.js:', thieu.join(' · '));
+  }
+}
+
 /* ================== KHỞI ĐỘNG ================== */
+apDungNoiDung();
 veUserBox();

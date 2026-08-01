@@ -131,6 +131,16 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 
 /* ---- tác động (số liệu thật từ Notion) ---- */
 .tacdong{padding:74px 0;background:var(--xanh-dam);color:#eef3e6}
+/* Ảnh nền cho mục Tác động — dùng lại cơ chế .hero-anh của css/hieu-ung.css.
+   Chỉ đổi lớp phủ: hero phủ đậm bên trái vì chữ căn trái, còn mục này chữ
+   căn giữa nên phủ đều trên–dưới, chừa sáng ở khoảng giữa cho thấy ảnh. */
+.tacdong.hero-anh::after{
+  background:linear-gradient(180deg,
+     rgba(14,36,19,.82) 0%,
+     rgba(16,42,22,.58) 50%,
+     rgba(14,36,19,.82) 100%);
+}
+.tacdong.hero-anh .so{text-shadow:0 2px 14px rgba(10,26,14,.55)}
 .tacdong .sec-head h2{color:#fff}
 .tacdong .eyebrow{color:var(--vang)}
 .td-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:10px}
@@ -189,6 +199,8 @@ footer ul a:hover{opacity:1;color:var(--vang)}
 </style>
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
+<!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
+<script src="js/noi-dung.js?v=1.0"></script>
 </head>
 <body>
 
@@ -211,16 +223,16 @@ footer ul a:hover{opacity:1;color:var(--vang)}
   </div>
 </header>
 
-<div class="mau-banner">Trang đang trong quá trình hoàn thiện.</div>
+<div class="mau-banner" data-nd="chung.bangThongBao"></div>
 <!-- ===== HERO ===== -->
 <section class="hero hero-anh">
   <img class="hero-bg" src="img/hero-trang-chu.jpg" alt="" onerror="this.classList.add('loi')">
   <div class="wrap">
-    <div class="eyebrow" style="color:var(--vang)">Hợp tác xã lúa hữu cơ · Từ 3 cánh đồng di sản</div>
-    <h1>Hạt gạo mang <em>câu chuyện</em> của đất và người Hội An</h1>
-    <p>Từ những thửa ruộng ven sông Thu Bồn ở Cẩm Kim và Cẩm Thanh, chúng tôi canh tác lúa theo hướng hữu cơ, minh bạch từng khâu — anh có thể xem nhật ký của chính thửa ruộng làm ra hạt gạo mình ăn.</p>
-    <a href="san-pham.html" class="cta nut-noi">Xem sản phẩm →</a>
-    <a href="canh-dong.html" class="cta phu nut-noi">Khám phá Cánh Đồng</a>
+    <div class="eyebrow" style="color:var(--vang)" data-nd="trangChu.hero.nhan"></div>
+    <h1 data-nd="trangChu.hero.tieuDe"></h1>
+    <p data-nd="trangChu.hero.dan"></p>
+    <a href="san-pham.html" class="cta nut-noi" data-nd="trangChu.hero.nut1"></a>
+    <a href="canh-dong.html" class="cta phu nut-noi" data-nd="trangChu.hero.nut2"></a>
   </div>
 </section>
 
@@ -229,11 +241,11 @@ footer ul a:hover{opacity:1;color:var(--vang)}
   <div class="wrap grid">
     <div class="anh khung-anh ti-le-5-4"><span class="goi-y"></span><img class="anh-that" src="img/cau-chuyen.jpg" alt="Cánh đồng lúa của HTX Lúa Di Sản Hội An"></div>
     <div>
-      <div class="eyebrow">Câu chuyện của chúng tôi</div>
-      <h2>Giữ lại giống lúa của ông cha, trên chính cánh đồng quê</h2>
-      <p>Hợp tác xã Lúa Di Sản ra đời từ mong muốn giữ gìn những giống lúa bản địa và cách canh tác thuận tự nhiên trên các cánh đồng Ông Đảng, Đồng Cao, Đồng Mẫu.</p>
-      <p>Mỗi lô ruộng được ghi mã riêng, gắn với tên người nông dân canh tác, ngày gieo sạ, ngày thu hoạch — tất cả công khai để người mua yên tâm về nguồn gốc.</p>
-      <a href="ve-chung-toi.html" class="doc-them nut-noi">Đọc câu chuyện đầy đủ →</a>
+      <div class="eyebrow" data-nd="trangChu.cauChuyen.nhan"></div>
+      <h2 data-nd="trangChu.cauChuyen.tieuDe"></h2>
+      <p data-nd="trangChu.cauChuyen.doan1"></p>
+      <p data-nd="trangChu.cauChuyen.doan2"></p>
+      <a href="ve-chung-toi.html" class="doc-them nut-noi" data-nd="trangChu.cauChuyen.nut"></a>
     </div>
   </div>
 </section>
@@ -242,35 +254,35 @@ footer ul a:hover{opacity:1;color:var(--vang)}
 <section class="sanpham">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Sản phẩm</div>
-      <h2>Ba cách để đồng hành cùng cánh đồng</h2>
+      <div class="eyebrow" data-nd="trangChu.sanPham.nhan"></div>
+      <h2 data-nd="trangChu.sanPham.tieuDe"></h2>
     </div>
     <div class="sp-grid">
       <a class="sp-card the-noi" href="chi-tiet.html?loai=san-pham&ma=gieo-mam">
         <div class="hinh khung-anh ti-le-1-1"><span class="goi-y"></span><img class="anh-that" src="img/goi-1-gieo-mam.jpg" alt="Gói Người gieo mầm"></div>
         <div class="than">
-          <div class="goi-ten">Người gieo mầm</div>
-          <div class="goi-mo">Gói cơ bản để bắt đầu trải nghiệm gạo hữu cơ Hội An — khách nhận gạo và quyền xem nhật ký sản xuất.</div>
-          <div class="goi-gia">— đ <small>/ đơn vị</small></div>
-          <button class="them-gio nut-noi" onclick="event.preventDefault();event.stopPropagation();moFormQuanTam('Người gieo mầm')">Tôi quan tâm gói này</button>
+          <div class="goi-ten" data-nd="goi.muc.gieo-mam.ten"></div>
+          <div class="goi-mo" data-nd="goi.muc.gieo-mam.tomTat"></div>
+          <div class="goi-gia" data-nd-gia="goi.muc.gieo-mam"></div>
+          <button class="them-gio nut-noi" data-nd="goi.muc.gieo-mam.nutMua" onclick="event.preventDefault();event.stopPropagation();moFormQuanTam(tenGoi('gieo-mam'))"></button>
         </div><span class="dau-bam">→</span>
       </a>
       <a class="sp-card the-noi" href="chi-tiet.html?loai=san-pham&ma=dong-kien-tao">
         <div class="hinh khung-anh ti-le-1-1"><span class="goi-y"></span><img class="anh-that" src="img/goi-2-dong-kien-tao.jpg" alt="Gói Người đồng kiến tạo"></div>
         <div class="than">
-          <div class="goi-ten">Người đồng kiến tạo</div>
-          <div class="goi-mo">Gói dành cho khách gắn bó — nhận gạo định kỳ và được gắn với một thửa ruộng cụ thể trên bản đồ.</div>
-          <div class="goi-gia">— đ <small>/ đơn vị</small></div>
-          <button class="them-gio nut-noi" onclick="event.preventDefault();event.stopPropagation();moFormQuanTam('Người đồng kiến tạo')">Tôi quan tâm gói này</button>
+          <div class="goi-ten" data-nd="goi.muc.dong-kien-tao.ten"></div>
+          <div class="goi-mo" data-nd="goi.muc.dong-kien-tao.tomTat"></div>
+          <div class="goi-gia" data-nd-gia="goi.muc.dong-kien-tao"></div>
+          <button class="them-gio nut-noi" data-nd="goi.muc.dong-kien-tao.nutMua" onclick="event.preventDefault();event.stopPropagation();moFormQuanTam(tenGoi('dong-kien-tao'))"></button>
         </div><span class="dau-bam">→</span>
       </a>
       <a class="sp-card the-noi" href="chi-tiet.html?loai=san-pham&ma=doi-tac">
         <div class="hinh khung-anh ti-le-1-1"><span class="goi-y"></span><img class="anh-that" src="img/goi-3-doi-tac.jpg" alt="Gói Đối tác kiến tạo di sản"></div>
         <div class="than">
-          <div class="goi-ten">Đối tác kiến tạo di sản</div>
-          <div class="goi-mo">Gói đồng hành sâu — hỗ trợ cả vụ canh tác của một thửa, tên khách hiện trên bản đồ (nếu đồng ý).</div>
-          <div class="goi-gia">— đ <small>/ đơn vị</small></div>
-          <button class="them-gio nut-noi" onclick="event.preventDefault();event.stopPropagation();moFormQuanTam('Đối tác kiến tạo di sản')">Tôi quan tâm gói này</button>
+          <div class="goi-ten" data-nd="goi.muc.doi-tac.ten"></div>
+          <div class="goi-mo" data-nd="goi.muc.doi-tac.tomTat"></div>
+          <div class="goi-gia" data-nd-gia="goi.muc.doi-tac"></div>
+          <button class="them-gio nut-noi" data-nd="goi.muc.doi-tac.nutMua" onclick="event.preventDefault();event.stopPropagation();moFormQuanTam(tenGoi('doi-tac'))"></button>
         </div><span class="dau-bam">→</span>
       </a>
     </div>
@@ -281,29 +293,29 @@ footer ul a:hover{opacity:1;color:var(--vang)}
 <section class="congdong">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Cộng đồng canh tác</div>
-      <h2>Ba cánh đồng, một di sản</h2>
+      <div class="eyebrow" data-nd="trangChu.congDong.nhan"></div>
+      <h2 data-nd="trangChu.congDong.tieuDe"></h2>
     </div>
     <div class="cd-grid">
       <a class="cd-card f1 the-noi" href="chi-tiet.html?loai=canh-dong&ma=ong-dang">
         <img class="cd-bg anh-that" src="img/dong-ong-dang.jpg" alt="Cánh đồng Ông Đảng">
-        <div class="cd-vt">Cẩm Kim</div>
-        <h3>Cánh đồng Ông Đảng</h3>
-        <div class="cd-mo">20 thửa ruộng ven sông, nơi HTX phát triển mô hình canh tác hữu cơ và du lịch nông nghiệp.</div>
+        <div class="cd-vt" data-nd="canhDong.muc.ong-dang.viTri"></div>
+        <h3 data-nd="canhDong.muc.ong-dang.ten"></h3>
+        <div class="cd-mo" data-nd="canhDong.muc.ong-dang.tomTat"></div>
         <span class="cd-link">Xem chi tiết →</span><span class="dau-bam">→</span>
       </a>
       <a class="cd-card f2 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-cao">
         <img class="cd-bg anh-that" src="img/dong-dong-cao.jpg" alt="Cánh đồng Đồng Cao">
-        <div class="cd-vt">Cẩm Thanh</div>
-        <h3>Cánh đồng Đồng Cao</h3>
-        <div class="cd-mo">Cánh đồng lớn nhất với hơn 40 thửa, mỗi thửa gắn tên một hộ nông dân xã viên.</div>
+        <div class="cd-vt" data-nd="canhDong.muc.dong-cao.viTri"></div>
+        <h3 data-nd="canhDong.muc.dong-cao.ten"></h3>
+        <div class="cd-mo" data-nd="canhDong.muc.dong-cao.tomTat"></div>
         <span class="cd-link">Xem chi tiết →</span><span class="dau-bam">→</span>
       </a>
       <a class="cd-card f3 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-mau">
         <img class="cd-bg anh-that" src="img/dong-dong-mau.jpg" alt="Cánh đồng Đồng Mẫu">
-        <div class="cd-vt">Cẩm Thanh</div>
-        <h3>Cánh đồng Đồng Mẫu</h3>
-        <div class="cd-mo">Những thửa ruộng rộng, canh tác giống lúa bản địa theo lịch mùa vụ truyền thống.</div>
+        <div class="cd-vt" data-nd="canhDong.muc.dong-mau.viTri"></div>
+        <h3 data-nd="canhDong.muc.dong-mau.ten"></h3>
+        <div class="cd-mo" data-nd="canhDong.muc.dong-mau.tomTat"></div>
         <span class="cd-link">Xem chi tiết →</span><span class="dau-bam">→</span>
       </a>
     </div>
@@ -311,29 +323,30 @@ footer ul a:hover{opacity:1;color:var(--vang)}
 </section>
 
 <!-- ===== TÁC ĐỘNG ===== -->
-<section class="tacdong">
+<section class="tacdong hero-anh">
+  <img class="hero-bg" src="img/hero-tac-dong.jpg" alt="" onerror="this.classList.add('loi')">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Tác động của chúng tôi</div>
-      <h2>Những con số từ cánh đồng thật</h2>
+      <div class="eyebrow" data-nd="trangChu.tacDong.nhan"></div>
+      <h2 data-nd="trangChu.tacDong.tieuDe"></h2>
     </div>
     <div class="td-grid">
-      <div class="td-o"><div class="so" id="tdDienTich">—</div><div class="nhan">diện tích canh tác<br>theo hướng hữu cơ</div></div>
-      <div class="td-o"><div class="so" id="tdSoHo">—</div><div class="nhan">hộ nông dân<br>xã viên tham gia</div></div>
-      <div class="td-o"><div class="so so-dem" id="tdThua" data-so="68">0</div><div class="nhan">thửa ruộng<br>được ghi mã riêng</div></div>
-      <div class="td-o"><div class="so so-dem" data-so="3">0</div><div class="nhan">cánh đồng<br>di sản</div></div>
+      <div class="td-o"><div class="so" id="tdDienTich">—</div><div class="nhan" data-nd="trangChu.tacDong.nhan1"></div></div>
+      <div class="td-o"><div class="so" id="tdSoHo">—</div><div class="nhan" data-nd="trangChu.tacDong.nhan2"></div></div>
+      <div class="td-o"><div class="so so-dem" id="tdThua" data-so="68">0</div><div class="nhan" data-nd="trangChu.tacDong.nhan3"></div></div>
+      <div class="td-o"><div class="so so-dem" data-so="3">0</div><div class="nhan" data-nd="trangChu.tacDong.nhan4"></div></div>
     </div>
-    <div class="td-note">* Diện tích, số hộ và số thửa lấy trực tiếp từ dữ liệu Notion của vụ đang canh tác, cộng từ cả 3 cánh đồng.</div>
+    <div class="td-note" data-nd="trangChu.tacDong.ghiChu"></div>
   </div>
 </section>
 
 <!-- ===== ĐĂNG KÝ ===== -->
 <section class="dangky">
   <div class="wrap">
-    <div class="eyebrow">Giữ liên lạc</div>
-    <h2>Nhận tin về mùa vụ &amp; sản phẩm mới</h2>
-    <p>Để lại thông tin để HTX liên hệ khi có gạo vụ mới, hoặc khi mở nhận đặt hàng theo thửa.</p>
-    <button class="nut-noi" onclick="moFormQuanTam('')" style="background:var(--dat-som);color:#fff;border:none;font-family:inherit;font-weight:700;font-size:15px;padding:15px 34px;border-radius:28px;cursor:pointer">Để lại thông tin liên hệ</button>
+    <div class="eyebrow" data-nd="trangChu.dangKy.nhan"></div>
+    <h2 data-nd="trangChu.dangKy.tieuDe"></h2>
+    <p data-nd="trangChu.dangKy.dan"></p>
+    <button class="nut-noi" onclick="moFormQuanTam('')" style="background:var(--dat-som);color:#fff;border:none;font-family:inherit;font-weight:700;font-size:15px;padding:15px 34px;border-radius:28px;cursor:pointer" data-nd="trangChu.dangKy.nut"></button>
   </div>
 </section>
 
@@ -342,8 +355,8 @@ footer ul a:hover{opacity:1;color:var(--vang)}
   <div class="wrap">
     <div class="ft-grid">
       <div class="ft-brand">
-        <div class="bname">HTX Lúa Di Sản Hội An</div>
-        <p>Hợp tác xã lúa hữu cơ tại Hội An, TP. Đà Nẵng — canh tác minh bạch, truy xuất nguồn gốc tới từng thửa ruộng.</p>
+        <div class="bname" data-nd="chung.tenDayDu"></div>
+        <p data-nd="trangChu.footer.gioiThieu"></p>
       </div>
       <div>
         <h4>Sản phẩm</h4>
@@ -364,15 +377,15 @@ footer ul a:hover{opacity:1;color:var(--vang)}
       <div>
         <h4>Liên hệ</h4>
         <ul>
-          <li><a href="#">Hội An, TP. Đà Nẵng</a></li>
-          <li><a href="#">Điện thoại: </a></li>
-          <li><a href="#">Facebook · YouTube</a></li>
+          <li><a href="#" data-nd="trangChu.footer.diaChi"></a></li>
+          <li><a href="#" data-nd="trangChu.footer.dienThoai"></a></li>
+          <li><a href="#" data-nd="trangChu.footer.mangXaHoi"></a></li>
         </ul>
       </div>
     </div>
     <div class="ft-duoi">
-      <span>© 2026 HTX Lúa Di Sản Hội An</span>
-      <span>Hội An · TP. Đà Nẵng</span>
+      <span data-nd="trangChu.footer.banQuyen"></span>
+      <span data-nd="trangChu.footer.dongCuoi"></span>
     </div>
   </div>
 </footer>
@@ -380,11 +393,11 @@ footer ul a:hover{opacity:1;color:var(--vang)}
 <!-- Modal đăng nhập (dùng chung cơ chế với bản đồ) -->
 <div class="modal-phu" id="mpDN">
   <div class="modal">
-    <h2>Đăng nhập</h2>
-    <p class="sub">Xã viên đăng nhập để nhập liệu. Khách hàng đã mua đăng nhập để xem nhật ký thửa của mình.</p>
-    <div class="form-o"><label>Tên đăng nhập / Mã KH</label><input id="dnUser" autocomplete="username"></div>
-    <div class="form-o"><label>Mật khẩu</label><input id="dnPass" type="password" autocomplete="current-password"></div>
-    <div class="fqt-loi" id="dnLoi" style="color:#b03c2a;font-size:13px;min-height:18px"></div><button class="nut-gui nut-noi" id="dnGui" onclick="dangNhap()">Đăng nhập</button>
+    <h2 data-nd="chung.dangNhap.tieuDe"></h2>
+    <p class="sub" data-nd="chung.dangNhap.dan"></p>
+    <div class="form-o"><label data-nd="chung.dangNhap.nhanUser"></label><input id="dnUser" autocomplete="username"></div>
+    <div class="form-o"><label data-nd="chung.dangNhap.nhanPass"></label><input id="dnPass" type="password" autocomplete="current-password"></div>
+    <div class="fqt-loi" id="dnLoi" style="color:#b03c2a;font-size:13px;min-height:18px"></div><button class="nut-gui nut-noi" id="dnGui" onclick="dangNhap()" data-nd="chung.dangNhap.nut"></button>
     <button class="dong" onclick="dongModal('mpDN')">Đóng</button>
   </div>
 </div>

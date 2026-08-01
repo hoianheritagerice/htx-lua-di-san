@@ -128,12 +128,28 @@
   Array.prototype.forEach.call(document.querySelectorAll('img.anh-that'), function(img){
     img.addEventListener('error', function(){ img.classList.add('loi'); });
     if(img.complete && img.naturalWidth === 0) img.classList.add('loi');
-    /* Ô gợi ý đang để trống → tự điền TÊN FILE cần đặt. Nhờ vậy mở trang
-       lên là biết ngay phải bỏ ảnh nào vào img/, khỏi tra tài liệu. */
+    /* Ô gợi ý: CHỈ điền tên file khi ảnh thật sự thiếu. Ảnh tải được thì
+       ẩn hẳn ô đó đi — trước đây điền vô điều kiện nên chữ mờ vẫn nằm
+       chồng lên ảnh đã có. */
     var oGoiY = img.parentNode && img.parentNode.querySelector('.goi-y');
-    if(oGoiY && !oGoiY.textContent.trim()){
+    if(oGoiY){
       var duongDan = img.getAttribute('src') || '';
-      oGoiY.innerHTML = 'Chưa có ảnh<br><b style="font-weight:600">' + duongDan + '</b>';
+      var hienNhac = function(){
+        oGoiY.style.display = '';
+        if(!oGoiY.textContent.trim()){
+          oGoiY.innerHTML = 'Chưa có ảnh<br><b style="font-weight:600">' + duongDan + '</b>';
+        }
+      };
+      var anNhac = function(){ oGoiY.style.display = 'none'; };
+      var kiemTra = function(){
+        if(img.complete) (img.naturalWidth === 0) ? hienNhac() : anNhac();
+      };
+      img.addEventListener('load',  anNhac);
+      img.addEventListener('error', hienNhac);
+      img.complete ? kiemTra() : anNhac();
+      /* Chốt lại một lần nữa sau khi trang tải xong: có trình duyệt không
+         bắn sự kiện error cho ảnh 404 nếu ảnh nằm ngoài màn hình (lazy). */
+      window.addEventListener('load', function(){ setTimeout(kiemTra, 300); });
     }
     if(!img.hasAttribute('loading')) img.setAttribute('loading','lazy');
     if(!img.hasAttribute('decoding')) img.setAttribute('decoding','async');

@@ -152,6 +152,57 @@ function apDungNoiDung(){
   }
 }
 
+/* ==================================================================
+   MENU DI ĐỘNG (nút ☰)
+   ------------------------------------------------------------------
+   Không viết lại danh sách tab ở đây — tự chép từ <nav class="menu">
+   có sẵn trong trang. Nhờ vậy sau này thêm/bớt tab chỉ cần sửa trong
+   .html, menu di động tự theo, không sợ lệch giữa hai nơi.
+   ================================================================== */
+function khoiTaoMenuDiDong(){
+  const nut  = document.querySelector('.burger');
+  const menu = document.querySelector('.nav .menu');
+  const head = document.querySelector('header');
+  if(!nut || !menu || !head || head.querySelector('.menu-mobile')) return;
+
+  const bang = document.createElement('nav');
+  bang.className = 'menu-mobile';
+  bang.innerHTML = menu.innerHTML;                 // chép các tab
+
+  // thêm nút đăng nhập vào cuối, vì trên di động chữ "Đăng nhập" bị ẩn
+  const dn = document.createElement('button');
+  dn.className = 'mm-dangnhap';
+  dn.textContent = 'Đăng nhập';
+  dn.addEventListener('click', function(){ dong(); moModal('mpDN'); });
+  bang.appendChild(dn);
+  head.appendChild(bang);
+
+  function mo(){
+    bang.classList.add('mo');
+    nut.textContent = '✕';
+    nut.setAttribute('aria-expanded','true');
+    nut.setAttribute('aria-label','Đóng menu');
+  }
+  function dong(){
+    bang.classList.remove('mo');
+    nut.textContent = '☰';
+    nut.setAttribute('aria-expanded','false');
+    nut.setAttribute('aria-label','Mở menu');
+  }
+
+  nut.addEventListener('click', function(e){
+    e.stopPropagation();
+    bang.classList.contains('mo') ? dong() : mo();
+  });
+  bang.addEventListener('click', function(e){ if(e.target.tagName === 'A') dong(); });
+  document.addEventListener('click', function(e){
+    if(bang.classList.contains('mo') && !head.contains(e.target)) dong();
+  });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') dong(); });
+  window.addEventListener('resize', function(){ if(window.innerWidth > 680) dong(); });
+}
+
 /* ================== KHỞI ĐỘNG ================== */
 apDungNoiDung();
+khoiTaoMenuDiDong();
 veUserBox();

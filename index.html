@@ -75,7 +75,6 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .hero .cta:hover{transform:translateY(-2px);background:#dcb42f}
 .hero .cta.phu{background:transparent;color:#fff;border:1.6px solid rgba(255,255,255,.6);margin-left:12px}
 .hero .cta.phu:hover{background:rgba(255,255,255,.12)}
-.hero-note{position:absolute;right:-40px;bottom:-40px;font-family:'Playfair Display',serif;font-style:italic;font-size:230px;color:rgba(255,255,255,.05);z-index:1;user-select:none}
 
 /* ---- dải mẫu nhắc nhở ---- */
 .mau-banner{background:#fff3d6;border-bottom:1px solid #e6cf94;color:#8a5a00;font-size:12.5px;text-align:center;padding:8px 16px}
@@ -110,6 +109,17 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .congdong{padding:76px 0}
 .cd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:8px}
 .cd-card{border-radius:16px;overflow:hidden;position:relative;min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;padding:22px;border:1px solid #d8cdb0}
+/* Ảnh thật của cánh đồng làm nền thẻ. Dùng lại đúng 3 file ảnh của trang
+   chi tiết (img/dong-*.jpg) — không cần thêm file mới. Thiếu ảnh thì lộ
+   nền gradient f1/f2/f3 như cũ, không vỡ layout. */
+.cd-card .cd-bg{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;
+  transition:transform .5s cubic-bezier(.22,.61,.36,1)}
+.cd-card .cd-bg.loi{display:none}
+.cd-card::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(20,45,25,.10) 0%,rgba(18,42,23,.48) 42%,rgba(12,32,17,.86) 100%)}
+.cd-card > *{position:relative;z-index:2}
+.cd-card > .cd-bg{z-index:0}
+.cd-card:hover .cd-bg{transform:scale(1.07)}
 .cd-card.f1{background:linear-gradient(180deg,rgba(30,77,43,.15),rgba(30,77,43,.82)),linear-gradient(135deg,#7fae57,#3c6b3a)}
 .cd-card.f2{background:linear-gradient(180deg,rgba(30,77,43,.15),rgba(30,77,43,.82)),linear-gradient(135deg,#c9a227,#8a6d1c)}
 .cd-card.f3{background:linear-gradient(180deg,rgba(30,77,43,.15),rgba(30,77,43,.82)),linear-gradient(135deg,#b5734a,#7d4a2b)}
@@ -212,7 +222,6 @@ footer ul a:hover{opacity:1;color:var(--vang)}
     <a href="san-pham.html" class="cta nut-noi">Xem sản phẩm →</a>
     <a href="canh-dong.html" class="cta phu nut-noi">Khám phá Cánh Đồng</a>
   </div>
-  <div class="hero-note">禾</div>
 </section>
 
 <!-- ===== CÂU CHUYỆN ===== -->
@@ -277,18 +286,21 @@ footer ul a:hover{opacity:1;color:var(--vang)}
     </div>
     <div class="cd-grid">
       <a class="cd-card f1 the-noi" href="chi-tiet.html?loai=canh-dong&ma=ong-dang">
+        <img class="cd-bg anh-that" src="img/dong-ong-dang.jpg" alt="Cánh đồng Ông Đảng">
         <div class="cd-vt">Cẩm Kim</div>
         <h3>Cánh đồng Ông Đảng</h3>
         <div class="cd-mo">20 thửa ruộng ven sông, nơi HTX phát triển mô hình canh tác hữu cơ và du lịch nông nghiệp.</div>
         <span class="cd-link">Xem chi tiết →</span><span class="dau-bam">→</span>
       </a>
       <a class="cd-card f2 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-cao">
+        <img class="cd-bg anh-that" src="img/dong-dong-cao.jpg" alt="Cánh đồng Đồng Cao">
         <div class="cd-vt">Cẩm Thanh</div>
         <h3>Cánh đồng Đồng Cao</h3>
         <div class="cd-mo">Cánh đồng lớn nhất với hơn 40 thửa, mỗi thửa gắn tên một hộ nông dân xã viên.</div>
         <span class="cd-link">Xem chi tiết →</span><span class="dau-bam">→</span>
       </a>
       <a class="cd-card f3 the-noi" href="chi-tiet.html?loai=canh-dong&ma=dong-mau">
+        <img class="cd-bg anh-that" src="img/dong-dong-mau.jpg" alt="Cánh đồng Đồng Mẫu">
         <div class="cd-vt">Cẩm Thanh</div>
         <h3>Cánh đồng Đồng Mẫu</h3>
         <div class="cd-mo">Những thửa ruộng rộng, canh tác giống lúa bản địa theo lịch mùa vụ truyền thống.</div>

@@ -139,20 +139,26 @@
 }
 @keyframes heroTho{from{transform:scale(1.02)}to{transform:scale(1.09)}}
 
-/* lớp phủ tối để chữ trắng đọc rõ — nhạt dần sang phải cho thấy ảnh */
+/* lớp phủ tối để chữ trắng đọc rõ — nhạt dần sang phải cho thấy ảnh.
+   Đã giảm độ tối 01/08/2026 cho ảnh sáng hơn; bù lại bằng text-shadow
+   đậm hơn ở dưới. Nếu sau này có ảnh sáng chói làm khó đọc chữ, tăng
+   con số đầu (.70) lên, đừng tăng cả ba. */
 .hero-anh::after{
   content:"";position:absolute;inset:0;z-index:2;
   background:linear-gradient(112deg,
-     rgba(14,36,19,.84) 0%,
-     rgba(18,46,25,.60) 46%,
-     rgba(22,56,30,.30) 100%);
+     rgba(14,36,19,.70) 0%,
+     rgba(18,46,25,.46) 46%,
+     rgba(22,56,30,.18) 100%);
 }
 /* nội dung nổi trên cùng — CHỈ tác động .wrap, không đụng phần trang trí
    khác trong hero (ví dụ chữ 禾 vốn được đặt tuyệt đối ở góc) */
 .hero-anh > .wrap{position:relative;z-index:4}
-.hero-anh .hero-note{z-index:3}
+
 /* chữ có viền bóng nhẹ để đọc rõ trên ảnh sáng */
-.hero-anh h1,.hero-anh p,.hero-anh .eyebrow{text-shadow:0 1px 12px rgba(10,26,14,.45)}
+.hero-anh h1,.hero-anh p,.hero-anh .eyebrow,
+.hero-anh .dan,.hero-anh .lai,.hero-anh .sn-so,.hero-anh .sn-nhan{
+  text-shadow:0 1px 3px rgba(10,26,14,.55), 0 2px 18px rgba(10,26,14,.5);
+}
 
 /* ====== 10. THẺ NỔI BẬT KHI RÊ CHUỘT ====== */
 .the-noi{

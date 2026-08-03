@@ -38,7 +38,7 @@ window.NOI_DUNG = {
    ==================================================================== */
 chung: {
   bangThongBao: `Trang đang trong quá trình hoàn thiện.`,
-  tenDayDu:     `HTX Lúa Di Sản Hội An`,
+  tenDayDu:     `HTX Lúa&nbsp;Di&nbsp;Sản Hội&nbsp;An`,
 
   /* Ô đăng nhập — dùng chung cho cả 5 trang */
   dangNhap: {
@@ -58,8 +58,8 @@ trangChu: {
   /* --- Phần đầu trang, chữ to trên ảnh nền --- */
   hero: {
     nhan:    `Hợp tác xã lúa hữu cơ · Từ 3 cánh đồng di sản`,
-    tieuDe:  `Hạt gạo mang <em>câu chuyện</em> của đất và người Hội An`,
-    dan:     `Từ những thửa ruộng ven sông Thu Bồn ở Cẩm Kim và Cẩm Thanh, chúng tôi canh tác lúa hữu cơ — không dùng bất cứ phân bón hay thuốc hóa học nào — và minh bạch từng khâu. Anh/chị có thể xem nhật ký của chính thửa ruộng làm ra hạt gạo mình ăn.`,
+    tieuDe:  `Hạt gạo mang <em>câu chuyện</em> của đất và người Hội&nbsp;An`,
+    dan:     `Từ những thửa ruộng ven sông Thu&nbsp;Bồn ở Cẩm&nbsp;Kim và Cẩm&nbsp;Thanh, chúng tôi canh tác lúa hữu cơ — không dùng bất cứ phân bón hay thuốc hóa học nào — và minh bạch từng khâu. Anh/chị có thể xem nhật ký của chính thửa ruộng làm ra hạt gạo mình ăn.`,
     nut1:    `Xem sản phẩm →`,
     nut2:    `Khám phá Cánh Đồng`,
   },
@@ -68,7 +68,7 @@ trangChu: {
   cauChuyen: {
     nhan:    `Câu chuyện của chúng tôi`,
     tieuDe:  `Giữ lại giống lúa của ông cha, trên chính cánh đồng quê`,
-    doan1:   `Hợp tác xã Lúa Di Sản ra đời từ mong muốn giữ gìn những giống lúa bản địa và cách canh tác thuận tự nhiên trên các cánh đồng Ông Đảng, Đồng Cao, Đồng Mẫu.`,
+    doan1:   `Hợp tác xã Lúa&nbsp;Di&nbsp;Sản ra đời từ mong muốn giữ gìn những giống lúa bản địa và cách canh tác thuận tự nhiên trên các cánh đồng Ông&nbsp;Đảng, Đồng&nbsp;Cao, Đồng&nbsp;Mẫu.`,
     doan2:   `Mỗi lô ruộng được ghi mã riêng, gắn với tên người nông dân canh tác, ngày gieo sạ, ngày thu hoạch — tất cả công khai để anh/chị yên tâm về nguồn gốc.`,
     nut:     `Đọc câu chuyện đầy đủ →`,
   },
@@ -76,7 +76,7 @@ trangChu: {
   /* --- Tiêu đề mục 3 gói (chữ trong từng thẻ nằm ở khối `goi`) --- */
   sanPham: {
     nhan:    `Sản phẩm`,
-    tieuDe:  `Ba cách để đồng hành cùng cánh đồng`,
+    tieuDe:  `Ba chương trình đồng hành cùng sào ruộng`,
   },
 
   /* --- Tiêu đề mục 3 cánh đồng (chữ trong thẻ nằm ở khối `canhDong`) --- */
@@ -106,12 +106,12 @@ trangChu: {
 
   /* --- Chân trang (chỉ trang chủ có bản đầy đủ) --- */
   footer: {
-    gioiThieu:  `Hợp tác xã lúa hữu cơ tại Hội An, TP. Đà Nẵng — canh tác minh bạch, truy xuất nguồn gốc tới từng thửa ruộng.`,
-    diaChi:     `Hội An, TP. Đà Nẵng`,
+    gioiThieu:  `Hợp tác xã lúa hữu cơ tại Hội&nbsp;An, TP.&nbsp;Đà&nbsp;Nẵng — canh tác minh bạch, truy xuất nguồn gốc tới từng thửa ruộng.`,
+    diaChi:     `Hội&nbsp;An, TP.&nbsp;Đà&nbsp;Nẵng`,
     dienThoai:  `Điện thoại: `,
     mangXaHoi:  `Facebook · YouTube`,
-    banQuyen:   `© 2026 HTX Lúa Di Sản Hội An`,
-    dongCuoi:   `Hội An · TP. Đà Nẵng`,
+    banQuyen:   `© 2026 HTX Lúa&nbsp;Di&nbsp;Sản Hội&nbsp;An`,
+    dongCuoi:   `Hội&nbsp;An · TP.&nbsp;Đà&nbsp;Nẵng`,
   },
 },
 
@@ -122,12 +122,12 @@ veChungToi: {
   hero: {
     nhan:    `Về chúng tôi`,
     tieuDe:  `Giữ hạt gạo quê, giữ một vùng di sản`,
-    dan:     `HTX Lúa Di Sản Hội An là nơi những người nông dân cùng nhau canh tác lúa hữu cơ hoàn toàn, gìn giữ giống lúa và cách làm ruộng của cha ông trên đất Cẩm Kim, Cẩm Thanh.`,
+    dan:     `HTX Lúa&nbsp;Di&nbsp;Sản Hội&nbsp;An là nơi những người nông dân cùng nhau canh tác lúa hữu cơ hoàn toàn, gìn giữ giống lúa và cách làm ruộng của cha ông trên đất Cẩm&nbsp;Kim, Cẩm&nbsp;Thanh.`,
   },
   cauChuyen: {
     nhan:    `Câu chuyện`,
-    tieuDe:  `Bắt đầu từ những cánh đồng ven sông Thu Bồn`,
-    doan1:   `Những cánh đồng của HTX nằm bên dòng Thu Bồn, nơi phù sa bồi đắp cho hạt lúa vị ngọt riêng. Trước áp lực của phân bón và thuốc hóa học, một nhóm nông dân đã chọn quay lại cách canh tác thuận tự nhiên — bỏ hẳn hóa chất, không phải giảm bớt.`,
+    tieuDe:  `Bắt đầu từ những cánh đồng ven sông Thu&nbsp;Bồn`,
+    doan1:   `Những cánh đồng của HTX nằm bên dòng Thu&nbsp;Bồn, nơi phù sa bồi đắp cho hạt lúa vị ngọt riêng. Trước áp lực của phân bón và thuốc hóa học, một nhóm nông dân đã chọn quay lại cách canh tác thuận tự nhiên — bỏ hẳn hóa chất, không phải giảm bớt.`,
     doan2:   `Từ đó, hợp tác xã hình thành — không chỉ để bán gạo, mà để giữ lại một cách sống gắn với ruộng đồng, và để người ăn biết rõ hạt gạo mình dùng đến từ đâu.`,
   },
   giaTriHead: {
@@ -148,25 +148,28 @@ veChungToi: {
 trangSanPham: {
   hero: {
     nhan:    `Sản phẩm`,
-    tieuDe:  `Ba cách đồng hành cùng cánh đồng di sản`,
-    dan:     `Không chỉ là mua gạo — mỗi gói gắn anh/chị với một thửa ruộng và những hoạt động diễn ra suốt mùa vụ, từ lễ xuống đồng đến ngày hội gặt.`,
+    tieuDe:  `Ba chương trình đồng hành cùng sào ruộng di sản`,
+    dan:     `Không chỉ là mua gạo — anh/chị cùng người nông dân nuôi dưỡng một sào ruộng Hội&nbsp;An, theo dõi hành trình của chính sào ruộng đó và ra đồng cùng bà con suốt mùa vụ.`,
   },
 
-  /* Bảng đối chiếu gói × hoạt động.
-     Mỗi dòng: [tên hoạt động, gói 1, gói 2, gói 3]
-     Gõ  co  nếu gói đó CÓ tham gia, gõ  khong  nếu KHÔNG. */
+  /* Bảng đối chiếu chương trình × quyền lợi.
+     Mỗi dòng: [tên quyền lợi, chương trình 1, 2, 3]
+     Gõ  co  nếu chương trình đó CÓ, gõ  khong  nếu KHÔNG. */
   doiChieu: {
-    nhan:    `Gói × Mùa vụ`,
-    tieuDe:  `Mua gói nào được tham gia hoạt động nào?`,
-    cot:     [`Hoạt động mùa vụ`, `Gieo mầm`, `Đồng kiến tạo`, `Đối tác`],
+    nhan:    `Ba chương trình × Quyền lợi`,
+    tieuDe:  `Tham gia chương trình nào thì nhận được gì?`,
+    cot:     [`Quyền lợi`, `Gieo mầm`, `Đồng kiến tạo`, `Đối tác`],
     hang: [
-      [`Bản tin các mốc mùa vụ`,              `co`,    `co`, `co`],
-      [`Gắn với một thửa ruộng`,              `khong`, `co`, `co`],
-      [`Trải nghiệm xuống giống · thăm đồng`, `khong`, `co`, `co`],
-      [`Ngày hội gặt`,                        `co`,    `co`, `co`],
-      [`Lễ cúng xuống đồng · cơm mới`,        `khong`, `khong`, `co`],
+      [`Gạo tươi Hội&nbsp;An giao định kỳ`,                 `co`,    `co`,    `co`],
+      [`Theo dõi hành trình sào ruộng · báo cáo tác động`,  `co`,    `co`,    `co`],
+      [`Tham quan, xuống giống, gặt lúa tại đồng`,          `co`,    `co`,    `co`],
+      [`Gạo di sản làm quà tặng · nguyên liệu`,             `khong`, `co`,    `co`],
+      [`Đồng hành truyền thông cùng HTX`,                   `khong`, `co`,    `co`],
+      [`Báo cáo Offset Carbon Footprint`,                   `khong`, `khong`, `co`],
+      [`Tên doanh nghiệp gắn tại sào ruộng`,                `khong`, `khong`, `co`],
+      [`Bao bì &amp; câu chuyện thương hiệu riêng`,         `khong`, `khong`, `co`],
     ],
-    ghiChu:  `Các hoạt động này khớp với <a href="canh-dong.html" style="color:var(--dat-som);font-weight:600">dòng thời gian ở trang Cánh Đồng</a>.`,
+    ghiChu:  `Lịch các hoạt động tại đồng khớp với <a href="canh-dong.html" style="color:var(--dat-som);font-weight:600">dòng thời gian ở trang Cánh&nbsp;Đồng</a>.`,
   },
 },
 
@@ -193,19 +196,19 @@ canhDong: {
   muc: {
 
     'ong-dang': {
-      ten:    `Cánh đồng Ông Đảng`,
-      tenNgan:`Ông Đảng`,
-      viTri:  `Cẩm Kim`,
-      phu:    `Cẩm Kim, Hội An`,
+      ten:    `Cánh đồng Ông&nbsp;Đảng`,
+      tenNgan:`Ông&nbsp;Đảng`,
+      viTri:  `Cẩm&nbsp;Kim`,
+      phu:    `Cẩm&nbsp;Kim, Hội&nbsp;An`,
       anh:    `img/dong-ong-dang.jpg`,
       /* câu ngắn hiện trên thẻ ở Trang chủ */
       tomTat: `20 thửa ruộng ven sông, nơi HTX phát triển mô hình canh tác hữu cơ và du lịch nông nghiệp.`,
       /* câu dẫn dưới tiêu đề ở trang chi tiết */
-      dan:    `Cánh đồng ven sông ở Cẩm Kim, nơi HTX phát triển mô hình canh tác hữu cơ gắn với du lịch nông nghiệp.`,
-      so: [[`20`, `thửa ruộng`], [`~13.500`, `m² diện tích`], [`Hè Thu 2026`, `vụ đang canh tác`]],
+      dan:    `Cánh đồng ven sông ở Cẩm&nbsp;Kim, nơi HTX phát triển mô hình canh tác hữu cơ gắn với du lịch nông nghiệp.`,
+      so: [[`20`, `thửa ruộng`], [`~13.500`, `m² diện tích`], [`Hè&nbsp;Thu&nbsp;2026`, `vụ đang canh tác`]],
       than: [
         { h: `Vị trí và đặc điểm đất`,
-          p: [`Cánh đồng nằm ở thôn Cẩm Kim, sát sông Thu Bồn, đất phù sa bồi hằng năm nên tơi xốp và giàu dinh dưỡng.`,
+          p: [`Cánh đồng nằm ở thôn Cẩm&nbsp;Kim, sát sông Thu&nbsp;Bồn, đất phù sa bồi hằng năm nên tơi xốp và giàu dinh dưỡng.`,
               `Nhờ vị trí ven sông, việc lấy nước và tiêu nước thuận lợi, phù hợp với canh tác lúa hữu cơ.`] },
         { h: `Cách canh tác`,
           ds: [`Không dùng bất cứ phân bón hay thuốc hóa học nào`,
@@ -219,17 +222,17 @@ canhDong: {
     },
 
     'dong-cao': {
-      ten:    `Cánh đồng Đồng Cao`,
-      tenNgan:`Đồng Cao`,
-      viTri:  `Cẩm Thanh`,
-      phu:    `Cẩm Thanh, Hội An`,
+      ten:    `Cánh đồng Đồng&nbsp;Cao`,
+      tenNgan:`Đồng&nbsp;Cao`,
+      viTri:  `Cẩm&nbsp;Thanh`,
+      phu:    `Cẩm&nbsp;Thanh, Hội&nbsp;An`,
       anh:    `img/dong-dong-cao.jpg`,
       tomTat: `Cánh đồng lớn nhất với hơn 40 thửa, mỗi thửa gắn tên một hộ nông dân xã viên.`,
       dan:    `Cánh đồng lớn nhất của HTX với hơn 40 thửa, mỗi thửa gắn tên một hộ nông dân xã viên.`,
-      so: [[`40+`, `thửa ruộng`], [`Cẩm Thanh`, `vị trí`], [`Hè Thu 2026`, `vụ đang canh tác`]],
+      so: [[`40+`, `thửa ruộng`], [`Cẩm&nbsp;Thanh`, `vị trí`], [`Hè&nbsp;Thu&nbsp;2026`, `vụ đang canh tác`]],
       than: [
         { h: `Quy mô lớn nhất trong ba cánh đồng`,
-          p: [`Đồng Cao là cánh đồng rộng nhất, tập trung nhiều hộ xã viên nhất, nằm dọc đường Tống Văn Sương ở Cẩm Thanh.`,
+          p: [`Đồng&nbsp;Cao là cánh đồng rộng nhất, tập trung nhiều hộ xã viên nhất, nằm dọc đường Tống Văn Sương ở Cẩm&nbsp;Thanh.`,
               `Hệ thống kênh thủy lợi chạy qua giúp chủ động nước tưới suốt vụ.`] },
         { h: `Cách tổ chức canh tác`,
           ds: [`Chia thửa rõ ràng, nhiều hộ chia đôi thửa lớn`,
@@ -240,17 +243,17 @@ canhDong: {
     },
 
     'dong-mau': {
-      ten:    `Cánh đồng Đồng Mẫu`,
-      tenNgan:`Đồng Mẫu`,
-      viTri:  `Cẩm Thanh`,
-      phu:    `Cẩm Thanh, Hội An`,
+      ten:    `Cánh đồng Đồng&nbsp;Mẫu`,
+      tenNgan:`Đồng&nbsp;Mẫu`,
+      viTri:  `Cẩm&nbsp;Thanh`,
+      phu:    `Cẩm&nbsp;Thanh, Hội&nbsp;An`,
       anh:    `img/dong-dong-mau.jpg`,
       tomTat: `Những thửa ruộng rộng, canh tác giống lúa bản địa theo lịch mùa vụ truyền thống.`,
       dan:    `Những thửa ruộng rộng, canh tác giống lúa bản địa theo lịch mùa vụ truyền thống.`,
-      so: [[`20`, `thửa ruộng`], [`Cẩm Thanh`, `vị trí`], [`Hè Thu 2026`, `vụ đang canh tác`]],
+      so: [[`20`, `thửa ruộng`], [`Cẩm&nbsp;Thanh`, `vị trí`], [`Hè&nbsp;Thu&nbsp;2026`, `vụ đang canh tác`]],
       than: [
         { h: `Cánh đồng của những thửa lớn`,
-          p: [`Đồng Mẫu có các thửa ruộng khổ lớn, thuận cho việc cơ giới hóa khâu làm đất và thu hoạch.`,
+          p: [`Đồng&nbsp;Mẫu có các thửa ruộng khổ lớn, thuận cho việc cơ giới hóa khâu làm đất và thu hoạch.`,
               `Đây là nơi HTX giữ gìn một số giống lúa bản địa theo cách canh tác truyền thống.`] },
         { h: `Điểm đáng chú ý`,
           ds: [`Thửa ruộng rộng, bố trí thẳng hàng theo kênh thủy lợi`,
@@ -335,88 +338,92 @@ giaTri: {
    Dùng ở: thẻ Trang chủ · trang Sản phẩm · trang chi tiết  (3 nơi)
    ==================================================================== */
 goi: {
-  nhan: `Gói sản phẩm`, ve: `san-pham.html`,
+  nhan: `Sản phẩm`, ve: `san-pham.html`,
   veChu: `Quay lại Sản phẩm`, navId: `navSP`,
-  khacTit: `Hai gói còn lại`,
+  khacTit: `Hai chương trình còn lại`,
   muc: {
 
+    /* ---------- CHƯƠNG TRÌNH 1 ---------- */
     'gieo-mam': {
       ten:    `Người gieo mầm`,
-      phu:    `Gói 1`,
+      phu:    `Chương trình 1 · Dành cho gia đình`,
       anh:    `img/goi-1-gieo-mam.jpg`,
-      gia:    `— đ`,
-      giaDv:  `/ đơn vị`,
-      nutMua: `Tôi quan tâm gói này`,
-      /* câu ngắn trên thẻ Trang chủ */
-      tomTat: `Gói cơ bản để bắt đầu trải nghiệm gạo hữu cơ Hội An — anh/chị nhận gạo và quyền xem nhật ký sản xuất.`,
-      /* câu dẫn ở trang Sản phẩm và đầu trang chi tiết */
-      dan:    `Gói khởi đầu để làm quen với gạo hữu cơ Hội An và cách canh tác minh bạch của HTX.`,
-      /* gạch đầu dòng ở trang Sản phẩm */
-      quyenLoi: [`Nhận gạo hữu cơ từ cánh đồng di sản`,
-                 `Xem nhật ký sản xuất của lô ruộng làm ra gạo`,
-                 `Nhận tin về mùa vụ và sản phẩm mới`],
-      hoatDong: `🎟️ <b>Hoạt động mùa vụ:</b> nhận bản tin các mốc chính (gieo sạ, trổ bông, thu hoạch).`,
+      gia:    `55.000đ`,
+      giaDv:  `/ kg — tối thiểu 50 kg mỗi năm`,
+      nutMua: `Tôi quan tâm chương trình này`,
+      tomTat: `Cùng người nông dân nuôi dưỡng một sào ruộng Hội&nbsp;An, nhận gạo tươi giao tận nhà và đưa con trẻ ra đồng.`,
+      dan:    `Mỗi bữa cơm là một hạt mầm cho tương lai. Anh/chị cùng người nông dân nuôi dưỡng một sào ruộng Hội&nbsp;An để mang những hạt gạo tươi lành đến gia đình, và gieo trong con trẻ tình yêu với đất, với lúa và với nguồn cội.`,
+      quyenLoi: [`<b>Gạo tươi theo định kỳ</b> — đăng ký gạo tươi Hội&nbsp;An, giao tận nhà định kỳ hằng tháng`,
+                 `<b>Minh bạch tác động bền vững</b> — theo dõi hành trình của sào ruộng và nhận báo cáo về tác động môi trường`,
+                 `<b>Trải nghiệm dành cho gia đình</b> — tham quan, xuống giống, gặt lúa và trải nghiệm nông nghiệp bản địa`],
+      hoatDong: `🎟️ <b>Trở thành Người gieo mầm:</b> tối thiểu 50 kg mỗi năm, 55.000đ/kg.`,
       than: [
-        { h: `Anh/chị nhận được gì`,
-          ds: [`Gạo hữu cơ từ cánh đồng di sản`,
-               `Quyền xem nhật ký sản xuất của lô ruộng làm ra gạo`,
-               `Bản tin các mốc chính của mùa vụ`] },
-        { h: `Hoạt động mùa vụ được tham gia`,
-          p: [`Nhận bản tin khi cánh đồng tới các mốc chính: gieo sạ, trổ bông, thu hoạch. Được mời tham dự Ngày hội gặt cuối vụ.`] },
+        { h: `Gia đình nhận được gì`,
+          ds: [`<b>Gạo tươi theo định kỳ.</b> Gia đình đăng ký gạo tươi Hội&nbsp;An và được giao tận nhà định kỳ hằng tháng.`,
+               `<b>Minh bạch tác động bền vững.</b> Theo dõi hành trình của sào ruộng và nhận báo cáo về tác động môi trường.`,
+               `<b>Trải nghiệm dành cho gia đình.</b> HTX tổ chức các chương trình tham quan, xuống giống, gặt lúa và trải nghiệm nông nghiệp bản địa cho gia đình.`] },
+        { h: `Mức tham gia`,
+          p: [`Tối thiểu 50 kg mỗi năm, giá 55.000đ/kg — tương đương 2.750.000đ cho trọn một năm.`] },
         { h: `Phù hợp với ai`,
-          p: [`Anh/chị muốn thử gạo hữu cơ Hội An lần đầu, hoặc muốn tìm hiểu cách HTX canh tác trước khi gắn bó lâu dài.`] },
+          p: [`Anh/chị muốn gia đình dùng gạo sạch có nguồn gốc rõ ràng, và muốn con em được ra đồng, biết hạt cơm mình ăn đến từ đâu.`] },
       ],
     },
 
+    /* ---------- CHƯƠNG TRÌNH 2 ---------- */
     'dong-kien-tao': {
       ten:    `Người đồng kiến tạo`,
-      phu:    `Gói 2`,
+      phu:    `Chương trình 2 · Dành cho doanh nghiệp`,
       anh:    `img/goi-2-dong-kien-tao.jpg`,
-      gia:    `— đ`,
-      giaDv:  `/ vụ`,
-      nutMua: `Tôi quan tâm gói này`,
-      tomTat: `Gói dành cho anh/chị muốn gắn bó — nhận gạo định kỳ và được gắn với một thửa ruộng cụ thể trên bản đồ.`,
-      dan:    `Dành cho anh/chị muốn gắn bó lâu dài và gần hơn với cánh đồng.`,
-      quyenLoi: [`Toàn bộ quyền lợi của gói Người gieo mầm`,
-                 `Được gắn với một thửa ruộng cụ thể trên bản đồ`,
-                 `Nhận gạo định kỳ theo vụ`],
-      hoatDong: `🎟️ <b>Hoạt động mùa vụ:</b> mời tham gia trải nghiệm xuống giống &amp; thăm đồng mùa lúa trổ.`,
+      gia:    `16.500.000đ`,
+      giaDv:  `/ sào mỗi năm — tối thiểu 3 sào`,
+      nutMua: `Tôi quan tâm chương trình này`,
+      tomTat: `Doanh nghiệp nuôi dưỡng sào ruộng Hội&nbsp;An: gạo di sản làm quà tặng, nguyên liệu, và trải nghiệm cho nhân viên.`,
+      dan:    `Doanh nghiệp không chỉ đồng hành với người nông dân mà còn góp phần kiến tạo những giá trị bền vững cho cộng đồng. Mỗi sào ruộng được nuôi dưỡng là một cam kết với môi trường, văn hóa và tương lai của vùng đất Hội&nbsp;An.`,
+      quyenLoi: [`<b>Làm quà tặng / nguyên liệu</b> — gạo di sản tặng nhân viên, đối tác và làm nguyên liệu cho menu của doanh nghiệp`,
+                 `<b>Minh bạch tác động bền vững</b> — theo dõi hành trình của sào ruộng và nhận báo cáo về tác động môi trường`,
+                 `<b>Trải nghiệm dành cho doanh nghiệp</b> — tham quan, xuống giống, gặt lúa cho nhân viên, khách hàng và đối tác`,
+                 `<b>Truyền thông thương hiệu</b> — đồng hành truyền thông cùng HTX Lúa&nbsp;Di&nbsp;Sản Hội&nbsp;An`],
+      hoatDong: `🎟️ <b>Trở thành Người đồng kiến tạo:</b> tối thiểu 3 sào mỗi năm, 55.000đ/kg — 16.500.000đ mỗi sào một năm.`,
       than: [
-        { h: `Anh/chị nhận được gì`,
-          ds: [`Toàn bộ quyền lợi của gói Người gieo mầm`,
-               `Được gắn với một thửa ruộng cụ thể trên bản đồ`,
-               `Nhận gạo định kỳ theo vụ`,
-               `Tài khoản riêng xem nhật ký thửa của mình`] },
-        { h: `Hoạt động mùa vụ được tham gia`,
-          p: [`Được mời tham gia trải nghiệm cùng nông dân xuống giống đầu vụ, thăm đồng mùa lúa trổ, và Ngày hội gặt.`] },
+        { h: `Doanh nghiệp nhận được gì`,
+          ds: [`<b>Làm quà tặng / nguyên liệu.</b> Gạo di sản làm quà tặng cho nhân viên hoặc đối tác, và làm nguyên liệu cho menu của doanh nghiệp.`,
+               `<b>Minh bạch tác động bền vững.</b> Theo dõi hành trình của sào ruộng và nhận báo cáo về tác động môi trường.`,
+               `<b>Trải nghiệm dành cho doanh nghiệp.</b> HTX tổ chức các chương trình tham quan, xuống giống, gặt lúa và trải nghiệm nông nghiệp bản địa cho nhân viên, khách hàng và đối tác.`,
+               `<b>Truyền thông thương hiệu.</b> Đồng hành truyền thông cùng HTX Lúa&nbsp;Di&nbsp;Sản Hội&nbsp;An.`] },
+        { h: `Mức tham gia`,
+          p: [`Tối thiểu 3 sào mỗi năm. Giá gạo 55.000đ/kg, tương đương 16.500.000đ cho mỗi sào một năm.`] },
         { h: `Phù hợp với ai`,
-          p: [`Anh/chị có gia đình muốn dùng gạo sạch đều đặn và thích cho con em ra đồng trải nghiệm theo mùa.`] },
+          p: [`Doanh nghiệp muốn có nguồn gạo sạch minh bạch để làm quà tặng hoặc nguyên liệu, đồng thời có câu chuyện thật để kể với nhân viên và khách hàng.`] },
       ],
     },
 
+    /* ---------- CHƯƠNG TRÌNH 3 ---------- */
     'doi-tac': {
       ten:    `Đối tác kiến tạo di sản`,
-      phu:    `Gói 3`,
+      phu:    `Chương trình 3 · Dành cho doanh nghiệp tiên phong`,
       anh:    `img/goi-3-doi-tac.jpg`,
-      gia:    `— đ`,
-      giaDv:  `/ vụ`,
-      nutMua: `Tôi quan tâm gói này`,
-      tomTat: `Gói đồng hành sâu — hỗ trợ cả vụ canh tác của một thửa, tên anh/chị hiện trên bản đồ (nếu đồng ý).`,
-      dan:    `Gói đồng hành sâu nhất — cùng HTX giữ gìn cả một thửa ruộng qua trọn mùa vụ.`,
-      quyenLoi: [`Toàn bộ quyền lợi của gói Người đồng kiến tạo`,
-                 `Đồng hành trọn vụ canh tác của một thửa ruộng`,
-                 `Tên hiện trên bản đồ thửa ruộng <i>(nếu đồng ý)</i>`],
-      hoatDong: `🎟️ <b>Hoạt động mùa vụ:</b> mời dự lễ cúng xuống đồng, ngày hội gặt và lễ cúng cơm mới.`,
+      gia:    `28.500.000đ`,
+      giaDv:  `/ sào mỗi năm — tối thiểu 3 sào`,
+      nutMua: `Tôi quan tâm chương trình này`,
+      tomTat: `Đầu tư dài hạn cùng HTX gìn giữ đất, giống lúa bản địa và văn hóa lúa nước Hội&nbsp;An — có dấu ấn thương hiệu ngay trên cánh đồng.`,
+      dan:    `Dành cho những doanh nghiệp mong muốn đầu tư dài hạn để cùng HTX và người nông dân gìn giữ đất, giống lúa bản địa và văn hóa lúa nước Hội&nbsp;An, như một phần trong chiến lược phát triển bền vững của mình.`,
+      quyenLoi: [`Toàn bộ quyền lợi của chương trình Người đồng kiến tạo`,
+                 `<b>Minh bạch dữ liệu lowcarbon</b> — báo cáo Offset Carbon Footprint chi tiết, phục vụ hoạt động ESG và CSR`,
+                 `<b>Dấu ấn thương hiệu trên cánh đồng</b> — tên doanh nghiệp gắn tại sào ruộng đồng hành`,
+                 `<b>Câu chuyện thương hiệu mang bản sắc riêng</b> — thiết kế bao bì quà tặng và nội dung đồng thương hiệu`],
+      hoatDong: `🎟️ <b>Trở thành Đối tác kiến tạo di sản:</b> tối thiểu 3 sào mỗi năm, 95.000đ/kg — 28.500.000đ mỗi sào một năm.`,
       than: [
-        { h: `Anh/chị nhận được gì`,
-          ds: [`Toàn bộ quyền lợi của gói Người đồng kiến tạo`,
-               `Đồng hành trọn vụ canh tác của một thửa ruộng`,
-               `Tên hiện trên bản đồ thửa ruộng <i>(nếu đồng ý)</i>`,
-               `Sản lượng gạo của thửa theo thỏa thuận`] },
-        { h: `Hoạt động mùa vụ được tham gia`,
-          p: [`Được mời dự đầy đủ: lễ cúng xuống đồng đầu mùa, các trải nghiệm giữa vụ, Ngày hội gặt và lễ cúng cơm mới tạ ơn cuối vụ.`] },
+        { h: `Doanh nghiệp nhận được gì`,
+          ds: [`<b>Làm quà tặng / nguyên liệu.</b> Gạo di sản làm quà tặng cho nhân viên hoặc đối tác, và làm nguyên liệu cho menu của doanh nghiệp.`,
+               `<b>Minh bạch tác động bền vững.</b> Theo dõi hành trình của sào ruộng và nhận báo cáo về tác động môi trường, hỗ trợ doanh nghiệp trong các hoạt động ESG và CSR.`,
+               `<b>Trải nghiệm dành riêng cho doanh nghiệp.</b> Tổ chức các chương trình tham quan, xuống giống, gặt lúa và trải nghiệm nông nghiệp bản địa cho nhân viên, khách hàng và đối tác.`,
+               `<b>Minh bạch dữ liệu lowcarbon.</b> Cung cấp báo cáo Offset Carbon Footprint chi tiết.`,
+               `<b>Dấu ấn thương hiệu trên cánh đồng.</b> Tên doanh nghiệp được gắn tại sào ruộng đồng hành, trở thành biểu tượng cho cam kết phát triển bền vững cùng người nông dân Hội&nbsp;An.`,
+               `<b>Câu chuyện thương hiệu mang bản sắc riêng.</b> Thiết kế bao bì quà tặng, câu chuyện truyền thông và nội dung đồng thương hiệu gắn với hành trình của chính sào ruộng doanh nghiệp đồng hành.`] },
+        { h: `Mức tham gia`,
+          p: [`Tối thiểu 3 sào mỗi năm. Giá gạo 95.000đ/kg, tương đương 28.500.000đ cho mỗi sào một năm.`] },
         { h: `Phù hợp với ai`,
-          p: [`Anh/chị là doanh nghiệp, tổ chức hoặc cá nhân muốn đồng hành lâu dài với việc giữ gìn cánh đồng di sản Hội An.`] },
+          p: [`Doanh nghiệp tiên phong coi phát triển bền vững là chiến lược dài hạn, cần dữ liệu carbon minh bạch và muốn ghi dấu ấn thương hiệu ngay trên cánh đồng di sản Hội&nbsp;An.`] },
       ],
     },
 
@@ -424,3 +431,24 @@ goi: {
 },
 
 };
+
+/**********************************************************************
+ * PHẦN DƯỚI ĐÂY LÀ MÁY MÓC — KHÔNG PHẢI NỘI DUNG, ĐỪNG SỬA.
+ *
+ * Trong phần chữ ở trên có dùng &nbsp; (khoảng trắng dính) để giữ các
+ * cụm như "Hội&nbsp;An", "TP.&nbsp;Đà&nbsp;Nẵng" không bị bẻ làm hai
+ * dòng. Trình duyệt hiểu &nbsp; khi chữ được đưa vào trang dưới dạng
+ * HTML, nhưng có vài chỗ dùng chữ thuần — tiêu đề tab trình duyệt, nội
+ * dung điền vào form. Ở đó phải gỡ &nbsp; ra, nếu không người xem sẽ
+ * thấy đúng chuỗi "&nbsp;" nằm giữa câu.
+ *
+ * Hàm này đặt ở đây (chứ không ở js/chung.js) vì file này được nạp
+ * trong <head>, sớm hơn — trang chi tiết cần dùng ngay.
+ **********************************************************************/
+function chuThuan(t){
+  return String(t == null ? '' : t)
+    .replace(/&nbsp;/g, ' ')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&amp;/g, '&')
+    .trim();
+}

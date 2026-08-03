@@ -242,8 +242,6 @@
 @media(min-width:681px){ .menu-mobile{display:none !important} }
 
 /* ====== 14. LOGO Ở CHÂN TRANG ====== */
-.ft-ten{display:flex; align-items:center; gap:12px; margin-bottom:10px}
-.ft-ten .bname{margin-bottom:0}
 footer .fb{display:flex; align-items:center; gap:10px}
 .ft-logo{
   width:42px; height:42px; flex:0 0 auto; border-radius:50%;

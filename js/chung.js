@@ -54,12 +54,18 @@ async function dangNhap(){
     if(!r.ok) throw r.error;
     localStorage.setItem('htx_phien', JSON.stringify({token:r.token, username:r.username, role:r.role||'admin'}));
     veUserBox(); dongModal('mpDN');
+    /* Bản đồ đang ở chế độ khách → vẽ lại ngay cho hiện đầy đủ */
+    if(typeof capNhatQuyenXem === 'function') capNhatQuyenXem();
     if(typeof thuaDangChon !== 'undefined' && thuaDangChon !== null && typeof moNhapLieu === 'function') moNhapLieu();
   }catch(e){ if(oLoi) oLoi.textContent = e; else alert(e); }
   if(nut) nut.disabled = false;
 }
 
-function dangXuat(){ localStorage.removeItem('htx_phien'); veUserBox(); }
+function dangXuat(){
+  localStorage.removeItem('htx_phien');
+  veUserBox();
+  if(typeof capNhatQuyenXem === 'function') capNhatQuyenXem();   // trả bản đồ về chế độ khách
+}
 
 /* ================== MODAL DÙNG CHUNG ================== */
 /* ---------- modal ---------- */
@@ -92,7 +98,7 @@ function layND(duong){
 /* Tên gói dùng cho nút "Tôi quan tâm" — để nút luôn khớp tên đã sửa */
 function tenGoi(ma){
   const g = layND('goi.muc.' + ma);
-  return (g && g.ten) ? g.ten : '';
+  return (g && g.ten) ? chuThuan(g.ten) : '';
 }
 
 function apDungNoiDung(){

@@ -205,7 +205,7 @@ const ma   = ts.get('ma')   || Object.keys((DU_LIEU[loai]||DU_LIEU['canh-dong'])
 const nhom = DU_LIEU[loai] || DU_LIEU['canh-dong'];
 const m    = nhom.muc[ma]  || nhom.muc[Object.keys(nhom.muc)[0]];
 
-document.title = m.ten + ' — HTX Lúa Di Sản Hội An';
+document.title = chuThuan(m.ten) + ' — HTX Lúa Di Sản Hội An';
 if(nhom.navId) document.getElementById(nhom.navId).classList.add('active');
 
 // hero
@@ -216,11 +216,11 @@ if(m.anh){
   bg.addEventListener('error', function(){ bg.classList.add('loi'); });
   hero.insertBefore(bg, hero.firstChild);
 }
-document.getElementById('ctLoai').textContent = nhom.nhan + (m.phu ? ' · ' + m.phu : '');
-document.getElementById('ctTen').textContent  = m.ten;
-document.getElementById('ctDan').textContent  = m.dan || '';
+document.getElementById('ctLoai').innerHTML = nhom.nhan + (m.phu ? ' · ' + m.phu : '');
+document.getElementById('ctTen').innerHTML  = m.ten;
+document.getElementById('ctDan').innerHTML  = m.dan || '';
 const lai = document.getElementById('ctLai');
-lai.href = nhom.ve; lai.textContent = '← ' + nhom.veChu;
+lai.href = nhom.ve; lai.innerHTML = '← ' + nhom.veChu;
 if(m.so){
   document.getElementById('ctSoNhanh').innerHTML = m.so.map(function(s){
     return '<div class="sn-o"><div class="sn-so">'+s[0]+'</div><div class="sn-nhan">'+s[1]+'</div></div>';
@@ -235,7 +235,7 @@ let h = '';
 if(m.gia){
   h += '<div class="mua-thanh"><div><div class="gia">'+m.gia+' <small>'+(m.giaDv||'')+'</small></div>'+
        '<div style="font-size:12.5px;color:var(--xam)">Liên hệ HTX để được tư vấn chi tiết</div></div>'+
-       '<div><button class="nut-mua nut-noi" onclick="moFormQuanTam(\''+m.ten.replace(/'/g,"")+'\')">Tôi quan tâm gói này</button></div></div>';
+       '<div><button class="nut-mua nut-noi" onclick="moFormQuanTam(\''+chuThuan(m.ten).replace(/'/g,"")+'\')">'+(m.nutMua||'Tôi quan tâm gói này')+'</button></div></div>';
 }
 (m.than||[]).forEach(function(k){
   h += '<div class="khoi"><h2>'+k.h+'</h2>';
@@ -250,7 +250,7 @@ h += '<div class="dieu-huong">'+nut.map(function(n){
 document.getElementById('ctThan').innerHTML = h;
 
 // xem thêm mục khác cùng loại
-document.getElementById('khacTit').textContent = nhom.khacTit || 'Xem thêm';
+document.getElementById('khacTit').innerHTML = nhom.khacTit || 'Xem thêm';
 document.getElementById('khacLuoi').innerHTML = Object.keys(nhom.muc)
   .filter(function(k){ return k !== ma; })
   .map(function(k){

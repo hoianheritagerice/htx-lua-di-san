@@ -47,7 +47,10 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .brand .logo{width:46px;height:46px;flex:none;object-fit:contain;transition:transform .35s cubic-bezier(.34,1.3,.64,1)}
 .brand:hover .logo{transform:rotate(-6deg) scale(1.06)}
 .brand .bname{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--xanh-dam);line-height:1.05}
-.brand .bname small{display:block;font-family:'Be Vietnam Pro',sans-serif;font-weight:400;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--xam)}
+.brand .bname small{display:block;font-family:'Be Vietnam Pro',sans-serif;font-weight:400;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--xam);
+  /* Chữ H của Playfair có đệm trái rộng hơn của Be Vietnam Pro. Cùng căn
+     trái nhưng nhìn lệch, nên đẩy dòng dưới sang phải 2px cho thẳng mắt. */
+  padding-left:2px}
 .nav .menu{display:flex;gap:28px;margin-left:26px;flex:1}
 .nav .menu a{font-size:14.5px;font-weight:500;padding:6px 0;position:relative;color:var(--muc)}
 .nav .menu a::after{content:"";position:absolute;left:0;right:100%;bottom:-2px;height:2px;background:var(--dat-som);transition:right .25s}
@@ -161,8 +164,11 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 /* ---- footer ---- */
 footer{background:#182e1a;color:#c9d3c0;font-size:14px;padding:56px 0 26px}
 .ft-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px;margin-bottom:36px}
-.ft-brand .bname{font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin-bottom:10px}
-.ft-brand p{font-size:13.5px;opacity:.8;max-width:32ch}
+.ft-brand{display:flex;align-items:flex-start;gap:12px}
+.ft-brand .ft-logo{margin-top:3px}
+.ft-brand .ft-txt{min-width:0}          /* cho phép chữ xuống dòng gọn trong cột hẹp */
+.ft-brand .bname{font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin-bottom:8px;line-height:1.2}
+.ft-brand p{font-size:13.5px;opacity:.8;max-width:34ch;line-height:1.6}
 footer h4{color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
 footer ul{list-style:none}
 footer ul li{margin-bottom:9px}
@@ -355,8 +361,11 @@ footer ul a:hover{opacity:1;color:var(--vang)}
   <div class="wrap">
     <div class="ft-grid">
       <div class="ft-brand">
-        <div class="ft-ten"><img class="ft-logo" src="img/logo.png" alt="Logo HTX Lúa Di Sản Hội An" width="42" height="42"><span class="bname" data-nd="chung.tenDayDu"></span></div>
-        <p data-nd="trangChu.footer.gioiThieu"></p>
+        <img class="ft-logo" src="img/logo.png" alt="Logo HTX Lúa Di Sản Hội An" width="42" height="42">
+        <div class="ft-txt">
+          <div class="bname" data-nd="chung.tenDayDu"></div>
+          <p data-nd="trangChu.footer.gioiThieu"></p>
+        </div>
       </div>
       <div>
         <h4>Sản phẩm</h4>

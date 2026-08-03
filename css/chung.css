@@ -36,6 +36,11 @@ svg{display:block;width:100%;height:auto;max-height:72vh}
 #thanhChonNhieu button{border:none;border-radius:8px;padding:9px 13px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;background:#8bc34a;color:#1b2a14}
 #thanhChonNhieu button.cn-huy{background:transparent;border:1.5px solid rgba(255,255,255,.5);color:#fff}
 #btnChonNhieu.dang-bat{background:#8bc34a;border-color:#33691e}
+/* Khách vãng lai: toàn cánh đồng một màu xanh nhạt như nhau, không
+   phân biệt trạng thái canh tác. Con trỏ vẫn là bàn tay vì chạm vào
+   sẽ mời đăng nhập. */
+.thua.khach{fill:#cfe3b6;stroke:#8fae74}
+.thua.khach:hover{filter:brightness(1.03)}
 .thua.huu-co{fill:#9ccc65;stroke:var(--xanh-vien)}
 .thua.khong-huu-co{fill:#e6dcc6;stroke:#a1887f}
 .thua.chua-ro{fill:#eceff1;stroke:#b0bec5;stroke-dasharray:22 14}

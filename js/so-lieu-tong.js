@@ -84,11 +84,10 @@
       else oDT.textContent = dinhDangDienTich(kq.dienTich);
     }
     if (oHo)   demDan(oHo, kq.soHo, ' hộ');
-    if (oThua && kq.soThua > 0) {
-      // để hiệu ứng đếm (nếu chưa chạy) dừng đúng con số thật
-      oThua.setAttribute('data-so', kq.soThua);
-      if (oThua.textContent !== '0') oThua.textContent = kq.soThua;
-    }
+    /* Ô "thửa ruộng" trước đây có data-so="68", nên hiệu ứng đếm của
+       hieu-ung.js cũng ghi vào đây và hay đè lại con số thật vừa lấy về.
+       Đã bỏ data-so trong index.html — giờ chỉ mình file này ghi vào ô đó. */
+    if (oThua && kq.soThua > 0) demDan(oThua, kq.soThua, '');
 
     var note = document.querySelector('.td-note');
     if (note) {
@@ -99,16 +98,18 @@
 
   /* ---------- cộng dồn 3 cánh đồng ---------- */
   function congDon(cacKetQua) {
-    var dienTich = 0, soThua = 0;
+    var soThua = 0;
     var tapHo = {};                       // "CKOD:LONG1" -> true
+    var dtVu = 0, dtLo = 0, vuDaCong = {};
 
     cacKetQua.forEach(function (r) {
       if (!r || !r.ok || !r.plots) return;
       soThua += r.plots.length;
+      var dtDong = 0;
 
       r.plots.forEach(function (pl) {
         if (!pl.organic) return;                       // chỉ tính lô hữu cơ
-        if (pl.area) dienTich += pl.area;
+        if (pl.area) dtDong += pl.area;
 
         var doan = (pl.productCode || '').split('-');  // CKOD-LONG1-HT26-DT8
         if (doan.length < 2) return;
@@ -117,9 +118,29 @@
         var chinh  = (GOP_HO[dong] && GOP_HO[dong][maThua]) || maThua;
         tapHo[dong + ':' + chinh] = true;
       });
+
+      /* Diện tích: LẤY THẲNG `season.tongDienTich` mà máy chủ trả về.
+         Con số đó Apps Script đã tự cộng từng lô hữu cơ (có phân trang),
+         nên KHÔNG dính trần 25 relation của Rollup Notion — Đồng Cao 36 lô
+         vẫn đúng. Trang chủ và bảng bên trang Cánh Đồng vì vậy luôn khớp
+         nhau, cùng một nguồn.
+         Chỉ khi máy chủ không trả số nào mới tự cộng tay ở đây.
+         Khoá theo _pageId để nếu vài cánh đồng cùng trỏ vào một trang Vụ
+         mùa thì không cộng trùng. */
+      var vu = r.season;
+      if (vu && vu.tongDienTich) {
+        var khoa = vu._pageId || vu.name || ('vu' + soThua);
+        if (!vuDaCong[khoa]) { vuDaCong[khoa] = true; dtVu += vu.tongDienTich; }
+      } else {
+        dtLo += dtDong;
+      }
     });
 
-    return { dienTich: dienTich, soHo: Object.keys(tapHo).length, soThua: soThua };
+    return {
+      dienTich: dtVu + dtLo,
+      soHo: Object.keys(tapHo).length,
+      soThua: soThua
+    };
   }
 
   /* ---------- chạy ---------- */

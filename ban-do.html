@@ -299,15 +299,19 @@ body.nhung #trangthai{padding-top:10px}
   };
 
   var nlNhom = '';
-  var nlChon = { hoatDong:'', vanDe:[], mucDo:'', viTri:[], xuLy:[] };
+  /* hoatDong là MẢNG: một lần ghi có thể gồm nhiều việc (làm cỏ + bón phân…) */
+  var nlChon = { hoatDong:[], vanDe:[], mucDo:'', viTri:[], xuLy:[] };
 
   function hienKhoi(id, hien) {
     var e = $(id); if (e) e.classList.toggle('nl-an', !hien);
   }
 
   function capNhatOHoatDong() {
-    hienKhoi('khoiPhan', nlChon.hoatDong === 'Bón phân');
-    hienKhoi('khoiNuoc', nlChon.hoatDong === 'Điều tiết nước');
+    /* hoatDong nay là mảng — phải hỏi "có chứa không", không so dấu bằng.
+       Dùng indexOf thay includes cho máy cũ. */
+    var ds = nlChon.hoatDong || [];
+    hienKhoi('khoiPhan', ds.indexOf('Bón phân') !== -1);
+    hienKhoi('khoiNuoc', ds.indexOf('Điều tiết nước') !== -1);
   }
 
   function veChip(idHop, ds, khoa, nhieu, lopThem) {
@@ -330,8 +334,11 @@ body.nhung #trangthai{padding-top:10px}
           });
           nlChon[khoa] = bat ? v : '';
           if (bat) b.classList.add('dachon');
-          if (khoa === 'hoatDong') capNhatOHoatDong();
         }
+        /* PHẢI nằm ngoài if/else. Trước đây dòng này nằm trong nhánh
+           "chọn một", nên khi Hoạt động chuyển sang chọn nhiều thì hai
+           khối Bón phân và Mực nước không bao giờ hiện ra nữa. */
+        if (khoa === 'hoatDong') capNhatOHoatDong();
       };
     });
   }
@@ -348,15 +355,15 @@ body.nhung #trangthai{padding-top:10px}
     if (nhom === 'Canh tác') capNhatOHoatDong();
     var td = $('nlTieuDe');
     if (td && !td.value) {
-      if (nhom === 'Canh tác' && nlChon.hoatDong) td.value = nlChon.hoatDong;
+      if (nhom === 'Canh tác' && nlChon.hoatDong.length) td.value = nlChon.hoatDong.join(' · ');
       if (nhom === 'Quan sát') td.value = 'Thăm đồng';
     }
   }
 
   function resetFormNhatKy() {
     nlNhom = '';
-    nlChon = { hoatDong:'', vanDe:[], mucDo:'', viTri:[], xuLy:[] };
-    veChip('hopHoatDong', OPT.hoatDong, 'hoatDong', false);
+    nlChon = { hoatDong:[], vanDe:[], mucDo:'', viTri:[], xuLy:[] };
+    veChip('hopHoatDong', OPT.hoatDong, 'hoatDong', true);
     veChip('hopVanDe',    OPT.vanDe,    'vanDe',    true);
     veChip('hopMucDo',    OPT.mucDo,    'mucDo',    false, ['md-nhe','md-vua','md-nang']);
     veChip('hopViTri',    OPT.viTri,    'viTri',    true);
@@ -439,7 +446,7 @@ body.nhung #trangthai{padding-top:10px}
     if (!nlNhom) { $('nlLoi').textContent = 'Chọn "hôm nay ghi gì" ở bước 1 trước đã.'; return; }
     var tieude = $('nlTieuDe').value.trim();
     if (!tieude) { $('nlLoi').textContent = 'Vui lòng nhập tiêu đề.'; return; }
-    if (nlNhom === 'Canh tác' && !nlChon.hoatDong) { $('nlLoi').textContent = 'Chọn việc đã làm ở bước 2.'; return; }
+    if (nlNhom === 'Canh tác' && !nlChon.hoatDong.length) { $('nlLoi').textContent = 'Chọn ít nhất một việc đã làm ở bước 2.'; return; }
     if (nlNhom === 'Vấn đề'  && !nlChon.vanDe.length) { $('nlLoi').textContent = 'Chọn ít nhất một vấn đề ở bước 2.'; return; }
 
     /* KHÔNG gửi status — máy chủ suy ra từ Nhóm. */
@@ -447,7 +454,7 @@ body.nhung #trangthai{padding-top:10px}
       action: 'createEntry', token: ph.token,
       title: tieude, content: $('nlNoiDung').value.trim(), date: $('nlNgay').value,
       images: anhDaChon.concat(videoDaChon),
-      nhom: nlNhom, hoatDong: nlChon.hoatDong || '', vanDe: nlChon.vanDe,
+      nhom: nlNhom, hoatDong: nlChon.hoatDong, vanDe: nlChon.vanDe,
       mucDo: nlChon.mucDo || '', viTri: nlChon.viTri, daXuLy: nlChon.xuLy,
       canXuLy: !!($('nlCanXuLy') && $('nlCanXuLy').checked),
       tyLe: $('nlTyLe').value || '', mucNuoc: $('nlMucNuoc').value || '',

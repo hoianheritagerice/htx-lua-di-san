@@ -65,13 +65,26 @@ svg{display:block;width:100%;height:auto;max-height:72vh}
 .vu-panel h3{font-size:14px;color:var(--xanh-dam);margin-bottom:2px}
 .vu-giaidoan{font-size:12.5px;color:#5d6b52;margin-bottom:12px}
 .vu-giaidoan b{color:var(--xanh-dam)}
-.tienDoKhung{position:relative;height:10px;background:#e8e2d0;border-radius:6px;margin:6px 52px 46px}
+.tienDoKhung{position:relative;height:10px;background:#e8e2d0;border-radius:6px;margin:6px 52px 76px}
 .tienDoFill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#8bc34a,#33691e);border-radius:6px;transition:width .6s}
 .moc{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid #b0bec5;transform:translate(-50%,-50%);z-index:2}
 .moc.qua{border-color:#33691e;background:#8bc34a}
 .moc-nhan{position:absolute;top:16px;transform:translateX(-50%);font-size:10.5px;color:#78826b;white-space:nowrap;text-align:center;line-height:1.25}
 .moc-nhan.qua{color:#33691e;font-weight:600}
 .moc-nhan small{display:block;font-size:9.5px;opacity:.75}
+/* Hàng thứ hai cho các mốc so le — xem ghi chú trong js/ban-do.js.
+   Gạch dọc nối ngược lên chấm mốc để biết nhãn thuộc về mốc nào. */
+.moc-nhan.hang2{top:46px}
+.moc-nhan.hang2::before{content:"";position:absolute;left:50%;top:-28px;width:1px;height:26px;
+  background:#cfd6c2;transform:translateX(-50%)}
+.moc-nhan.hang2.qua::before{background:#a3bd8c}
+@media(max-width:560px){
+  .tienDoKhung{margin:6px 34px 72px}
+  .moc-nhan{font-size:9.5px}
+  .moc-nhan small{font-size:8.5px}
+  .moc-nhan.hang2{top:42px}
+  .moc-nhan.hang2::before{top:-26px;height:24px}
+}
 .vu-thongso{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 8px}
 .ts-o{background:#f7f4ea;border-radius:9px;padding:9px 6px;text-align:center}
 .ts-o .ts-so{font-size:16px;font-weight:700;color:var(--xanh-dam)}

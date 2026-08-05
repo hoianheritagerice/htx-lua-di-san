@@ -302,16 +302,21 @@ function veVuPanel(s, soHoDem){
     {ten:'Thu hoạch',    ngay:s.thuHoach},
   ].filter(m=>m.ngay).sort((a,b)=>a.ngay.localeCompare(b.ngay));
 
+  /* Bảy mốc nằm hết trên MỘT hàng thì trên điện thoại chữ chồng lên nhau.
+     Cho chúng so le hai hàng: mốc chẵn hàng trên, mốc lẻ hàng dưới —
+     mỗi nhãn có gấp đôi chỗ trống theo chiều ngang. Nhãn hàng dưới có
+     thêm một gạch dọc mảnh nối lên chấm mốc cho khỏi lẫn. */
   let html = `<div class="tienDoFill" style="width:${pct}%"></div>`;
   let giaiDoanHT = 'Gieo sạ';
-  mocs.forEach(m=>{
+  mocs.forEach((m, i)=>{
     const d = new Date(m.ngay+'T00:00:00');
     const p = Math.min(100, Math.max(0, (d-start)/(end-start)*100));
     const qua = d <= nay;
     if(qua) giaiDoanHT = m.ten;
     const [y,mo,da] = m.ngay.split('-');
+    const hang = (i % 2) ? ' hang2' : '';
     html += `<div class="moc${qua?' qua':''}" style="left:${p}%"></div>`;
-    html += `<div class="moc-nhan${qua?' qua':''}" style="left:${p}%">${m.ten}<small>${da}/${mo}</small></div>`;
+    html += `<div class="moc-nhan${hang}${qua?' qua':''}" style="left:${p}%">${m.ten}<small>${da}/${mo}</small></div>`;
   });
   $('tienDoKhung').innerHTML = html;
 

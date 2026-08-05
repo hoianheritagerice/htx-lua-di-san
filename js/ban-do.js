@@ -276,6 +276,54 @@ async function napNotion(){
 
 /* ---------- thanh tiến độ mùa vụ ---------- */
 /* ---------- thanh tiến độ mùa vụ ---------- */
+/* Xếp nhãn mốc thành nhiều hàng sao cho KHÔNG nhãn nào chồng nhãn nào.
+   ------------------------------------------------------------------
+   Cách cũ so le chẵn/lẻ không đủ: "Chín vàng 06/09" và "Thu hoạch 10/09"
+   chỉ cách nhau 4 ngày, tức vài phần trăm chiều ngang, trong khi mỗi nhãn
+   rộng 60-70px — khác hàng vẫn đè nếu hai nhãn nữa cùng hàng lại gần nhau.
+
+   Nay ĐO chiều rộng thật của từng nhãn rồi xếp kiểu "chồng hộp": duyệt từ
+   trái sang phải, mỗi nhãn tìm hàng thấp nhất còn chỗ trống. Cần bao nhiêu
+   hàng thì dùng bấy nhiêu, và chừa đúng bấy nhiêu chỗ phía dưới thanh.
+   Chạy lại mỗi khi đổi kích thước cửa sổ vì chiều rộng đổi thì chỗ đổi. */
+function xepHangMocNhan_(){
+  const khung = $('tienDoKhung');
+  if(!khung) return;
+  const nhan = Array.prototype.slice.call(khung.querySelectorAll('.moc-nhan'));
+  if(!nhan.length) return;
+
+  const W = khung.clientWidth || 1;
+  const KHE = 10;          // khoảng hở tối thiểu giữa hai nhãn cùng hàng (px)
+  const CAO_HANG = 30;     // phải khớp con số trong css/chung.css
+
+  const ds = nhan.map(function(el){
+    el.classList.remove('co-noi');
+    el.style.setProperty('--h', 0);
+    const tam = (parseFloat(el.style.left) || 0) / 100 * W;
+    const w   = el.getBoundingClientRect().width || 70;
+    return { el: el, tu: tam - w / 2, den: tam + w / 2 };
+  }).sort(function(a, b){ return a.tu - b.tu; });
+
+  const mepPhai = [];      // mép phải đã dùng của từng hàng
+  let soHang = 1;
+  ds.forEach(function(o){
+    let h = 0;
+    while(mepPhai[h] !== undefined && o.tu < mepPhai[h] + KHE) h++;
+    mepPhai[h] = o.den;
+    o.el.style.setProperty('--h', h);
+    if(h > 0) o.el.classList.add('co-noi');
+    if(h + 1 > soHang) soHang = h + 1;
+  });
+
+  khung.style.marginBottom = (22 + soHang * CAO_HANG) + 'px';
+}
+
+let henXepLai = null;
+window.addEventListener('resize', function(){
+  clearTimeout(henXepLai);
+  henXepLai = setTimeout(xepHangMocNhan_, 150);
+});
+
 function veVuPanel(s, soHoDem){
   const panel = $('vuPanel');
   if(!s || !s.gieoSa || !s.thuHoach){ panel.style.display='none'; return; }
@@ -302,10 +350,6 @@ function veVuPanel(s, soHoDem){
     {ten:'Thu hoạch',    ngay:s.thuHoach},
   ].filter(m=>m.ngay).sort((a,b)=>a.ngay.localeCompare(b.ngay));
 
-  /* Bảy mốc nằm hết trên MỘT hàng thì trên điện thoại chữ chồng lên nhau.
-     Cho chúng so le hai hàng: mốc chẵn hàng trên, mốc lẻ hàng dưới —
-     mỗi nhãn có gấp đôi chỗ trống theo chiều ngang. Nhãn hàng dưới có
-     thêm một gạch dọc mảnh nối lên chấm mốc cho khỏi lẫn. */
   let html = `<div class="tienDoFill" style="width:${pct}%"></div>`;
   let giaiDoanHT = 'Gieo sạ';
   mocs.forEach((m, i)=>{
@@ -314,11 +358,11 @@ function veVuPanel(s, soHoDem){
     const qua = d <= nay;
     if(qua) giaiDoanHT = m.ten;
     const [y,mo,da] = m.ngay.split('-');
-    const hang = (i % 2) ? ' hang2' : '';
     html += `<div class="moc${qua?' qua':''}" style="left:${p}%"></div>`;
-    html += `<div class="moc-nhan${hang}${qua?' qua':''}" style="left:${p}%">${m.ten}<small>${da}/${mo}</small></div>`;
+    html += `<div class="moc-nhan${qua?' qua':''}" style="left:${p}%">${m.ten}<small>${da}/${mo}</small></div>`;
   });
   $('tienDoKhung').innerHTML = html;
+  xepHangMocNhan_();
 
   $('vuGiaiDoan').innerHTML = (quaNgay >= 0 && nay <= end)
     ? `🌾 Đang giai đoạn: <b>${giaiDoanHT}</b> — ngày thứ <b>${quaNgay}</b> sau gieo sạ (${Math.round(pct)}%)`

@@ -125,6 +125,36 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .river-node:hover .river-dot{transform:scale(1.22)}
 .river-node:active .river-dot{transform:scale(1.1)}
 
+/* ===== ẢNH THEO MỐC =====
+   Thả vào khoảng trống hai bên đường lượn, ngang tầm mốc của nó. Ảnh hiện
+   dần khi cuộn tới, xen kẽ trái–phải để mắt đi zíc zắc theo dòng sông.
+   Dưới 900px không còn chỗ hai bên nên ảnh xuống nằm ngay dưới tên mốc. */
+.moc-anh{position:absolute;top:0;width:190px;z-index:2;pointer-events:none;
+  opacity:0;transform:translateY(26px) scale(.96);
+  transition:opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1)}
+.moc-anh.hien{opacity:1;transform:translateY(0) scale(1)}
+.moc-anh.trai{right:calc(50% + 214px)}
+.moc-anh.phai{left:calc(50% + 214px)}
+.moc-anh figure{margin:0;background:#fffdf7;padding:8px 8px 0;border-radius:12px;
+  box-shadow:0 10px 26px rgba(52,64,38,.14);border:1px solid #ece5d4;
+  transform:rotate(var(--nghieng,0deg))}
+.moc-anh img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:7px;background:#e7e0cd}
+.moc-anh figcaption{font-size:10.5px;color:#7b8270;line-height:1.35;padding:7px 2px 9px;text-align:center}
+.moc-anh figcaption b{display:block;color:var(--xanh-dam);font-size:11.5px;font-weight:600}
+/* Sợi chỉ nối ảnh vào đường lượn */
+.moc-anh::after{content:"";position:absolute;top:34px;width:26px;height:1px;background:#d8cfb8}
+.moc-anh.trai::after{right:-26px}
+.moc-anh.phai::after{left:-26px}
+@media(prefers-reduced-motion:reduce){
+  .moc-anh{transition:none;opacity:1;transform:none}
+}
+@media(max-width:900px){
+  .moc-anh{position:static;width:auto;max-width:230px;margin:10px auto 0;transform:none}
+  .moc-anh.hien{transform:none}
+  .moc-anh figure{transform:none}
+  .moc-anh::after{display:none}
+}
+
 .today{position:absolute;transform:translate(-50%,-50%);z-index:4;pointer-events:none}
 .today .dot{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--xanh-la);box-shadow:0 0 0 6px rgba(111,158,75,.28);animation:beat2 1.8s ease-in-out infinite}
 @keyframes beat2{0%,100%{box-shadow:0 0 0 6px rgba(111,158,75,.28)}50%{box-shadow:0 0 0 12px rgba(111,158,75,.1)}}
@@ -468,31 +498,31 @@ const LOAI_TXT = {nong:'Mốc nông học', le:'Lễ cúng · tâm linh', trai:'
 const LOAI_BG  = {nong:'#e6f2d8', le:'#f5e3d8', trai:'#faf0cf'};
 const LOAI_FG  = {nong:'#4f7325', le:'#9c4e28', trai:'#8a6910'};
 let SU_KIEN = [
-  {ngay:'2026-05-15', ic:'ic-cung', loai:'le',   ten:'Lễ cúng xuống đồng', tenDay:'Lễ cúng xuống đồng (đầu mùa)',
+  {ngay:'2026-05-15', ic:'ic-cung', loai:'le',   ten:'Lễ cúng xuống đồng', anh:'01-le-cung-xuong-dong', tenDay:'Lễ cúng xuống đồng (đầu mùa)',
    mo:'Nghi lễ cầu cho mùa vụ thuận hòa, mưa gió điều hòa, trước ngày gieo sạ đầu tiên.', goi:'Đối tác kiến tạo di sản'},
-  {ngay:'2026-05-20', ic:'ic-gieo', loai:'nong', ten:'Gieo sạ', tenDay:'Ngày gieo sạ',
+  {ngay:'2026-05-20', ic:'ic-gieo', loai:'nong', ten:'Gieo sạ', anh:'02-gieo-sa', tenDay:'Ngày gieo sạ',
    mo:'Những hạt giống đã được ngâm ủ cẩn thận được gieo xuống ruộng. Từ đây, hạt bắt đầu bén rễ, nảy mầm và mở ra hành trình của một vụ lúa mới.', goi:''},
-  {ngay:'2026-05-22', ic:'ic-ma',   loai:'trai', ten:'Cùng xuống giống', tenDay:'Trải nghiệm: Cùng nông dân xuống giống',
+  {ngay:'2026-05-22', ic:'ic-ma',   loai:'trai', ten:'Cùng xuống giống', anh:'03-cung-xuong-giong', tenDay:'Trải nghiệm: Cùng nông dân xuống giống',
    mo:'Anh/chị ra đồng lội ruộng, gieo mạ cùng bà con xã viên và tìm hiểu giống lúa bản địa.', goi:'Người đồng kiến tạo · Đối tác kiến tạo di sản'},
-  {ngay:'2026-06-07', ic:'ic-ma',   loai:'nong', ten:'Giai đoạn mạ', tenDay:'Giai đoạn mạ',
+  {ngay:'2026-06-07', ic:'ic-ma',   loai:'nong', ten:'Giai đoạn mạ', anh:'04-giai-doan-ma', tenDay:'Giai đoạn mạ',
    mo:'Cây lúa non nhú lên khỏi mặt đất, hình thành những chiếc lá đầu tiên và từng bước phát triển bộ rễ để bám chắc vào ruộng.', goi:''},
-  {ngay:'2026-06-24', ic:'ic-ma',   loai:'nong', ten:'Đẻ nhánh rộ', tenDay:'Đẻ nhánh rộ',
+  {ngay:'2026-06-24', ic:'ic-ma',   loai:'nong', ten:'Đẻ nhánh rộ', anh:'05-de-nhanh-ro', tenDay:'Đẻ nhánh rộ',
    mo:'Cây lúa phát triển nhanh và liên tục tạo thêm nhiều nhánh mới. Những nhánh khỏe sau này sẽ mang bông, góp phần tạo nên năng suất của cả cánh đồng.', goi:''},
-  {ngay:'2026-07-05', ic:'ic-dong', loai:'nong', ten:'Làm đòng', tenDay:'Làm đòng',
+  {ngay:'2026-07-05', ic:'ic-dong', loai:'nong', ten:'Làm đòng', anh:'06-lam-dong', tenDay:'Làm đòng',
    mo:'Bên trong thân lúa, những bông lúa non đầu tiên bắt đầu hình thành. Đây là giai đoạn quan trọng, cây cần được chăm sóc và duy trì đủ nước để đòng phát triển khỏe mạnh.', goi:''},
-  {ngay:'2026-07-20', ic:'ic-bong', loai:'nong', ten:'Trổ bông', tenDay:'Trổ bông',
+  {ngay:'2026-07-20', ic:'ic-bong', loai:'nong', ten:'Trổ bông', anh:'07-tro-bong', tenDay:'Trổ bông',
    mo:'Những bông lúa dần vươn ra khỏi thân cây. Hoa lúa nở, tung phấn và thụ tinh trong vài ngày, mở đầu quá trình hình thành hạt gạo.', goi:''},
-  {ngay:'2026-07-24', ic:'ic-que',  loai:'trai', ten:'Thăm đồng lúa trổ', tenDay:'Trải nghiệm: Thăm đồng mùa lúa trổ',
+  {ngay:'2026-07-24', ic:'ic-que',  loai:'trai', ten:'Thăm đồng lúa trổ', anh:'08-tham-dong-lua-tro', tenDay:'Trải nghiệm: Thăm đồng mùa lúa trổ',
    mo:'Đi giữa cánh đồng lúa đang trổ bông, chụp ảnh, nghe kể về nhịp sinh trưởng của cây lúa.', goi:'Người đồng kiến tạo · Đối tác kiến tạo di sản'},
-  {ngay:'2026-08-05', ic:'ic-chac', loai:'nong', ten:'Chắc hạt', tenDay:'Chắc hạt',
+  {ngay:'2026-08-05', ic:'ic-chac', loai:'nong', ten:'Chắc hạt', anh:'09-chac-hat', tenDay:'Chắc hạt',
    mo:'Sau khi hoa được thụ tinh, hạt lúa bắt đầu tích lũy dưỡng chất. Phần sữa bên trong dần đặc lại, hạt ngày càng đầy và chắc hơn.', goi:''},
-  {ngay:'2026-08-25', ic:'ic-chac', loai:'nong', ten:'Chín vàng', tenDay:'Chín vàng',
+  {ngay:'2026-08-25', ic:'ic-chac', loai:'nong', ten:'Chín vàng', anh:'10-chin-vang', tenDay:'Chín vàng',
    mo:'Bông lúa dần chuyển từ xanh sang vàng, hạt trở nên cứng và nặng hơn. Cả cánh đồng khoác lên màu vàng óng, báo hiệu mùa gặt đang đến gần.', goi:''},
-  {ngay:'2026-09-05', ic:'ic-gat',  loai:'nong', ten:'Thu hoạch', tenDay:'Ngày thu hoạch dự kiến',
+  {ngay:'2026-09-05', ic:'ic-gat',  loai:'nong', ten:'Thu hoạch', anh:'11-thu-hoach', tenDay:'Ngày thu hoạch dự kiến',
    mo:'Khi phần lớn hạt lúa đã chín vàng, bà con bắt đầu thu hoạch. Đây là thành quả của nhiều tháng chăm sóc và cũng là lúc một hành trình mới của hạt gạo bắt đầu.', goi:''},
-  {ngay:'2026-09-06', ic:'ic-bo',   loai:'trai', ten:'Ngày hội gặt', tenDay:'Trải nghiệm: Ngày hội gặt',
+  {ngay:'2026-09-06', ic:'ic-bo',   loai:'trai', ten:'Ngày hội gặt', anh:'12-ngay-hoi-gat', tenDay:'Trải nghiệm: Ngày hội gặt',
    mo:'Cùng gặt lúa, tuốt lúa, trải nghiệm xay giã theo cách truyền thống của làng.', goi:'Tất cả các gói'},
-  {ngay:'2026-09-15', ic:'ic-com',  loai:'le',   ten:'Cúng cơm mới', tenDay:'Lễ cúng cơm mới (tạ ơn)',
+  {ngay:'2026-09-15', ic:'ic-com',  loai:'le',   ten:'Cúng cơm mới', anh:'13-cung-com-moi', tenDay:'Lễ cúng cơm mới (tạ ơn)',
    mo:'Nấu nồi cơm từ gạo vụ mới, dâng cúng tạ ơn trời đất và tổ tiên đã cho mùa màng.', goi:'Đối tác kiến tạo di sản'},
 ];
 
@@ -531,6 +561,93 @@ function pHomNay(){
   return {p:pOf(N-1), truoc:N-1, sau:-1};
 }
 
+/* =====================================================================
+   ẢNH THEO MỐC — hai nguồn, ưu tiên từ trên xuống
+   ---------------------------------------------------------------------
+   1. Ảnh do HTX tự chọn: đặt file vào img/timeline/<mã>.jpg rồi khai
+      thêm  anh:'ma-file'  vào mốc đó trong SU_KIEN. Dùng cho mốc tâm
+      linh (lễ cúng, cơm mới, ngày hội gặt) — nhật ký đồng ruộng không
+      chụp mấy dịp này, để máy tự lấy sẽ ra ảnh sai hoàn toàn.
+   2. Ảnh thật từ nhật ký đồng: lấy bản ghi CÓ ẢNH gần ngày mốc nhất,
+      trong phạm vi ±KHOANG_NGAY. Ngoài phạm vi thì thà không có ảnh còn
+      hơn gắn nhầm một tấm chẳng liên quan.
+
+   Không có nguồn nào thì mốc hiện như cũ, không ảnh — không vỡ gì.
+   ===================================================================== */
+const KHOANG_NGAY = 12;          // ảnh nhật ký được coi là "thuộc về" mốc nếu cách không quá 12 ngày
+let NHAT_KY_CO_ANH = [];         // veTimeline nạp vào từ dữ liệu máy chủ
+let DS_ANH_MOC = [];
+
+let ANH_DA_DUNG = [];    // reset mỗi lần vẽ, xem veTimeline()
+
+function chonAnhMoc(sk){
+  /* (1) ẢNH CHÍNH — do HTX tự chuẩn bị, đặt trong img/timeline/.
+     Tên file đã khai sẵn ở SU_KIEN, xem img/timeline/HUONG-DAN.txt.
+     Đây là nguồn ưu tiên cho MỌI mốc: HTX chọn được tấm đẹp nhất, ảnh
+     nằm ngay trên GitHub nên tải nhanh và không bao giờ hết hạn. */
+  const chinh = sk.anh ? 'img/timeline/' + sk.anh + '.jpg' : '';
+
+  /* (2) ẢNH DỰ PHÒNG — ảnh thật gần ngày nhất trong nhật ký đồng, dùng
+     khi file ở (1) chưa được tải lên. Chỉ áp cho mốc nông học và trải
+     nghiệm; mốc tâm linh thì không, vì nhật ký chỉ chụp việc đồng áng —
+     gắn ảnh bón phân vào "Lễ cúng xuống đồng" là sai hoàn toàn. */
+  if(sk.loai === 'le' || !NHAT_KY_CO_ANH.length){
+    return chinh ? { url: chinh, chu: '', duPhong: '' } : null;
+  }
+
+  const moc = new Date(sk.ngay + 'T00:00:00');
+  let tot = null, cachMin = Infinity;
+  NHAT_KY_CO_ANH.forEach(function(e){
+    if(ANH_DA_DUNG.indexOf(e) !== -1) return;      // mỗi tấm chỉ dùng MỘT lần
+    const d = Math.abs(new Date(e.ngay + 'T00:00:00') - moc) / 86400000;
+    if(d < cachMin){ cachMin = d; tot = e; }
+  });
+  if(!tot || cachMin > KHOANG_NGAY){
+    return chinh ? { url: chinh, chu: '', duPhong: '' } : null;
+  }
+  ANH_DA_DUNG.push(tot);
+
+  const [y,m,dd] = tot.ngay.split('-');
+  const phu = [tot.hoatDong, (tot.nss != null ? 'NSS ' + tot.nss : '')]
+                .filter(Boolean).join(' · ');
+  const chuNK = (phu ? phu + ' — ' : '') + dd + '/' + m;
+  return chinh
+    ? { url: chinh,   chu: '',     duPhong: tot.anh, chuDuPhong: chuNK }
+    : { url: tot.anh, chu: chuNK,  duPhong: '' };
+}
+
+/* Ảnh chính thiếu → thử ảnh nhật ký. Thiếu nốt → gỡ cả thẻ. */
+function luiAnhMoc(img){
+  const box = img.closest('.moc-anh');
+  if(!box) return;
+  const du = box.dataset.duPhong;
+  if(du && img.src.indexOf(du) === -1){
+    img.src = du;
+    const cg = box.querySelector('figcaption .cg');
+    if(cg) cg.textContent = box.dataset.chuDuPhong || '';
+    return;
+  }
+  box.remove();
+}
+
+/* Ảnh hiện dần khi cuộn tới. Mỗi tấm tự hiện một lần rồi thôi — không
+   nhấp nháy khi người xem cuộn lên cuộn xuống. */
+function batDauHienAnh(){
+  if(!DS_ANH_MOC.length) return;
+  if(!('IntersectionObserver' in window)){
+    DS_ANH_MOC.forEach(function(e){ e.classList.add('hien'); });
+    return;
+  }
+  const theoDoi = new IntersectionObserver(function(cac){
+    cac.forEach(function(x){
+      if(!x.isIntersecting) return;
+      x.target.classList.add('hien');
+      theoDoi.unobserve(x.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.15 });
+  DS_ANH_MOC.forEach(function(e){ theoDoi.observe(e); });
+}
+
 function veTimeline(){
   // xoá mốc của lần vẽ trước (giữ nguyên thẻ <svg> đường sông)
   river.querySelectorAll('.river-node, .today').forEach(e=>e.remove());
@@ -548,8 +665,31 @@ function veTimeline(){
       `<div class="river-dot ${daQua?'past':'future'} ${s.loai}"><svg><use href="#${s.ic}"/></svg></div>
        <div class="river-label"><div class="t">${s.ten}</div><div class="d">${dd}/${m}</div></div>`;
     node.addEventListener('click', ()=>moCT(i));
+
+    /* Ảnh của mốc — xem chonAnhMoc(). Xen kẽ trái/phải theo thứ tự mốc,
+       hơi nghiêng mỗi tấm một khác cho giống ảnh dán trên tường. */
+    const anh = chonAnhMoc(s);
+    if(anh){
+      const box = document.createElement('div');
+      box.className = 'moc-anh ' + (i % 2 ? 'phai' : 'trai');
+      box.style.setProperty('--nghieng', ((i % 3) - 1) * 1.4 + 'deg');
+      /* Chưa tải ảnh chính lên thì thử ảnh nhật ký, hết mới bỏ hẳn thẻ —
+         không để lại ô ảnh vỡ trên trang. */
+      box.dataset.duPhong    = anh.duPhong || '';
+      box.dataset.chuDuPhong = anh.chuDuPhong || '';
+      box.innerHTML =
+        `<figure><img src="${anh.url}" alt="${s.ten}" loading="lazy" decoding="async"
+           onerror="luiAnhMoc(this)">
+         <figcaption><b>${s.ten}</b><span class="cg">${anh.chu||''}</span></figcaption></figure>`;
+      /* Trên máy tính ảnh nằm tuyệt đối cạnh mốc; dưới 900px nó rơi vào
+         trong node nên phải đặt trong node, không phải trong river. */
+      node.appendChild(box);
+      DS_ANH_MOC.push(box);
+    }
+
     river.appendChild(node);
   });
+  batDauHienAnh();
 
   // chấm hôm nay
   const h = pHomNay();
@@ -740,6 +880,15 @@ async function napThoiTiet(ma){
     const r = await res.json();
     if(!r.ok) throw r.error;
     veThoiTiet(r);
+
+    /* Cùng một lần gọi này đã mang về nhật ký đồng — lọc lấy bản ghi CÓ
+       ẢNH rồi vẽ lại dòng thời gian để ảnh hiện lên cạnh từng mốc.
+       Chỉ vẽ lại khi thật sự có ảnh mới, tránh chớp màn hình vô cớ. */
+    const coAnh = (r.nhatKy || []).filter(function(x){ return x.anh && x.ngay; });
+    if(coAnh.length && coAnh.length !== NHAT_KY_CO_ANH.length){
+      NHAT_KY_CO_ANH = coAnh;
+      veTimeline();
+    }
   }catch(e){
     oBd.innerHTML = '<div class="tt-trong">Chưa lấy được dữ liệu thời tiết.<br><small>'+escTT(e)+'</small></div>';
   }

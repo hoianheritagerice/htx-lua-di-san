@@ -1,0 +1,1781 @@
+/**********************************************************************
+ * HTX LÚA DI SẢN — BACKEND (Google Apps Script Web App)
+ * Bản 2.0 — 29/07/2026 (thêm nhật ký có cấu trúc + thời tiết)
+ *
+ * ⚠ FILE NÀY THAY THẾ TOÀN BỘ Code.gs CŨ.
+ *   Ctrl+A trong editor → Delete → dán nguyên file này → Lưu → Triển khai lại.
+ *   Token Notion và tài khoản người dùng KHÔNG nằm trong file này
+ *   (chúng ở Script Properties) nên thay file không mất gì.
+ *
+ * CÁC API (POST, body JSON):
+ *   login · getMapData · getHistory · createEntry · getSeasonTimeline
+ **********************************************************************/
+
+/* ================== 1. CẤU HÌNH ================== */
+const CONFIG = {
+  DB_PRODUCT:     '3891c9d219fa80108552d5f2c83b63c7',
+  DB_MASTER_TASK: '37c1c9d219fa80d3bdeadfef47b98199',
+  DB_WEATHER:     '6bfcec567276434e860d1e7f08105261',   // 🌦️ THỜI TIẾT NGÀY
+
+  PROPS: {
+    // --- DB Mã sản phẩm ---
+    PRODUCT_TITLE: 'Mã Sản phẩm',
+    AREA:          'Diện tích (m2)',
+    ORGANIC:       'Canh tác hữu cơ',
+    YIELD_DRY:     'Sản lượng khô (kg)',
+    PRODUCT_SEASON_REL: 'Vụ mùa',
+
+    // --- DB Nhật ký (MASTERTASK) ---
+    TASK_TITLE:       'Task Name',
+    TASK_DATE:        'Ngày thực hiện',
+    TASK_PRODUCT_REL: 'Mã sản phẩm',
+    TASK_STATUS:      'Trạng thái',
+    TASK_IMAGES:      'Hình ảnh',
+    TASK_DESC:        'Mô tả chi tiết',
+    TASK_DEPT:        'Bộ phận',
+    TASK_TYPE:        'Loại task',
+    TASK_SEASON_REL:  'Vụ mùa',
+
+    // --- 12 trường cấu trúc ---
+    F_NHOM:     'Nhóm',
+    F_HOATDONG: 'Hoạt động',
+    F_VANDE:    'Vấn đề',
+    F_MUCDO:    'Mức độ',
+    F_TYLE:     'Tỷ lệ (%)',
+    F_VITRI:    'Vị trí trong thửa',
+    F_XULY:     'Đã xử lý tại chỗ',   // nhãn trên form là "Hướng xử lý"
+    F_XULY_ALT: 'Hướng xử lý',        // dùng nếu anh đổi tên cột trong Notion
+    F_CANXULY:  'Cần xử lý',
+    F_VATTU:    'Vật tư',
+    F_SOLUONG:  'Số lượng',
+    F_DONVI:    'Đơn vị',
+    F_MUCNUOC:  'Mực nước (cm)',
+  },
+
+  DEPT_DEFAULT: 'Kỹ thuật',
+
+  /* Trạng thái SUY RA từ Nhóm — web không gửi status nữa.
+     Đây là cách chặn vĩnh viễn kiểu lỗi từng xảy ra: đổi tên option
+     "Kiểm tra" → "Cập nhật" trong Notion khiến mọi bản ghi rơi thầm
+     về "Hoàn thành" mà không báo lỗi. */
+  STATUS_BY_NHOM: {
+    'Canh tác': 'Hoàn thành',
+    'Vấn đề':   'Cập nhật',
+    'Quan sát': 'Cập nhật',
+  },
+  STATUS_DONE: 'Hoàn thành',
+  STATUS_ALLOWED: ['Kế hoạch', 'Hoàn thành', 'Đang làm', 'Chuẩn bị', 'Cập nhật'],
+
+  /* Loại task SUY RA từ Hoạt động — không hardcode 'Kiểm tra đồng ruộng' nữa */
+  TYPE_BY_HOATDONG: {
+    'Gieo/Cấy':       'Gieo/Cấy',
+    'Dặm - cấy lại':  'Gieo/Cấy',
+    'Bón phân':       'Bón phân',
+    'Điều tiết nước': 'Điều tiết nước',
+    'Làm cỏ':         'Làm cỏ',
+    'Cắt bông cỏ':    'Làm cỏ',
+    'Thu hoạch':      'Thu hoạch',
+  },
+  TYPE_DEFAULT: 'Kiểm tra đồng ruộng',
+
+  /* ------------------------------------------------------------------
+     WHITELIST — Notion TỰ TẠO option mới khi nhận tên lạ. Một lỗi gõ là
+     sinh option rác vĩnh viễn, sang vụ sau có cả "Cỏ chát" lẫn "cỏ chat"
+     → hỏng đúng khả năng so sánh giữa các mùa vụ.
+     Giá trị lạ sẽ bị BỎ QUA và ghi log. Thêm option mới trong Notion thì
+     PHẢI thêm vào đây VÀ vào biến OPT trong js/ban-do.js.
+     ------------------------------------------------------------------ */
+  WL: {
+    NHOM: ['Canh tác', 'Vấn đề', 'Quan sát', 'Hành chính'],
+    HOATDONG: ['Làm đất', 'Ngâm ủ giống', 'Gieo/Cấy', 'Dặm - cấy lại', 'Bón phân',
+               'Điều tiết nước', 'Làm cỏ', 'Cắt bông cỏ', 'Rào chuột', 'Thu hoạch'],
+    VANDE: ['Cỏ', 'Chuột', 'Ốc bươu vàng', 'Sâu', 'Đạo ôn', 'Khô vằn',
+            'Khô nước', 'Ngập úng', 'Nhiễm mặn', 'Đổ ngã', 'Vàng lá'],
+    MUCDO: ['Nhẹ (<10%)', 'Vừa (10-30%)', 'Nặng (>30%)'],
+    VITRI: ['Giữa đám', 'Sát bờ', 'Giáp đất màu', 'Giáp đất ở', 'Giáp mương'],
+    XULY: ['Rào ni lông', 'Thêm nước', 'Tháo nước', 'Cắt bông cỏ', 'Thuê công', 'Đặt bẫy'],
+    DONVI: ['kg', 'bao', 'lít', 'gói', 'công'],
+  },
+
+  /* Property trên DB Vụ Mùa */
+  SEASON_PROPS: {
+    GIEO_SA:   'Ngày gieo sạ',
+    DE_NHANH:  'Ngày đẻ nhánh rộ',
+    DON_DONG:  'Ngày làm đòng',      // tên cột trong Notion — đổi 03/08/2026, trước ghi nhầm 'đón đòng'
+    TRO_BONG:  'Ngày trổ bông',
+    CHAC_HAT:  'Ngày chắc hạt',
+    CHIN_VANG: 'Ngày chín vàng',
+    THU_HOACH: 'Ngày thu hoạch dự kiến',
+    TONG_DT:   'Tổng diện tích',
+    SO_HO:     'Số hộ canh tác',
+    SAN_LUONG: 'Tổng Sản lượng (kg)',
+  },
+
+  /* Toạ độ kéo thời tiết Open-Meteo */
+  /* Toạ độ do anh Quân cung cấp (đo thực địa), không phải ước lượng:
+       Ông Đảng            15°51'50.8"N 108°19'38.3"E
+       Đồng Cao + Đồng Mẫu 15°53'00.7"N 108°21'32.6"E  (dùng chung 1 điểm)
+     LƯU Ý: lưới dữ liệu Open-Meteo rộng ~9-11 km. Ba cánh đồng cách nhau
+     chưa tới 4 km nên nhiều khả năng rơi vào CÙNG một ô lưới — số liệu
+     mưa của cả ba sẽ giống hệt nhau. Đó là bình thường, không phải lỗi. */
+  FIELDS_GEO: {
+    CKOD: { lat: 15.86411, lng: 108.32731, ten: 'Ông Đảng — Cẩm Kim' },
+    CTDC: { lat: 15.88353, lng: 108.35906, ten: 'Đồng Cao — Cẩm Thanh' },
+    CTDM: { lat: 15.88353, lng: 108.35906, ten: 'Đồng Mẫu — Cẩm Thanh' },
+  },
+
+  DRIVE_ROOT_FOLDER_ID: '1igoEai8ER5We42EL8pb_y7ouaHs2Tw1H',
+  TOKEN_TTL_SECONDS: 21600,
+
+  /* Đổi số này MỖI LẦN payload getMapData đổi hình dạng.
+     Phải khớp với 'htxmap_v2_' trong js/ban-do.js. */
+  CACHE_VER: 'v2',
+};
+
+/* ============ 2. HÀM CÀI ĐẶT — CHẠY 1 LẦN TRONG EDITOR ============ */
+
+function setupNotionToken() {
+  PropertiesService.getScriptProperties()
+    .setProperty('NOTION_TOKEN', 'yourkey');   // ← dán token thật rồi Run, sau đó xoá lại
+  Logger.log('Đã lưu Notion token an toàn.');
+}
+
+function addUser() {
+  const username = 'user';          // ← sửa
+  const password = 'pass';          // ← sửa
+  const role = 'admin';             // 'admin' = xã viên nhập liệu | 'khach' = chỉ xem
+  const salt = Utilities.getUuid();
+  const hash = hashPassword_(password, salt);
+  const props = PropertiesService.getScriptProperties();
+  const users = JSON.parse(props.getProperty('USERS') || '{}');
+  users[username] = { salt: salt, hash: hash, role: role };
+  props.setProperty('USERS', JSON.stringify(users));
+  Logger.log('Đã tạo/cập nhật user: ' + username + ' (quyền: ' + role + ')');
+}
+
+function taoTaiKhoanKhach() {
+  const username = 'khach1';        // ← sửa
+  const password = 'matkhau';       // ← sửa
+  const salt = Utilities.getUuid();
+  const hash = hashPassword_(password, salt);
+  const props = PropertiesService.getScriptProperties();
+  const users = JSON.parse(props.getProperty('USERS') || '{}');
+  users[username] = { salt: salt, hash: hash, role: 'khach' };
+  props.setProperty('USERS', JSON.stringify(users));
+  Logger.log('Đã tạo tài khoản khách: ' + username);
+}
+
+function removeUser() {
+  const username = 'ten_can_xoa';   // ← sửa
+  const props = PropertiesService.getScriptProperties();
+  const users = JSON.parse(props.getProperty('USERS') || '{}');
+  delete users[username];
+  props.setProperty('USERS', JSON.stringify(users));
+  Logger.log('Đã xóa user: ' + username);
+}
+
+/* ==================== 3. ĐIỂM VÀO WEB APP ==================== */
+
+function doGet() {
+  return jsonOut_({ ok: true, message: 'HTX Lúa Di Sản API đang hoạt động.' });
+}
+
+function doPost(e) {
+  try {
+    const req = JSON.parse(e.postData.contents);
+    switch (req.action) {
+      case 'login':             return jsonOut_(handleLogin_(req));
+      case 'getMapData':        return jsonOut_(handleGetMapData_(req));
+      case 'getHistory':        return jsonOut_(handleGetHistory_(req));
+      case 'createEntry':       return jsonOut_(handleCreateEntry_(req));
+      case 'getSeasonTimeline': return jsonOut_(handleGetSeasonTimeline_(req));
+      default:                  return jsonOut_({ ok: false, error: 'Action không hợp lệ.' });
+    }
+  } catch (err) {
+    return jsonOut_({ ok: false, error: String(err) });
+  }
+}
+
+/* ==================== 4. ĐĂNG NHẬP & PHIÊN ==================== */
+
+function handleLogin_(req) {
+  const users = JSON.parse(
+    PropertiesService.getScriptProperties().getProperty('USERS') || '{}');
+  const u = users[req.username];
+  if (!u || hashPassword_(req.password, u.salt) !== u.hash) {
+    Utilities.sleep(800);
+    return { ok: false, error: 'Sai tên đăng nhập hoặc mật khẩu.' };
+  }
+  const role = u.role || 'admin';
+  const token = Utilities.getUuid();
+  CacheService.getScriptCache()
+    .put('tok_' + token, req.username + '|' + role, CONFIG.TOKEN_TTL_SECONDS);
+  return { ok: true, token: token, username: req.username, role: role };
+}
+
+function requireAuth_(req) {
+  if (!req.token) throw 'Cần đăng nhập để nhập liệu.';
+  const who = CacheService.getScriptCache().get('tok_' + req.token);
+  if (!who) throw 'Phiên đã hết hạn, vui lòng đăng nhập lại.';
+  const phan = who.split('|');
+  return { username: phan[0], role: phan[1] || 'admin' };
+}
+
+function hashPassword_(password, salt) {
+  const bytes = Utilities.computeDigest(
+    Utilities.DigestAlgorithm.SHA_256, salt + '::' + password);
+  return bytes.map(function (b) {
+    const v = (b < 0 ? b + 256 : b).toString(16);
+    return v.length === 1 ? '0' + v : v;
+  }).join('');
+}
+
+/* ==================== 5. ĐỌC DỮ LIỆU BẢN ĐỒ ==================== */
+
+function handleGetMapData_(req) {
+  if (!req.field || !req.season) throw 'Thiếu field hoặc season.';
+
+  const dem = CacheService.getScriptCache();
+  const khoaDem = 'map_' + CONFIG.CACHE_VER + '_' + req.field + '_' + req.season;
+  if (!req.fresh) {
+    const cu = dem.get(khoaDem);
+    if (cu) return JSON.parse(cu);
+  }
+
+  const pages = notionQueryAll_(CONFIG.DB_PRODUCT, {
+    and: [
+      { property: CONFIG.PROPS.PRODUCT_TITLE, title: { contains: req.field } },
+      { property: CONFIG.PROPS.PRODUCT_TITLE, title: { contains: req.season } },
+    ],
+  });
+
+  const plots = pages.map(function (p) {
+    const props = p.properties;
+    return {
+      pageId:       p.id,
+      productCode:  plainTitle_(props[CONFIG.PROPS.PRODUCT_TITLE]),
+      area:         dienTichLo_(props),
+      organic:      organicVal_(props[CONFIG.PROPS.ORGANIC]),
+      organicLabel: statusVal_(props[CONFIG.PROPS.ORGANIC]),
+      tinhTrang:    statusVal_(props['Tình trạng canh tác']),
+      sanLuong:     numberVal_(props[CONFIG.PROPS.YIELD_DRY]),
+    };
+  });
+
+  let season = null;
+  try { season = laySeasonInfo_(pages); } catch (e) { season = null; }
+
+  const ketQua = { ok: true, plots: plots, season: season };
+  try { dem.put(khoaDem, JSON.stringify(ketQua), 1800); } catch (e) {}
+  return ketQua;
+}
+
+/* Lần theo relation "Vụ mùa" của lô đầu tiên để đọc trang Vụ Mùa.
+   LƯU Ý: Notion API chỉ tính Rollup trên 25 relation đầu tiên — Đồng Cao
+   có 36 lô nên rollup sẽ THIẾU. Vì vậy diện tích, số hộ và sản lượng đều
+   tự cộng từ danh sách lô đã phân trang; Rollup chỉ là phương án dự phòng.
+   CHỈ TÍNH LÔ HỮU CƠ — đúng nghĩa "diện tích canh tác hữu cơ". */
+function laySeasonInfo_(productPages) {
+  let tongDT = 0, demLo = 0, tongSL = 0;
+  productPages.forEach(function (p) {
+    if (!organicVal_(p.properties[CONFIG.PROPS.ORGANIC])) return;
+    demLo++;
+    const a = dienTichLo_(p.properties);
+    if (a) tongDT += a;
+    const sl = numberVal_(p.properties[CONFIG.PROPS.YIELD_DRY]);
+    if (sl) tongSL += sl;
+  });
+
+  let seasonId = null;
+  for (let i = 0; i < productPages.length; i++) {
+    const rel = productPages[i].properties[CONFIG.PROPS.PRODUCT_SEASON_REL];
+    if (rel && rel.type === 'relation' && rel.relation.length) {
+      seasonId = rel.relation[0].id;
+      break;
+    }
+  }
+  if (!seasonId) return null;
+
+  const page = notionFetch_('https://api.notion.com/v1/pages/' + seasonId, 'get', null);
+  const pr = page.properties;
+  let name = '';
+  for (const key in pr) {
+    if (pr[key].type === 'title') { name = plainTitle_(pr[key]); break; }
+  }
+  const S = CONFIG.SEASON_PROPS;
+  return {
+    _pageId: seasonId,
+    name:     name,
+    gieoSa:   dateVal_(pr[S.GIEO_SA]),
+    deNhanh:  dateVal_(pr[S.DE_NHANH]),
+    donDong:  dateVal_(pr[S.DON_DONG]),
+    troBong:  dateVal_(pr[S.TRO_BONG]),
+    chacHat:  dateVal_(pr[S.CHAC_HAT]),
+    chinVang: dateVal_(pr[S.CHIN_VANG]),
+    thuHoach: dateVal_(pr[S.THU_HOACH]),
+    tongDienTich:  tongDT > 0 ? Math.round(tongDT * 10) / 10 : numberVal_(pr[S.TONG_DT]),
+    soHo:          demLo  > 0 ? demLo  : numberVal_(pr[S.SO_HO]),
+    tongSanLuong:  tongSL > 0 ? tongSL : numberVal_(pr[S.SAN_LUONG]),
+  };
+}
+
+/* ==================== 6. XEM NHẬT KÝ ==================== */
+
+function handleGetHistory_(req) {
+  if (!req.productCode) throw 'Thiếu productCode.';
+  let daDangNhap = false;
+  try { if (req.token) { requireAuth_(req); daDangNhap = true; } } catch (e) {}
+
+  const productPageId = findProductPageId_(req.productCode);
+  if (!productPageId) return { ok: true, entries: [] };
+
+  const pages = notionQueryAll_(CONFIG.DB_MASTER_TASK, {
+    property: CONFIG.PROPS.TASK_PRODUCT_REL,
+    relation: { contains: productPageId },
+  });
+
+  /* Lọc bỏ việc hành chính: task Họp/Thanh toán/Content bị "Phân bổ toàn
+     vụ" gắn xuống mọi lô, khách quét QR đang thấy chúng. */
+  const LOAI_DONG = ['Gieo/Cấy', 'Bón phân', 'Thu hoạch', 'Điều tiết nước',
+                     'Làm cỏ', 'Kiểm tra đồng ruộng'];
+  const laViecDong = function (props) {
+    const nhom = statusVal_(props[CONFIG.PROPS.F_NHOM]);
+    if (nhom === 'Hành chính') return false;
+    if (nhom) return true;
+    const bp = props[CONFIG.PROPS.TASK_DEPT];
+    if (bp && bp.type === 'multi_select' &&
+        bp.multi_select.some(function (o) { return o.name === 'Kỹ thuật'; })) return true;
+    const lt = props[CONFIG.PROPS.TASK_TYPE];
+    if (lt && lt.type === 'multi_select') {
+      return lt.multi_select.some(function (o) { return LOAI_DONG.indexOf(o.name) !== -1; });
+    }
+    return false;
+  };
+
+  const entries = pages.filter(function (p) { return laViecDong(p.properties); })
+    .map(function (p) {
+      const props = p.properties;
+      return {
+        pageId: p.id,
+        title:  plainTitle_(props[CONFIG.PROPS.TASK_TITLE]),
+        date:   dateVal_(props[CONFIG.PROPS.TASK_DATE]),
+        status: statusVal_(props[CONFIG.PROPS.TASK_STATUS]),
+        // nhãn cấu trúc — ai cũng xem được
+        nhom:     statusVal_(props[CONFIG.PROPS.F_NHOM]),
+        hoatDong: docHoatDong_(props[CONFIG.PROPS.F_HOATDONG]),
+        vanDe:    multiVal_(props[CONFIG.PROPS.F_VANDE]),
+        mucDo:    statusVal_(props[CONFIG.PROPS.F_MUCDO]),
+        viTri:    multiVal_(props[CONFIG.PROPS.F_VITRI]),
+        daXuLy:   multiVal_(props[CONFIG.PROPS.F_XULY]).concat(multiVal_(props[CONFIG.PROPS.F_XULY_ALT])),
+        nss:      numberVal_(props['NSS']),
+        giaiDoan: formulaStr_(props['Giai đoạn']),
+        // nội dung chi tiết vẫn khoá sau đăng nhập
+        desc:  daDangNhap ? richTextVal_(props[CONFIG.PROPS.TASK_DESC]) : '',
+        media: daDangNhap ? filesVal_(props[CONFIG.PROPS.TASK_IMAGES]) : null,
+        url:   daDangNhap ? p.url : '',
+        khoa:  !daDangNhap,
+      };
+    });
+
+  entries.sort(function (a, b) { return (b.date || '').localeCompare(a.date || ''); });
+  return { ok: true, entries: entries };
+}
+
+/* ==================== 7. NHẬP LIỆU MỚI ==================== */
+
+function handleCreateEntry_(req) {
+  const auth = requireAuth_(req);
+  if (auth.role !== 'admin') throw 'Tài khoản khách chỉ được xem chi tiết, không nhập liệu được.';
+  const username = auth.username;
+  if (!req.title) throw 'Thiếu title.';
+
+  let maList = [];
+  if (req.productCodes && req.productCodes.length) maList = req.productCodes.slice();
+  else if (req.productCode) maList = [req.productCode];
+  if (!maList.length) throw 'Thiếu productCode.';
+
+  const hopLe = [], boQua = [];
+  maList.forEach(function (ma) {
+    const id = findProductPageId_(ma);
+    if (id) hopLe.push({ code: ma, pageId: id });
+    else boQua.push(ma);
+  });
+  if (!hopLe.length) throw 'Không thửa nào khớp mã sản phẩm trong Notion: ' + maList.join(', ');
+
+  // Ảnh/video: upload Drive ĐÚNG 1 LẦN, mọi thửa dùng chung link
+  const imageLinks = [];
+  if (req.images && req.images.length) {
+    const dai = hopLe[0].code;
+    const fieldName = dai.split('-')[0];
+    const dateStr = req.date || Utilities.formatDate(new Date(), 'Asia/Ho_Chi_Minh', 'yyyy-MM-dd');
+    const sub = hopLe.length > 1 ? (dateStr + '_chung') : dateStr;
+    const folder = getOrCreatePath_([fieldName, dai, sub]);
+    req.images.forEach(function (img, i) {
+      const blob = Utilities.newBlob(
+        Utilities.base64Decode(img.base64),
+        img.mimeType || 'image/jpeg',
+        img.name || ('media_' + (i + 1)));
+      const file = folder.createFile(blob);
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      imageLinks.push({ name: file.getName(), url: file.getUrl() });
+    });
+  }
+
+  const daTao = [];
+  hopLe.forEach(function (lo) {
+    try {
+      const r = taoMotTask_(lo, req, imageLinks, username);
+      daTao.push({ code: lo.code, url: r.url });
+      const ph = lo.code.split('-');
+      if (ph.length >= 3) {
+        try {
+          CacheService.getScriptCache()
+            .remove('map_' + CONFIG.CACHE_VER + '_' + ph[0] + '_' + ph[2]);
+        } catch (e) {}
+      }
+    } catch (e) {
+      boQua.push(lo.code + ' (lỗi ghi: ' + e + ')');
+    }
+  });
+
+  return {
+    ok: true,
+    soTask: daTao.length,
+    notionPageUrl: daTao.length ? daTao[0].url : null,
+    daTao: daTao,
+    boQua: boQua,
+    images: imageLinks,
+  };
+}
+
+/* Tạo 1 bản ghi nhật ký cho 1 thửa */
+function taoMotTask_(lo, req, imageLinks, username) {
+  const P = CONFIG.PROPS;
+  const properties = {};
+
+  properties[P.TASK_TITLE] = { title: [{ text: { content: req.title } }] };
+  properties[P.TASK_PRODUCT_REL] = { relation: [{ id: lo.pageId }] };
+  if (req.date) properties[P.TASK_DATE] = { date: { start: req.date } };
+  if (req.content) properties[P.TASK_DESC] = { rich_text: richTextChunks_(req.content) };
+
+  // Nhóm — nền tảng của mọi thứ còn lại
+  const nhom = loc1_(req.nhom, CONFIG.WL.NHOM) || 'Quan sát';
+  properties[P.F_NHOM] = { select: { name: nhom } };
+
+  // Trạng thái SUY RA, không nhận từ web
+  const trangThai = CONFIG.STATUS_BY_NHOM[nhom] || CONFIG.STATUS_DONE;
+  properties[P.TASK_STATUS] = { select: { name: trangThai } };
+
+  /* Hoạt động — web có thể gửi lên một chuỗi (bản cũ) hoặc một mảng
+     (bản mới, chọn nhiều việc). Nhận cả hai rồi lọc theo whitelist. */
+  const dsHoatDong = locN_(
+    Array.isArray(req.hoatDong) ? req.hoatDong : (req.hoatDong ? [req.hoatDong] : []),
+    CONFIG.WL.HOATDONG);
+
+  /* Gửi lên Notion ĐÚNG KIỂU cột đang có. Nếu HTX đổi cột này từ Select
+     sang Multi-select trong Notion thì code tự bắt kịp, không cần sửa —
+     và ngược lại. Không làm vậy thì Notion trả lỗi 400, cả bản ghi bị
+     từ chối, xã viên ngoài đồng bấm Lưu là báo lỗi. */
+  if (dsHoatDong.length) {
+    try {
+      const kieuHD = layKieuCot_(CONFIG.DB_MASTER_TASK, P.F_HOATDONG);
+      if (kieuHD === 'multi_select') {
+        properties[P.F_HOATDONG] = {
+          multi_select: dsHoatDong.map(function (v) { return { name: v }; })
+        };
+      } else if (kieuHD === 'select') {
+        properties[P.F_HOATDONG] = { select: { name: dsHoatDong[0] } };
+        if (dsHoatDong.length > 1) {
+          Logger.log('⚠ Cột "' + P.F_HOATDONG + '" vẫn là Select nên chỉ ghi được ' +
+                     'việc đầu tiên (' + dsHoatDong[0] + '), bỏ qua: ' +
+                     dsHoatDong.slice(1).join(', ') +
+                     '. Đổi cột sang Multi-select trong Notion để ghi đủ.');
+        }
+      }
+    } catch (e) { Logger.log('⚠ Không đọc được kiểu cột Hoạt động: ' + e); }
+  }
+
+  /* Loại task suy ra từ TẤT CẢ việc đã chọn, gộp lại và bỏ trùng.
+     Ví dụ chọn "Làm cỏ" + "Cắt bông cỏ" thì cả hai đều ra "Làm cỏ",
+     gộp lại chỉ còn một. */
+  const dsLoaiTask = [];
+  dsHoatDong.forEach(function (hd) {
+    const lt = CONFIG.TYPE_BY_HOATDONG[hd];
+    if (lt && dsLoaiTask.indexOf(lt) === -1) dsLoaiTask.push(lt);
+  });
+  if (!dsLoaiTask.length) dsLoaiTask.push(CONFIG.TYPE_DEFAULT);
+  try {
+    const kieuLT = layKieuCot_(CONFIG.DB_MASTER_TASK, P.TASK_TYPE);
+    if (kieuLT === 'multi_select') {
+      properties[P.TASK_TYPE] = {
+        multi_select: dsLoaiTask.map(function (v) { return { name: v }; })
+      };
+    } else if (kieuLT === 'select') {
+      properties[P.TASK_TYPE] = { select: { name: dsLoaiTask[0] } };
+    }
+  } catch (e) {}
+
+  // Bộ phận
+  try {
+    const kieuBP = layKieuCot_(CONFIG.DB_MASTER_TASK, P.TASK_DEPT);
+    if (kieuBP === 'multi_select') properties[P.TASK_DEPT] = { multi_select: [{ name: CONFIG.DEPT_DEFAULT }] };
+    else if (kieuBP === 'select')  properties[P.TASK_DEPT] = { select: { name: CONFIG.DEPT_DEFAULT } };
+  } catch (e) {}
+
+  // Nhóm vấn đề
+  const vanDe = locN_(req.vanDe, CONFIG.WL.VANDE);
+  if (vanDe.length) properties[P.F_VANDE] = { multi_select: vanDe.map(function (v) { return { name: v }; }) };
+
+  const mucDo = loc1_(req.mucDo, CONFIG.WL.MUCDO);
+  if (mucDo) properties[P.F_MUCDO] = { select: { name: mucDo } };
+
+  if (soHopLe_(req.tyLe))    properties[P.F_TYLE]    = { number: Number(req.tyLe) };
+  if (soHopLe_(req.mucNuoc)) properties[P.F_MUCNUOC] = { number: Number(req.mucNuoc) };
+  if (soHopLe_(req.soLuong)) properties[P.F_SOLUONG] = { number: Number(req.soLuong) };
+
+  const viTri = locN_(req.viTri, CONFIG.WL.VITRI);
+  if (viTri.length) properties[P.F_VITRI] = { multi_select: viTri.map(function (v) { return { name: v }; }) };
+
+  const daXuLy = locN_(req.daXuLy, CONFIG.WL.XULY);
+  if (daXuLy.length) {
+    // Tự dò tên cột: "Đã xử lý tại chỗ" hoặc "Hướng xử lý" — cái nào có thì ghi vào.
+    let tenCot = P.F_XULY;
+    try { if (layKieuCot_(CONFIG.DB_MASTER_TASK, P.F_XULY) === 'none') tenCot = P.F_XULY_ALT; } catch (e) {}
+    properties[tenCot] = { multi_select: daXuLy.map(function (v) { return { name: v }; }) };
+  }
+
+  if (req.canXuLy === true) properties[P.F_CANXULY] = { checkbox: true };
+
+  if (req.vatTu) properties[P.F_VATTU] = { rich_text: richTextChunks_(String(req.vatTu).substring(0, 300)) };
+  const donVi = loc1_(req.donVi, CONFIG.WL.DONVI);
+  if (donVi) properties[P.F_DONVI] = { select: { name: donVi } };
+
+  // Vụ mùa: lần theo relation của chính lô này (nuôi NSS + Giai đoạn)
+  try {
+    const seasonId = laySeasonIdCuaLo_(lo.pageId, lo.code);
+    if (seasonId) properties[P.TASK_SEASON_REL] = { relation: [{ id: seasonId }] };
+  } catch (e) {}
+
+  if (imageLinks.length && P.TASK_IMAGES) {
+    properties[P.TASK_IMAGES] = {
+      files: imageLinks.map(function (l) {
+        return { name: l.name.substring(0, 90), external: { url: l.url } };
+      }),
+    };
+  }
+
+  const children = [{
+    object: 'block', type: 'paragraph',
+    paragraph: { rich_text: [{ text: { content: 'Người ghi nhận: ' + username } }] },
+  }];
+  imageLinks.forEach(function (l) {
+    children.push({ object: 'block', type: 'bookmark', bookmark: { url: l.url } });
+  });
+
+  try {
+    return notionFetch_('https://api.notion.com/v1/pages', 'post', {
+      parent: { database_id: CONFIG.DB_MASTER_TASK },
+      properties: properties, children: children,
+    });
+  } catch (err) {
+    // Cột trạng thái là kiểu Status chứ không phải Select → thử lại
+    if (String(err).indexOf('status') !== -1 || String(err).indexOf('select') !== -1) {
+      properties[P.TASK_STATUS] = { status: { name: trangThai } };
+      return notionFetch_('https://api.notion.com/v1/pages', 'post', {
+        parent: { database_id: CONFIG.DB_MASTER_TASK },
+        properties: properties, children: children,
+      });
+    }
+    throw err;
+  }
+}
+
+/* --- Lọc whitelist --- */
+function loc1_(giaTri, danhSach) {
+  if (!giaTri) return null;
+  const v = String(giaTri).trim();
+  if (danhSach.indexOf(v) !== -1) return v;
+  Logger.log('⚠ Giá trị lạ bị bỏ qua: "' + v + '" — không có trong whitelist.');
+  return null;
+}
+function locN_(mang, danhSach) {
+  if (!mang || !mang.length) return [];
+  const ok = [];
+  mang.forEach(function (x) {
+    const v = loc1_(x, danhSach);
+    if (v && ok.indexOf(v) === -1) ok.push(v);
+  });
+  return ok;
+}
+function soHopLe_(x) {
+  return x !== null && x !== undefined && x !== '' && !isNaN(Number(x));
+}
+
+/* Dò kiểu của 1 cột (nhớ đệm 6 giờ) */
+/* Chạy tay hàm này ngay sau khi đổi kiểu cột trong Notion, để code nhận
+   ra thay đổi tức thì thay vì chờ hết 6 giờ nhớ đệm. */
+function xoaDemKieuCot() {
+  const c = CacheService.getScriptCache();
+  const P = CONFIG.PROPS;
+  [P.F_HOATDONG, P.TASK_TYPE, P.TASK_DEPT].forEach(function (ten) {
+    c.remove('ptype_' + CONFIG.DB_MASTER_TASK + '_' + ten);
+    Logger.log('🧹 Đã xoá đệm kiểu cột: ' + ten);
+  });
+  Logger.log('Xong. Lần ghi nhật ký tiếp theo sẽ đọc lại kiểu cột từ Notion.');
+}
+
+function layKieuCot_(dbId, propName) {
+  const c = CacheService.getScriptCache();
+  const k = 'ptype_' + dbId + '_' + propName;
+  const hit = c.get(k);
+  if (hit) return hit;
+  const db = notionFetch_('https://api.notion.com/v1/databases/' + dbId, 'get', null);
+  const t = db.properties[propName] ? db.properties[propName].type : 'none';
+  try { c.put(k, t, 21600); } catch (e) {}
+  return t;
+}
+
+/* Đọc trang Vụ Mùa mà lô đang trỏ tới (nhớ đệm 6 giờ theo mã lô) */
+function laySeasonIdCuaLo_(productPageId, productCode) {
+  const c = CacheService.getScriptCache();
+  const k = 'seas_' + productCode;
+  const hit = c.get(k);
+  if (hit) return hit;
+  const pg = notionFetch_('https://api.notion.com/v1/pages/' + productPageId, 'get', null);
+  const rel = pg.properties[CONFIG.PROPS.PRODUCT_SEASON_REL];
+  if (rel && rel.type === 'relation' && rel.relation.length) {
+    const id = rel.relation[0].id;
+    try { c.put(k, id, 21600); } catch (e) {}
+    return id;
+  }
+  return null;
+}
+
+/* Notion giới hạn 2000 ký tự / khối text */
+function richTextChunks_(text) {
+  const chunks = [];
+  for (let i = 0; i < text.length; i += 1900) {
+    chunks.push({ text: { content: text.substring(i, i + 1900) } });
+  }
+  return chunks;
+}
+
+/* ============ 8. DÒNG THỜI GIAN MÙA VỤ (cho canh-dong.html) ============ */
+
+function handleGetSeasonTimeline_(req) {
+  const field  = req.field  || 'CKOD';
+  const season = req.season || 'HT26';
+
+  const cache = CacheService.getScriptCache();
+  const khoa = 'tl_' + CONFIG.CACHE_VER + '_' + field + '_' + season;
+  if (!req.fresh) {
+    const cu = cache.get(khoa);
+    if (cu) return JSON.parse(cu);
+  }
+
+  const pages = notionQueryAll_(CONFIG.DB_PRODUCT, {
+    and: [
+      { property: CONFIG.PROPS.PRODUCT_TITLE, title: { contains: field } },
+      { property: CONFIG.PROPS.PRODUCT_TITLE, title: { contains: season } },
+    ],
+  });
+  const s = laySeasonInfo_(pages);
+  if (!s) throw 'Không lần được trang Vụ Mùa từ lô nào.';
+
+  const nhatKy = notionQueryAll_(CONFIG.DB_MASTER_TASK, {
+    property: CONFIG.PROPS.TASK_SEASON_REL,
+    relation: { contains: s._pageId },
+  }).map(function (p) {
+    const pr = p.properties;
+    return {
+      ngay:     dateVal_(pr[CONFIG.PROPS.TASK_DATE]),
+      ten:      plainTitle_(pr[CONFIG.PROPS.TASK_TITLE]),
+      nhom:     statusVal_(pr[CONFIG.PROPS.F_NHOM]),
+      hoatDong: docHoatDong_(pr[CONFIG.PROPS.F_HOATDONG]),
+      vanDe:    multiVal_(pr[CONFIG.PROPS.F_VANDE]),
+      mucDo:    statusVal_(pr[CONFIG.PROPS.F_MUCDO]),
+      nss:      numberVal_(pr['NSS']),
+      /* Ảnh đầu tiên của bản ghi, để dòng thời gian hiện ảnh thật theo mốc.
+         Chỉ lấy ẢNH, bỏ video — video không làm nền trang được.
+         LƯU Ý: link file Notion hết hạn sau 1 giờ. An toàn vì máy chủ chỉ
+         đệm kết quả 30 phút, nhưng đừng nâng con số đó lên quá 50 phút,
+         nếu không ảnh sẽ chết giữa chừng. */
+      anh:      (function () {
+        const f = filesVal_(pr[CONFIG.PROPS.TASK_IMAGES]);
+        const a = f.items.filter(function (x) { return !x.video && x.url; });
+        return a.length ? a[0].url : '';
+      })(),
+    };
+  }).filter(function (x) { return x.ngay; })
+    .sort(function (a, b) { return a.ngay.localeCompare(b.ngay); });
+
+  const loc = { and: [{ property: 'Cánh đồng', select: { equals: field } }] };
+  if (s.gieoSa)   loc.and.push({ property: 'Ngày', date: { on_or_after:  s.gieoSa } });
+  if (s.thuHoach) loc.and.push({ property: 'Ngày', date: { on_or_before: s.thuHoach } });
+  let thoiTiet = [];
+  try {
+    thoiTiet = notionQueryAll_(CONFIG.DB_WEATHER, loc).map(function (p) {
+      const pr = p.properties;
+      return {
+        ngay: dateVal_(pr['Ngày']),
+        mua:  numberVal_(pr['Lượng mưa (mm)']),
+        tMax: numberVal_(pr['Nhiệt độ cao (C)']),
+        tMin: numberVal_(pr['Nhiệt độ thấp (C)']),
+      };
+    }).filter(function (x) { return x.ngay; })
+      .sort(function (a, b) { return a.ngay.localeCompare(b.ngay); });
+  } catch (e) { thoiTiet = []; }
+
+  const kq = { ok: true, season: s, nhatKy: nhatKy, thoiTiet: thoiTiet };
+  try { cache.put(khoa, JSON.stringify(kq), 1800); } catch (e) {}
+  return kq;
+}
+
+/* ==================== 9. KÉO THỜI TIẾT OPEN-METEO ==================== */
+/* Trigger: ⏰ Add Trigger → keoThoiTietHangNgay → Time-driven → Day timer → 2am-3am
+   Kéo bù cả vụ: sửa 2 ngày trong keoThoiTietLichSu() rồi Run một lần. */
+
+/* ĐÂY LÀ HÀM ĐẶT TRIGGER. Mỗi lần chạy làm hai việc:
+
+   BƯỚC 1 — ghi các ngày còn thiếu trong 10 ngày gần nhất, LẤY ĐẾN HÔM QUA.
+     Cố ý không ghi hôm nay: lúc 2-3h sáng thì con số của hôm nay mới chỉ là
+     DỰ BÁO, mà cột "Khoá" chặn ghi trùng nên nó sẽ bị đóng băng vĩnh viễn.
+     Bỏ hôm nay đi, sáng mai mới ghi — khi đó là ngày đã xong.
+
+   BƯỚC 2 — sửa lại các ngày cũ bằng số đo thật (ERA5).
+     Số ở bước 1 vẫn là mô hình dự báo, chưa phải số đo. Kho ERA5 của
+     Open-Meteo về chậm 5-7 ngày, nên bước này quay lại cửa sổ 5-35 ngày
+     trước, lấy số thật và GHI ĐÈ lên dòng cũ, rồi đánh dấu Nguồn =
+     "Open-Meteo archive" để lần sau không đụng vào nữa.
+
+   Kết quả: sáng hôm sau đã có số để xem, khoảng một tuần sau con số đó
+   tự được thay bằng số đo thật, đúng một lần. */
+function keoThoiTietHangNgay() {
+  const tz = 'Asia/Ho_Chi_Minh';
+  const homQua = Utilities.formatDate(new Date(Date.now() -  1 * 86400000), tz, 'yyyy-MM-dd');
+  const tu     = Utilities.formatDate(new Date(Date.now() - 10 * 86400000), tz, 'yyyy-MM-dd');
+  keoThoiTiet_(tu, homQua, false);     // bước 1
+  capNhatThoiTietThat_(35, 5);         // bước 2
+  xoaDemDongThoiGian_();               // bước 3
+  baoDongThoiTiet_(homQua);            // bước 4
+}
+
+/* Trang Cánh Đồng nhớ đệm dòng thời gian 30 phút cho MỖI cánh đồng riêng.
+   Vừa ghi mưa mới mà không xoá thì cánh đồng nào đang còn đệm sẽ hiện số
+   cũ tới nửa tiếng — trông như "cánh đồng này cập nhật, cánh đồng kia
+   không". Xoá luôn cho ba cánh đồng để cả ba hiện cùng lúc. */
+function xoaDemDongThoiGian_() {
+  try {
+    const dem = CacheService.getScriptCache();
+    const vu = 'HT26';
+    Object.keys(CONFIG.FIELDS_GEO).forEach(function (ma) {
+      dem.remove('tl_'  + CONFIG.CACHE_VER + '_' + ma + '_' + vu);
+      dem.remove('map_' + CONFIG.CACHE_VER + '_' + ma + '_' + vu);
+    });
+    Logger.log('🧹 Đã xoá đệm dòng thời gian của 3 cánh đồng.');
+  } catch (e) {
+    Logger.log('⚠ Không xoá được đệm: ' + e);
+  }
+}
+
+/* Chạy xong thì KIỂM LẠI: hôm qua đã có dòng trong Notion chưa?
+   Chưa có nghĩa là việc ghi hỏng — gửi mail báo ngay.
+
+   Vì sao cần: mọi lỗi ghi Notion trong keoThoiTiet_ đều bị try/catch nuốt
+   và chỉ ghi vào Logger. Apps Script vì thế vẫn báo "Error rate 0%", trigger
+   trông như chạy tốt suốt, trong khi thực tế không ghi được gì. Đó đúng là
+   chuyện đã xảy ra từ 01/08/2026 mà không ai biết. */
+function baoDongThoiTiet_(ngayCanCo) {
+  try {
+    const daCo = tapKhoaThoiTietDaCo_();
+    const thieu = Object.keys(CONFIG.FIELDS_GEO).filter(function (ma) {
+      return !daCo[ma + '_' + ngayCanCo];
+    });
+    if (!thieu.length) return;
+
+    const mail = Session.getEffectiveUser().getEmail();
+    if (!mail) return;
+    MailApp.sendEmail(mail,
+      '[HTX Lúa Di Sản] Chưa ghi được thời tiết ngày ' + ngayCanCo,
+      'Chạy xong keoThoiTietHangNgay nhưng ngày ' + ngayCanCo +
+      ' vẫn thiếu dữ liệu ở các cánh đồng: ' + thieu.join(', ') + '.\n\n' +
+      'Mở Apps Script → Executions → lượt chạy gần nhất, tìm dòng bắt đầu ' +
+      'bằng ❌ để biết vì sao.\n\n' +
+      'Lưu ý: cột "Error rate" của trigger KHÔNG phản ánh lỗi ghi Notion, ' +
+      'vì các lỗi đó được bắt lại và chỉ ghi vào log.');
+    Logger.log('📧 Đã gửi mail báo thiếu dữ liệu ngày ' + ngayCanCo + ' cho ' + mail);
+  } catch (e) {
+    Logger.log('⚠ Không gửi được mail báo động: ' + e);
+  }
+}
+
+/* Chạy tay khi muốn ép sửa lại số thật ngay, không chờ trigger.
+   Có thể nới rộng cửa sổ, ví dụ capNhatThoiTietThat_(120, 5) để rà cả vụ. */
+function suaLaiSoMuaThat() {
+  capNhatThoiTietThat_(120, 5);
+}
+
+/* CHỈ DÙNG ĐỂ LẤP DỮ LIỆU CŨ, chạy tay. ĐỪNG ĐẶT TRIGGER VÀO HÀM NÀY —
+   nó dùng kho ERA5 vốn chậm vài ngày, nên không bao giờ lấy được hôm qua.
+   Hàm đặt trigger là keoThoiTietHangNgay. */
+function keoThoiTietLichSu() {
+  keoThoiTiet_('2026-05-01', '2026-09-30', true);   // ← sửa 2 ngày này khi cần
+  // Ngày kết thúc tự động cắt về hôm nay bên trong keoThoiTiet_ —
+  // API archive không có dữ liệu tương lai, đưa ngày mai vào là báo lỗi
+  // "Parameter 'end_date' is out of allowed range".
+}
+
+function keoThoiTiet_(tuNgay, denNgay, dungArchive) {
+  /* CẮT NGÀY KẾT THÚC VỀ HÔM NAY.
+     Open-Meteo archive chỉ có dữ liệu tới hôm nay. Truyền ngày tương lai
+     (ví dụ 30/09 khi mới là 30/07) thì API trả lỗi và KHÔNG ghi được gì:
+       {"error":true,"reason":"Parameter 'end_date' is out of allowed
+        range from 1940-01-01 to 2026-07-30"}
+     Chạy lại hàm này sau khi gặt là nó tự lấy nốt phần còn thiếu —
+     những ngày đã có sẵn được bỏ qua nhờ cột "Khoá". */
+  const homNay = Utilities.formatDate(new Date(), 'Asia/Ho_Chi_Minh', 'yyyy-MM-dd');
+  if (denNgay > homNay) {
+    Logger.log('ℹ️ Ngày kết thúc ' + denNgay + ' ở tương lai → cắt về ' + homNay + '.');
+    denNgay = homNay;
+  }
+  if (tuNgay > denNgay) {
+    Logger.log('❌ Ngày bắt đầu ' + tuNgay + ' sau ngày kết thúc ' + denNgay + ' — không làm gì.');
+    return;
+  }
+
+  const daCo = tapKhoaThoiTietDaCo_();
+  let tongMoi = 0;
+
+  /* Đồng Cao và Đồng Mẫu dùng CHUNG một toạ độ → chỉ gọi API một lần rồi
+     dùng lại kết quả. Trước đây biến daGoi có khai mà không dùng, nên mỗi
+     lượt tốn 3 lượt gọi thay vì 2. Ít gọi là ít đụng trần lượt/ngày. */
+  const daGoi = {};
+  Object.keys(CONFIG.FIELDS_GEO).forEach(function (ma) {
+    const g = CONFIG.FIELDS_GEO[ma];
+    const khoaToaDo = g.lat + ',' + g.lng;
+    const goc = dungArchive
+      ? 'https://archive-api.open-meteo.com/v1/archive'
+      : 'https://api.open-meteo.com/v1/forecast';
+    let url = goc + '?latitude=' + g.lat + '&longitude=' + g.lng +
+      '&daily=precipitation_sum,temperature_2m_max,temperature_2m_min,wind_gusts_10m_max' +
+      '&timezone=Asia%2FBangkok';
+    url += dungArchive
+      ? ('&start_date=' + tuNgay + '&end_date=' + denNgay)
+      : '&past_days=10&forecast_days=1';
+
+    if (daGoi[khoaToaDo]) {                 // đã gọi cho toạ độ này rồi
+      xuLyDaily_(daGoi[khoaToaDo], ma);
+      return;
+    }
+
+    let res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+
+    /* BẪY ĐÃ LÀM CHẾT VIỆC GHI MƯA TỪ 01/08/2026 — đọc kỹ trước khi sửa.
+       Kho ERA5 chậm vài ngày so với hôm nay. Hỏi tới ngày nó chưa có,
+       API KHÔNG trả mảng rỗng mà trả hẳn lỗi 400:
+         "Parameter 'end_date' is out of allowed range from 1940-01-01 to
+          2026-07-31"
+       Lỗi đó làm cả lượt chạy thoát ra, KHÔNG ghi được ngày nào — kể cả
+       những ngày cũ vốn đã có sẵn dữ liệu. Càng để lâu càng hụt nhiều,
+       mà log vẫn êm re nếu không ai mở ra đọc.
+       Nay: bắt lấy ngày cuối cùng mà kho có, rồi hỏi lại đúng tới đó. */
+    if (res.getResponseCode() >= 300 && dungArchive) {
+      const noiDung = res.getContentText();
+      const khop = noiDung.match(/to (\d{4}-\d{2}-\d{2})/);
+      if (khop && khop[1] >= tuNgay) {
+        Logger.log('ℹ️ Kho ERA5 mới có tới ' + khop[1] +
+                   ' (đã hỏi tới ' + denNgay + ') → hỏi lại tới ' + khop[1] + '.');
+        url = url.replace('&end_date=' + denNgay, '&end_date=' + khop[1]);
+        res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+      }
+    }
+
+    if (res.getResponseCode() >= 300) {
+      const noiDung = res.getContentText();
+      Logger.log('❌ Open-Meteo lỗi cho ' + ma + ': ' + noiDung);
+      if (noiDung.indexOf('limit exceeded') !== -1) {
+        Logger.log('   ↳ Đây là TRẦN LƯỢT GỌI/NGÀY của Open-Meteo, tính theo ' +
+                   'địa chỉ IP. Apps Script chạy trên IP dùng chung của Google ' +
+                   'nên hạn mức bị người khác xài hết, không phải do mình gọi ' +
+                   'nhiều. Cách chữa: đặt thêm trigger vào các giờ khác trong ' +
+                   'ngày — hàm tự bỏ qua ngày đã có nên chạy lại không tốn gì.');
+      }
+      return;
+    }
+    const d = JSON.parse(res.getContentText()).daily;
+    if (!d || !d.time) { Logger.log('⚠ Không có dữ liệu daily cho ' + ma); return; }
+    daGoi[khoaToaDo] = d;
+    xuLyDaily_(d, ma);
+  });
+
+  /* Ghi các ngày còn thiếu của một cánh đồng, từ bảng dữ liệu đã tải về. */
+  function xuLyDaily_(d, ma) {
+    for (let i = 0; i < d.time.length; i++) {
+      const ngay = d.time[i];
+      if (ngay < tuNgay || ngay > denNgay) continue;
+      const khoa = ma + '_' + ngay;
+      if (daCo[khoa]) continue;
+
+      const props = {};
+      props['Khoá']      = { title: [{ text: { content: khoa } }] };
+      props['Ngày']      = { date: { start: ngay } };
+      props['Cánh đồng'] = { select: { name: ma } };
+      props['Nguồn']     = { select: { name: dungArchive ? 'Open-Meteo archive' : 'Open-Meteo forecast' } };
+      if (d.precipitation_sum  && d.precipitation_sum[i]  !== null) props['Lượng mưa (mm)']    = { number: d.precipitation_sum[i] };
+      if (d.temperature_2m_max && d.temperature_2m_max[i] !== null) props['Nhiệt độ cao (C)']  = { number: d.temperature_2m_max[i] };
+      if (d.temperature_2m_min && d.temperature_2m_min[i] !== null) props['Nhiệt độ thấp (C)'] = { number: d.temperature_2m_min[i] };
+      const gio = d.wind_gusts_10m_max || d.windgusts_10m_max;   // API đổi tên tham số, nhận cả hai
+      if (gio && gio[i] !== null && gio[i] !== undefined) props['Gió giật (km/h)'] = { number: gio[i] };
+
+      try {
+        notionFetch_('https://api.notion.com/v1/pages', 'post', {
+          parent: { database_id: CONFIG.DB_WEATHER }, properties: props,
+        });
+        daCo[khoa] = true;
+        tongMoi++;
+        Utilities.sleep(340);
+      } catch (e) {
+        Logger.log('❌ Ghi lỗi ' + khoa + ': ' + e);
+      }
+    }
+  }
+
+  if (tongMoi === 0) {
+    Logger.log('⚠ Không ghi thêm ngày nào. Hoặc các ngày trong khoảng ' +
+               tuNgay + ' → ' + denNgay + ' đã có đủ, hoặc dòng ❌ phía trên ' +
+               'cho biết vì sao. Đừng vội kết luận là chạy thành công.');
+  } else {
+    Logger.log('✅ Đã ghi thêm ' + tongMoi + ' ngày thời tiết.');
+  }
+}
+
+/* Trả về  khoá -> { id, nguon }  của mọi dòng đã có trong DB thời tiết.
+   keoThoiTiet_ chỉ cần biết "có hay không" (object luôn truthy) nên vẫn
+   chạy như cũ; capNhatThoiTietThat_ thì cần id để ghi đè. */
+function tapKhoaThoiTietDaCo_() {
+  const tap = {};
+  let cursor = null;
+  do {
+    const body = { page_size: 100 };
+    if (cursor) body.start_cursor = cursor;
+    const data = notionFetch_(
+      'https://api.notion.com/v1/databases/' + CONFIG.DB_WEATHER + '/query', 'post', body);
+    data.results.forEach(function (p) {
+      const k = plainTitle_(p.properties['Khoá']);
+      if (!k) return;
+      const ng = p.properties['Nguồn'];
+      tap[k] = { id: p.id, nguon: (ng && ng.select && ng.select.name) || '' };
+    });
+    cursor = data.has_more ? data.next_cursor : null;
+  } while (cursor);
+  return tap;
+}
+
+/* ==================== 9b. GHI ĐÈ BẰNG SỐ ĐO THẬT (ERA5) ====================
+
+   luiToiDa / luiToiThieu = cửa sổ ngày tính ngược từ hôm nay.
+   Mặc định 35 và 5: rà các ngày từ 35 ngày trước đến 5 ngày trước.
+
+   Vì sao không rà tới hôm qua: ERA5 về chậm 5-7 ngày, hỏi sớm quá thì API
+   trả null. Gặp null thì hàm BỎ QUA chứ không đánh dấu archive, nên ngày
+   đó sẽ được thử lại vào những lần chạy sau — tự lành, không cần canh.
+
+   Dòng nào đã có Nguồn = "Open-Meteo archive" thì bỏ qua hẳn: số đo thật
+   rồi, không ghi đè lần hai. */
+function capNhatThoiTietThat_(luiToiDa, luiToiThieu) {
+  luiToiDa    = luiToiDa    || 35;
+  luiToiThieu = luiToiThieu || 5;
+  const tz = 'Asia/Ho_Chi_Minh';
+  const tuNgay  = Utilities.formatDate(new Date(Date.now() - luiToiDa    * 86400000), tz, 'yyyy-MM-dd');
+  const denNgay = Utilities.formatDate(new Date(Date.now() - luiToiThieu * 86400000), tz, 'yyyy-MM-dd');
+
+  const daCo = tapKhoaThoiTietDaCo_();
+  let daSua = 0, chuaCo = 0;
+  const TRAN = 150;                  // chặn trên, tránh chạy quá 6 phút
+
+  Object.keys(CONFIG.FIELDS_GEO).forEach(function (ma) {
+    if (daSua >= TRAN) return;
+    const g = CONFIG.FIELDS_GEO[ma];
+    const url = 'https://archive-api.open-meteo.com/v1/archive' +
+      '?latitude=' + g.lat + '&longitude=' + g.lng +
+      '&daily=precipitation_sum,temperature_2m_max,temperature_2m_min,wind_gusts_10m_max' +
+      '&timezone=Asia%2FBangkok&start_date=' + tuNgay + '&end_date=' + denNgay;
+
+    const res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+    if (res.getResponseCode() >= 300) {
+      Logger.log('❌ ERA5 lỗi cho ' + ma + ': ' + res.getContentText());
+      return;
+    }
+    const d = JSON.parse(res.getContentText()).daily;
+    if (!d || !d.time) { Logger.log('⚠ ERA5 không có dữ liệu cho ' + ma); return; }
+
+    for (let i = 0; i < d.time.length; i++) {
+      if (daSua >= TRAN) break;
+      const ngay = d.time[i];
+      const dong = daCo[ma + '_' + ngay];
+      if (!dong)      { chuaCo++; continue; }             // chưa có dòng → để bước 1 ghi
+      if (dong.nguon === 'Open-Meteo archive') continue;  // đã là số thật
+      /* Số vũ kế do người đo tại ruộng LUÔN đúng hơn mô hình toàn cầu.
+         Tuyệt đối không đè lên. Muốn quay lại số của Open-Meteo thì tự
+         đổi Nguồn về "Open-Meteo forecast" trong Notion. */
+      if (dong.nguon === 'Nhập tay') continue;
+
+      const mua = d.precipitation_sum ? d.precipitation_sum[i] : null;
+      if (mua === null || mua === undefined) continue;    // ERA5 chưa về → thử lại hôm sau
+
+      const props = {
+        'Lượng mưa (mm)': { number: mua },
+        'Nguồn':          { select: { name: 'Open-Meteo archive' } },
+      };
+      if (d.temperature_2m_max && d.temperature_2m_max[i] !== null) props['Nhiệt độ cao (C)']  = { number: d.temperature_2m_max[i] };
+      if (d.temperature_2m_min && d.temperature_2m_min[i] !== null) props['Nhiệt độ thấp (C)'] = { number: d.temperature_2m_min[i] };
+      const gio = d.wind_gusts_10m_max || d.windgusts_10m_max;
+      if (gio && gio[i] !== null && gio[i] !== undefined) props['Gió giật (km/h)'] = { number: gio[i] };
+
+      try {
+        notionFetch_('https://api.notion.com/v1/pages/' + dong.id, 'patch', { properties: props });
+        dong.nguon = 'Open-Meteo archive';
+        daSua++;
+        Utilities.sleep(340);
+      } catch (e) {
+        Logger.log('❌ Sửa lỗi ' + ma + '_' + ngay + ': ' + e);
+      }
+    }
+  });
+
+  Logger.log('✅ Đã thay ' + daSua + ' ngày bằng số đo thật (ERA5), cửa sổ ' +
+             tuNgay + ' → ' + denNgay +
+             (chuaCo ? '. Còn ' + chuaCo + ' ngày chưa có dòng trong Notion.' : '.'));
+  return daSua;
+}
+
+/* ==================== 10. TIỆN ÍCH NOTION ==================== */
+
+function notionFetch_(url, method, payload) {
+  const token = PropertiesService.getScriptProperties().getProperty('NOTION_TOKEN');
+  if (!token) throw 'Chưa cài Notion token (chạy setupNotionToken).';
+  const res = UrlFetchApp.fetch(url, {
+    method: method,
+    contentType: 'application/json',
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Notion-Version': '2022-06-28',
+    },
+    payload: payload ? JSON.stringify(payload) : null,
+    muteHttpExceptions: true,
+  });
+  const data = JSON.parse(res.getContentText());
+  if (res.getResponseCode() >= 300) {
+    throw 'Notion API lỗi: ' + (data.message || res.getContentText());
+  }
+  return data;
+}
+
+function notionQueryAll_(dbId, filter) {
+  let results = [], cursor = null;
+  do {
+    const body = { page_size: 100 };
+    if (filter) body.filter = filter;
+    if (cursor) body.start_cursor = cursor;
+    const data = notionFetch_(
+      'https://api.notion.com/v1/databases/' + dbId + '/query', 'post', body);
+    results = results.concat(data.results);
+    cursor = data.has_more ? data.next_cursor : null;
+  } while (cursor);
+  return results;
+}
+
+function findProductPageId_(productCode) {
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get('prod_' + productCode);
+  if (cached) return cached;
+  const pages = notionQueryAll_(CONFIG.DB_PRODUCT, {
+    property: CONFIG.PROPS.PRODUCT_TITLE,
+    title: { equals: productCode },
+  });
+  if (!pages.length) return null;
+  cache.put('prod_' + productCode, pages[0].id, 21600);
+  return pages[0].id;
+}
+
+/* ---- Đọc giá trị các kiểu property ---- */
+
+function plainTitle_(prop) {
+  if (!prop || !prop.title) return '';
+  return prop.title.map(function (t) { return t.plain_text; }).join('');
+}
+
+/* Đọc một ô Notion ra SỐ.
+   Trước đây chỉ nhận number thuần, formula-number và rollup-number. Nhưng
+   "Diện tích (m2)" là FORMULA, còn "Tổng diện tích" là ROLLUP CỦA FORMULA —
+   hai kiểu đó Notion API có lúc trả về chuỗi hoặc mảng, thế là hàm cũ trả
+   null và trang chủ hiện dấu "—". Nay xử lý cả hai. */
+function numberVal_(prop) {
+  if (!prop) return null;
+  if (prop.type === 'number') return prop.number;
+
+  if (prop.type === 'formula') {
+    if (prop.formula.type === 'number') return prop.formula.number;
+    if (prop.formula.type === 'string') return soTuChuoi_(prop.formula.string);
+    return null;
+  }
+
+  if (prop.type === 'rollup') {
+    if (prop.rollup.type === 'number') return prop.rollup.number;
+    if (prop.rollup.type === 'array') {          // rollup của formula → mảng
+      let tong = 0, co = false;
+      prop.rollup.array.forEach(function (o) {
+        const v = numberVal_(o);                 // mỗi phần tử lại là một ô
+        if (v === null || v === undefined) return;
+        tong += v; co = true;
+      });
+      return co ? tong : null;
+    }
+    return null;
+  }
+  return null;
+}
+
+/* "13.500 m²" → 13500 . Dấu chấm ngăn nghìn kiểu Việt được bỏ đi,
+   dấu phẩy thập phân đổi thành dấu chấm. */
+function soTuChuoi_(chuoi) {
+  if (!chuoi) return null;
+  /* Bắt CỤM SỐ ĐẦU TIÊN rồi mới xử lý — không được xoá hết chữ trước,
+     vì đơn vị "m2" có chữ số 2 sẽ dính vào làm sai kết quả. */
+  const m = String(chuoi).match(/-?\d[\d.,]*/);
+  if (!m) return null;
+  const t = m[0]
+    .replace(/\.(?=\d{3}(\D|$))/g, '')   // bỏ dấu chấm ngăn nghìn kiểu Việt
+    .replace(',', '.');                    // phẩy thập phân → chấm
+  const n = parseFloat(t);
+  return isNaN(n) ? null : n;
+}
+
+/* Diện tích của một lô. Thử lần lượt vài tên cột — Notion đang có cả
+   "Diện tích (m2)" (formula) lẫn "DT thửa (m2)" (rollup số, đáng tin hơn),
+   và có nơi gõ m² bằng ký tự ² nhỏ. Cột nào ra số trước thì lấy. */
+const COT_DIEN_TICH = ['Diện tích (m2)', 'DT thửa (m2)', 'Diện tích (m²)', 'DT thửa (m²)'];
+function dienTichLo_(props) {
+  for (let i = 0; i < COT_DIEN_TICH.length; i++) {
+    const v = numberVal_(props[COT_DIEN_TICH[i]]);
+    if (v) return v;
+  }
+  return null;
+}
+
+function organicVal_(prop) {
+  if (!prop) return false;
+  if (prop.type === 'checkbox') return prop.checkbox === true;
+  let v = '';
+  if (prop.type === 'select' && prop.select) v = prop.select.name;
+  else if (prop.type === 'status' && prop.status) v = prop.status.name;
+  else return false;
+  v = v.toLowerCase().trim();
+  if (v.indexOf('không') === 0 || v.indexOf('khong') === 0 || v === 'no') return false;
+  return v.indexOf('hữu cơ') !== -1 || v.indexOf('huu co') !== -1 ||
+         v === 'organic' || v === 'có' || v === 'co' || v === 'yes';
+}
+
+function dateVal_(prop) {
+  if (!prop) return null;
+  if (prop.type === 'date' && prop.date) return prop.date.start;
+  if (prop.type === 'created_time') return prop.created_time;
+  if (prop.type === 'rollup') {
+    const r = prop.rollup;
+    if (r.type === 'date' && r.date) return r.date.start;
+    if (r.type === 'array' && r.array.length) {
+      const it = r.array[0];
+      if (it.type === 'date' && it.date) return it.date.start;
+    }
+  }
+  if (prop.type === 'formula' && prop.formula.type === 'date' && prop.formula.date) {
+    return prop.formula.date.start;
+  }
+  return null;
+}
+
+/* Đọc cột "Hoạt động" — cột này có thể là Select (một giá trị) HOẶC
+   Multi-select (nhiều giá trị), tuỳ HTX cấu hình trong Notion.
+   Luôn trả về MỘT CHUỖI để phần hiển thị bên web không phải sửa gì:
+   nhiều việc thì nối lại bằng dấu " · ".
+   Hàm statusVal_ cũ chỉ hiểu select, gặp multi-select là trả chuỗi rỗng
+   → hoạt động biến mất khỏi nhật ký mà không báo lỗi. */
+function docHoatDong_(prop) {
+  if (!prop) return '';
+  if (prop.type === 'multi_select') {
+    return (prop.multi_select || []).map(function (o) { return o.name; }).join(' · ');
+  }
+  return statusVal_(prop);
+}
+
+function statusVal_(prop) {
+  if (!prop) return '';
+  if (prop.type === 'status' && prop.status) return prop.status.name;
+  if (prop.type === 'select' && prop.select) return prop.select.name;
+  return '';
+}
+
+function multiVal_(prop) {
+  if (!prop || prop.type !== 'multi_select' || !prop.multi_select) return [];
+  return prop.multi_select.map(function (o) { return o.name; });
+}
+
+function richTextVal_(prop) {
+  if (!prop || prop.type !== 'rich_text' || !prop.rich_text) return '';
+  return prop.rich_text.map(function (t) { return t.plain_text; }).join('');
+}
+
+function formulaStr_(prop) {
+  if (!prop) return '';
+  if (prop.type === 'formula' && prop.formula.type === 'string') {
+    return (prop.formula.string || '').trim();
+  }
+  return '';
+}
+
+function filesVal_(prop) {
+  if (!prop || prop.type !== 'files' || !prop.files || !prop.files.length) {
+    return { count: 0, anh: 0, video: 0, items: [], folderUrl: '' };
+  }
+  const items = prop.files.map(function (f) {
+    const url = f.type === 'external' ? f.external.url : (f.file ? f.file.url : '');
+    const ten = (f.name || '').toLowerCase();
+    const laVideo = /\.(mp4|mov|avi|mkv|webm|3gp|m4v|hevc)$/.test(ten) ||
+                    url.toLowerCase().indexOf('video') !== -1;
+    return { name: f.name || '', url: url, video: laVideo };
+  });
+  const anh = items.filter(function (x) { return !x.video; }).length;
+  return { count: items.length, anh: anh, video: items.length - anh, items: items, folderUrl: '' };
+}
+
+/* ==================== 11. TIỆN ÍCH DRIVE ==================== */
+
+function getOrCreatePath_(parts) {
+  let folder = DriveApp.getFolderById(CONFIG.DRIVE_ROOT_FOLDER_ID);
+  parts.forEach(function (name) {
+    const it = folder.getFoldersByName(name);
+    folder = it.hasNext() ? it.next() : folder.createFolder(name);
+  });
+  return folder;
+}
+
+/* ==================== 12. TRẢ JSON ==================== */
+
+function jsonOut_(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+/* ==================== 13. HÀM CHẨN ĐOÁN ==================== */
+
+function kiemTraToken() {
+  const token = PropertiesService.getScriptProperties().getProperty('NOTION_TOKEN');
+  Logger.log('Độ dài token: ' + (token ? token.length : 'CHƯA CÓ'));
+  const res = UrlFetchApp.fetch('https://api.notion.com/v1/users/me', {
+    headers: { 'Authorization': 'Bearer ' + token, 'Notion-Version': '2022-06-28' },
+    muteHttpExceptions: true,
+  });
+  Logger.log('Notion trả lời: ' + res.getContentText());
+}
+
+function kiemTraDatabase() {
+  ['DB_PRODUCT', 'DB_MASTER_TASK', 'DB_WEATHER'].forEach(function (k) {
+    const id = CONFIG[k];
+    const token = PropertiesService.getScriptProperties().getProperty('NOTION_TOKEN');
+    const res = UrlFetchApp.fetch('https://api.notion.com/v1/databases/' + id, {
+      headers: { 'Authorization': 'Bearer ' + token, 'Notion-Version': '2022-06-28' },
+      muteHttpExceptions: true,
+    });
+    const d = JSON.parse(res.getContentText());
+    if (d.object === 'database') {
+      Logger.log(k + ' ✓ OK — tên: ' + (d.title && d.title[0] ? d.title[0].plain_text : '(không tên)'));
+    } else {
+      Logger.log(k + ' ✗ LỖI: ' + d.message);
+    }
+  });
+}
+
+function kiemTraUser() {
+  const users = JSON.parse(
+    PropertiesService.getScriptProperties().getProperty('USERS') || '{}');
+  const ds = Object.keys(users);
+  Logger.log(ds.length ? 'Các tài khoản đang có: ' + ds.join(', ') : 'CHƯA CÓ tài khoản nào!');
+}
+
+/* HÀM QUAN TRỌNG NHẤT — chạy sau khi dán xong, phải thấy ✅ hết */
+function kiemTraBanVa() {
+  Logger.log('=== 1. DATABASE ===');
+  ['DB_PRODUCT', 'DB_MASTER_TASK', 'DB_WEATHER'].forEach(function (k) {
+    try {
+      const d = notionFetch_('https://api.notion.com/v1/databases/' + CONFIG[k], 'get', null);
+      Logger.log('  ' + k + ' ✓ ' + (d.title[0] ? d.title[0].plain_text : '(không tên)'));
+    } catch (e) { Logger.log('  ' + k + ' ✗ ' + e); }
+  });
+
+  Logger.log('=== 2. TRƯỜNG CẤU TRÚC TRÊN DB NHẬT KÝ ===');
+  const db = notionFetch_('https://api.notion.com/v1/databases/' + CONFIG.DB_MASTER_TASK, 'get', null);
+  ['F_NHOM','F_HOATDONG','F_VANDE','F_MUCDO','F_TYLE','F_VITRI','F_XULY',
+   'F_CANXULY','F_VATTU','F_SOLUONG','F_DONVI','F_MUCNUOC'].forEach(function (k) {
+    const ten = CONFIG.PROPS[k];
+    Logger.log('  "' + ten + '": ' + (db.properties[ten] ? 'CÓ ✅ (' + db.properties[ten].type + ')' : 'KHÔNG ❌'));
+  });
+  ['NSS', 'Giai đoạn', 'Ngày gieo sạ (vụ)'].forEach(function (ten) {
+    Logger.log('  "' + ten + '": ' + (db.properties[ten] ? 'CÓ ✅' : 'KHÔNG ❌'));
+  });
+
+  Logger.log('=== 3. TRẠNG THÁI — WHITELIST CÓ KHỚP OPTION NOTION KHÔNG ===');
+  const cot = db.properties[CONFIG.PROPS.TASK_STATUS];
+  const opt = ((cot.select || cot.status || {}).options) || [];
+  const tenOpt = opt.map(function (o) { return o.name; });
+  Logger.log('  Notion đang có: ' + tenOpt.join(' | '));
+  Object.keys(CONFIG.STATUS_BY_NHOM).forEach(function (n) {
+    const v = CONFIG.STATUS_BY_NHOM[n];
+    Logger.log('  Nhóm "' + n + '" → "' + v + '": ' +
+      (tenOpt.indexOf(v) !== -1 ? 'KHỚP ✅' : '❌ KHÔNG CÓ — sẽ tạo option rác!'));
+  });
+
+  Logger.log('=== 4. NGÀY GIEO SẠ TRÊN 3 TRANG VỤ MÙA ===');
+  ['CKOD', 'CTDM', 'CTDC'].forEach(function (f) {
+    try {
+      const pg = notionQueryAll_(CONFIG.DB_PRODUCT, {
+        and: [{ property: CONFIG.PROPS.PRODUCT_TITLE, title: { contains: f } },
+              { property: CONFIG.PROPS.PRODUCT_TITLE, title: { contains: 'HT26' } }],
+      });
+      const s = laySeasonInfo_(pg);
+      Logger.log('  ' + f + ': gieo sạ = ' +
+        (s && s.gieoSa ? s.gieoSa + ' ✅' : '❌ CHƯA ĐIỀN — NSS sẽ rỗng') +
+        ' | thu hoạch DK = ' + (s && s.thuHoach ? s.thuHoach + ' ✅' : '❌ chưa điền'));
+    } catch (e) { Logger.log('  ' + f + ': lỗi ' + e); }
+  });
+}
+
+/* ============ CHẨN ĐOÁN 2 CON SỐ HAY HỎNG ============
+   Chạy tay hàm này rồi đọc Execution log. Nó trả lời đúng hai câu:
+     1. Vì sao "diện tích canh tác hữu cơ" ở trang chủ hiện dấu "—"
+     2. Vì sao thanh tiến độ thiếu mốc (Làm đòng, Chắc hạt...)
+   Cả hai gần như luôn là do TÊN CỘT trong Notion khác tên khai trong
+   CONFIG, hoặc ô ngày còn để trống — không phải lỗi code.
+   ==================================================== */
+function kiemTraSoLieu() {
+  const VU = 'HT26';
+  Logger.log('=== A. DIỆN TÍCH TỪNG LÔ (cột "' + CONFIG.PROPS.AREA + '") ===');
+  let tongTatCa = 0;
+  ['CKOD', 'CTDC', 'CTDM'].forEach(function (f) {
+    try {
+      const pg = notionQueryAll_(CONFIG.DB_PRODUCT, {
+        and: [{ property: CONFIG.PROPS.PRODUCT_TITLE, title: { contains: f } },
+              { property: CONFIG.PROPS.PRODUCT_TITLE, title: { contains: VU } }],
+      });
+      let coSo = 0, rong = 0, tong = 0, huuCo = 0;
+      pg.forEach(function (x) {
+        if (!organicVal_(x.properties[CONFIG.PROPS.ORGANIC])) return;
+        huuCo++;
+        const a = dienTichLo_(x.properties);
+        if (a) { coSo++; tong += a; } else rong++;
+      });
+      tongTatCa += tong;
+      Logger.log('  ' + f + ': ' + huuCo + ' lô hữu cơ | có diện tích: ' + coSo +
+                 ' | RỖNG: ' + rong + ' | tổng: ' + Math.round(tong) + ' m²' +
+                 (rong === huuCo && huuCo > 0 ? '  ❌ KHÔNG ĐỌC ĐƯỢC CỘT NÀO' : ''));
+      if (rong === huuCo && huuCo > 0 && pg.length) {
+        Logger.log('     → Tên cột thật đang có trên lô đầu tiên:');
+        Object.keys(pg[0].properties).forEach(function (ten) {
+          const t = pg[0].properties[ten].type;
+          if (t === 'number' || t === 'formula' || t === 'rollup') Logger.log('        · "' + ten + '" (' + t + ')');
+        });
+      }
+    } catch (e) { Logger.log('  ' + f + ': lỗi ' + e); }
+  });
+  Logger.log('  TỔNG 3 CÁNH ĐỒNG: ' + Math.round(tongTatCa) + ' m² = ' +
+             (tongTatCa / 10000).toFixed(2) + ' ha' +
+             (tongTatCa === 0 ? '  ❌ Trang chủ sẽ hiện dấu —' : '  ✅'));
+
+  Logger.log('=== B. CÁC MỐC MÙA VỤ (thanh tiến độ) ===');
+  const S = CONFIG.SEASON_PROPS;
+  const MOC = [['Gieo sạ', S.GIEO_SA, 'gieoSa'], ['Đẻ nhánh rộ', S.DE_NHANH, 'deNhanh'],
+               ['Làm đòng', S.DON_DONG, 'donDong'], ['Trổ bông', S.TRO_BONG, 'troBong'],
+               ['Chắc hạt', S.CHAC_HAT, 'chacHat'], ['Chín vàng', S.CHIN_VANG, 'chinVang'],
+               ['Thu hoạch', S.THU_HOACH, 'thuHoach']];
+  ['CKOD', 'CTDC', 'CTDM'].forEach(function (f) {
+    try {
+      const pg = notionQueryAll_(CONFIG.DB_PRODUCT, {
+        and: [{ property: CONFIG.PROPS.PRODUCT_TITLE, title: { contains: f } },
+              { property: CONFIG.PROPS.PRODUCT_TITLE, title: { contains: VU } }],
+      });
+      const s = laySeasonInfo_(pg);
+      if (!s) { Logger.log('  ' + f + ': ❌ lô không nối tới trang Vụ mùa nào'); return; }
+      Logger.log('  ' + f + ' — trang vụ "' + s.name + '":');
+      MOC.forEach(function (m) {
+        Logger.log('     ' + (s[m[2]] ? '✅ ' : '❌ ') + m[0] +
+                   '  (cột Notion: "' + m[1] + '") = ' + (s[m[2]] || 'TRỐNG → mốc này sẽ không hiện'));
+      });
+      const trang = notionFetch_('https://api.notion.com/v1/pages/' + s._pageId, 'get', null);
+      const thieu = MOC.filter(function (m) { return !trang.properties[m[1]]; });
+      if (thieu.length) {
+        Logger.log('     ⚠ CỘT KHÔNG TỒN TẠI trên trang Vụ mùa: ' +
+                   thieu.map(function (m) { return '"' + m[1] + '"'; }).join(', '));
+        Logger.log('     → Tên cột ngày thật đang có:');
+        Object.keys(trang.properties).forEach(function (ten) {
+          if (trang.properties[ten].type === 'date') Logger.log('        · "' + ten + '"');
+        });
+      }
+    } catch (e) { Logger.log('  ' + f + ': lỗi ' + e); }
+  });
+}
+
+/* ============ 14. PHÂN BỔ TASK TOÀN VỤ (giữ nguyên, không đổi) ============
+ * Danh sách phân bổ =
+ *     (lô trong cột "Mã Sản Phẩm" của trang VỤ MÙA)  ← chọn tay
+ *   ∩ (lô có nhãn hữu cơ trong "Canh tác hữu cơ")    ← lớp bảo vệ 2
+ *   − (cột "Trừ lô" trên task)                        ← loại trừ riêng
+ ========================================================================= */
+
+const PB_CONFIG = {
+  MASTERTASK_DB_ID: '37c1c9d219fa80d3bdeadfef47b98199',
+  MASP_DB_ID:       '3891c9d219fa80108552d5f2c83b63c7',
+  VUMUA_DB_ID:      '37c1c9d219fa80bfaa4ce4e651f9b270',
+
+  P_PHANBO:     'Phân bổ toàn vụ',
+  P_DAPHANBO:   'Đã phân bổ',
+  P_TRULO:      'Trừ lô',
+  P_VUMUA_TASK: 'Vụ mùa',
+  P_MASP_TASK:  'Mã sản phẩm',
+  P_MASP_VUMUA: 'Mã Sản Phẩm',
+  P_ORGANIC_LO: 'Canh tác hữu cơ',
+  P_VUMUA_LO:   'Vụ mùa',
+
+  /* ⚠ 'Hoàn thành' là một giá trị TRẠNG THÁI lọt vào trường PHÂN LOẠI.
+     organicVal_() ở trên trả FALSE cho nó (không chứa chữ "hữu cơ"), nên
+     nếu có lô nào dùng giá trị này thì script phân bổ và bản đồ sẽ hiểu
+     ngược nhau. Hiện chưa lô nào dùng nên chưa sai lệch.
+     Nay đã có trường "Tình trạng canh tác" thay thế đúng nghĩa — khi dọn
+     option này khỏi Notion thì XOÁ LUÔN khỏi mảng dưới đây. */
+  ORGANIC_OK: ['Canh tác hữu cơ', 'Hoàn thành'],
+};
+
+function pbToken_() {
+  const t = PropertiesService.getScriptProperties().getProperty('NOTION_TOKEN');
+  if (!t) throw new Error('Chưa có NOTION_TOKEN trong Script Properties!');
+  return t;
+}
+
+function pbFetch_(url, method, payload) {
+  const options = {
+    method: method,
+    headers: {
+      'Authorization': 'Bearer ' + pbToken_(),
+      'Content-Type': 'application/json',
+      'Notion-Version': '2022-06-28',
+    },
+    muteHttpExceptions: true,
+  };
+  if (payload) options.payload = JSON.stringify(payload);
+  const resp = UrlFetchApp.fetch(url, options);
+  const code = resp.getResponseCode();
+  const body = JSON.parse(resp.getContentText());
+  if (code >= 300) throw new Error('Notion API ' + code + ': ' + (body.message || ''));
+  return body;
+}
+
+function phanBoTaskToanVu() {
+  const tasks = pbFetch_(
+    'https://api.notion.com/v1/databases/' + PB_CONFIG.MASTERTASK_DB_ID + '/query',
+    'post',
+    {
+      filter: { and: [
+        { property: PB_CONFIG.P_PHANBO,   checkbox: { equals: true } },
+        { property: PB_CONFIG.P_DAPHANBO, checkbox: { equals: false } },
+      ]},
+      page_size: 10,
+    }
+  ).results;
+
+  if (!tasks.length) { Logger.log('Không có task nào cần phân bổ.'); return; }
+  Logger.log('Tìm thấy ' + tasks.length + ' task cần phân bổ.');
+
+  tasks.forEach(function (task) {
+    try { xuLyMotTask_(task); }
+    catch (e) { Logger.log('❌ Lỗi task ' + task.id + ': ' + e.message); }
+  });
+}
+
+function xuLyMotTask_(task) {
+  const taskName = (task.properties['Task Name'].title[0] || {}).plain_text || '(không tên)';
+
+  const vuMuaRel = task.properties[PB_CONFIG.P_VUMUA_TASK].relation;
+  if (!vuMuaRel || !vuMuaRel.length) {
+    Logger.log('⚠️ Task "' + taskName + '" chưa chọn Vụ mùa — bỏ qua.');
+    return;
+  }
+  const vuMuaId = vuMuaRel[0].id;
+
+  const chonTayIds = pbDocRelationDayDu_(vuMuaId, PB_CONFIG.P_MASP_VUMUA, PB_CONFIG.VUMUA_DB_ID);
+  if (!chonTayIds.length) {
+    Logger.log('⚠️ Task "' + taskName + '": cột "' + PB_CONFIG.P_MASP_VUMUA +
+               '" trên trang Vụ Mùa đang TRỐNG — không phân bổ gì.');
+    return;
+  }
+
+  const orFilter = PB_CONFIG.ORGANIC_OK.map(function (nhan) {
+    return { property: PB_CONFIG.P_ORGANIC_LO, select: { equals: nhan } };
+  });
+  let huuCoIds = {};
+  let cursor = null;
+  do {
+    const body = {
+      filter: { and: [
+        { property: PB_CONFIG.P_VUMUA_LO, relation: { contains: vuMuaId } },
+        { or: orFilter },
+      ]},
+      page_size: 100,
+    };
+    if (cursor) body.start_cursor = cursor;
+    const resp = pbFetch_(
+      'https://api.notion.com/v1/databases/' + PB_CONFIG.MASP_DB_ID + '/query', 'post', body);
+    resp.results.forEach(function (pg) { huuCoIds[pg.id] = true; });
+    cursor = resp.has_more ? resp.next_cursor : null;
+    Utilities.sleep(350);
+  } while (cursor);
+
+  const quaLoc = chonTayIds.filter(function (id) { return huuCoIds[id] === true; });
+  const biChan = chonTayIds.length - quaLoc.length;
+  if (biChan > 0) {
+    Logger.log('ℹ️ ' + biChan + ' lô có trong cột Mã Sản Phẩm nhưng nhãn không phải hữu cơ → không phân bổ.');
+  }
+
+  const truLoIds = (task.properties[PB_CONFIG.P_TRULO].relation || []).map(function (r) { return r.id; });
+  const finalIds = quaLoc.filter(function (id) { return truLoIds.indexOf(id) === -1; });
+  Logger.log('Task "' + taskName + '": ' + chonTayIds.length + ' lô chọn tay, ' +
+             quaLoc.length + ' qua lọc hữu cơ, trừ ' + truLoIds.length +
+             ' → phân bổ ' + finalIds.length + ' lô.');
+
+  if (!finalIds.length) { Logger.log('⚠️ Không còn lô nào sau khi lọc — không ghi gì.'); return; }
+
+  const daCo = (task.properties[PB_CONFIG.P_MASP_TASK].relation || []).map(function (r) { return r.id; });
+  const gop = daCo.slice();
+  finalIds.forEach(function (id) { if (gop.indexOf(id) === -1) gop.push(id); });
+
+  const props = {};
+  props[PB_CONFIG.P_MASP_TASK] = { relation: gop.map(function (id) { return { id: id }; }) };
+  props[PB_CONFIG.P_DAPHANBO]  = { checkbox: true };
+
+  pbFetch_('https://api.notion.com/v1/pages/' + task.id, 'patch', { properties: props });
+  Utilities.sleep(350);
+  Logger.log('✅ Đã phân bổ "' + taskName + '" cho ' + gop.length + ' lô.');
+}
+
+/* Đọc relation đầy đủ (quá 25 phần tử) */
+function pbDocRelationDayDu_(pageId, propName, dbId) {
+  const page = pbFetch_('https://api.notion.com/v1/pages/' + pageId, 'get');
+  const prop = page.properties[propName];
+  if (!prop) throw new Error('Trang Vụ Mùa không có property "' + propName + '".');
+  if (prop.type !== 'relation') throw new Error('"' + propName + '" không phải Relation (đang là ' + prop.type + ').');
+
+  const inline = (prop.relation || []).map(function (r) { return r.id; });
+  if (!prop.has_more) return inline;
+
+  try {
+    const ids = [];
+    let cursor = null;
+    do {
+      let url = 'https://api.notion.com/v1/pages/' + pageId + '/properties/' + prop.id + '?page_size=100';
+      if (cursor) url += '&start_cursor=' + encodeURIComponent(cursor);
+      const data = pbFetch_(url, 'get');
+      (data.results || []).forEach(function (item) {
+        if (item.type === 'relation' && item.relation) ids.push(item.relation.id);
+      });
+      cursor = data.has_more ? data.next_cursor : null;
+      Utilities.sleep(200);
+    } while (cursor);
+    if (ids.length >= inline.length) return ids;
+    Logger.log('⚠️ Phân trang trả ' + ids.length + ' < đọc thẳng ' + inline.length + ' — dùng bản đọc thẳng.');
+    return inline;
+  } catch (e) {
+    Logger.log('⚠️ Lỗi phân trang relation (' + e.message + ') — dùng tạm ' + inline.length + ' lô đầu.');
+    return inline;
+  }
+}
+
+function kiemTraDocRelation() {
+  const vus = pbFetch_(
+    'https://api.notion.com/v1/databases/' + PB_CONFIG.VUMUA_DB_ID + '/query',
+    'post', { page_size: 100 }).results;
+  vus.forEach(function (vu) {
+    let ten = '';
+    for (const k in vu.properties) {
+      if (vu.properties[k].type === 'title') {
+        ten = (vu.properties[k].title[0] || {}).plain_text || '(không tên)';
+        break;
+      }
+    }
+    const tong = pbDocRelationDayDu_(vu.id, PB_CONFIG.P_MASP_VUMUA, PB_CONFIG.VUMUA_DB_ID);
+    Logger.log('Vụ "' + ten + '": ' + tong.length + ' lô.');
+  });
+  Logger.log('So với thực tế: Đồng Mẫu 12, Ông Đảng 20, Đồng Cao 36.');
+}
+
+function kiemTraPhanBo() {
+  Logger.log('Token: ' + (pbToken_() ? 'OK ✅' : 'THIẾU ❌'));
+
+  const db1 = pbFetch_('https://api.notion.com/v1/databases/' + PB_CONFIG.MASTERTASK_DB_ID, 'get');
+  Logger.log('MASTERTASK: ' + db1.title[0].plain_text + ' ✅');
+  ['P_PHANBO','P_DAPHANBO','P_TRULO','P_VUMUA_TASK','P_MASP_TASK'].forEach(function (k) {
+    const name = PB_CONFIG[k];
+    Logger.log('  "' + name + '": ' + (db1.properties[name] ? 'CÓ ✅' : 'KHÔNG ❌'));
+  });
+
+  const db2 = pbFetch_('https://api.notion.com/v1/databases/' + PB_CONFIG.MASP_DB_ID, 'get');
+  Logger.log('DB Mã Sản Phẩm: ' + db2.title[0].plain_text + ' ✅');
+  ['P_VUMUA_LO','P_ORGANIC_LO'].forEach(function (k) {
+    const name = PB_CONFIG[k];
+    Logger.log('  "' + name + '": ' + (db2.properties[name] ? 'CÓ ✅' : 'KHÔNG ❌'));
+  });
+
+  const db3 = pbFetch_('https://api.notion.com/v1/databases/' + PB_CONFIG.VUMUA_DB_ID, 'get');
+  Logger.log('DB Vụ Mùa: ' + db3.title[0].plain_text + ' ✅');
+  Logger.log('  "' + PB_CONFIG.P_MASP_VUMUA + '": ' +
+             (db3.properties[PB_CONFIG.P_MASP_VUMUA] ? 'CÓ ✅' : 'KHÔNG ❌'));
+
+  kiemTraDocRelation();
+}
+
+/* ============ 15. ĐỒNG BỘ "Ký hiệu" → "Mã Sản phẩm" ============
+   Cột Ký hiệu (Formula) tự ghép mã; cột Mã Sản phẩm (Title) không chứa
+   được công thức nên script này quét và chép sang.
+   Trigger: hàm dongBoMaSanPham → Time-driven → Minutes → Every 15 minutes
+   ================================================================ */
+const KY_HIEU_PROP = 'Ký hiệu';
+
+function dongBoMaSanPham() { runDongBo_(false); }
+function kiemTraDongBo()   { runDongBo_(true); }   // chỉ in ra, không sửa
+
+function runDongBo_(chiXem) {
+  let cursor = null, quet = 0, lech = 0;
+  const demCanXoa = [];
+  do {
+    const body = { page_size: 100 };
+    if (cursor) body.start_cursor = cursor;
+    const res = notionFetch_(
+      'https://api.notion.com/v1/databases/' + CONFIG.DB_PRODUCT + '/query', 'post', body);
+    res.results.forEach(function (p) {
+      quet++;
+      const kh  = formulaStr_(p.properties[KY_HIEU_PROP]);
+      const ten = plainTitle_(p.properties[CONFIG.PROPS.PRODUCT_TITLE]);
+      if (!kh) return;
+      if (kh === ten) return;
+      lech++;
+      Logger.log((chiXem ? '[SẼ SỬA] ' : '[ĐÃ SỬA] ') + '"' + (ten || '(trống)') + '" -> "' + kh + '"');
+      if (!chiXem) {
+        const props = {};
+        props[CONFIG.PROPS.PRODUCT_TITLE] = { title: [{ text: { content: kh } }] };
+        notionFetch_('https://api.notion.com/v1/pages/' + p.id, 'patch', { properties: props });
+        const ph = kh.split('-');
+        if (ph.length >= 3) demCanXoa.push('map_' + CONFIG.CACHE_VER + '_' + ph[0] + '_' + ph[2]);
+        Utilities.sleep(350);
+      }
+    });
+    cursor = res.has_more ? res.next_cursor : null;
+  } while (cursor);
+  if (!chiXem && demCanXoa.length) {
+    const dem = CacheService.getScriptCache();
+    demCanXoa.forEach(function (k) { try { dem.remove(k); } catch (e) {} });
+  }
+  Logger.log('Quét ' + quet + ' lô — ' + (chiXem ? 'phát hiện ' : 'đã sửa ') + lech + ' lô lệch mã.');
+}
+
+/* ====================================================================
+   TỔNG HỢP THỜI TIẾT CẢ VỤ → ghi ngược lên trang VỤ MÙA
+   --------------------------------------------------------------------
+   Vì sao cần: 120 dòng thời tiết mỗi vụ mỗi cánh đồng thì không ai đọc.
+   Thứ dùng để SO SÁNH GIỮA CÁC VỤ chỉ là 6 con số. Hàm này rút gọn
+   chúng và ghi thẳng lên trang Vụ Mùa, để mở bảng Vụ Mùa ra là thấy
+   các vụ nằm cạnh nhau, so được ngay trong Notion.
+
+   CHẠY: bấm tay sau khi kéo thời tiết, hoặc cài trigger 1 lần/tuần.
+   ==================================================================== */
+function tongHopThoiTietVu() {
+  const vus = notionQueryAll_(PB_CONFIG.VUMUA_DB_ID, null);
+  Logger.log('Tìm thấy ' + vus.length + ' trang Vụ Mùa.');
+
+  vus.forEach(function (vu) {
+    let ten = '';
+    for (const k in vu.properties) {
+      if (vu.properties[k].type === 'title') { ten = plainTitle_(vu.properties[k]); break; }
+    }
+
+    // Cánh đồng suy từ lô đầu tiên trỏ về vụ này (không dò theo tên — tên có thể đổi)
+    let field = '';
+    try {
+      const lo = notionFetch_(
+        'https://api.notion.com/v1/databases/' + CONFIG.DB_PRODUCT + '/query', 'post',
+        { filter: { property: CONFIG.PROPS.PRODUCT_SEASON_REL, relation: { contains: vu.id } },
+          page_size: 1 });
+      if (lo.results.length) {
+        field = plainTitle_(lo.results[0].properties[CONFIG.PROPS.PRODUCT_TITLE]).split('-')[0].toUpperCase();
+      }
+    } catch (e) {}
+    if (!field) { Logger.log('⚠ "' + ten + '": không xác định được cánh đồng — bỏ qua.'); return; }
+
+    const S = CONFIG.SEASON_PROPS;
+    const tu = dateVal_(vu.properties[S.GIEO_SA]);
+    if (!tu) { Logger.log('⚠ "' + ten + '": chưa điền Ngày gieo sạ — bỏ qua.'); return; }
+    const homNay = Utilities.formatDate(new Date(), 'Asia/Ho_Chi_Minh', 'yyyy-MM-dd');
+    let den = dateVal_(vu.properties[S.THU_HOACH]) || homNay;
+    if (den > homNay) den = homNay;   // chưa gặt thì tính tới hôm nay
+
+    const loc = { and: [
+      { property: 'Cánh đồng', select: { equals: field } },
+      { property: 'Ngày', date: { on_or_after:  tu } },
+      { property: 'Ngày', date: { on_or_before: den } },
+    ]};
+    let ngay = [];
+    try {
+      ngay = notionQueryAll_(CONFIG.DB_WEATHER, loc).map(function (p) {
+        return {
+          ngay: dateVal_(p.properties['Ngày']),
+          mua:  numberVal_(p.properties['Lượng mưa (mm)']),
+          tMax: numberVal_(p.properties['Nhiệt độ cao (C)']),
+          tMin: numberVal_(p.properties['Nhiệt độ thấp (C)']),
+        };
+      }).filter(function (x) { return x.ngay; })
+        .sort(function (a, b) { return a.ngay.localeCompare(b.ngay); });
+    } catch (e) { Logger.log('❌ "' + ten + '": lỗi đọc thời tiết — ' + e); return; }
+
+    if (!ngay.length) {
+      Logger.log('⚠ "' + ten + '" (' + field + '): chưa có ngày thời tiết nào trong ' + tu + ' → ' + den
+                 + '. Chạy keoThoiTietLichSu() trước.');
+      return;
+    }
+
+    let tongMua = 0, soNgayMua = 0, soNgayMuaLon = 0, tongNhiet = 0, demNhiet = 0, soNgayNong = 0;
+    let khoDaiNhat = 0, khoHienTai = 0;
+    ngay.forEach(function (d) {
+      const m = d.mua || 0;
+      tongMua += m;
+      if (m >= 1)  soNgayMua++;
+      if (m >= 50) soNgayMuaLon++;
+      if (m < 1) { khoHienTai++; if (khoHienTai > khoDaiNhat) khoDaiNhat = khoHienTai; }
+      else khoHienTai = 0;
+      if (d.tMax !== null && d.tMin !== null) { tongNhiet += (d.tMax + d.tMin) / 2; demNhiet++; }
+      if (d.tMax !== null && d.tMax >= 35) soNgayNong++;
+    });
+
+    const props = {};
+    props['Tổng mưa vụ (mm)']              = { number: Math.round(tongMua * 10) / 10 };
+    props['Số ngày mưa']                   = { number: soNgayMua };
+    props['Số ngày mưa lớn (>50mm)']       = { number: soNgayMuaLon };
+    props['Chuỗi ngày không mưa dài nhất'] = { number: khoDaiNhat };
+    props['Nhiệt độ TB (C)']               = { number: demNhiet ? Math.round(tongNhiet / demNhiet * 10) / 10 : null };
+    props['Số ngày nóng (>35C)']           = { number: soNgayNong };
+    props['Thời tiết cập nhật lúc']        = { date: { start: homNay } };
+
+    try {
+      notionFetch_('https://api.notion.com/v1/pages/' + vu.id, 'patch', { properties: props });
+      Logger.log('✅ "' + ten + '" (' + field + ', ' + ngay.length + ' ngày): '
+        + tongMua.toFixed(1) + 'mm · ' + soNgayMua + ' ngày mưa · '
+        + soNgayMuaLon + ' ngày mưa lớn · khô dài nhất ' + khoDaiNhat + ' ngày · '
+        + soNgayNong + ' ngày nóng');
+      Utilities.sleep(350);
+    } catch (e) { Logger.log('❌ "' + ten + '": ghi lỗi — ' + e); }
+  });
+}

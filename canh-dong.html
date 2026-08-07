@@ -91,10 +91,9 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .tt-chip.tat-ca{color:#7b8270}
 /* --- bảng gộp theo giai đoạn sinh trưởng --- */
 .tt-bang-bao{overflow-x:auto;margin-top:14px}
-.tt-bang{width:100%;border-collapse:collapse;font-size:12.5px;min-width:520px}
-.tt-bang th{text-align:right;font-weight:600;color:#7b8270;padding:6px 9px;border-bottom:1px solid #e2e5da;
-  font-size:11.5px;line-height:1.3;white-space:nowrap}
-.tt-bang th small{font-weight:400;opacity:.75}
+.tt-bang{width:100%;border-collapse:collapse;font-size:12.5px;min-width:470px}
+.tt-bang th{text-align:right;font-weight:600;color:#7b8270;padding:8px 9px;border-bottom:1px solid #e2e5da;
+  font-size:11.5px;line-height:1.3;white-space:nowrap;vertical-align:bottom}
 .tt-bang th:first-child,.tt-bang td.ten{text-align:left}
 .tt-bang td{text-align:right;padding:7px 9px;border-bottom:1px solid #f0f1ea;color:#3f4a33;
   font-variant-numeric:tabular-nums}
@@ -847,7 +846,7 @@ async function napMocThat(ma){
         + ' Lễ cúng và trải nghiệm là ngày dự kiến, tính theo mốc nông học thật.';
     }
     veTimeline();
-  }catch(e){ /* giữ ngày mẫu */ }
+  }catch(e){ console.error('[mốc mùa vụ] giữ ngày mẫu vì:', e); }
 }
 
 /* ==================================================================
@@ -856,6 +855,30 @@ async function napMocThat(ma){
    Ở lại đây chỉ còn phần NẠP dữ liệu, vì nó còn phải đụng vào dòng thời
    gian (NHAT_KY_CO_ANH, veTimeline) nằm trong file này.
    ================================================================== */
+/* Thoát chuỗi TỐI GIẢN, cố ý viết lại ngay tại đây thay vì dùng escTT().
+
+   BÀI HỌC 06/08/2026 — đọc kỹ trước khi "dọn cho gọn":
+   Khối catch bên dưới trước đây gọi escTT(), mà escTT() nằm trong
+   js/bieu-do-thoi-tiet.js. Khi chính file đó không nạp được thì escTT
+   cũng không tồn tại → catch văng lỗi lần hai → thông báo lỗi KHÔNG BAO
+   GIỜ hiện ra → trang đứng mãi ở dòng "Đang tải dữ liệu thời tiết…" mà
+   không ai biết vì sao.
+
+   Nguyên tắc rút ra: TRÌNH XỬ LÝ LỖI KHÔNG ĐƯỢC PHỤ THUỘC VÀO THỨ CÓ
+   THỂ HỎNG. Đừng gộp hàm này với escTT dù hai hàm giống hệt nhau. */
+function escLoi(t){
+  return String(t == null ? '' : (t.message || t))
+    .replace(/[&<>"]/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+    });
+}
+
+function baoLoiTT(oBd, tieuDe, chiTiet, loiGoc){
+  if(loiGoc) console.error('[thời tiết]', tieuDe, loiGoc);
+  oBd.innerHTML = '<div class="tt-trong"><b>' + escLoi(tieuDe) + '</b>'
+    + (chiTiet ? '<br><small>' + escLoi(chiTiet) + '</small>' : '') + '</div>';
+}
+
 async function napThoiTiet(ma){
   const oSo=document.getElementById('ttSo'), oBd=document.getElementById('ttBieuDo'), oChu=document.getElementById('ttChu');
   if(!oBd) return;
@@ -864,24 +887,63 @@ async function napThoiTiet(ma){
   oSo.innerHTML=''; oChu.textContent='';
   const oChip=document.getElementById('ttChip'), oBang=document.getElementById('ttBangGD');
   if(oChip) oChip.innerHTML=''; if(oBang) oBang.innerHTML='';
+
+  /* Kiểm tra TRƯỚC KHI gọi mạng: file vẽ có nạp được không.
+     Kiểm ở đây thì thông báo nói đúng nguyên nhân, thay vì để lỗi rơi
+     vào catch chung rồi hiện một câu chung chung. */
+  if(typeof veThoiTiet !== 'function'){
+    baoLoiTT(oBd, 'Chưa nạp được js/bieu-do-thoi-tiet.js',
+      'File phải nằm trong thư mục js/ của repo, đúng tên bieu-do-thoi-tiet.js. '
+      + 'Mở F12 → tab Network, tìm dòng bieu-do-thoi-tiet.js: nếu là 404 thì file chưa lên hoặc sai đường dẫn.');
+    return;
+  }
+
   oBd.innerHTML = '<div class="tt-trong">Đang tải dữ liệu thời tiết…</div>';
+
+  /* Chặn giờ: không có mốc này thì lần gọi hỏng sẽ treo vô hạn và trang
+     đứng ở "Đang tải…" y như lỗi cũ, chỉ khác nguyên nhân. */
+  const huy = ('AbortController' in window) ? new AbortController() : null;
+  const hetGio = setTimeout(function(){ if(huy) huy.abort(); }, 20000);
+
   try{
-    const res = await fetch(API_URL_TL, {method:'POST',
+    const res = await fetch(API_URL_TL, {method:'POST', signal: huy ? huy.signal : undefined,
       body: JSON.stringify({action:'getSeasonTimeline', field:ma, season:'HT26'})});
-    const r = await res.json();
-    if(!r.ok) throw r.error;
+    const chu = await res.text();
+    let r;
+    try{ r = JSON.parse(chu); }
+    catch(eJson){
+      /* Apps Script trả về HTML thay vì JSON — gần như luôn là một trong hai:
+         URL triển khai đã đổi, hoặc quyền truy cập không phải "Bất kỳ ai". */
+      throw new Error('Máy chủ trả về không phải JSON. Thường là do URL triển khai Apps Script '
+        + 'đã đổi (tạo bản triển khai MỚI thay vì sửa bản cũ), hoặc quyền truy cập chưa đặt "Bất kỳ ai". '
+        + 'Kiểm tra hằng API_URL_TL trong canh-dong.html.');
+    }
+    if(!r.ok) throw new Error(r.error || 'Máy chủ báo lỗi không rõ nguyên nhân.');
+
     veThoiTiet(r);
 
     /* Cùng một lần gọi này đã mang về nhật ký đồng — lọc lấy bản ghi CÓ
        ẢNH rồi vẽ lại dòng thời gian để ảnh hiện lên cạnh từng mốc.
-       Chỉ vẽ lại khi thật sự có ảnh mới, tránh chớp màn hình vô cớ. */
-    const coAnh = (r.nhatKy || []).filter(function(x){ return x.anh && x.ngay; });
-    if(coAnh.length && coAnh.length !== NHAT_KY_CO_ANH.length){
-      NHAT_KY_CO_ANH = coAnh;
-      veTimeline();
-    }
+       Chỉ vẽ lại khi thật sự có ảnh mới, tránh chớp màn hình vô cớ.
+       Bọc riêng try: ảnh hỏng thì mất ảnh, KHÔNG được kéo sập biểu đồ
+       vừa vẽ xong ở dòng trên. */
+    try{
+      const coAnh = (r.nhatKy || []).filter(function(x){ return x.anh && x.ngay; });
+      if(coAnh.length && coAnh.length !== NHAT_KY_CO_ANH.length){
+        NHAT_KY_CO_ANH = coAnh;
+        veTimeline();
+      }
+    }catch(eAnh){ console.error('[dòng thời gian] không vẽ lại được ảnh:', eAnh); }
+
   }catch(e){
-    oBd.innerHTML = '<div class="tt-trong">Chưa lấy được dữ liệu thời tiết.<br><small>'+escTT(e)+'</small></div>';
+    if(e && e.name === 'AbortError'){
+      baoLoiTT(oBd, 'Máy chủ không trả lời sau 20 giây.',
+        'Thử tải lại trang. Nếu vẫn vậy, mở Apps Script → Executions xem lần chạy gần nhất.', e);
+    }else{
+      baoLoiTT(oBd, 'Chưa lấy được dữ liệu thời tiết.', e, e);
+    }
+  }finally{
+    clearTimeout(hetGio);
   }
 }
 

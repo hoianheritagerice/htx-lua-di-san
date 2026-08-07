@@ -33,6 +33,17 @@ const MAU_NHOM   = { 'Canh tác': '#6f9b3f', 'Vấn đề': '#c0392b', 'Quan sá
    xem cần thấy trước. */
 const UU_TIEN_NHOM = ['Vấn đề', 'Canh tác', 'Quan sát'];
 
+/* Số ngày TRƯỚC ngày sạ được đưa vào biểu đồ — giai đoạn làm đất, ủ giống,
+   đổ ải. PHẢI khớp với CONFIG.NGAY_CHUAN_BI trong Code.gs: bên đó quyết
+   định lấy dữ liệu từ ngày nào, bên này quyết định vẽ từ ngày nào. Lệch
+   nhau thì trục sẽ có một khoảng trống không ai giải thích được. */
+const NGAY_CHUAN_BI = 7;
+
+/* Dưới ngưỡng này coi như ngày khô. 5mm rơi rải trong 24 giờ gần như bốc
+   hơi hết, không đủ đổi độ ẩm đất — gọi là "ngày có mưa" thì con số đếm
+   được sẽ đẹp mà vô nghĩa. */
+const NGUONG_KHO = 5;
+
 function soNgayTT(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
 function escTT(t) {
   return String(t == null ? '' : t).replace(/[&<>"]/g,
@@ -51,9 +62,12 @@ function soGon(v, n) {
    Nay mọi ranh giới lấy từ Notion. Chỉ còn ĐÚNG MỘT ranh giới ước lượng:
    điểm mạ chuyển sang đẻ nhánh sớm (NSS 15), vì Notion không có mốc đó.
    ====================================================================== */
-function bangGiaiDoan(season, gieo, nssMax) {
+function bangGiaiDoan(season, gieo, nssMin, nssMax) {
   const nss = d => d ? soNgayTT(gieo, d) : null;
   const moc = [
+    /* Chuẩn bị: làm đất, ủ giống, đổ ải. Ranh giới kết thúc là ngày sạ
+       nên vẫn là mốc THẬT, không phải ước lượng. */
+    { ten: 'Chuẩn bị',       nss: nssMin,               that: true  },
     { ten: 'Mạ',             nss: 0,                    that: true  },
     { ten: 'Đẻ nhánh sớm',   nss: 15,                   that: false },
     { ten: 'Đẻ nhánh rộ',    nss: nss(season.deNhanh),  that: true  },
@@ -199,20 +213,18 @@ function veThoiTiet(r) {
   });
 
   /* ---------- THỐNG KÊ CẢ VỤ ---------- */
-  let tongMua = 0, nMua = 0, nLon = 0, khoMax = 0, kho = 0, tongN = 0, demN = 0, tongBX = 0, demBX = 0;
+  let tongMua = 0, nKho = 0, nLon = 0, tongN = 0, demN = 0, tongBX = 0, demBX = 0;
   tt.forEach(d => {
     const m = d.mua || 0; tongMua += m;
-    if (m >= 1) nMua++;
+    if (m < NGUONG_KHO) nKho++;
     if (m >= 50) nLon++;
-    if (m < 1) { kho++; if (kho > khoMax) khoMax = kho; } else kho = 0;
     if (d.tMax != null && d.tMin != null) { tongN += (d.tMax + d.tMin) / 2; demN++; }
     if (d.bucXa != null) { tongBX += d.bucXa; demBX++; }
   });
   oSo.innerHTML = [
     [Math.round(tongMua) + ' mm', 'Tổng mưa cả vụ'],
-    [nMua, 'Ngày có mưa'],
+    [nKho + ' ngày', 'Tổng ngày khô / mưa rất ít (<' + NGUONG_KHO + 'mm)'],
     [nLon, 'Ngày mưa lớn (>50mm)'],
-    [khoMax + ' ngày', 'Chuỗi khô dài nhất'],
     [(demN ? (tongN / demN).toFixed(1) : '—') + '°C', 'Nhiệt độ trung bình'],
     [(demBX ? Math.round(tongBX) : '—') + ' MJ/m²', 'Tổng bức xạ']
   ].map(x => '<div class="tt-o"><div class="tt-so-lon">' + x[0] + '</div><div class="tt-nhan">' + x[1] + '</div></div>').join('');
@@ -225,8 +237,12 @@ function veThoiTiet(r) {
   const nssMax = Math.max(100,
     ...tt.map(d => soNgayTT(gieo, d.ngay)),
     ...chamNK.map(e => soNgayTT(gieo, e.ngay)));
+  /* Trục bắt đầu từ SỐ ÂM. Mọi phép so sánh biên bên dưới phải dùng
+     nssMin chứ không phải 0 — sót một chỗ là mất luôn tuần Chuẩn bị mà
+     không báo lỗi gì. */
+  const nssMin = -NGAY_CHUAN_BI;
   const pw = W - L - R, ph = H - T - B;
-  const x = n => L + (n / nssMax) * pw;
+  const x = n => L + ((n - nssMin) / (nssMax - nssMin)) * pw;
 
   /* ---------- THANG ĐO ---------- */
   const muaMax = Math.max(20, ...tt.map(d => d.mua || 0));
@@ -248,13 +264,13 @@ function veThoiTiet(r) {
      làm nhân vật chính, hiện nhãn MJ/m². */
   const traiLa = HIEN_THI.mua ? 'mua' : (HIEN_THI.bucXa && bxCo ? 'bucXa' : null);
 
-  const BANG = bangGiaiDoan(r.season, gieo, nssMax);
+  const BANG = bangGiaiDoan(r.season, gieo, nssMin, nssMax);
   let g = '';
 
   /* ---------- 1. VÙNG BỨC XẠ (nền) ---------- */
   if (HIEN_THI.bucXa && bxCo) {
     const dbx = tt.map(d => [soNgayTT(gieo, d.ngay), d.bucXa])
-                  .filter(p => p[0] >= 0 && p[0] <= nssMax && p[1] != null)
+                  .filter(p => p[0] >= nssMin && p[0] <= nssMax && p[1] != null)
                   .sort((a, b) => a[0] - b[0]);
     if (dbx.length > 1) {
       const diem = dbx.map(p => x(p[0]).toFixed(1) + ',' + yBX(p[1]).toFixed(1)).join(' ');
@@ -279,7 +295,7 @@ function veThoiTiet(r) {
     g += '<rect class="tt-gd" data-gd="' + i + '" x="' + a.toFixed(1) + '" y="' + T +
          '" width="' + (b - a).toFixed(1) + '" height="' + ph +
          '" fill="#2f4718" opacity="0" style="cursor:pointer"/>';
-    if (gd.tu > 0) {
+    if (gd.tu > nssMin) {
       g += '<line x1="' + a.toFixed(1) + '" y1="' + T + '" x2="' + a.toFixed(1) +
            '" y2="' + (T + ph) + '" stroke="#b6bfa6" stroke-width="1"' +
            (gd.that ? '' : ' stroke-dasharray="3 3"') + '/>';
@@ -318,7 +334,7 @@ function veThoiTiet(r) {
   if (HIEN_THI.mua) {
     tt.forEach(d => {
       const n = soNgayTT(gieo, d.ngay);
-      if (n < 0 || n > nssMax) return;
+      if (n < nssMin || n > nssMax) return;
       const m = d.mua || 0;
       if (m <= 0) return;
       /* Ngày dùng số vũ kế đo tại ruộng thì viền đậm, để phân biệt với
@@ -333,7 +349,7 @@ function veThoiTiet(r) {
   /* ---------- 4. ĐƯỜNG NHIỆT ĐỘ CAO NHẤT ---------- */
   if (HIEN_THI.nhiet) {
     const dt = dsNhiet.map(d => [soNgayTT(gieo, d.ngay), d.tMax])
-                      .filter(p => p[0] >= 0 && p[0] <= nssMax)
+                      .filter(p => p[0] >= nssMin && p[0] <= nssMax)
                       .sort((a, b) => a[0] - b[0]);
     if (dt.length > 1) {
       g += '<polyline fill="none" stroke="' + MAU_NHIET + '" stroke-width="1.5" opacity=".85" points="' +
@@ -342,13 +358,18 @@ function veThoiTiet(r) {
   }
 
   /* ---------- trục ngang NSS ---------- */
-  for (let n = 0; n <= nssMax; n += 10) {
+  /* Chia vạch từ 0 trở lên theo bước 10, cộng thêm ĐÚNG MỘT vạch ở đầu
+     trục cho quãng Chuẩn bị. Chia đều từ nssMin sẽ ra những con số lẻ
+     kiểu −7, 3, 13 — đọc mệt mà chẳng để làm gì. */
+  const mocTruc = [nssMin];
+  for (let n = 0; n <= nssMax; n += 10) mocTruc.push(n);
+  mocTruc.forEach(n => {
     g += '<line x1="' + x(n).toFixed(1) + '" y1="' + (T + ph) + '" x2="' + x(n).toFixed(1) +
          '" y2="' + (T + ph + 4) + '" stroke="#b9bfae"/>';
     g += '<text x="' + x(n).toFixed(1) + '" y="' + (T + ph + 16) +
-         '" text-anchor="middle" font-size="10" fill="#98a08c">' + n + '</text>';
-  }
-  g += '<text x="' + L + '" y="' + (T + ph + 32) + '" font-size="10.5" fill="#7b8270">NSS — ngày sau sạ (gieo ' +
+         '" text-anchor="middle" font-size="10" fill="#98a08c">' + (n < 0 ? '−' + (-n) : n) + '</text>';
+  });
+  g += '<text x="' + L + '" y="' + (T + ph + 32) + '" font-size="10.5" fill="#7b8270">NSS — ngày sau sạ; số âm là trước khi sạ (gieo ' +
        gieo.slice(8, 10) + '/' + gieo.slice(5, 7) + ')</text>';
 
   /* ---------- 5. CHẤM NHẬT KÝ ---------- */
@@ -357,7 +378,7 @@ function veThoiTiet(r) {
   if (HIEN_THI.nhatKy) {
     chamNK.forEach(c => {
       const n = soNgayTT(gieo, c.ngay);
-      if (n < 0 || n > nssMax) return;
+      if (n < nssMin || n > nssMax) return;
       g += '<circle cx="' + x(n).toFixed(1) + '" cy="' + yE + '" r="5.5" fill="#fffdf7"/>';
       g += '<circle class="tt-cham" cx="' + x(n).toFixed(1) + '" cy="' + yE + '" r="4.2" fill="' + MAU_NHOM[c.nhom] + '"/>';
       // nhiều bản ghi cùng ngày: viền ngoài cho biết có nhiều thứ bên trong
@@ -372,7 +393,7 @@ function veThoiTiet(r) {
 
   /* ---------- 6. VẠCH HÔM NAY ---------- */
   const nHN = soNgayTT(gieo, new Date().toISOString().slice(0, 10));
-  if (nHN >= 0 && nHN <= nssMax) {
+  if (nHN >= nssMin && nHN <= nssMax) {
     const xh = x(nHN);
     g += '<line x1="' + xh.toFixed(1) + '" y1="22" x2="' + xh.toFixed(1) + '" y2="' + (yE + 11) +
          '" stroke="#2f4718" stroke-width="1.25" opacity=".45"/>';
@@ -415,34 +436,33 @@ function veThoiTiet(r) {
       if (d.tMax != null && d.tMin != null) { sN += (d.tMax + d.tMin) / 2; dN++; }
       if (d.bucXa != null) { bx += d.bucXa; coBx = true; }
     });
-    const soNK = chamNK.reduce((s, c) => {
-      const n = soNgayTT(gieo, c.ngay);
-      return s + ((n >= gd.tu && n < gd.den) ? c.ds.length : 0);
-    }, 0);
-    return { gd: gd, ngay: trong.length, mua: mua, nhiet: dN ? sN / dN : null, bx: coBx ? bx : null, nk: soNK };
+    return { gd: gd, ngay: trong.length, mua: mua, nhiet: dN ? sN / dN : null, bx: coBx ? bx : null };
   });
 
   if (oBang) {
+    /* Tiêu đề một dòng, đơn vị trong ngoặc. Kiểu hai dòng có <small> làm
+       chân chữ mỗi cột nằm một cao độ khác nhau, nhìn lồi lõm. */
+    const nhanNss = n => n < 0 ? '−' + (-n) : String(n);
     oBang.innerHTML =
       '<table class="tt-bang"><thead><tr>' +
       '<th>Giai đoạn</th><th>NSS</th><th>Ngày</th>' +
-      '<th style="color:' + MAU_MUA + '">Mưa<br><small>mm</small></th>' +
-      '<th style="color:' + MAU_NHIET + '">Nhiệt TB<br><small>°C</small></th>' +
-      '<th style="color:' + MAU_BUCXA + '">Bức xạ<br><small>MJ/m²</small></th>' +
-      '<th>Bản ghi</th></tr></thead><tbody>' +
+      '<th style="color:' + MAU_MUA + '">Mưa (mm)</th>' +
+      '<th style="color:' + MAU_NHIET + '">Nhiệt TB (°C)</th>' +
+      '<th style="color:' + MAU_BUCXA + '">Bức xạ (MJ/m²)</th>' +
+      '</tr></thead><tbody>' +
       tomTat.map((t, i) =>
         '<tr data-gd="' + i + '"><td class="ten">' + escTT(t.gd.ten) +
         (t.gd.that ? '' : ' <span class="uoc" title="Ranh giới ước lượng, Notion không có mốc này">≈</span>') +
-        '</td><td>' + t.gd.tu + '–' + Math.min(t.gd.den, nssMax) + '</td><td>' + t.ngay + '</td>' +
+        '</td><td>' + nhanNss(t.gd.tu) + '–' + nhanNss(Math.min(t.gd.den, nssMax)) + '</td>' +
+        '<td>' + t.ngay + '</td>' +
         '<td>' + (t.ngay ? Math.round(t.mua) : '—') + '</td>' +
         '<td>' + (t.nhiet != null ? soGon(t.nhiet) : '—') + '</td>' +
-        '<td>' + (t.bx != null ? Math.round(t.bx) : '—') + '</td>' +
-        '<td>' + (t.nk || '—') + '</td></tr>').join('') +
+        '<td>' + (t.bx != null ? Math.round(t.bx) : '—') + '</td></tr>').join('') +
       '</tbody></table>';
   }
 
   ganTuongTac(oBd, oBang, {
-    tt: tt, chamNK: chamNK, gieo: gieo, nssMax: nssMax,
+    tt: tt, chamNK: chamNK, gieo: gieo, nssMin: nssMin, nssMax: nssMax,
     L: L, R: R, T: T, W: W, ph: ph, pw: pw,
     yMua: yMua, yNhiet: yNhiet, x: x, muaMax: muaMax
   });
@@ -463,7 +483,7 @@ function ganTuongTac(oBd, oBang, K) {
   const theoNss = {};
   K.tt.forEach(d => {
     const n = soNgayTT(K.gieo, d.ngay);
-    if (n >= 0 && n <= K.nssMax) theoNss[n] = d;
+    if (n >= K.nssMin && n <= K.nssMax) theoNss[n] = d;
   });
   const nkTheoNgay = {};
   K.chamNK.forEach(c => { nkTheoNgay[c.ngay] = c; });
@@ -496,8 +516,8 @@ function ganTuongTac(oBd, oBang, K) {
     const rect = svg.getBoundingClientRect();
     if (!rect.width) return;
     const sx = (clientX - rect.left) * (K.W / rect.width);
-    let n = Math.round((sx - K.L) / K.pw * K.nssMax);
-    n = Math.max(0, Math.min(K.nssMax, n));
+    let n = K.nssMin + Math.round((sx - K.L) / K.pw * (K.nssMax - K.nssMin));
+    n = Math.max(K.nssMin, Math.min(K.nssMax, n));
     const d = theoNss[n];
     if (!d) { anTro(); return; }
 

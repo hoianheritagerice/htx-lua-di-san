@@ -489,32 +489,19 @@ function huyChonNhieu(){
   xoaTickTatCa();
 }
 
-function nhapNhieuThua(){
-  if(!thuaDaChonNhieu.size){ alert('Anh chưa chọn thửa nào. Chạm vào các thửa trên bản đồ để chọn.'); return; }
-  const ph = phienHienTai();
-  if(!ph){ moModal('mpDN'); return; }
-  if(ph.role === 'khach'){ alert('Tài khoản khách chỉ xem chi tiết nhật ký, không nhập liệu được.'); return; }
-  // Gom mã Notion của các thửa đã tick; thửa chưa khớp mã sẽ bị bỏ khi lưu (server báo lại)
-  maNhieuThua = [];
-  const tenBoQua = [];
-  thuaDaChonNhieu.forEach(i=>{
-    const p = MAP_DATA.plots[i];
-    const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
-    if(nd) maNhieuThua.push(nd.productCode);
-    else tenBoQua.push(nhanThua(p));
-  });
-  if(!maNhieuThua.length){ alert('Các thửa đã chọn đều chưa có mã sản phẩm trong Notion nên chưa nhập liệu được.'); return; }
-  // Mở form ở chế độ nhiều thửa
-  dangNhapNhieu = true;
-  moModal('mpNhap');
-  $('nlMa').innerHTML = '<b>' + maNhieuThua.length + ' thửa</b> sẽ được ghi cùng nội dung này'
-    + (tenBoQua.length ? ' <span style="color:#c0392b">(bỏ qua ' + tenBoQua.length + ' thửa chưa có mã: ' + tenBoQua.join(', ') + ')</span>' : '');
-  $('nlNgay').value = new Date().toISOString().slice(0,10);
-  $('nlTieuDe').value=''; $('nlNoiDung').value=''; $('nlAnh').value='';
-  $('nlTrangThai').value='Hoàn thành';
-  $('nlXemAnh').innerHTML=''; $('nlLoi').textContent=''; anhDaChon=[];
-  $('nlVideo').value=''; $('nlXemVideo').innerHTML=''; videoDaChon=[];
-}
+/* nhapNhieuThua / moNhapLieu / guiNhapLieu ĐÃ GỠ 11/08/2026.
+
+   Chúng là BẢN SAO CHẾT: ban-do.html định nghĩa hàm cùng tên rồi gán đè
+   lên window sau khi file này chạy, nên bản ở đây chưa từng được gọi.
+   Bằng chứng: cả ba đều đọc $('nlTrangThai') — ô đó đã bị bỏ khỏi form
+   từ lâu; nếu thật sự chạy thì form đã văng lỗi mỗi lần mở.
+
+   Nguy hiểm ở chỗ ai đó sửa bản ở đây sẽ thấy sửa xong mà không có gì
+   đổi, và mất cả buổi mới hiểu. Bản đang sống nằm trong ban-do.html.
+
+   veXemAnh / boAnh / docFileB64 / veXemVideo / boVideo / nenAnh vẫn Ở LẠI
+   file này — ban-do.html KHÔNG định nghĩa lại chúng, chúng đang chạy thật.
+   Đừng dọn tiếp. */
 
 /* ---------- nhật ký ---------- */
 /* ---------- nhật ký ---------- */
@@ -577,36 +564,6 @@ let anhDaChon = [];
 let videoDaChon = [];
 let dangNhapNhieu = false;      // form đang ở chế độ nhiều thửa?
 let maNhieuThua = [];           // danh sách mã Notion khi nhập nhiều thửa
-function moNhapLieu(){
-  dangNhapNhieu = false;   // luồng 1 thửa
-  const ph = phienHienTai();
-  if(!ph){ dongModal('mpThua'); moModal('mpDN'); return; }
-  if(ph.role === 'khach'){ alert('Tài khoản khách chỉ xem chi tiết nhật ký, không nhập liệu được.'); return; }
-  const p = MAP_DATA.plots[thuaDangChon];
-  const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
-  if(!nd){ alert('Thửa này chưa khớp mã sản phẩm trong Notion nên chưa nhập liệu được.'); return; }
-  dongModal('mpThua'); moModal('mpNhap');
-  $('nlMa').textContent = nd.productCode;
-  $('nlNgay').value = new Date().toISOString().slice(0,10);
-  $('nlTieuDe').value=''; $('nlNoiDung').value=''; $('nlAnh').value='';
-  $('nlTrangThai').value='Hoàn thành';
-  $('nlXemAnh').innerHTML=''; $('nlLoi').textContent=''; anhDaChon=[];
-  $('nlVideo').value=''; $('nlXemVideo').innerHTML=''; videoDaChon=[];
-}
-
-// nén ảnh phía trình duyệt (tối đa cạnh 1600px, JPEG 80%)
-$('nlAnh') && $('nlAnh').addEventListener('change', async function(){
-  // Cộng dồn vào danh sách (chụp camera từng tấm vẫn giữ đủ, không đè tấm trước)
-  for(const f of this.files){
-    const b64 = await nenAnh(f);
-    const ten = (f.name || 'anh').replace(/\.[^.]+$/,'') + '_' + Date.now() + '.jpg';
-    anhDaChon.push({name: ten, mimeType:'image/jpeg', base64: b64});
-  }
-  this.value = '';   // xóa lựa chọn của ô input để lần bấm sau luôn nhận ảnh mới
-  veXemAnh();
-});
-
-// Vẽ lại dàn ảnh xem trước, mỗi ảnh có nút × để bỏ
 function veXemAnh(){
   const kho = $('nlXemAnh');
   kho.innerHTML = '';
@@ -680,51 +637,6 @@ function nenAnh(file){
     img.onerror = rej;
     img.src = URL.createObjectURL(file);
   });
-}
-
-async function guiNhapLieu(){
-  const ph = phienHienTai();
-  if(!ph){ moModal('mpDN'); return; }
-  const tieude = $('nlTieuDe').value.trim();
-  if(!tieude){ $('nlLoi').textContent = 'Vui lòng nhập tiêu đề.'; return; }
-
-  // Gói dữ liệu chung; 1 thửa gửi productCode, nhiều thửa gửi productCodes[]
-  const goi = {action:'createEntry', token: ph.token, title: tieude,
-    content: $('nlNoiDung').value.trim(), date: $('nlNgay').value,
-    status: $('nlTrangThai').value,
-    images: anhDaChon.concat(videoDaChon)};
-  if(dangNhapNhieu){
-    goi.productCodes = maNhieuThua;
-  }else{
-    const p = MAP_DATA.plots[thuaDangChon];
-    const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
-    if(!nd){ $('nlLoi').textContent = 'Thửa này chưa có mã sản phẩm.'; return; }
-    goi.productCode = nd.productCode;
-  }
-
-  $('nlGui').disabled = true; $('nlGui').textContent='Đang lưu…'; $('nlLoi').textContent='';
-  try{
-    const r = await goiAPI(goi);
-    if(!r.ok) throw r.error;
-    const soTask = r.soTask || 1;
-    $('nlGui').textContent = '✓ Đã lưu ' + soTask + ' bản ghi';
-    // Nếu có thửa bị bỏ qua (chưa khớp mã) → báo lại cho anh
-    if(r.boQua && r.boQua.length){
-      $('nlLoi').style.color = '#b26a00';
-      $('nlLoi').textContent = 'Đã bỏ qua ' + r.boQua.length + ' thửa chưa khớp mã: ' + r.boQua.join(', ');
-    }
-    const cho = (r.boQua && r.boQua.length) ? 2600 : 1200;
-    setTimeout(()=>{
-      dongModal('mpNhap');
-      $('nlGui').disabled=false; $('nlGui').textContent='Lưu vào Notion';
-      $('nlLoi').style.color=''; 
-      if(dangNhapNhieu) huyChonNhieu();   // xong đợt nhiều thửa thì tắt chế độ, xóa tick
-    }, cho);
-  }catch(e){
-    $('nlLoi').style.color=''; $('nlLoi').textContent = e;
-    if(String(e).includes('hết hạn') || String(e).includes('đăng nhập')){ dangXuat(); moModal('mpDN'); }
-    $('nlGui').disabled=false; $('nlGui').textContent='Lưu vào Notion';
-  }
 }
 
 /* ---------- khởi động ---------- */

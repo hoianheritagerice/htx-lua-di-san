@@ -44,6 +44,33 @@ const NGAY_CHUAN_BI = 7;
    được sẽ đẹp mà vô nghĩa. */
 const NGUONG_KHO = 5;
 
+/* Nhãn "việc này ở thửa nào" đứng sau tiêu đề bản ghi nhật ký.
+
+   Tên có đuôi NK (nhật ký) là CỐ Ý: js/ban-do.js đã có một hàm tên
+   nhanThua() làm việc khác hẳn. Hai trang hiện không nạp chung nhau nên
+   chưa va, nhưng hai hàm cùng tên khai báo ở cấp cao nhất thì cái sau
+   ĐÈ IM LẶNG cái trước, không một dòng báo lỗi. Đừng bỏ đuôi này.
+
+   Một bản ghi có thể gắn nhiều lô, vì việc làm chung cả cánh đồng được
+   phân bổ xuống từng lô. Liệt kê hết mã thì hộp thông tin dài thành một
+   cột chữ không ai đọc. Quy tắc:
+       1 thửa  → CKOD-THU
+       2 thửa  → CKOD-THU · CKOD-BAN
+      ≥3 thửa  → 21 thửa
+   Máy chủ chỉ gửi tối đa hai mã, nên quá hai là buộc phải hiện số. */
+function nhanThuaNK(e) {
+  const n = e.soThua || 0;
+  if (!n) return '';
+  const ds = (e.dsThua || []).filter(Boolean);
+  /* Chỉ liệt kê khi có ĐỦ mã cho đủ số thửa. Nếu soThua = 2 mà chỉ tra
+     ra 1 mã (một lô chưa nối với thửa nào trong Notion) thì hiện đúng
+     một mã là NÓI THIẾU — người đọc tưởng việc chỉ xảy ra ở một thửa.
+     Trường hợp đó lùi về con số. */
+  if (n <= 2 && ds.length >= n) return ds.slice(0, 2).join(' · ');
+  return n + ' thửa';
+}
+
+/* ---------- tiện ích dùng chung ---------- */
 function soNgayTT(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
 function escTT(t) {
   return String(t == null ? '' : t).replace(/[&<>"]/g,
@@ -594,7 +621,9 @@ function ganTuongTac(oBd, oBang, K) {
               (ds.length > 1 ? ' · ' + ds.length + ' bản ghi' : '');
       ds.forEach(e => {
         const phu = [e.hoatDong, (e.vanDe || []).join(', '), e.mucDo].filter(Boolean).join(' · ');
+        const chu = nhanThuaNK(e);
         h += '<br><span style="color:' + (MAU_NHOM[e.nhom] || '#b9bfae') + '">●</span> ' + escTT(e.ten) +
+             (chu ? ' <span class="tt-thua">' + escTT(chu) + '</span>' : '') +
              (phu ? '<br><span class="tt-phu" style="margin-left:12px">' + escTT(phu) + '</span>' : '');
       });
       hienHop(cx, cy, h);

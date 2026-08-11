@@ -397,6 +397,19 @@ function chonThua(i){
   $('tBadge').innerHTML = nd
     ? (nd.organic ? '<span class="badge hc">Canh tác hữu cơ</span>' : '<span class="badge khc">Không hữu cơ</span>')
     : '<span class="badge cr">Chưa có dữ liệu</span>';
+
+  /* Nút sang trang truy xuất công khai — đúng trang khách quét mã QR sẽ
+     thấy. Chỉ hiện khi thửa đã có mã sản phẩm trong Notion; thửa chưa có
+     mã mà vẫn cho bấm thì khách sẽ rơi vào trang "không tìm thấy". */
+  const nutTX = $('tTruyXuat');
+  if (nutTX) {
+    if (nd && nd.productCode) {
+      nutTX.href = 'truy-xuat.html?ma=' + encodeURIComponent(nd.productCode);
+      nutTX.style.display = '';
+    } else {
+      nutTX.style.display = 'none';
+    }
+  }
   moModal('mpThua');
 }
 
@@ -408,15 +421,66 @@ function toggleChonNhieu(){
   $('thanhChonNhieu').style.display = cheDoChonNhieu ? 'flex' : 'none';
   if(!cheDoChonNhieu) xoaTickTatCa();
 }
+/* MỘT chỗ duy nhất cập nhật dòng đếm. Trước đây ba nơi tự gán chuỗi
+   riêng; thêm chỗ thứ tư là chắc chắn quên một nơi nào đó. */
+function capNhatDemChon(ghiChu){
+  $('cnSoLuong').innerHTML = 'Đã chọn ' + thuaDaChonNhieu.size + ' thửa'
+    + (ghiChu ? '<small>' + ghiChu + '</small>' : '');
+}
 function tickThua(i){
   if(thuaDaChonNhieu.has(i)){ thuaDaChonNhieu.delete(i); $('thua'+i).classList.remove('dachon-nhieu'); }
   else { thuaDaChonNhieu.add(i); $('thua'+i).classList.add('dachon-nhieu'); }
-  $('cnSoLuong').textContent = 'Đã chọn ' + thuaDaChonNhieu.size + ' thửa';
+  capNhatDemChon('');   // tick tay thì bỏ ghi chú của lần chọn tự động
 }
 function xoaTickTatCa(){
   thuaDaChonNhieu.forEach(i=>{ const el=$('thua'+i); if(el) el.classList.remove('dachon-nhieu'); });
   thuaDaChonNhieu.clear();
-  $('cnSoLuong').textContent = 'Đã chọn 0 thửa';
+  capNhatDemChon('');
+}
+
+/* ---------- chọn hết thửa đang canh tác hữu cơ ----------
+   Căn cứ DUY NHẤT là cột "Canh tác hữu cơ" trong Notion, đọc qua
+   notionPlots. Không suy từ màu trên bản đồ: màu chỉ là kết quả của
+   cùng dữ liệu đó, lấy màu làm căn cứ là đi vòng và sẽ sai âm thầm nếu
+   sau này đổi cách tô màu.
+
+   NÓI RÕ CÁI GÌ BỊ BỎ QUA. Đây là bước chuẩn bị ghi xuống Notion cho
+   hàng chục thửa cùng lúc; im lặng bỏ sót vài thửa rồi người dùng tưởng
+   đã ghi hết là kiểu lỗi tốn cả buổi mới lần ra. */
+function chonHetHuuCo(){
+  const ph = phienHienTai();
+  if(!ph){ moModal('mpDN'); return; }
+  if(ph.role === 'khach'){ alert('Tài khoản khách không nhập liệu được.'); return; }
+
+  if(!Object.keys(notionPlots).length){
+    alert('Chưa tải xong dữ liệu thửa từ Notion nên chưa biết thửa nào hữu cơ.\n\n'
+        + 'Anh chờ dòng trạng thái phía trên hiện "Đã khớp ... thửa" rồi bấm lại.');
+    return;
+  }
+
+  if(!cheDoChonNhieu) toggleChonNhieu();   // tự bật chế độ chọn nhiều
+  xoaTickTatCa();
+
+  let khongHC = 0, chuaCoMa = 0;
+  MAP_DATA.plots.forEach((p,i)=>{
+    const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
+    const nd = notionPlots[ma];
+    if(!nd){ chuaCoMa++; return; }          // thửa chưa có mã sản phẩm trong vụ này
+    if(!nd.organic){ khongHC++; return; }
+    thuaDaChonNhieu.add(i);
+    const el = $('thua'+i); if(el) el.classList.add('dachon-nhieu');
+  });
+
+  const boQua = [];
+  if(khongHC)  boQua.push(khongHC + ' thửa không hữu cơ');
+  if(chuaCoMa) boQua.push(chuaCoMa + ' thửa chưa có mã sản phẩm');
+  capNhatDemChon('đang canh tác hữu cơ, vụ ' + $('selVu').value
+    + (boQua.length ? ' · bỏ qua ' + boQua.join(', ') : ''));
+
+  if(!thuaDaChonNhieu.size){
+    alert('Cánh đồng này chưa có thửa nào được đánh dấu "Canh tác hữu cơ" trong vụ '
+        + $('selVu').value + '.');
+  }
 }
 function huyChonNhieu(){
   cheDoChonNhieu = false;

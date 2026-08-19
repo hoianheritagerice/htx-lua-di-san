@@ -91,6 +91,7 @@ body.nhung #trangthai{padding-top:10px}
 
 <div class="chuthich">
   <span><i class="i-hc"></i> Canh tác hữu cơ</span>
+  <span><i class="i-vp"></i> Hữu cơ nhưng vi phạm quy trình</span>
   <span><i class="i-khc"></i> Không hữu cơ</span>
   <span><i class="i-cr"></i> Chưa có dữ liệu</span>
 </div>
@@ -448,6 +449,18 @@ body.nhung #trangthai{padding-top:10px}
     if (!tieude) { $('nlLoi').textContent = 'Vui lòng nhập tiêu đề.'; return; }
     if (nlNhom === 'Canh tác' && !nlChon.hoatDong.length) { $('nlLoi').textContent = 'Chọn ít nhất một việc đã làm ở bước 2.'; return; }
     if (nlNhom === 'Vấn đề'  && !nlChon.vanDe.length) { $('nlLoi').textContent = 'Chọn ít nhất một vấn đề ở bước 2.'; return; }
+
+    /* Chốt chặn cuối: đã chọn file ở ô ảnh mà danh sách vẫn rỗng nghĩa là
+       khâu đọc ảnh hỏng. Thà hỏi lại còn hơn lưu thiếu rồi mất công. */
+    try {
+      var oAnh = $('nlAnh');
+      if (oAnh && oAnh.files && oAnh.files.length && !anhDaChon.length) {
+        $('nlLoi').style.color = '#b03c2a';
+        $('nlLoi').textContent = 'Ảnh chưa được đọc xong hoặc đọc lỗi. '
+          + 'Chờ ô xem trước hiện ảnh rồi hãy bấm Lưu.';
+        return;
+      }
+    } catch (e) {}
 
     /* KHÔNG gửi status — máy chủ suy ra từ Nhóm. */
     var goi = {

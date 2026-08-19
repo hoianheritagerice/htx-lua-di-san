@@ -48,17 +48,26 @@ function veUserBox(){
 
 async function dangNhap(){
   const oLoi = $('dnLoi'), nut = $('dnGui');
-  if(oLoi) oLoi.textContent=''; if(nut) nut.disabled = true;
+  if(oLoi) oLoi.textContent='';
+  /* Apps Script mất 2-5 giây mới trả lời. Bản cũ chỉ khoá nút mà không đổi
+     chữ, nên người dùng bấm xong thấy màn hình đứng im, tưởng treo rồi bấm
+     lại nhiều lần. Đổi chữ nút là đủ để hết cảm giác giật. */
+  const chuCu = nut ? nut.textContent : '';
+  if(nut){ nut.disabled = true; nut.textContent = 'Đang đăng nhập…'; }
   try{
     const r = await goiAPI({action:'login', username:$('dnUser').value.trim(), password:$('dnPass').value});
     if(!r.ok) throw r.error;
     localStorage.setItem('htx_phien', JSON.stringify({token:r.token, username:r.username, role:r.role||'admin'}));
     veUserBox(); dongModal('mpDN');
-    /* Bản đồ đang ở chế độ khách → vẽ lại ngay cho hiện đầy đủ */
-    if(typeof capNhatQuyenXem === 'function') capNhatQuyenXem();
-    if(typeof thuaDangChon !== 'undefined' && thuaDangChon !== null && typeof moNhapLieu === 'function') moNhapLieu();
+    /* Vẽ lại bản đồ là việc nặng (81 thửa + nhãn). Làm ngay tại đây thì
+       hộp đăng nhập đứng hình mất nửa giây mới đóng. Đẩy sang lượt sau để
+       hộp đóng mượt trước, bản đồ cập nhật ngay sau đó. */
+    setTimeout(function(){
+      if(typeof capNhatQuyenXem === 'function') capNhatQuyenXem();
+      if(typeof thuaDangChon !== 'undefined' && thuaDangChon !== null && typeof moNhapLieu === 'function') moNhapLieu();
+    }, 0);
   }catch(e){ if(oLoi) oLoi.textContent = e; else alert(e); }
-  if(nut) nut.disabled = false;
+  if(nut){ nut.disabled = false; nut.textContent = chuCu || 'Đăng nhập'; }
 }
 
 function dangXuat(){

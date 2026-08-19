@@ -235,12 +235,18 @@ function apDungKetQua(r){
     }
     /* Khách: giữ nguyên một màu xanh nhạt, không tô trạng thái canh tác */
     if(laKhach()){
-      el.classList.remove('huu-co','khong-huu-co','chua-ro');
+      el.classList.remove('huu-co','vi-pham','khong-huu-co','chua-ro');
       el.classList.add('khach');
       return;
     }
-    el.classList.remove('khach','huu-co','khong-huu-co','chua-ro');
-    el.classList.add(nd ? (nd.organic ? 'huu-co' : 'khong-huu-co') : 'chua-ro');
+    el.classList.remove('khach','huu-co','vi-pham','khong-huu-co','chua-ro');
+    /* BA trạng thái, không phải hai:
+         huu-co       — đang canh tác hữu cơ, tuân thủ
+         vi-pham      — đầu vụ có làm hữu cơ, giữa chừng không tuân thủ
+         khong-huu-co — không đăng ký hữu cơ ngay từ đầu
+       Thứ tự kiểm quan trọng: máy chủ đã đặt organic=false cho lô vi phạm,
+       nên phải hỏi viPham TRƯỚC, không thì lô vi phạm rơi vào "không hữu cơ". */
+    el.classList.add(!nd ? 'chua-ro' : (nd.viPham ? 'vi-pham' : (nd.organic ? 'huu-co' : 'khong-huu-co')));
   });
   tt.textContent = laKhach()
     ? 'Đăng nhập để xem trạng thái canh tác và nhật ký của từng thửa.'
@@ -395,21 +401,12 @@ function chonThua(i){
   $('tThua').textContent = nhanThua(p) + ' — ' + p.area + ' m²';
   $('tMa').textContent = nd ? nd.productCode : 'Chưa có mã sản phẩm';
   $('tBadge').innerHTML = nd
-    ? (nd.organic ? '<span class="badge hc">Canh tác hữu cơ</span>' : '<span class="badge khc">Không hữu cơ</span>')
+    ? (nd.viPham
+        ? '<span class="badge vp">Canh tác hữu cơ nhưng vi phạm quy trình và tiêu chuẩn</span>'
+          + (nd.nssDung != null ? '<div class="vp-ghi">Dừng tuân thủ từ NSS ' + nd.nssDung + ' — nhật ký không cập nhật tiếp sau mốc này.</div>' : '')
+        : (nd.organic ? '<span class="badge hc">Canh tác hữu cơ</span>'
+                      : '<span class="badge khc">Không hữu cơ</span>'))
     : '<span class="badge cr">Chưa có dữ liệu</span>';
-
-  /* Nút sang trang truy xuất công khai — đúng trang khách quét mã QR sẽ
-     thấy. Chỉ hiện khi thửa đã có mã sản phẩm trong Notion; thửa chưa có
-     mã mà vẫn cho bấm thì khách sẽ rơi vào trang "không tìm thấy". */
-  const nutTX = $('tTruyXuat');
-  if (nutTX) {
-    if (nd && nd.productCode) {
-      nutTX.href = 'truy-xuat.html?ma=' + encodeURIComponent(nd.productCode);
-      nutTX.style.display = '';
-    } else {
-      nutTX.style.display = 'none';
-    }
-  }
   moModal('mpThua');
 }
 
@@ -421,66 +418,15 @@ function toggleChonNhieu(){
   $('thanhChonNhieu').style.display = cheDoChonNhieu ? 'flex' : 'none';
   if(!cheDoChonNhieu) xoaTickTatCa();
 }
-/* MỘT chỗ duy nhất cập nhật dòng đếm. Trước đây ba nơi tự gán chuỗi
-   riêng; thêm chỗ thứ tư là chắc chắn quên một nơi nào đó. */
-function capNhatDemChon(ghiChu){
-  $('cnSoLuong').innerHTML = 'Đã chọn ' + thuaDaChonNhieu.size + ' thửa'
-    + (ghiChu ? '<small>' + ghiChu + '</small>' : '');
-}
 function tickThua(i){
   if(thuaDaChonNhieu.has(i)){ thuaDaChonNhieu.delete(i); $('thua'+i).classList.remove('dachon-nhieu'); }
   else { thuaDaChonNhieu.add(i); $('thua'+i).classList.add('dachon-nhieu'); }
-  capNhatDemChon('');   // tick tay thì bỏ ghi chú của lần chọn tự động
+  $('cnSoLuong').textContent = 'Đã chọn ' + thuaDaChonNhieu.size + ' thửa';
 }
 function xoaTickTatCa(){
   thuaDaChonNhieu.forEach(i=>{ const el=$('thua'+i); if(el) el.classList.remove('dachon-nhieu'); });
   thuaDaChonNhieu.clear();
-  capNhatDemChon('');
-}
-
-/* ---------- chọn hết thửa đang canh tác hữu cơ ----------
-   Căn cứ DUY NHẤT là cột "Canh tác hữu cơ" trong Notion, đọc qua
-   notionPlots. Không suy từ màu trên bản đồ: màu chỉ là kết quả của
-   cùng dữ liệu đó, lấy màu làm căn cứ là đi vòng và sẽ sai âm thầm nếu
-   sau này đổi cách tô màu.
-
-   NÓI RÕ CÁI GÌ BỊ BỎ QUA. Đây là bước chuẩn bị ghi xuống Notion cho
-   hàng chục thửa cùng lúc; im lặng bỏ sót vài thửa rồi người dùng tưởng
-   đã ghi hết là kiểu lỗi tốn cả buổi mới lần ra. */
-function chonHetHuuCo(){
-  const ph = phienHienTai();
-  if(!ph){ moModal('mpDN'); return; }
-  if(ph.role === 'khach'){ alert('Tài khoản khách không nhập liệu được.'); return; }
-
-  if(!Object.keys(notionPlots).length){
-    alert('Chưa tải xong dữ liệu thửa từ Notion nên chưa biết thửa nào hữu cơ.\n\n'
-        + 'Anh chờ dòng trạng thái phía trên hiện "Đã khớp ... thửa" rồi bấm lại.');
-    return;
-  }
-
-  if(!cheDoChonNhieu) toggleChonNhieu();   // tự bật chế độ chọn nhiều
-  xoaTickTatCa();
-
-  let khongHC = 0, chuaCoMa = 0;
-  MAP_DATA.plots.forEach((p,i)=>{
-    const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
-    const nd = notionPlots[ma];
-    if(!nd){ chuaCoMa++; return; }          // thửa chưa có mã sản phẩm trong vụ này
-    if(!nd.organic){ khongHC++; return; }
-    thuaDaChonNhieu.add(i);
-    const el = $('thua'+i); if(el) el.classList.add('dachon-nhieu');
-  });
-
-  const boQua = [];
-  if(khongHC)  boQua.push(khongHC + ' thửa không hữu cơ');
-  if(chuaCoMa) boQua.push(chuaCoMa + ' thửa chưa có mã sản phẩm');
-  capNhatDemChon('đang canh tác hữu cơ, vụ ' + $('selVu').value
-    + (boQua.length ? ' · bỏ qua ' + boQua.join(', ') : ''));
-
-  if(!thuaDaChonNhieu.size){
-    alert('Cánh đồng này chưa có thửa nào được đánh dấu "Canh tác hữu cơ" trong vụ '
-        + $('selVu').value + '.');
-  }
+  $('cnSoLuong').textContent = 'Đã chọn 0 thửa';
 }
 function huyChonNhieu(){
   cheDoChonNhieu = false;
@@ -489,19 +435,32 @@ function huyChonNhieu(){
   xoaTickTatCa();
 }
 
-/* nhapNhieuThua / moNhapLieu / guiNhapLieu ĐÃ GỠ 11/08/2026.
-
-   Chúng là BẢN SAO CHẾT: ban-do.html định nghĩa hàm cùng tên rồi gán đè
-   lên window sau khi file này chạy, nên bản ở đây chưa từng được gọi.
-   Bằng chứng: cả ba đều đọc $('nlTrangThai') — ô đó đã bị bỏ khỏi form
-   từ lâu; nếu thật sự chạy thì form đã văng lỗi mỗi lần mở.
-
-   Nguy hiểm ở chỗ ai đó sửa bản ở đây sẽ thấy sửa xong mà không có gì
-   đổi, và mất cả buổi mới hiểu. Bản đang sống nằm trong ban-do.html.
-
-   veXemAnh / boAnh / docFileB64 / veXemVideo / boVideo / nenAnh vẫn Ở LẠI
-   file này — ban-do.html KHÔNG định nghĩa lại chúng, chúng đang chạy thật.
-   Đừng dọn tiếp. */
+function nhapNhieuThua(){
+  if(!thuaDaChonNhieu.size){ alert('Anh chưa chọn thửa nào. Chạm vào các thửa trên bản đồ để chọn.'); return; }
+  const ph = phienHienTai();
+  if(!ph){ moModal('mpDN'); return; }
+  if(ph.role === 'khach'){ alert('Tài khoản khách chỉ xem chi tiết nhật ký, không nhập liệu được.'); return; }
+  // Gom mã Notion của các thửa đã tick; thửa chưa khớp mã sẽ bị bỏ khi lưu (server báo lại)
+  maNhieuThua = [];
+  const tenBoQua = [];
+  thuaDaChonNhieu.forEach(i=>{
+    const p = MAP_DATA.plots[i];
+    const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
+    if(nd) maNhieuThua.push(nd.productCode);
+    else tenBoQua.push(nhanThua(p));
+  });
+  if(!maNhieuThua.length){ alert('Các thửa đã chọn đều chưa có mã sản phẩm trong Notion nên chưa nhập liệu được.'); return; }
+  // Mở form ở chế độ nhiều thửa
+  dangNhapNhieu = true;
+  moModal('mpNhap');
+  $('nlMa').innerHTML = '<b>' + maNhieuThua.length + ' thửa</b> sẽ được ghi cùng nội dung này'
+    + (tenBoQua.length ? ' <span style="color:#c0392b">(bỏ qua ' + tenBoQua.length + ' thửa chưa có mã: ' + tenBoQua.join(', ') + ')</span>' : '');
+  $('nlNgay').value = new Date().toISOString().slice(0,10);
+  $('nlTieuDe').value=''; $('nlNoiDung').value=''; $('nlAnh').value='';
+  $('nlTrangThai').value='Hoàn thành';
+  $('nlXemAnh').innerHTML=''; $('nlLoi').textContent=''; anhDaChon=[];
+  $('nlVideo').value=''; $('nlXemVideo').innerHTML=''; videoDaChon=[];
+}
 
 /* ---------- nhật ký ---------- */
 /* ---------- nhật ký ---------- */
@@ -564,6 +523,79 @@ let anhDaChon = [];
 let videoDaChon = [];
 let dangNhapNhieu = false;      // form đang ở chế độ nhiều thửa?
 let maNhieuThua = [];           // danh sách mã Notion khi nhập nhiều thửa
+function moNhapLieu(){
+  dangNhapNhieu = false;   // luồng 1 thửa
+  const ph = phienHienTai();
+  if(!ph){ dongModal('mpThua'); moModal('mpDN'); return; }
+  if(ph.role === 'khach'){ alert('Tài khoản khách chỉ xem chi tiết nhật ký, không nhập liệu được.'); return; }
+  const p = MAP_DATA.plots[thuaDangChon];
+  const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
+  if(!nd){ alert('Thửa này chưa khớp mã sản phẩm trong Notion nên chưa nhập liệu được.'); return; }
+  dongModal('mpThua'); moModal('mpNhap');
+  $('nlMa').textContent = nd.productCode;
+  $('nlNgay').value = new Date().toISOString().slice(0,10);
+  $('nlTieuDe').value=''; $('nlNoiDung').value=''; $('nlAnh').value='';
+  $('nlTrangThai').value='Hoàn thành';
+  $('nlXemAnh').innerHTML=''; $('nlLoi').textContent=''; anhDaChon=[];
+  $('nlVideo').value=''; $('nlXemVideo').innerHTML=''; videoDaChon=[];
+}
+
+// nén ảnh phía trình duyệt (tối đa cạnh 1600px, JPEG 80%)
+/* ĐỌC KỸ TRƯỚC KHI SỬA — chỗ này đã từng làm MẤT TRẮNG ảnh của cả buổi.
+   Bản cũ gọi thẳng `await nenAnh(f)` mà không bắt lỗi. nenAnh() nạp ảnh
+   vào thẻ <img> để nén; ảnh HEIC của iPhone hoặc ảnh quá lớn thì trình
+   duyệt Android KHÔNG nạp được → promise bị từ chối → cả vòng lặp văng ra
+   → ảnh không vào danh sách, KHÔNG có thông báo nào, ô xem trước trống
+   trơn. Người dùng chọn tiếp video thấy video hiện lên nên tưởng đã đủ,
+   bấm Lưu, và chỉ có video lên Notion.
+
+   Nay: bắt lỗi TỪNG tấm, tấm nào nén hỏng thì gửi nguyên bản, hỏng hẳn
+   thì báo tên tấm đó ra màn hình. Không bao giờ im lặng nữa. */
+$('nlAnh') && $('nlAnh').addEventListener('change', async function(){
+  const soFile = this.files.length;
+  const hong = [];
+  let nguyenBan = 0;
+
+  for(const f of this.files){
+    const goc = (f.name || 'anh').replace(/\.[^.]+$/,'') + '_' + Date.now();
+    try{
+      const b64 = await nenAnh(f);
+      anhDaChon.push({name: goc + '.jpg', mimeType:'image/jpeg', base64: b64});
+    }catch(e1){
+      // Nén không được (HEIC, ảnh lạ) → gửi nguyên file, miễn là đừng mất
+      try{
+        if(f.size > 12*1024*1024) throw 'qua-nang';
+        const b64 = await docFileB64(f);
+        const duoi = (f.name.match(/\.[^.]+$/) || ['.jpg'])[0];
+        anhDaChon.push({name: goc + duoi, mimeType: f.type || 'image/jpeg', base64: b64});
+        nguyenBan++;
+      }catch(e2){
+        hong.push(f.name || 'ảnh không tên');
+      }
+    }
+  }
+
+  this.value = '';   // xóa lựa chọn của ô input để lần bấm sau luôn nhận ảnh mới
+  veXemAnh();
+
+  const oLoi = $('nlLoi');
+  if(oLoi){
+    if(hong.length){
+      oLoi.style.color = '#b03c2a';
+      oLoi.textContent = 'KHÔNG đọc được ' + hong.length + '/' + soFile + ' ảnh: '
+        + hong.join(', ') + '. Thử chụp lại bằng máy ảnh của điện thoại, '
+        + 'hoặc đổi máy ảnh sang định dạng JPEG rồi chọn lại.';
+    }else if(nguyenBan){
+      oLoi.style.color = '#8a6a3a';
+      oLoi.textContent = nguyenBan + ' ảnh không nén được nên gửi nguyên bản — '
+        + 'sẽ lâu hơn một chút, cứ chờ đừng tắt.';
+    }else{
+      oLoi.textContent = ''; oLoi.style.color = '';
+    }
+  }
+});
+
+// Vẽ lại dàn ảnh xem trước, mỗi ảnh có nút × để bỏ
 function veXemAnh(){
   const kho = $('nlXemAnh');
   kho.innerHTML = '';
@@ -637,6 +669,51 @@ function nenAnh(file){
     img.onerror = rej;
     img.src = URL.createObjectURL(file);
   });
+}
+
+async function guiNhapLieu(){
+  const ph = phienHienTai();
+  if(!ph){ moModal('mpDN'); return; }
+  const tieude = $('nlTieuDe').value.trim();
+  if(!tieude){ $('nlLoi').textContent = 'Vui lòng nhập tiêu đề.'; return; }
+
+  // Gói dữ liệu chung; 1 thửa gửi productCode, nhiều thửa gửi productCodes[]
+  const goi = {action:'createEntry', token: ph.token, title: tieude,
+    content: $('nlNoiDung').value.trim(), date: $('nlNgay').value,
+    status: $('nlTrangThai').value,
+    images: anhDaChon.concat(videoDaChon)};
+  if(dangNhapNhieu){
+    goi.productCodes = maNhieuThua;
+  }else{
+    const p = MAP_DATA.plots[thuaDangChon];
+    const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
+    if(!nd){ $('nlLoi').textContent = 'Thửa này chưa có mã sản phẩm.'; return; }
+    goi.productCode = nd.productCode;
+  }
+
+  $('nlGui').disabled = true; $('nlGui').textContent='Đang lưu…'; $('nlLoi').textContent='';
+  try{
+    const r = await goiAPI(goi);
+    if(!r.ok) throw r.error;
+    const soTask = r.soTask || 1;
+    $('nlGui').textContent = '✓ Đã lưu ' + soTask + ' bản ghi';
+    // Nếu có thửa bị bỏ qua (chưa khớp mã) → báo lại cho anh
+    if(r.boQua && r.boQua.length){
+      $('nlLoi').style.color = '#b26a00';
+      $('nlLoi').textContent = 'Đã bỏ qua ' + r.boQua.length + ' thửa chưa khớp mã: ' + r.boQua.join(', ');
+    }
+    const cho = (r.boQua && r.boQua.length) ? 2600 : 1200;
+    setTimeout(()=>{
+      dongModal('mpNhap');
+      $('nlGui').disabled=false; $('nlGui').textContent='Lưu vào Notion';
+      $('nlLoi').style.color=''; 
+      if(dangNhapNhieu) huyChonNhieu();   // xong đợt nhiều thửa thì tắt chế độ, xóa tick
+    }, cho);
+  }catch(e){
+    $('nlLoi').style.color=''; $('nlLoi').textContent = e;
+    if(String(e).includes('hết hạn') || String(e).includes('đăng nhập')){ dangXuat(); moModal('mpDN'); }
+    $('nlGui').disabled=false; $('nlGui').textContent='Lưu vào Notion';
+  }
 }
 
 /* ---------- khởi động ---------- */

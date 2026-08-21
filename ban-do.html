@@ -9,6 +9,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/chung.css">
 <style>
+/* Nút chọn nhanh thửa hữu cơ — màu nhạt hơn nút nhập liệu để mắt nhìn ra
+   ngay đâu là bước chọn, đâu là bước ghi xuống Notion. */
+#thanhChonNhieu button.cn-hc{background:#d7e8bd;color:#2b4417}
+/* Hai dòng phân bón: nhãn — ô số — đơn vị, thẳng hàng nhau */
+.nl-phan{display:grid;grid-template-columns:1fr 96px auto;align-items:center;gap:10px;margin-bottom:8px}
+.nl-phan label{font-size:14px;color:#3f4a33}
+.nl-phan input{width:100%;font:inherit;font-size:15px;padding:9px 11px;border:1.5px solid #ddd6c2;
+  border-radius:9px;background:#fffdf8;text-align:right}
+.nl-phan span{font-size:13px;color:#7b8270;min-width:46px}
+/* Chip trạng thái: vàng = chưa làm, hồng = đang làm, xanh = xong */
+#hopTrangThai .chip.tt-kh.dachon{background:#f6e6b8;border-color:#d8bf76;color:#6b5518}
+#hopTrangThai .chip.tt-dl.dachon{background:#f7dbe4;border-color:#dba7b8;color:#7a2540}
+#hopTrangThai .chip.tt-ht.dachon{background:#dff0cc;border-color:#a7c884;color:#33521a}
+#thanhChonNhieu #cnSoLuong small{display:block;font-weight:400;font-size:11.5px;opacity:.8;margin-top:2px}
+.nut-truyxuat{display:block;margin-top:10px;text-align:center;font-size:14.5px;font-weight:600;
+  color:#1e4d2b;border:1.6px solid #1e4d2b;border-radius:26px;padding:11px 18px;text-decoration:none}
+.nut-truyxuat:hover{background:#1e4d2b;color:#fff}
+</style>
+<style>
 /* ===== Form nhật ký có cấu trúc ===== */
 .nl-buoc{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
          color:#8a9080;margin:18px 0 8px}
@@ -89,6 +108,9 @@ body.nhung #trangthai{padding-top:10px}
   </div>
   <div id="thanhChonNhieu" style="display:none">
     <span id="cnSoLuong">Đã chọn 0 thửa</span>
+    <!-- Chọn nhanh toàn bộ thửa hữu cơ. Đứng TRƯỚC nút nhập liệu vì đây
+         là bước chọn, còn nhập liệu là bước sau. -->
+    <button onclick="chonHetHuuCo()" class="cn-hc">🌱 Chọn hết thửa hữu cơ</button>
     <button onclick="nhapNhieuThua()">✏️ Nhập liệu cho các thửa đã chọn</button>
     <button onclick="huyChonNhieu()" class="cn-huy">Hủy</button>
   </div>
@@ -112,6 +134,9 @@ body.nhung #trangthai{padding-top:10px}
       <button class="nut-xem" onclick="moNhatKy()">📖 Xem nhật ký</button>
       <button class="nut-nhap" onclick="moNhapLieu()">✏️ Nhập liệu mới</button>
     </div>
+    <!-- Trang truy xuất công khai: chính là trang khách quét mã QR nhìn
+         thấy. Để ở đây để anh xem trước đúng thứ khách sẽ thấy. -->
+    <a class="nut-truyxuat" id="tTruyXuat" href="#" style="display:none">🔎 Xem đầy đủ trang truy xuất</a>
     <button class="dong" onclick="dongModal(&#39;mpThua&#39;)">Đóng</button>
   </div>
 </div>
@@ -134,7 +159,7 @@ body.nhung #trangthai{padding-top:10px}
 
     <div class="nl-buoc">1 · Hôm nay ghi gì</div>
     <div class="nl-nhom">
-      <button type="button" id="nhomCT" onclick="chonNhom('Canh tác')">🌾 Canh tác<small>việc đã làm</small></button>
+      <button type="button" id="nhomCT" onclick="chonNhom('Canh tác')">🌾 Canh tác<small>công việc trên đồng</small></button>
       <button type="button" id="nhomVD" onclick="chonNhom('Vấn đề')">⚠️ Vấn đề<small>cỏ, chuột, sâu…</small></button>
       <button type="button" id="nhomQS" onclick="chonNhom('Quan sát')">👀 Quan sát<small>ghi nhận chung</small></button>
     </div>
@@ -142,16 +167,26 @@ body.nhung #trangthai{padding-top:10px}
     <div id="khoiCanhTac" class="nl-an">
       <div class="nl-buoc">2 · Làm việc gì</div>
       <div class="chip-hop" id="hopHoatDong"></div>
+      <!-- Trạng thái CHỈ hiện cho nhóm Canh tác. Vấn đề và Quan sát là sự
+           việc đã xảy ra, không có tiến độ để chọn. -->
+      <div class="nl-buoc">3 · Việc này đã làm chưa</div>
+      <div class="chip-hop" id="hopTrangThai"></div>
       <div id="khoiPhan" class="nl-an">
-        <div class="nl-buoc">Lượng phân đã bón</div>
-        <div class="nl-ba">
-          <input id="nlVatTu" placeholder="Loại phân (VD: NPK 16-16-8)">
-          <input id="nlSoLuong" type="number" inputmode="decimal" placeholder="Số lượng">
-          <select id="nlDonVi">
-            <option value="">Đơn vị</option><option value="kg">kg</option>
-            <option value="bao">bao</option><option value="lít">lít</option><option value="gói">gói</option>
-          </select>
+        <div class="nl-buoc">Lượng phân bón <span style="font-weight:400;text-transform:none;color:#98a08c">(ghi cho toàn cánh đồng)</span></div>
+        <!-- Hai loại phân cố định, mỗi loại một ô. Đợt nào không bón loại
+             nào thì để trống — KHÔNG gõ số 0, vì trống nghĩa là "không
+             bón", còn 0 nghĩa là "có bón mà bón không kilogram nào". -->
+        <div class="nl-phan">
+          <label for="nlBanhDau">Bánh dầu ủ</label>
+          <input id="nlBanhDau" type="number" inputmode="decimal" placeholder="0" min="0" step="0.1">
+          <span>kg/sào</span>
         </div>
+        <div class="nl-phan">
+          <label for="nlCompost">Compost</label>
+          <input id="nlCompost" type="number" inputmode="decimal" placeholder="0" min="0" step="0.1">
+          <span>kg/sào</span>
+        </div>
+        <div class="nl-goiy">Đợt này chỉ bón một loại thì để trống ô kia.</div>
       </div>
       <div id="khoiNuoc" class="nl-an">
         <div class="nl-buoc">Mực nước sau khi điều tiết</div>
@@ -182,11 +217,11 @@ body.nhung #trangthai{padding-top:10px}
     </div>
 
     <div id="khoiChung">
-      <div class="nl-buoc">Tiêu đề &amp; ngày</div>
-      <div class="form-o o-noi"><input id="nlTieuDe" placeholder="VD: Chuột phá giáp mương"></div>
+      <div class="nl-buoc" id="nlNhanNgay">Tiêu đề &amp; ngày</div>
+      <div class="form-o"><input id="nlTieuDe" placeholder="VD: Chuột phá giáp mương"></div>
       <div class="form-o"><input id="nlNgay" type="date"></div>
       <div class="form-o"><label>Mô tả chi tiết</label>
-        <div class="o-noi"><textarea id="nlNoiDung" placeholder="Mô tả chi tiết tình hình…"></textarea></div></div>
+        <textarea id="nlNoiDung" placeholder="Mô tả chi tiết tình hình…"></textarea></div>
       <div class="form-o"><label>Hình ảnh</label><input id="nlAnh" type="file" accept="image/*" multiple="">
         <div class="anh-xem" id="nlXemAnh"></div></div>
       <div class="form-o"><label>Video (tối đa 20MB/video — nên quay 15–30 giây)</label>
@@ -315,7 +350,11 @@ body.nhung #trangthai{padding-top:10px}
     hoatDong: ['Làm đất','Ngâm ủ giống','Gieo/Cấy','Dặm - cấy lại','Bón phân',
                'Điều tiết nước','Làm cỏ','Cắt bông cỏ','Rào chuột','Thu hoạch'],
     vanDe: ['Cỏ','Chuột','Ốc bươu vàng','Sâu','Đạo ôn','Khô vằn',
-            'Khô nước','Ngập úng','Nhiễm mặn','Đổ ngã','Vàng lá'],
+            'Khô nước','Ngập úng','Nhiễm mặn','Nhiễm phèn','Đổ ngã','Vàng lá'],
+    /* Ba trạng thái này chỉ hiện cho nhóm Canh tác. Phải khớp TỪNG KÝ TỰ
+       với CONFIG.STATUS_FORM trong Apps Script và với option cột "Trạng
+       thái" trong Notion — lệch một dấu là bản ghi bị chặn im lặng. */
+    trangThai: ['Kế hoạch','Đang làm','Hoàn thành'],
     mucDo: ['Nhẹ (<10%)','Vừa (10-30%)','Nặng (>30%)'],
     viTri: ['Giữa đám','Sát bờ','Giáp đất màu','Giáp đất ở','Giáp mương'],
     xuLy:  ['Rào ni lông','Thêm nước','Tháo nước','Cắt bông cỏ','Thuê công','Đặt bẫy']
@@ -323,7 +362,7 @@ body.nhung #trangthai{padding-top:10px}
 
   var nlNhom = '';
   /* hoatDong là MẢNG: một lần ghi có thể gồm nhiều việc (làm cỏ + bón phân…) */
-  var nlChon = { hoatDong:[], vanDe:[], mucDo:'', viTri:[], xuLy:[] };
+  var nlChon = { hoatDong:[], vanDe:[], mucDo:'', viTri:[], xuLy:[], trangThai:'' };
 
   function hienKhoi(id, hien) {
     var e = $(id); if (e) e.classList.toggle('nl-an', !hien);
@@ -335,6 +374,25 @@ body.nhung #trangthai{padding-top:10px}
     var ds = nlChon.hoatDong || [];
     hienKhoi('khoiPhan', ds.indexOf('Bón phân') !== -1);
     hienKhoi('khoiNuoc', ds.indexOf('Điều tiết nước') !== -1);
+  }
+
+  /* Tô sẵn một chip đang chọn. Dùng cho mặc định "Hoàn thành" — veChip
+     vẽ lại từ đầu nên phải gọi SAU nó, không thì bị xoá mất. */
+  function danhDauChip(idHop, giaTri) {
+    var hop = $(idHop); if (!hop) return;
+    Array.prototype.forEach.call(hop.querySelectorAll('.chip'), function (b) {
+      b.classList.toggle('dachon', b.getAttribute('data-v') === giaTri);
+    });
+  }
+
+  /* Chọn "Kế hoạch" thì ô ngày không còn là ngày đã làm nữa. Đổi nhãn để
+     người ghi khỏi nhầm — và để bản ghi kế hoạch mang đúng ngày dự tính
+     chứ không phải hôm nay. */
+  function capNhatNhanNgay() {
+    var e = $('nlNhanNgay'); if (!e) return;
+    e.innerHTML = (nlChon.trangThai === 'Kế hoạch')
+      ? 'Tiêu đề &amp; ngày dự kiến'
+      : 'Tiêu đề &amp; ngày';
   }
 
   function veChip(idHop, ds, khoa, nhieu, lopThem) {
@@ -351,7 +409,10 @@ body.nhung #trangthai{padding-top:10px}
           if (i === -1) ds2.push(v); else ds2.splice(i, 1);
           b.classList.toggle('dachon');
         } else {
-          var bat = (nlChon[khoa] !== v);
+          /* Trạng thái KHÔNG được bỏ trống: bấm lại chip đang chọn thì
+             giữ nguyên, không tắt. Bản ghi không trạng thái là bản ghi
+             không ai biết đã làm hay chưa. */
+          var bat = (khoa === 'trangThai') ? true : (nlChon[khoa] !== v);
           Array.prototype.forEach.call(hop.querySelectorAll('.chip'), function (x) {
             x.classList.remove('dachon');
           });
@@ -361,7 +422,8 @@ body.nhung #trangthai{padding-top:10px}
         /* PHẢI nằm ngoài if/else. Trước đây dòng này nằm trong nhánh
            "chọn một", nên khi Hoạt động chuyển sang chọn nhiều thì hai
            khối Bón phân và Mực nước không bao giờ hiện ra nữa. */
-        if (khoa === 'hoatDong') capNhatOHoatDong();
+        if (khoa === 'hoatDong')  capNhatOHoatDong();
+        if (khoa === 'trangThai') capNhatNhanNgay();
       };
     });
   }
@@ -385,22 +447,27 @@ body.nhung #trangthai{padding-top:10px}
 
   function resetFormNhatKy() {
     nlNhom = '';
-    nlChon = { hoatDong:[], vanDe:[], mucDo:'', viTri:[], xuLy:[] };
+    nlChon = { hoatDong:[], vanDe:[], mucDo:'', viTri:[], xuLy:[], trangThai:'Hoàn thành' };
     veChip('hopHoatDong', OPT.hoatDong, 'hoatDong', true);
     veChip('hopVanDe',    OPT.vanDe,    'vanDe',    true);
     veChip('hopMucDo',    OPT.mucDo,    'mucDo',    false, ['md-nhe','md-vua','md-nang']);
     veChip('hopViTri',    OPT.viTri,    'viTri',    true);
     veChip('hopViTriQS',  OPT.viTri,    'viTri',    true);
     veChip('hopXuLy',     OPT.xuLy,     'xuLy',     true);
+    /* Mặc định "Hoàn thành": phần lớn bản ghi là ghi lại việc vừa làm
+       xong. Ai lên kế hoạch trước thì bấm đổi — đường bấm thường ngày
+       không dài thêm chạm nào. */
+    veChip('hopTrangThai', OPT.trangThai, 'trangThai', false, ['tt-kh','tt-dl','tt-ht']);
+    danhDauChip('hopTrangThai', 'Hoàn thành');
+    capNhatNhanNgay();
     ['nhomCT','nhomVD','nhomQS'].forEach(function (id) {
       var e = $(id); if (e) e.classList.remove('dachon');
     });
     ['khoiCanhTac','khoiVanDe','khoiQuanSat','khoiPhan','khoiNuoc']
       .forEach(function (id) { hienKhoi(id, false); });
     hienKhoi('khoiChung', true);   // tiêu đề, ngày, mô tả, ảnh, nút Lưu: luôn hiện
-    ['nlTieuDe','nlNoiDung','nlVatTu','nlSoLuong','nlMucNuoc','nlTyLe','nlAnh','nlVideo']
+    ['nlTieuDe','nlNoiDung','nlBanhDau','nlCompost','nlMucNuoc','nlTyLe','nlAnh','nlVideo']
       .forEach(function (id) { var e = $(id); if (e) e.value = ''; });
-    if ($('nlDonVi'))   $('nlDonVi').value = '';
     if ($('nlCanXuLy')) $('nlCanXuLy').checked = false;
     $('nlNgay').value = new Date().toISOString().slice(0, 10);
     $('nlXemAnh').innerHTML = ''; $('nlXemVideo').innerHTML = '';
@@ -472,19 +539,9 @@ body.nhung #trangthai{padding-top:10px}
     if (nlNhom === 'Canh tác' && !nlChon.hoatDong.length) { $('nlLoi').textContent = 'Chọn ít nhất một việc đã làm ở bước 2.'; return; }
     if (nlNhom === 'Vấn đề'  && !nlChon.vanDe.length) { $('nlLoi').textContent = 'Chọn ít nhất một vấn đề ở bước 2.'; return; }
 
-    /* Chốt chặn cuối: đã chọn file ở ô ảnh mà danh sách vẫn rỗng nghĩa là
-       khâu đọc ảnh hỏng. Thà hỏi lại còn hơn lưu thiếu rồi mất công. */
-    try {
-      var oAnh = $('nlAnh');
-      if (oAnh && oAnh.files && oAnh.files.length && !anhDaChon.length) {
-        $('nlLoi').style.color = '#b03c2a';
-        $('nlLoi').textContent = 'Ảnh chưa được đọc xong hoặc đọc lỗi. '
-          + 'Chờ ô xem trước hiện ảnh rồi hãy bấm Lưu.';
-        return;
-      }
-    } catch (e) {}
-
-    /* KHÔNG gửi status — máy chủ suy ra từ Nhóm. */
+    /* Trạng thái CHỈ gửi khi là Canh tác. Với Vấn đề và Quan sát, máy
+       chủ vẫn tự gán như cũ — gửi lên cũng bị bỏ qua, nhưng không gửi
+       thì rõ ý hơn cho người đọc code sau này. */
     var goi = {
       action: 'createEntry', token: ph.token,
       title: tieude, content: $('nlNoiDung').value.trim(), date: $('nlNgay').value,
@@ -493,8 +550,8 @@ body.nhung #trangthai{padding-top:10px}
       mucDo: nlChon.mucDo || '', viTri: nlChon.viTri, daXuLy: nlChon.xuLy,
       canXuLy: !!($('nlCanXuLy') && $('nlCanXuLy').checked),
       tyLe: $('nlTyLe').value || '', mucNuoc: $('nlMucNuoc').value || '',
-      vatTu: $('nlVatTu').value.trim(), soLuong: $('nlSoLuong').value || '',
-      donVi: $('nlDonVi').value || ''
+      trangThai: (nlNhom === 'Canh tác') ? (nlChon.trangThai || 'Hoàn thành') : '',
+      banhDau: $('nlBanhDau').value || '', compost: $('nlCompost').value || ''
     };
     if (dangNhapNhieu) { goi.productCodes = maNhieuThua; }
     else {
@@ -506,7 +563,9 @@ body.nhung #trangthai{padding-top:10px}
     $('nlGui').disabled = true; $('nlGui').textContent = 'Đang lưu…'; $('nlLoi').textContent = '';
     goiAPI(goi).then(function (r) {
       if (!r.ok) throw r.error;
-      $('nlGui').textContent = '✓ Đã lưu ' + (r.soTask || 1) + ' bản ghi';
+      /* Nay là MỘT bản ghi nối nhiều thửa, nên đếm THỬA mới đúng nghĩa
+         với người ghi. r.soTask giờ luôn bằng 1. */
+      $('nlGui').textContent = '✓ Đã lưu cho ' + (r.soThua || 1) + ' thửa';
       if (r.boQua && r.boQua.length) {
         $('nlLoi').style.color = '#b26a00';
         $('nlLoi').textContent = 'Đã bỏ qua ' + r.boQua.length + ' thửa chưa khớp mã: ' + r.boQua.join(', ');
@@ -560,101 +619,6 @@ body.nhung #trangthai{padding-top:10px}
       })
       .catch(function (e) { $('nkDS').innerHTML = '<div class="trong">Lỗi tải nhật ký: ' + e + '</div>'; });
   }
-
-  /* ==================================================================
-     NHẬP BẰNG GIỌNG NÓI
-     ------------------------------------------------------------------
-     Gắn nút 🎤 vào ô Tiêu đề và ô Mô tả. Bấm rồi nói, chữ chạy thẳng vào
-     ô. Dùng Web Speech API có sẵn của trình duyệt — KHÔNG tốn tiền,
-     KHÔNG gọi máy chủ nào, không cần cài gì.
-
-     HOẠT ĐỘNG Ở ĐÂU: Chrome và Edge trên Android và máy tính. Safari trên
-     iPhone thì KHÔNG — nhưng bàn phím iPhone đã có sẵn nút micro riêng,
-     nên người dùng iPhone vẫn nói được, chỉ là bấm ở bàn phím.
-     Trình duyệt không hỗ trợ thì nút tự ẩn, form chạy như cũ.
-
-     Chữ nói ra được CỘNG THÊM vào cuối ô, không xoá cái đang có — xã
-     viên nói nhiều đợt vẫn giữ đủ.
-     ================================================================== */
-  var BoNhanGiong = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-  function ganNutNoi(idO) {
-    if (!BoNhanGiong) return;                 // trình duyệt không hỗ trợ → không gắn nút
-    var o = $(idO); if (!o) return;
-    var boc = o.closest('.o-noi'); if (!boc) return;
-    if (boc.querySelector('.nut-noi-giong')) return;
-
-    var nut = document.createElement('button');
-    nut.type = 'button';
-    nut.className = 'nut-noi-giong';
-    nut.title = 'Bấm rồi nói';
-    nut.setAttribute('aria-label', 'Nhập bằng giọng nói');
-    nut.textContent = '🎤';
-    boc.appendChild(nut);
-
-    var may = null, dangNghe = false;
-
-    function dung() {
-      dangNghe = false;
-      nut.classList.remove('dang-nghe');
-      nut.textContent = '🎤';
-      if (may) { try { may.stop(); } catch (e) {} }
-    }
-
-    nut.addEventListener('click', function () {
-      if (dangNghe) { dung(); return; }
-
-      may = new BoNhanGiong();
-      may.lang = 'vi-VN';
-      may.interimResults = false;      // chỉ nhận câu đã chốt, đỡ chữ nhảy loạn
-      may.continuous = true;           // nói nhiều câu liên tiếp không phải bấm lại
-
-      may.onresult = function (e) {
-        var them = '';
-        for (var i = e.resultIndex; i < e.results.length; i++) {
-          if (e.results[i].isFinal) them += e.results[i][0].transcript;
-        }
-        if (!them.trim()) return;
-        var cu = o.value.trim();
-        o.value = cu ? (cu + ' ' + them.trim()) : them.trim();
-        o.dispatchEvent(new Event('input', { bubbles: true }));
-      };
-
-      may.onerror = function (e) {
-        dung();
-        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-          $('nlLoi').textContent = 'Trình duyệt chưa được cấp quyền dùng micro. ' +
-            'Bấm vào biểu tượng ổ khoá cạnh địa chỉ web để bật.';
-        } else if (e.error === 'no-speech') {
-          $('nlLoi').textContent = 'Không nghe thấy gì. Bấm 🎤 rồi nói gần máy hơn.';
-        } else if (e.error === 'network') {
-          $('nlLoi').textContent = 'Nhận giọng nói cần mạng. Kiểm tra kết nối rồi thử lại.';
-        }
-      };
-
-      may.onend = function () { if (dangNghe) dung(); };
-
-      try {
-        may.start();
-        dangNghe = true;
-        nut.classList.add('dang-nghe');
-        nut.textContent = '■';
-        $('nlLoi').textContent = 'Đang nghe… nói xong bấm ■ để dừng.';
-        $('nlLoi').style.color = '#5b6b4a';
-      } catch (e) { dung(); }
-    });
-
-    /* Đóng form giữa chừng mà quên tắt thì micro vẫn bật — phải dừng hẳn. */
-    var oModal = o.closest('.modal-phu');
-    if (oModal) {
-      new MutationObserver(function () {
-        if (!oModal.classList.contains('mo') && dangNghe) dung();
-      }).observe(oModal, { attributes: true, attributeFilter: ['class'] });
-    }
-  }
-
-  ganNutNoi('nlTieuDe');
-  ganNutNoi('nlNoiDung');
 
   /* --- Gán đè lên window: thắng mọi định nghĩa cùng tên trong js/ban-do.js --- */
   window.chonNhom        = chonNhom;

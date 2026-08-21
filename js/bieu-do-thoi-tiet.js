@@ -96,7 +96,11 @@ function bangGiaiDoan(season, gieo, nssMin, nssMax) {
        nên vẫn là mốc THẬT, không phải ước lượng. */
     { ten: 'Chuẩn bị',       nss: nssMin,               that: true  },
     { ten: 'Mạ',             nss: 0,                    that: true  },
-    { ten: 'Đẻ nhánh sớm',   nss: 15,                   that: false },
+    /* Có ngày thật trong Notion (cột "Ngày đẻ nhánh sớm", thêm 19/08/2026)
+       thì dùng; ô trống thì mới ước lượng NSS 15 và đánh dấu ≈. */
+    (season.deSom
+      ? { ten: 'Đẻ nhánh sớm', nss: nss(season.deSom),  that: true  }
+      : { ten: 'Đẻ nhánh sớm', nss: 15,                 that: false }),
     { ten: 'Đẻ nhánh rộ',    nss: nss(season.deNhanh),  that: true  },
     { ten: 'Làm đòng',       nss: nss(season.donDong),  that: true  },
     { ten: 'Trổ – phơi màu', nss: nss(season.troBong),  that: true  },
@@ -236,7 +240,11 @@ function veThoiTiet(r) {
   const chamNK = Object.keys(theoNgay).sort().map(ngay => {
     const ds = theoNgay[ngay];
     const nhom = UU_TIEN_NHOM.find(t => ds.some(e => e.nhom === t)) || ds[0].nhom;
-    return { ngay: ngay, nhom: nhom, ds: ds };
+    /* Chấm RỖNG RUỘT khi MỌI bản ghi của ngày đó đều chưa xảy ra (kế
+       hoạch). Chỉ cần một việc đã làm là tô đặc — nếu không, một cái kế
+       hoạch ghi kèm sẽ làm cả ngày trông như chưa làm gì. */
+    const chuaXayRa = ds.length > 0 && ds.every(e => e.chuaXayRa === true);
+    return { ngay: ngay, nhom: nhom, ds: ds, chuaXayRa: chuaXayRa };
   });
 
   /* ---------- THỐNG KÊ CẢ VỤ ---------- */
@@ -407,7 +415,11 @@ function veThoiTiet(r) {
       const n = soNgayTT(gieo, c.ngay);
       if (n < nssMin || n > nssMax) return;
       g += '<circle cx="' + x(n).toFixed(1) + '" cy="' + yE + '" r="5.5" fill="#fffdf7"/>';
-      g += '<circle class="tt-cham" cx="' + x(n).toFixed(1) + '" cy="' + yE + '" r="4.2" fill="' + MAU_NHOM[c.nhom] + '"/>';
+      g += c.chuaXayRa
+        ? '<circle class="tt-cham" cx="' + x(n).toFixed(1) + '" cy="' + yE +
+          '" r="3.9" fill="#fffdf7" stroke="' + MAU_NHOM[c.nhom] + '" stroke-width="1.6"/>'
+        : '<circle class="tt-cham" cx="' + x(n).toFixed(1) + '" cy="' + yE +
+          '" r="4.2" fill="' + MAU_NHOM[c.nhom] + '"/>';
       // nhiều bản ghi cùng ngày: viền ngoài cho biết có nhiều thứ bên trong
       if (c.ds.length > 1) {
         g += '<circle cx="' + x(n).toFixed(1) + '" cy="' + yE + '" r="6.6" fill="none" stroke="' +
@@ -496,7 +508,8 @@ function veThoiTiet(r) {
 
   oChu.innerHTML = 'Mưa, nhiệt độ và bức xạ lấy tự động từ Open-Meteo (kho ERA5). ' +
     'Cột mưa <b>viền đậm</b> là ngày có số vũ kế đo tại ruộng — số đo tại ruộng luôn được ưu tiên hơn mô hình. ' +
-    'Rê dọc biểu đồ để đọc số từng ngày; chấm tròn dưới trục là nhật ký đồng, chạm vào để xem.';
+    'Rê dọc biểu đồ để đọc số từng ngày; chấm tròn dưới trục là nhật ký đồng, chạm vào để xem. ' +
+    'Chấm <b>rỗng ruột</b> là việc mới lên kế hoạch, chưa làm.';
 }
 
 /* ======================================================================
@@ -622,8 +635,11 @@ function ganTuongTac(oBd, oBang, K) {
       ds.forEach(e => {
         const phu = [e.hoatDong, (e.vanDe || []).join(', '), e.mucDo].filter(Boolean).join(' · ');
         const chu = nhanThuaNK(e);
+        /* Nói rõ việc chưa làm. Không nói thì chấm rỗng chỉ là một khác
+           biệt hình thức mà người xem phải tự đoán ý. */
+        const tt = e.chuaXayRa ? ' <span class="tt-chua">' + escTT(e.trangThai || 'Kế hoạch') + '</span>' : '';
         h += '<br><span style="color:' + (MAU_NHOM[e.nhom] || '#b9bfae') + '">●</span> ' + escTT(e.ten) +
-             (chu ? ' <span class="tt-thua">' + escTT(chu) + '</span>' : '') +
+             (chu ? ' <span class="tt-thua">' + escTT(chu) + '</span>' : '') + tt +
              (phu ? '<br><span class="tt-phu" style="margin-left:12px">' + escTT(phu) + '</span>' : '');
       });
       hienHop(cx, cy, h);

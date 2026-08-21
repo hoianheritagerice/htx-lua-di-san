@@ -355,7 +355,11 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
       <button class="field-tab" onclick="chonDong(this,'Đồng Cao','CTDC')">Đồng Cao · Cẩm Thanh</button>
       <button class="field-tab" onclick="chonDong(this,'Đồng Mẫu','CTDM')">Đồng Mẫu · Cẩm Thanh</button>
     </div>
-    <select class="vu-sel"><option>Vụ Hè Thu 2026</option></select>
+    <!-- Danh sách vụ nạp từ máy chủ (CONFIG.VU trong Code.gs). Dòng dưới
+         chỉ là bản dự phòng khi chưa gọi được API. -->
+    <select class="vu-sel" id="selVuTrang" onchange="chonVu(this.value)">
+      <option value="HT26">Vụ Hè Thu 2026</option>
+    </select>
   </div>
 </div>
 
@@ -364,7 +368,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
     <div class="map-box">
       <div class="map-head">
         <h2>Bản đồ canh tác — <span id="tenDong">Ông Đảng</span></h2>
-        <button class="mo-bando nut-noi" onclick="location.href='ban-do.html?dong='+DONG_HIEN_TAI">Mở toàn màn hình ↗</button>
+        <button class="mo-bando nut-noi" onclick="location.href='ban-do.html?dong='+DONG_HIEN_TAI+'&vu='+VU_HIEN_TAI">Mở toàn màn hình ↗</button>
       </div>
       <!-- Bản đồ thật, nhúng thẳng vào tab Cánh Đồng.
            Dùng iframe để js/ban-do.js chạy nguyên vẹn trong môi trường của
@@ -476,7 +480,40 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
    ban-do.html để trình duyệt buộc phải tải bản mới. */
 const VER_BANDO = '3.0';
 let DONG_HIEN_TAI = 'CKOD';
-function srcBanDo(ma){ return 'ban-do.html?nhung=1&dong=' + ma + '&cb=' + VER_BANDO; }
+/* Vụ đang xem. Đổi ở ô chọn vụ; bản đồ nhúng, dòng thời gian và biểu đồ
+   mưa đều bám theo biến này. */
+let VU_HIEN_TAI = 'HT26';
+
+function srcBanDo(ma){
+  return 'ban-do.html?nhung=1&dong=' + ma + '&vu=' + VU_HIEN_TAI + '&cb=' + VER_BANDO;
+}
+
+/* Đổi vụ: nạp lại cả ba phần cùng lúc cho khỏi lệch nhau. */
+function chonVu(maVu){
+  if(!maVu || maVu === VU_HIEN_TAI) return;
+  VU_HIEN_TAI = maVu;
+  const khung = document.getElementById('khungBanDo');
+  if(khung) khung.src = srcBanDo(DONG_HIEN_TAI);
+  if(typeof napMocThat === 'function')  napMocThat(DONG_HIEN_TAI);
+  if(typeof napThoiTiet === 'function') napThoiTiet(DONG_HIEN_TAI);
+}
+
+/* Nạp danh sách vụ từ máy chủ — thêm vụ mới chỉ sửa Code.gs.
+   HOÃN tới khi trang tải xong: API_URL_TL khai bằng const ở cuối file,
+   gọi ngay tại đây sẽ vướng "Cannot access before initialization" và ô
+   chọn vụ đứng nguyên một dòng mặc định. */
+document.addEventListener('DOMContentLoaded', async function napDanhSachVu(){
+  try{
+    const res = await fetch(API_URL_TL, {method:'POST', body: JSON.stringify({action:'getCauHinh'})});
+    const r = await res.json();
+    if(!r.ok || !r.vu || !r.vu.DS) return;
+    const sel = document.getElementById('selVuTrang'); if(!sel) return;
+    sel.innerHTML = r.vu.DS.map(v => '<option value="'+v.ma+'">Vụ '+v.ten+'</option>').join('');
+    const mac = r.vu.HIEN_TAI || r.vu.DS[0].ma;
+    sel.value = mac;
+    if(mac !== VU_HIEN_TAI) chonVu(mac);
+  }catch(e){}
+});
 
 function chonDong(btn, ten, ma){
   document.querySelectorAll('.field-tab').forEach(b=>b.classList.remove('active'));
@@ -795,7 +832,7 @@ function congNgay(ngay, n){
 async function napMocThat(ma){
   try{
     const res = await fetch(API_URL_TL, {method:'POST',
-      body: JSON.stringify({action:'getMapData', field: ma, season:'HT26'})});
+      body: JSON.stringify({action:'getMapData', field: ma, season: VU_HIEN_TAI})});
     const r = await res.json();
     if(!r.ok || !r.season) return;
     let doi = 0, neo = 0;
@@ -880,7 +917,7 @@ async function napThoiTiet(ma){
   oBd.innerHTML = '<div class="tt-trong">Đang tải dữ liệu thời tiết…</div>';
   try{
     const res = await fetch(API_URL_TL, {method:'POST',
-      body: JSON.stringify({action:'getSeasonTimeline', field:ma, season:'HT26'})});
+      body: JSON.stringify({action:'getSeasonTimeline', field:ma, season: VU_HIEN_TAI})});
     const r = await res.json();
     if(!r.ok) throw r.error;
     veThoiTiet(r);

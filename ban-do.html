@@ -35,6 +35,10 @@
 /* Chế độ nhúng trong tab Cánh Đồng: ban-do.html?nhung=1&dong=CKOD */
 body.nhung header{display:none}
 body.nhung .chon{display:none}
+.quay-lai{display:inline-flex;align-items:center;text-decoration:none;
+  background:var(--xanh-dam,#1e4d2b);color:#fff;font-weight:600;font-size:13.5px;
+  padding:8px 16px;border-radius:22px;margin-right:8px;white-space:nowrap}
+.quay-lai:hover{background:#163a20}
 body.nhung #trangthai{padding-top:10px}
 </style>
 </head>
@@ -47,6 +51,8 @@ body.nhung #trangthai{padding-top:10px}
 </header>
 
 <div class="chon">
+  <!-- Chỉ hiện khi mở toàn màn hình; trong iframe cả khối .chon đã bị ẩn. -->
+  <a id="nutQuayLai" class="quay-lai" href="canh-dong.html">← Cánh Đồng</a>
   <label>Mùa vụ</label>
   <select id="selVu"><option value="HT26">Hè Thu 2026</option></select>
   <label>Cánh đồng</label>
@@ -227,6 +233,22 @@ body.nhung #trangthai{padding-top:10px}
    ====================================================================== */
 (function () {
   var q = new URLSearchParams(location.search);
+
+  /* ?vu=DX26 — trang Cánh Đồng truyền vụ đang xem sang, để bản đồ mở toàn
+     màn hình không nhảy về vụ mặc định. Phải chốt Ở ĐÂY, trước khi
+     js/ban-do.js gọi napNotion(). */
+  var vuURL = (q.get('vu') || '').toUpperCase();
+  var selV = document.getElementById('selVu');
+  if (vuURL && selV) {
+    var coRoi = false;
+    for (var k = 0; k < selV.options.length; k++) {
+      if (selV.options[k].value === vuURL) { coRoi = true; break; }
+    }
+    if (!coRoi) selV.insertAdjacentHTML('beforeend',
+      '<option value="' + vuURL + '">' + vuURL + '</option>');
+    selV.value = vuURL;
+  }
+
   var dong = (q.get('dong') || '').toUpperCase();
   var sel = document.getElementById('selDong');
 

@@ -802,6 +802,12 @@ goiAPI({ action: 'getCauHinh' }).then(function (r) {
             ? dangChon : (r.vu.HIEN_TAI || r.vu.DS[0].ma);
 }).catch(function () {});
 
+/* Nút "← Cánh Đồng" mang theo cánh đồng đang xem, để quay lại đúng chỗ. */
+(function(){
+  const nut = $('nutQuayLai');
+  if(nut && MAP_DATA && MAP_DATA.field) nut.href = 'canh-dong.html?dong=' + MAP_DATA.field;
+})();
+
 capNhatGiaoDienKhach();
 
 $('selVu').addEventListener('change', napNotion);

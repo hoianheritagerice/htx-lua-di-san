@@ -241,6 +241,10 @@ function apDungKetQua(r){
       return;
     }
     el.classList.remove('khach','huu-co','vi-pham','khong-huu-co','chua-ro');
+    /* Vụ ĐÃ THU HOẠCH mà thửa không có mã sản phẩm → hộ đó không tham gia
+       hữu cơ vụ ấy, tô be. Vụ ĐANG canh tác thì để xám "chưa có dữ liệu",
+       vì lúc đó nhiều khả năng chỉ là chưa kịp nhập liệu. */
+    if(!nd && r.season && r.season.daXong){ el.classList.add('khong-huu-co'); return; }
     /* BA trạng thái, không phải hai:
          huu-co       — đang canh tác hữu cơ, tuân thủ
          vi-pham      — đầu vụ có làm hữu cơ, giữa chừng không tuân thủ
@@ -784,6 +788,19 @@ function capNhatQuyenXem(){
   else if(laKhach()) $('trangthai').textContent =
       'Đăng nhập để xem trạng thái canh tác và nhật ký của từng thửa.';
 }
+
+/* Ô chọn vụ lấy danh sách từ máy chủ (CONFIG.VU trong Code.gs) — thêm vụ
+   mới chỉ cần sửa Code.gs, không phải sửa file này hay ban-do.html. */
+goiAPI({ action: 'getCauHinh' }).then(function (r) {
+  if (!r || !r.ok || !r.vu || !r.vu.DS) return;
+  const sel = $('selVu'); if (!sel) return;
+  const dangChon = sel.value;
+  sel.innerHTML = r.vu.DS.map(function (v) {
+    return '<option value="' + v.ma + '">' + v.ten + '</option>';
+  }).join('');
+  sel.value = r.vu.DS.some(function (v) { return v.ma === dangChon; })
+            ? dangChon : (r.vu.HIEN_TAI || r.vu.DS[0].ma);
+}).catch(function () {});
 
 capNhatGiaoDienKhach();
 

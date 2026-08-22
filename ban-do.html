@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/chung.css">
+<link rel="stylesheet" href="css/chung.css?v=20260822a">
 <style>
 /* Nút chọn nhanh thửa hữu cơ — màu nhạt hơn nút nhập liệu để mắt nhìn ra
    ngay đâu là bước chọn, đâu là bước ghi xuống Notion. */
@@ -247,7 +247,7 @@ body.nhung #trangthai{padding-top:10px}
   </div>
 </div>
 
-<script src="js/chung.js"></script>
+<script src="js/chung.js?v=20260822a"></script>
 <script>
 /* ======================================================================
    CỔNG CHẶN CÁNH ĐỒNG — bắt buộc chạy GIỮA chung.js và ban-do.js
@@ -330,7 +330,14 @@ body.nhung #trangthai{padding-top:10px}
   }
 })();
 </script>
-<script src="js/ban-do.js"></script>
+<!-- ?v=... là CHỐNG BỘ NHỚ ĐỆM. Đừng gỡ.
+     22/08/2026: máy xã viên chạy ban-do.html MỚI ghép với js/ban-do.js CŨ
+     vì trình duyệt điện thoại giữ file .js rất lâu còn .html thì kiểm lại
+     thường xuyên. Kết quả: chốt chặn có mà bộ nhận ảnh không có, chọn ảnh
+     xong không lưu được.
+     MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
+     bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
+<script src="js/ban-do.js?v=20260822a"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html
@@ -542,26 +549,29 @@ body.nhung #trangthai{padding-top:10px}
     if (nlNhom === 'Vấn đề'  && !nlChon.vanDe.length) { $('nlLoi').textContent = 'Chọn ít nhất một vấn đề ở bước 2.'; return; }
 
     /* ===== CHỐT CHẶN ẢNH/VIDEO — đừng gỡ =====
-       Sáng 22/08/2026 mất ảnh của một lượt ghi ngoài đồng. Nguyên nhân
-       trong Notion rất rõ: bản ghi đó không có cột Hình ảnh và cũng không
-       có khối bookmark nào, mà cả hai đều sinh từ imageLinks — nghĩa là
-       máy chủ chưa từng nhận được ảnh, ảnh chưa rời khỏi điện thoại.
+       Ba cửa, ba bệnh khác nhau. Quan trọng là báo ĐÚNG bệnh: ngày
+       22/08/2026 chốt cũ nói "file chưa nạp được" làm tưởng ảnh hỏng,
+       trong khi thật ra js/ban-do.js đang chạy là bản cũ lấy từ bộ nhớ
+       đệm của trình duyệt.
 
-       Hai cửa chặn, hai nguyên nhân khác nhau:
-
-       (1) dangDocAnh > 0 — nén ảnh/đọc video CHƯA XONG. nenAnh() là hàm
-           bất đồng bộ, ảnh camera 12MP mất một hai giây. Bấm Lưu trong
-           lúc đó thì anhDaChon vẫn rỗng mà form vẫn báo "✓ Đã lưu".
-           Đây chính là lỗi sáng 22/08.
-
-       (2) input còn file — listener 'change' xong việc luôn đặt lại
-           value = '', nên lúc bấm Lưu ô đó phải rỗng. Còn file nghĩa là
-           listener KHÔNG CHẠY, thường vì bị xoá trong một đợt dọn code
-           (đã xảy ra ngày 11/08/2026).
+       (0) ANH_LISTENER_OK không bật — js/ban-do.js chạy là BẢN CŨ hoặc
+           chưa nạp được. Không phải lỗi ảnh.
+       (1) dangDocAnh > 0 — đang nén dở. nenAnh() bất đồng bộ, ảnh camera
+           12MP mất một hai giây; bấm Lưu lúc này thì anhDaChon vẫn rỗng
+           mà form vẫn báo "✓ Đã lưu". Lỗi mất ảnh sáng 22/08.
+       (2) input còn file — listener có gắn, có chạy, nhưng file này đọc
+           không được (thường là HEIC).
 
        Thà chặn không cho lưu còn hơn báo thành công giả. Xã viên ra tận
        đồng chụp, về mới biết mất là không dựng lại được. */
-    if (typeof dangDocAnh !== 'undefined' && dangDocAnh > 0) {
+    if (!window.ANH_LISTENER_OK) {
+      $('nlLoi').style.color = '#c0392b';
+      $('nlLoi').textContent = '⚠ Trang đang chạy bản cũ nên không nhận được ảnh. '
+        + 'Đóng hẳn tab này, mở lại trang, rồi ghi lại. Nếu vẫn báo dòng này thì '
+        + 'vào cài đặt trình duyệt xoá bộ nhớ đệm. ĐỪNG lưu khi còn dòng này — sẽ mất ảnh.';
+      return;
+    }
+    if (window.dangDocAnh > 0) {
       $('nlLoi').style.color = '#b26a00';
       $('nlLoi').textContent = '⏳ Ảnh/video đang được xử lý, chưa xong. '
         + 'Đợi ảnh hiện đủ ở khung xem trước rồi bấm Lưu lại.';
@@ -572,9 +582,9 @@ body.nhung #trangthai{padding-top:10px}
                + (oVid && oVid.files ? oVid.files.length : 0);
     if (conSot) {
       $('nlLoi').style.color = '#c0392b';
-      $('nlLoi').textContent = '⚠ ' + conSot + ' file chưa được nạp vào — '
-        + 'nếu lưu bây giờ là MẤT. Bỏ chọn rồi chọn lại; phải thấy hiện ra ở '
-        + 'khung xem trước thì mới nạp được. Vẫn không hiện thì báo kỹ thuật, đừng lưu.';
+      $('nlLoi').textContent = '⚠ ' + conSot + ' file đọc không được (thường là ảnh HEIC '
+        + 'của iPhone). Bỏ chọn rồi chọn lại; phải thấy hiện ra ở khung xem trước thì '
+        + 'mới nạp được. Lưu bây giờ là MẤT file đó.';
       return;
     }
 

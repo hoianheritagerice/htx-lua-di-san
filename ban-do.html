@@ -541,6 +541,43 @@ body.nhung #trangthai{padding-top:10px}
     if (nlNhom === 'Canh tác' && !nlChon.hoatDong.length) { $('nlLoi').textContent = 'Chọn ít nhất một việc đã làm ở bước 2.'; return; }
     if (nlNhom === 'Vấn đề'  && !nlChon.vanDe.length) { $('nlLoi').textContent = 'Chọn ít nhất một vấn đề ở bước 2.'; return; }
 
+    /* ===== CHỐT CHẶN ẢNH/VIDEO — đừng gỡ =====
+       Sáng 22/08/2026 mất ảnh của một lượt ghi ngoài đồng. Nguyên nhân
+       trong Notion rất rõ: bản ghi đó không có cột Hình ảnh và cũng không
+       có khối bookmark nào, mà cả hai đều sinh từ imageLinks — nghĩa là
+       máy chủ chưa từng nhận được ảnh, ảnh chưa rời khỏi điện thoại.
+
+       Hai cửa chặn, hai nguyên nhân khác nhau:
+
+       (1) dangDocAnh > 0 — nén ảnh/đọc video CHƯA XONG. nenAnh() là hàm
+           bất đồng bộ, ảnh camera 12MP mất một hai giây. Bấm Lưu trong
+           lúc đó thì anhDaChon vẫn rỗng mà form vẫn báo "✓ Đã lưu".
+           Đây chính là lỗi sáng 22/08.
+
+       (2) input còn file — listener 'change' xong việc luôn đặt lại
+           value = '', nên lúc bấm Lưu ô đó phải rỗng. Còn file nghĩa là
+           listener KHÔNG CHẠY, thường vì bị xoá trong một đợt dọn code
+           (đã xảy ra ngày 11/08/2026).
+
+       Thà chặn không cho lưu còn hơn báo thành công giả. Xã viên ra tận
+       đồng chụp, về mới biết mất là không dựng lại được. */
+    if (typeof dangDocAnh !== 'undefined' && dangDocAnh > 0) {
+      $('nlLoi').style.color = '#b26a00';
+      $('nlLoi').textContent = '⏳ Ảnh/video đang được xử lý, chưa xong. '
+        + 'Đợi ảnh hiện đủ ở khung xem trước rồi bấm Lưu lại.';
+      return;
+    }
+    var oAnh = $('nlAnh'), oVid = $('nlVideo');
+    var conSot = (oAnh && oAnh.files ? oAnh.files.length : 0)
+               + (oVid && oVid.files ? oVid.files.length : 0);
+    if (conSot) {
+      $('nlLoi').style.color = '#c0392b';
+      $('nlLoi').textContent = '⚠ ' + conSot + ' file chưa được nạp vào — '
+        + 'nếu lưu bây giờ là MẤT. Bỏ chọn rồi chọn lại; phải thấy hiện ra ở '
+        + 'khung xem trước thì mới nạp được. Vẫn không hiện thì báo kỹ thuật, đừng lưu.';
+      return;
+    }
+
     /* Trạng thái CHỈ gửi khi là Canh tác. Với Vấn đề và Quan sát, máy
        chủ vẫn tự gán như cũ — gửi lên cũng bị bỏ qua, nhưng không gửi
        thì rõ ý hơn cho người đọc code sau này. */

@@ -574,9 +574,14 @@ function dinhKemHtml(media){
 let anhDaChon = [];
 let videoDaChon = [];
 /* Số file ảnh/video đang đọc dở. > 0 nghĩa là CHƯA được phép bấm Lưu.
-   Phải khai báo TRƯỚC hai listener bên dưới, đừng dời xuống.
-   guiNhapLieu() trong ban-do.html đọc biến này qua window. */
-let dangDocAnh = 0;
+
+   GẮN THẲNG VÀO window, đừng đổi thành let hay var. Lý do: guiNhapLieu()
+   nằm trong thẻ <script> khác (bên ban-do.html). Biến khai báo bằng let ở
+   đầu file này nằm trong phạm vi từ vựng toàn cục chứ KHÔNG phải thuộc
+   tính của window — trên trình duyệt thì vẫn đọc chéo được, nhưng đó là
+   phụ thuộc ngầm, và hỏng ngay nếu sau này file được bọc trong IIFE hay
+   chuyển sang type="module". Viết window.dangDocAnh thì không bao giờ mơ hồ. */
+window.dangDocAnh = 0;
 let dangNhapNhieu = false;      // form đang ở chế độ nhiều thửa?
 let maNhieuThua = [];           // danh sách mã Notion khi nhập nhiều thửa
 function veXemAnh(){
@@ -613,7 +618,21 @@ function boAnh(i){
    CÁCH TỰ KIỂM 10 GIÂY: mở form, chọn một ảnh. Phải thấy ảnh hiện ra
    ngay dưới ô chọn. Không thấy = listener lại mất, ĐỪNG ghi tiếp.
    Ngoài ra guiNhapLieu() trong ban-do.html có chốt chặn tự bắt lỗi này. */
-$('nlAnh') && $('nlAnh').addEventListener('change', async function(){
+/* Cờ để guiNhapLieu() biết bộ nhận ảnh có thật sự gắn được hay không.
+   Nếu js/ban-do.js đang chạy là bản CŨ (trình duyệt lấy từ bộ nhớ đệm)
+   thì cờ này undefined, và chốt chặn sẽ nói đúng bệnh thay vì đổ cho
+   file ảnh hỏng. Số phiên bản phải khớp với ?v=... trong ban-do.html. */
+window.BANDO_JS_VER = '20260822a';
+window.ANH_LISTENER_OK = false;
+
+if ($('nlAnh')) {
+  $('nlAnh').addEventListener('change', xuLyChonAnh);
+  window.ANH_LISTENER_OK = true;
+} else {
+  console.error('[ban-do] KHÔNG tìm thấy #nlAnh — bộ nhận ảnh chưa gắn được.');
+}
+
+async function xuLyChonAnh(){
   const hong = [];
   let stt = 0;
   /* Khoá nút Lưu trong lúc nén. Đây là chỗ đã làm mất ảnh sáng 22/08/2026:
@@ -623,7 +642,7 @@ $('nlAnh') && $('nlAnh').addEventListener('change', async function(){
      Bằng chứng trong Notion: bản ghi 22/08 không có cột Hình ảnh và cũng
      không có khối bookmark nào — cả hai đều sinh từ imageLinks, mất cả hai
      nghĩa là máy chủ chưa từng nhận được ảnh. */
-  dangDocAnh++;
+  window.dangDocAnh++;
   capNhatNutLuu();
   try{
     for(const f of this.files){
@@ -642,7 +661,7 @@ $('nlAnh') && $('nlAnh').addEventListener('change', async function(){
     }
   } finally {
     this.value = '';
-    dangDocAnh--;
+    window.dangDocAnh--;
     capNhatNutLuu();
     veXemAnh();
   }
@@ -656,12 +675,12 @@ $('nlAnh') && $('nlAnh').addEventListener('change', async function(){
       'Cách chữa: iPhone → Cài đặt → Camera → Định dạng → chọn "Tương thích nhất", ' +
       'rồi chụp lại. Ảnh cũ thì mở trong app Ảnh, bấm Sửa rồi Xong để máy đổi sang JPG.');
   }
-});
+}
 
 function capNhatNutLuu(){
   const nut = $('nlGui');
   if(!nut) return;
-  if(dangDocAnh > 0){
+  if(window.dangDocAnh > 0){
     nut.disabled = true;
     nut.dataset.chuCu = nut.dataset.chuCu || nut.textContent;
     nut.textContent = '⏳ Đang xử lý ảnh…';
@@ -676,7 +695,7 @@ $('nlVideo') && $('nlVideo').addEventListener('change', async function(){
   /* Khoá nút Lưu y như bên ảnh. Đọc base64 một video 20MB còn lâu hơn nén
      ảnh nhiều, nên chỗ này thậm chí dễ mất hơn. */
   const hong = [];
-  dangDocAnh++; capNhatNutLuu();
+  window.dangDocAnh++; capNhatNutLuu();
   try{
     for(const f of this.files){
       if(f.size > 20*1024*1024){
@@ -699,7 +718,7 @@ $('nlVideo') && $('nlVideo').addEventListener('change', async function(){
     }
   } finally {
     this.value = '';
-    dangDocAnh--; capNhatNutLuu();
+    window.dangDocAnh--; capNhatNutLuu();
     veXemVideo();
   }
   if(hong.length){

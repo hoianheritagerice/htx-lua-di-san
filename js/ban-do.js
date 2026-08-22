@@ -573,6 +573,10 @@ function dinhKemHtml(media){
 /* ---------- nhập liệu ---------- */
 let anhDaChon = [];
 let videoDaChon = [];
+/* Số file ảnh/video đang đọc dở. > 0 nghĩa là CHƯA được phép bấm Lưu.
+   Phải khai báo TRƯỚC hai listener bên dưới, đừng dời xuống.
+   guiNhapLieu() trong ban-do.html đọc biến này qua window. */
+let dangDocAnh = 0;
 let dangNhapNhieu = false;      // form đang ở chế độ nhiều thửa?
 let maNhieuThua = [];           // danh sách mã Notion khi nhập nhiều thửa
 function veXemAnh(){
@@ -592,25 +596,116 @@ function boAnh(i){
   veXemAnh();
 }
 
+/* ---- ảnh: nén về JPEG ≤1600px rồi mới đưa vào anhDaChon ----
+
+   ⚠⚠ LISTENER NÀY TỪNG BIẾN MẤT — ĐỪNG XOÁ, ĐỪNG DỌN.
+
+   Phát hiện 22/08/2026: trong bản gộp ngày 21/08, khối này không còn.
+   Hậu quả: người dùng chọn ảnh → KHÔNG có gì xảy ra. Không xem trước,
+   không báo lỗi, anhDaChon rỗng, bấm Lưu vẫn hiện "✓ Đã lưu". Xã viên
+   ra tận đồng chụp rồi về mới biết mất trắng.
+
+   Vì sao mất: đợt dọn 11/08/2026 gỡ ba hàm bản-sao-chết ở ngay phía
+   trên (nhapNhieuThua / moNhapLieu / guiNhapLieu). Listener này nằm kề
+   đó và bị cắt theo, trong khi hàm nenAnh() vẫn còn — nên grep 'nenAnh'
+   vẫn thấy có, tưởng là còn nguyên. Bẫy nằm ở chỗ đó.
+
+   CÁCH TỰ KIỂM 10 GIÂY: mở form, chọn một ảnh. Phải thấy ảnh hiện ra
+   ngay dưới ô chọn. Không thấy = listener lại mất, ĐỪNG ghi tiếp.
+   Ngoài ra guiNhapLieu() trong ban-do.html có chốt chặn tự bắt lỗi này. */
+$('nlAnh') && $('nlAnh').addEventListener('change', async function(){
+  const hong = [];
+  let stt = 0;
+  /* Khoá nút Lưu trong lúc nén. Đây là chỗ đã làm mất ảnh sáng 22/08/2026:
+     nenAnh() là hàm BẤT ĐỒNG BỘ, ảnh camera 12MP mất một hai giây để giải
+     mã và vẽ lại. Trong khoảng đó anhDaChon VẪN RỖNG. Bấm Lưu ngay sau khi
+     chụp thì gói tin bay đi với images: [] mà form vẫn báo "✓ Đã lưu".
+     Bằng chứng trong Notion: bản ghi 22/08 không có cột Hình ảnh và cũng
+     không có khối bookmark nào — cả hai đều sinh từ imageLinks, mất cả hai
+     nghĩa là máy chủ chưa từng nhận được ảnh. */
+  dangDocAnh++;
+  capNhatNutLuu();
+  try{
+    for(const f of this.files){
+      try{
+        const b64 = await nenAnh(f);
+        if(!b64) throw new Error('nén ra rỗng');
+        anhDaChon.push({
+          name: f.name.replace(/\.[^.]+$/,'') + '_' + Date.now() + '_' + (++stt) + '.jpg',
+          mimeType: 'image/jpeg',
+          base64: b64,
+        });
+        veXemAnh();          // hiện dần từng ảnh cho người dùng thấy máy đang chạy
+      }catch(e){
+        hong.push(f.name);
+      }
+    }
+  } finally {
+    this.value = '';
+    dangDocAnh--;
+    capNhatNutLuu();
+    veXemAnh();
+  }
+
+  /* Ảnh hỏng phải KÊU TO. Bỏ qua im lặng chính là lỗi đã làm mất ảnh
+     của xã viên nhiều lần rồi. */
+  if(hong.length){
+    alert('⚠ KHÔNG đọc được ' + hong.length + ' ảnh:\n\n' + hong.join('\n') +
+      '\n\nNhững ảnh này CHƯA được lưu. Đừng đóng form khi chưa xử lý.\n\n' +
+      'Thường gặp nhất là ảnh iPhone định dạng HEIC mà máy này không mở được.\n' +
+      'Cách chữa: iPhone → Cài đặt → Camera → Định dạng → chọn "Tương thích nhất", ' +
+      'rồi chụp lại. Ảnh cũ thì mở trong app Ảnh, bấm Sửa rồi Xong để máy đổi sang JPG.');
+  }
+});
+
+function capNhatNutLuu(){
+  const nut = $('nlGui');
+  if(!nut) return;
+  if(dangDocAnh > 0){
+    nut.disabled = true;
+    nut.dataset.chuCu = nut.dataset.chuCu || nut.textContent;
+    nut.textContent = '⏳ Đang xử lý ảnh…';
+  }else{
+    nut.disabled = false;
+    if(nut.dataset.chuCu){ nut.textContent = nut.dataset.chuCu; delete nut.dataset.chuCu; }
+  }
+}
+
 // ---- video: đọc nguyên file (không nén), giới hạn 20MB/video ----
 $('nlVideo') && $('nlVideo').addEventListener('change', async function(){
-  for(const f of this.files){
-    if(f.size > 20*1024*1024){
-      alert('Video "' + f.name + '" nặng ' + (f.size/1048576).toFixed(1) +
-            'MB — vượt 20MB nên bị bỏ qua. Anh quay clip ngắn 15–30 giây nhé.');
-      continue;
+  /* Khoá nút Lưu y như bên ảnh. Đọc base64 một video 20MB còn lâu hơn nén
+     ảnh nhiều, nên chỗ này thậm chí dễ mất hơn. */
+  const hong = [];
+  dangDocAnh++; capNhatNutLuu();
+  try{
+    for(const f of this.files){
+      if(f.size > 20*1024*1024){
+        alert('Video "' + f.name + '" nặng ' + (f.size/1048576).toFixed(1) +
+              'MB — vượt 20MB nên bị bỏ qua. Anh quay clip ngắn 15–30 giây nhé.');
+        continue;
+      }
+      try{
+        const b64 = await docFileB64(f);
+        if(!b64) throw new Error('đọc ra rỗng');
+        const duoi = (f.name.match(/\.[^.]+$/) || ['.mp4'])[0];
+        videoDaChon.push({
+          name: f.name.replace(/\.[^.]+$/,'') + '_' + Date.now() + duoi,
+          mimeType: f.type || 'video/mp4',
+          base64: b64,
+          mb: (f.size/1048576).toFixed(1),
+        });
+        veXemVideo();
+      }catch(e){ hong.push(f.name); }
     }
-    const b64 = await docFileB64(f);
-    const duoi = (f.name.match(/\.[^.]+$/) || ['.mp4'])[0];
-    videoDaChon.push({
-      name: f.name.replace(/\.[^.]+$/,'') + '_' + Date.now() + duoi,
-      mimeType: f.type || 'video/mp4',
-      base64: b64,
-      mb: (f.size/1048576).toFixed(1),
-    });
+  } finally {
+    this.value = '';
+    dangDocAnh--; capNhatNutLuu();
+    veXemVideo();
   }
-  this.value = '';
-  veXemVideo();
+  if(hong.length){
+    alert('⚠ KHÔNG đọc được ' + hong.length + ' video:\n\n' + hong.join('\n') +
+          '\n\nNhững video này CHƯA được lưu.');
+  }
 });
 
 function docFileB64(f){
@@ -637,16 +732,29 @@ function boVideo(i){
 function nenAnh(file){
   return new Promise((res, rej)=>{
     const img = new Image();
+    const url = URL.createObjectURL(file);
+    /* Nhớ thu hồi URL ở CẢ hai nhánh. Xã viên chọn vài chục ảnh một
+       buổi, không thu hồi thì trình duyệt trên điện thoại phình bộ nhớ
+       rồi tự tải lại trang — mất luôn form đang nhập dở. */
     img.onload = ()=>{
-      const MAX = 1600;
-      let w = img.width, h = img.height;
-      if(Math.max(w,h) > MAX){ const k = MAX/Math.max(w,h); w=Math.round(w*k); h=Math.round(h*k); }
-      const c = document.createElement('canvas'); c.width=w; c.height=h;
-      c.getContext('2d').drawImage(img,0,0,w,h);
-      res(c.toDataURL('image/jpeg',0.8).split(',')[1]);
+      try{
+        const MAX = 1600;
+        let w = img.width, h = img.height;
+        if(!w || !h) throw new Error('ảnh không có kích thước');
+        if(Math.max(w,h) > MAX){ const k = MAX/Math.max(w,h); w=Math.round(w*k); h=Math.round(h*k); }
+        const c = document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg',0.8).split(',')[1]);
+      }catch(e){ rej(e); }
+      finally{ URL.revokeObjectURL(url); }
     };
-    img.onerror = rej;
-    img.src = URL.createObjectURL(file);
+    img.onerror = ()=>{
+      URL.revokeObjectURL(url);
+      /* Hay gặp nhất: HEIC/HEIF của iPhone trên trình duyệt không phải
+         Safari. Trả lỗi có chữ để chỗ gọi còn biết đường báo người dùng. */
+      rej(new Error('Trình duyệt không mở được file này (' + (file.type || 'không rõ định dạng') + ')'));
+    };
+    img.src = url;
   });
 }
 

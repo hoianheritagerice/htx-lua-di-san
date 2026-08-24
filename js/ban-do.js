@@ -622,7 +622,7 @@ function boAnh(i){
    Nếu js/ban-do.js đang chạy là bản CŨ (trình duyệt lấy từ bộ nhớ đệm)
    thì cờ này undefined, và chốt chặn sẽ nói đúng bệnh thay vì đổ cho
    file ảnh hỏng. Số phiên bản phải khớp với ?v=... trong ban-do.html. */
-window.BANDO_JS_VER = '20260822a';
+window.BANDO_JS_VER = '20260822b';
 window.ANH_LISTENER_OK = false;
 
 if ($('nlAnh')) {

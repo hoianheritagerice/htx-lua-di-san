@@ -80,8 +80,39 @@ function dangXuat(){
 /* ---------- modal ---------- */
 function moModal(id){ $(id).classList.add('mo'); }
 function dongModal(id){ $(id).classList.remove('mo'); }
+/* Bấm ra NỀN để đóng modal.
+
+   ⚠ PHẢI kiểm CẢ điểm nhấn xuống LẪN điểm nhả ra. Đừng rút gọn lại
+   thành mỗi 'click' như trước.
+
+   Lỗi cũ (sửa 22/08/2026): trên điện thoại form nằm sát đáy màn hình
+   (css align-items:flex-end), khoảng trống phía trên chính là nền này.
+   Xã viên chạm vào ô nhập → bàn phím bật lên giữa lúc ngón tay còn
+   đang chạm → trang co lại → tới lúc trình duyệt sinh 'click' thì điểm
+   chạm đã rơi ra nền → e.target === m → form đóng mất. Phải thử ba
+   bốn lần, khi bàn phím đã mở sẵn không còn co giãn nữa, mới gõ được.
+
+   Ghi nhớ đúng chỗ nhấn xuống thì hết: ngón tay bắt đầu trên ô nhập
+   nghĩa là người ta muốn gõ, không phải muốn đóng. Cách này cũng chặn
+   luôn trường hợp bôi đen chữ trong form rồi kéo tay ra ngoài. */
 document.querySelectorAll('.modal-phu').forEach(m=>{
-  m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('mo'); });
+  let nhanTrenNen = false;
+  const ghiNhan = e => { nhanTrenNen = (e.target === m); };
+
+  /* Gắn cả ba, ĐỪNG rẽ nhánh theo window.PointerEvent. Trình duyệt sinh
+     nhiều sự kiện cho cùng một cú chạm nên gắn thừa là vô hại — cả ba
+     đều ghi cùng một giá trị. Còn rẽ nhánh thì môi trường nào thiếu
+     PointerEvent sẽ không nghe được sự kiện nào, cờ kẹt ở false, và
+     bấm ra nền KHÔNG đóng được form nữa. Bài thử ngày 22/08/2026 bắt
+     đúng lỗi này trước khi kịp đẩy lên. */
+  m.addEventListener('pointerdown', ghiNhan);
+  m.addEventListener('mousedown',   ghiNhan);
+  m.addEventListener('touchstart',  ghiNhan, { passive: true });
+
+  m.addEventListener('click', e=>{
+    if (e.target === m && nhanTrenNen) m.classList.remove('mo');
+    nhanTrenNen = false;
+  });
 });
 
 /* ==================================================================

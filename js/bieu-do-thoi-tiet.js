@@ -254,14 +254,25 @@ function veThoiTiet(r) {
     if (m < NGUONG_KHO) nKho++;
     if (m >= 50) nLon++;
     if (d.tMax != null && d.tMin != null) { tongN += (d.tMax + d.tMin) / 2; demN++; }
-    if (d.bucXa != null) { tongBX += d.bucXa; demBX++; }
+
+    /* BỨC XẠ CHỈ CỘNG TỪ NSS 0 TRỞ ĐI — khác ba con số trên.
+
+       tt bắt đầu từ NSS −NGAY_CHUAN_BI (hiện là −7), quãng làm đất và ủ
+       giống. Mưa và nhiệt độ của quãng đó vẫn đáng cộng vì chúng tác
+       động lên đất và lên hạt giống đang ủ. Còn bức xạ thì không: chưa
+       có cây trên ruộng thì nắng chiếu xuống bùn không tạo ra gì cả,
+       cộng vào chỉ làm tổng phồng lên khoảng 7 ngày nắng vô nghĩa.
+
+       Biểu đồ VẪN VẼ đủ cả quãng chuẩn bị — chỗ này chỉ đổi cách cộng
+       tổng, không đổi cách hiển thị. */
+    if (d.bucXa != null && soNgayTT(gieo, d.ngay) >= 0) { tongBX += d.bucXa; demBX++; }
   });
   oSo.innerHTML = [
     [Math.round(tongMua) + ' mm', 'Tổng mưa cả vụ'],
     [nKho + ' ngày', 'Tổng ngày khô / mưa rất ít (<' + NGUONG_KHO + 'mm)'],
     [nLon, 'Ngày mưa lớn (>50mm)'],
     [(demN ? (tongN / demN).toFixed(1) : '—') + '°C', 'Nhiệt độ trung bình'],
-    [(demBX ? Math.round(tongBX) : '—') + ' MJ/m²', 'Tổng bức xạ']
+    [(demBX ? Math.round(tongBX) : '—') + ' MJ/m²', 'Tổng bức xạ (từ ngày sạ)']
   ].map(x => '<div class="tt-o"><div class="tt-so-lon">' + x[0] + '</div><div class="tt-nhan">' + x[1] + '</div></div>').join('');
 
   /* ---------- KHUNG ----------
@@ -475,6 +486,11 @@ function veThoiTiet(r) {
       if (d.tMax != null && d.tMin != null) { sN += (d.tMax + d.tMin) / 2; dN++; }
       if (d.bucXa != null) { bx += d.bucXa; coBx = true; }
     });
+    /* Giai đoạn "Chuẩn bị" (NSS âm) không tính bức xạ — chưa có cây trên
+       ruộng. Phải khớp với cách cộng tổng chung ở trên, nếu không thì
+       cộng các dòng trong bảng lại sẽ KHÔNG ra con số tổng, người đọc
+       tưởng bảng sai. Mưa và nhiệt độ của giai đoạn này vẫn giữ. */
+    if (gd.tu < 0) { bx = 0; coBx = false; }
     return { gd: gd, ngay: trong.length, mua: mua, nhiet: dN ? sN / dN : null, bx: coBx ? bx : null };
   });
 

@@ -501,7 +501,11 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 
 <!-- Biểu đồ thời tiết tách thành file riêng. PHẢI nạp TRƯỚC đoạn script
      dưới đây, vì đoạn đó gọi napThoiTiet() ngay khi trang mở. -->
-<script src="js/bieu-do-thoi-tiet.js?v=1.0"></script>
+<!-- ?v=... PHẢI ĐỔI MỖI LẦN SỬA js/bieu-do-thoi-tiet.js.
+     Trước đây ghi cứng "1.0" nên sửa file xong máy xã viên vẫn chạy
+     bản cũ trong bộ nhớ đệm mà không ai biết. Dùng ngày + chữ cái,
+     khớp với quy ước bên ban-do.html. -->
+<script src="js/bieu-do-thoi-tiet.js?v=20260822c"></script>
 
 <script>
 /* MỘT chỗ duy nhất khai báo phiên bản bản đồ. Đổi số này khi sửa
@@ -1012,7 +1016,7 @@ napThoiTiet('CKOD');
   }, {passive:true});
 })();
 </script>
-<script src="js/chung.js"></script>
+<script src="js/chung.js?v=20260822c"></script>
 <script src="js/form-quan-tam.js"></script>
 <script src="js/hieu-ung.js"></script>
 </body>

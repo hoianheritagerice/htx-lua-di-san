@@ -159,6 +159,9 @@ svg{display:block;width:100%;height:auto;max-height:72vh}
 .nkmuc .nk-ngay{font-size:11.5px;color:#8a9180;font-family:ui-monospace,monospace}
 .nkmuc .nk-tieude{font-weight:600;font-size:14.5px;margin:2px 0}
 .nkmuc .nk-tt{display:inline-block;font-size:11px;padding:2px 9px;border-radius:12px;background:#e6f2d8;color:#33691e}
+/* Chip lượng phân: nền vàng đất để tách khỏi nhãn cấu trúc màu xanh —
+   đây là con số đo được của riêng thửa, không phải nhãn phân loại. */
+.nkmuc .nk-tt.nk-phan{background:#fbe9c4;color:#7a4f00;font-weight:600}
 .nkmuc a{font-size:12px;color:var(--xanh-dam)}
 .nkmuc .nk-mota{font-size:13px;color:#41503a;margin:6px 0;padding:8px 10px;background:#f7f4ea;border-radius:8px;line-height:1.5;white-space:pre-wrap}
 .nkmuc .nk-xemthem{display:inline-block;margin:2px 8px 2px 0;background:none;border:none;color:var(--xanh-dam);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;padding:0}

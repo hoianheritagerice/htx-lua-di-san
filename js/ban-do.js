@@ -10,27 +10,32 @@
 const MA_NONG_DAN = {
   // ----- Ông Đảng — Cẩm Kim -----
   CKOD: {
-    'TRẦN CƯỚC': 'CUOC',
-    'NGUYỄN HỘ': 'HO',
-    'TÔ VĂN HƯNG': 'HUNG',        // 19/08/2026: đổi từ Nguyễn Thị Mừng (MUNG)   // đổi từ Tô Văn Hưng (HUNG) — lô Notion đã đổi theo
-    'NGUYỄN SÔ': 'NGSO',          // ⚠ trùng với TRẦN SỞ — sửa theo Notion
-    'TRẦN ĐÌNH CHÍNH': 'CHINH',   // 19/08/2026: đổi từ Nguyễn Thị Sáu (SAU)   // đổi từ Trần Đình Chính (CHINH) — lô Notion đã đổi theo
-    'PHẠM THỊ HƯƠNG': 'HUONG',
-    'HUỲNH KIM LONG 1/2': 'LONG1',
-    'HUỲNH KIM LONG 2/2': 'LONG2',
-    'TÔ THỊ ANH': 'ANH',
-    'ĐỖ HỮU THÁI': 'THAI',
-    'TRẦN SỞ': 'TRANSO',            // ⚠ trùng với NGUYỄN SÔ — sửa theo Notion
-    'NGUYỄN MẠNH THẤN': 'THAN',
-    'NGUYỄN ĐÌNH BÁN': 'BAN',
+    /* Khoá là NHÃN HIỂN THỊ trên bản đồ (tên hộ + ký hiệu 1/2), KHÔNG phải
+       mã thửa. Đổi tên hộ trong MAP_DATA mà quên bảng này thì thửa tô xám
+       'chưa có dữ liệu' — im lặng, không báo lỗi. Đã dính ngày 29/08/2026:
+       đổi 7 tên hộ, 9 thửa hoá xám.
+       Sinh lại từ MAP_DATA ngày 29/08/2026 nên khớp 21/21. */
     'DƯƠNG NGUYỆN': 'NGUYEN',
-    'DƯƠNG THỊ HOA': 'HOA',       // 20/08/2026: tách từ thửa Dương Nguyện (2029,4 → 1134,7 + 894,7)
+    'DƯƠNG THỊ HOA': 'HOA',
+    'DƯƠNG THỊ THÙY NGA 1/2': 'NGA2',
+    'DƯƠNG THỊ THÙY NGA 2/2': 'NGA1',
+    'HUỲNH KIM BÌNH': 'BINH',
+    'NGUYỄN HỘ': 'HO',
     'NGUYỄN LA 1/2': 'LA1',
     'NGUYỄN LA 2/2': 'LA2',
-    'ĐỖ HỐT 1/2': 'HOT1',
-    'ĐỖ HỐT 2/2': 'HOT2',
+    'NGUYỄN MẠNH THẤN': 'THAN',
+    'NGUYỄN THỊ HÀ': 'HA',
+    'NGUYỄN THỊ SÁU': 'SAU',
+    'PHẠM THỊ BẢY': 'BAY',
+    'PHẠM THỊ HƯƠNG': 'HUONG',
+    'TRẦN CƯỚC': 'CUOC',
+    'TRẦN THỊ HẢI': 'HAI',
+    'TÔ HIÊN': 'HIEN',
+    'TÔ VĂN HƯNG': 'HUNG',
     'VÕ THỊ THU': 'THU',
-    'HUỲNH KIM BÌNH': 'BINH',
+    'ĐỖ HỘT 1/2': 'HOT1',
+    'ĐỖ HỘT 2/2': 'HOT2',
+    'ĐỖ HỮU THÁI': 'THAI',
   },
   // ----- Đồng Cao — Cẩm Thanh -----
   CTDC: {
@@ -622,7 +627,7 @@ function boAnh(i){
    Nếu js/ban-do.js đang chạy là bản CŨ (trình duyệt lấy từ bộ nhớ đệm)
    thì cờ này undefined, và chốt chặn sẽ nói đúng bệnh thay vì đổ cho
    file ảnh hỏng. Số phiên bản phải khớp với ?v=... trong ban-do.html. */
-window.BANDO_JS_VER = '20260829c';
+window.BANDO_JS_VER = '20260829d';
 window.ANH_LISTENER_OK = false;
 
 if ($('nlAnh')) {

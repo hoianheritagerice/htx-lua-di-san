@@ -48,9 +48,9 @@
 #river .river-label .t{display:block;font:600 19px/1.4 'Playfair Display',serif;color:#24472b}
 #river .river-label .d{display:block;font:400 12px/1.6 'Be Vietnam Pro',sans-serif;color:#68735e;margin-top:6px}
 #river .river-node.ngoai-goi .river-dot{opacity:1;background:#f8f6ef;box-shadow:none}
-#river .river-node.trong-goi .river-dot{border:2px solid #28552e;background:#e8f1dc;box-shadow:0 0 0 5px #d6e4c8}
-#river .river-node.trong-goi .river-label .t{color:#1e4d2b}
-#river .cd-trong-goi{display:inline-block;background:#28552e;color:#fff;font:500 10px/1.6 'Be Vietnam Pro',sans-serif;padding:2px 9px;border-radius:12px;margin-top:7px}
+#river .river-node.trong-goi .river-dot{border:2px solid #ad510b;background:#f5bc42;color:#4b2b09;--icon-accent:#fff4c7;box-shadow:0 0 0 6px #f4dba2,0 5px 15px #98581825}
+#river .river-node.trong-goi .river-label .t{color:#91400b;font-weight:700}
+#river .cd-trong-goi{display:inline-block;background:#a7490c;color:#fff;font:600 10px/1.6 'Be Vietnam Pro',sans-serif;padding:3px 10px;border-radius:12px;margin-top:7px}
 #river .cd-tl-photo{display:block;width:100%;max-width:205px;margin-top:13px;border-radius:9px;overflow:hidden}
 #river .river-label[style*="right"] .cd-tl-photo{margin-left:auto}
 #river .cd-tl-photo img{display:block;width:100%;height:auto;aspect-ratio:400/260;object-fit:cover;border-radius:9px}

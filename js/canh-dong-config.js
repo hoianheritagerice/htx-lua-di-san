@@ -7,10 +7,14 @@
  */
 const CAU_HINH_CANH_DONG = {
   dong: {
-    CKOD: {slug:'ong-dang', ten:'Ông Đảng', anh:[]},
-    CTDC: {slug:'dong-cao', ten:'Đồng Cao', anh:[]},
-    CTDM: {slug:'dong-mau', ten:'Đồng Mẫu', anh:[]}
+    CKOD: {slug:'ong-dang', ten:'Ông Đảng', anh:[], thuVien:{soAnh:0,duoi:'jpg',coAnhNho:false}},
+    CTDC: {slug:'dong-cao', ten:'Đồng Cao', anh:[], thuVien:{soAnh:0,duoi:'jpg',coAnhNho:false}},
+    CTDM: {slug:'dong-mau', ten:'Đồng Mẫu', anh:[], thuVien:{soAnh:0,duoi:'jpg',coAnhNho:false}}
   },
+  // Sau khi upload 01.jpg ... 15.jpg vào img/canh-dong/ckod (hoặc ctdc/ctdm),
+  // đổi soAnh:0 thành soAnh:15 của đúng đồng. Ảnh bìa không thuộc thư viện.
+  // Ảnh timeline chung: bật sau khi upload đủ bộ tên file trong hướng dẫn.
+  anhTimeline: {bat:false, thuMuc:'img/timeline', duoi:'jpg'},
   goi: {
     'gieo-mam': {nhan:'Người gieo mầm', hoatDong:['xuong-giong','tham-dong','ngay-hoi-gat'], doiTuong:'Trải nghiệm dành cho gia đình.'},
     'dong-kien-tao': {nhan:'Người đồng kiến tạo', hoatDong:['xuong-giong','tham-dong','ngay-hoi-gat'], doiTuong:'Trải nghiệm dành cho nhân viên, khách hàng và đối tác.'},

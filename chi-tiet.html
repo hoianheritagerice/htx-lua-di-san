@@ -113,6 +113,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
 <script src="js/noi-dung.js?v=1.0"></script>
+<script src="js/canh-dong-so-chot.js?v=20260914b"></script>
 </head>
 <body>
 
@@ -225,8 +226,10 @@ document.getElementById('ctTen').innerHTML  = m.ten;
 document.getElementById('ctDan').innerHTML  = m.dan || '';
 const lai = document.getElementById('ctLai');
 lai.href = veCanhDong ? veCanhDong + '#gioi-thieu' : nhom.ve; lai.innerHTML = '← ' + nhom.veChu;
-if(m.so){
-  document.getElementById('ctSoNhanh').innerHTML = m.so.map(function(s){
+const soChot = loai === 'canh-dong' ? SO_CHOT_CANH_DONG[MA_CANH_DONG[ma]] : null;
+const soHienThi = soChot ? [[soChot.soThua,'thửa ruộng'],[soChot.soHo,'hộ nông dân'],[soChot.dienTich.toLocaleString('vi-VN',{maximumFractionDigits:1}),'m² diện tích']] : m.so;
+if(soHienThi){
+  document.getElementById('ctSoNhanh').innerHTML = soHienThi.map(function(s){
     return '<div class="sn-o"><div class="sn-so">'+s[0]+'</div><div class="sn-nhan">'+s[1]+'</div></div>';
   }).join('');
 }

@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cánh Đồng — HTX Lúa Di Sản Hội An</title>
-<link rel="stylesheet" href="css/canh-dong.css?v=20260914a">
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
@@ -271,6 +270,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
   .river-label .t{font-size:13.5px}
 }
 </style>
+<link rel="stylesheet" href="css/canh-dong.css?v=20260914b">
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
@@ -403,8 +403,12 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
       <div><div class="eyebrow" id="cdViTri"></div><h2 id="cdTen">Khám phá cánh đồng</h2></div>
       <p id="cdDan"></p>
     </div>
-    <div id="cdAnh" class="cd-anh" aria-label="Ảnh đặc trưng cánh đồng"></div>
-    <div class="cd-anh-chan"><span>Những góc nhìn về cánh đồng</span><button type="button" id="cdXemAnh">Xem ảnh</button></div>
+    <div class="cd-bia">
+      <img id="cdAnhBia" alt="" width="1600" height="650" decoding="async">
+      <div class="cd-bia-noi"><p>Quy mô toàn cánh đồng</p><div id="cdSoChot" class="cd-so-chot"></div><small id="cdNgayChot"></small></div>
+    </div>
+    <div class="cd-anh-chan"><span id="cdThuVienNhan">Thư viện ảnh cánh đồng</span><button type="button" id="cdXemAnh" hidden>Xem thư viện ảnh ↗</button></div>
+    <div id="cdAnh" class="cd-anh" aria-label="Ảnh đặc trưng cánh đồng" hidden></div>
     <div id="cdMoTa" class="cd-mo-ta"></div>
   </div>
 </section>
@@ -534,8 +538,10 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
      bản cũ trong bộ nhớ đệm mà không ai biết. Dùng ngày + chữ cái,
      khớp với quy ước bên ban-do.html. -->
 <script src="js/bieu-do-thoi-tiet.js?v=20260829f"></script>
-<script src="js/canh-dong-config.js?v=20260914a"></script>
-<script src="js/canh-dong-ui.js?v=20260914a"></script>
+<script src="js/canh-dong-config.js?v=20260914b"></script>
+<script src="js/canh-dong-so-chot.js?v=20260914b"></script>
+<script src="js/canh-dong-ui.js?v=20260914b"></script>
+<script src="js/canh-dong-timeline.js?v=20260914b"></script>
 
 <script>
 /* MỘT chỗ duy nhất khai báo phiên bản bản đồ. Đổi số này khi sửa
@@ -642,72 +648,8 @@ const MAU_SU_KIEN = SU_KIEN.map((s,i)=>({...s,id:MA_HOAT_DONG[i],ngay:''}));
 SU_KIEN = MAU_SU_KIEN.map(s=>({...s}));
 let N = SU_KIEN.length;
 const river = document.getElementById('river');
-const AMP = window.matchMedia('(max-width:520px)').matches ? 24 : 30;  // biên độ uốn lượn (%)
-const CYC = 4.5;                                                        // số nhịp lượn
-const pOf = i => 0.05 + 0.90 * (i/(N-1));   // vị trí dọc 0..1 (đều theo thứ tự, dễ đọc)
-const Xf  = p => 50 + AMP * Math.sin(p * Math.PI * CYC);  // x theo % (đường lượn)
-const Yf  = p => 4 + 92 * p;                              // y theo % (chừa lề trên/dưới)
-
 function ngay(i){ return new Date(SU_KIEN[i].ngay+'T00:00:00'); }
-
-// chiều cao khung theo số mốc
-river.style.height = (N * 118 + 70) + 'px';
-
-// vẽ đường uốn lượn
-(function veDuong(){
-  let d = '';
-  for(let k=0;k<=120;k++){ const p=k/120; d += (k? ' L':'M') + ' ' + Xf(p).toFixed(2) + ' ' + Yf(p).toFixed(2); }
-  document.getElementById('riverBase').setAttribute('d', d);
-  const done = document.getElementById('riverDone');
-  done.setAttribute('d', d);
-})();
-
-
-function veTimeline(){
-  river.querySelectorAll('.river-node, .today').forEach(e=>e.remove());
-  N = SU_KIEN.length;
-  river.style.height = (N * 145 + 100) + 'px';
-  SU_KIEN.forEach((s,i)=>{
-    const p=pOf(i), daQua=s.ngay && !s.duKien && ngay(i)<=HOM_NAY;
-    const node=document.createElement('button');
-    node.type='button';node.className='river-node '+(daQua?'past':'future');
-    node.dataset.hoatDong=s.id;
-    node.style.left=Xf(p)+'%';node.style.top=Yf(p)+'%';
-    const ngayChu=s.ngay?s.ngay.split('-').reverse().slice(0,2).join('/'):'Chưa có ngày';
-    const trangThai=s.trangThai||(s.ngay?(s.duKien?'Dự kiến':'Mốc mùa vụ'):'');
-    node.setAttribute('aria-label',s.ten+' · '+ngayChu+(trangThai?' · '+trangThai:''));
-    node.innerHTML='<span class="river-dot '+(daQua?'past':'future')+' '+s.loai+'"><svg aria-hidden="true"><use href="#'+s.ic+'"/></svg></span>'
-      +'<span class="river-label"><span class="t">'+s.ten+'</span><span class="d" style="display:block">'+ngayChu+(trangThai?' · '+trangThai:'')+'</span></span>';
-    node.addEventListener('click',()=>moCT(i));
-    river.append(node);
-  });
-  apDungGoiCD();
-  const ds=SU_KIEN.map((s,i)=>({s,i})).filter(x=>x.s.ngay && !['Hủy','Hoãn'].includes(x.s.trangThai));
-  const txt=document.getElementById('phaseTxt'), phase=document.getElementById('phaseNow');
-  const path=document.getElementById('riverDone');
-  path.style.strokeDasharray='0 10000';
-  phase.querySelector('.pn-dot').style.display='none';
-  if(!ds.length){txt.textContent='Chưa có lịch cho mùa vụ này';return;}
-  const dau=new Date(ds[0].s.ngay+'T00:00:00'), cuoi=new Date(ds[ds.length-1].s.ngay+'T00:00:00');
-  if(HOM_NAY<dau){txt.textContent='Mùa vụ sắp bắt đầu';return;}
-  if(HOM_NAY>cuoi){txt.textContent='Đã qua các mốc lịch hiện có';return;}
-  let p=pOf(ds[0].i);
-  for(let j=0;j<ds.length-1;j++){
-    const a=new Date(ds[j].s.ngay+'T00:00:00'),b=new Date(ds[j+1].s.ngay+'T00:00:00');
-    if(HOM_NAY>=a && HOM_NAY<=b){
-      p=pOf(ds[j].i)+(pOf(ds[j+1].i)-pOf(ds[j].i))*((HOM_NAY-a)/Math.max(1,b-a));
-      break;
-    }
-  }
-  const t=document.createElement('div');t.className='today canh'+(Xf(p)<50?' phai':'');
-  t.style.left=Xf(p)+'%';t.style.top=Yf(p)+'%';t.innerHTML='<div class="pill">Hôm nay</div><div class="dot"></div>';river.append(t);
-  txt.textContent='Vị trí hôm nay trên lịch mùa vụ';phase.querySelector('.pn-dot').style.display='';
-  try{
-    const total=path.getTotalLength();let lo=0,hi=total;
-    for(let k=0;k<26;k++){const mid=(lo+hi)/2;if(path.getPointAtLength(mid).y<Yf(p))lo=mid;else hi=mid;}
-    path.style.strokeDasharray=lo+' '+total;
-  }catch(e){}
-}
+function veTimeline(){ veHanhTrinhCD(); }
 
 function moCT(i){
   NUT_MOC_CU = document.querySelectorAll('.river-node')[i];

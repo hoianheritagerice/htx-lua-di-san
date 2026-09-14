@@ -13,3 +13,15 @@ const SO_CHOT_CANH_DONG = Object.freeze({
   CTDC:Object.freeze({soThua:41,soHo:32,dienTich:15479}),
   CTDM:Object.freeze({soThua:20,soHo:19,dienTich:14538})
 });
+
+/* Tổng mục Tác động lấy từ đúng các số cố định ở trên.
+ * Chỉ cần sửa CKOD/CTDC/CTDM khi muốn cập nhật, không sửa tổng ở nơi khác. */
+function tongSoChotCanhDong(){
+  const ds=['CKOD','CTDC','CTDM'].map(ma=>SO_CHOT_CANH_DONG[ma]);
+  return Object.freeze({
+    soDong:ds.length,
+    soThua:ds.reduce((sum,s)=>sum+s.soThua,0),
+    soHo:ds.reduce((sum,s)=>sum+s.soHo,0),
+    dienTich:ds.reduce((sum,s)=>sum+Math.round(s.dienTich*10),0)/10
+  });
+}

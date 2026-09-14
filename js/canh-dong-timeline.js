@@ -16,7 +16,10 @@ function anhHoatDongCD(s){
   return {src:cfg.thuMuc+'/'+ANH_MOC_CD[s.id]+'.'+cfg.duoi,chu:'Ảnh minh họa · '+s.ten};
 }
 function iconHoatDongCD(id){
-  const hat='<path d="M16 27V8"/><path d="M16 12c-5 0-7-3-6-5 4 0 6 2 6 5Zm0 6c-5 0-7-3-6-5 4 0 6 2 6 5Zm0 6c-5 0-7-3-6-5 4 0 6 2 6 5Zm0-9c5 0 7-3 6-5-4 0-6 2-6 5Zm0 6c5 0 7-3 6-5-4 0-6 2-6 5Z" fill="var(--icon-accent)"/>';
+  // Bông lúa rủ: cuống cong, nhánh nhỏ và hạt thon; không dùng bông lúa mì.
+  const hat='<path d="M8 29C9 22 9 14 13 8c5-6 13-3 14 4M9 23C5 20 3 16 3 12c4 4 6 8 6 11Zm1-4c2-4 5-6 9-7-4 3-6 6-9 7Z"/>'
+    +'<path d="m15 6-1 6m4-7-1 9m5-8-2 9m5-6-1 9m3-6 1 7M14 10l-3 4m6-4 2 6m2-5 2 6" stroke-width="1.1"/>'
+    +'<g fill="var(--icon-accent)" stroke-width="1.1"><ellipse cx="11" cy="15" rx="1.3" ry="2.3" transform="rotate(20 11 15)"/><ellipse cx="14" cy="13" rx="1.3" ry="2.3"/><ellipse cx="17" cy="15" rx="1.3" ry="2.3"/><ellipse cx="19" cy="17" rx="1.3" ry="2.3" transform="rotate(-12 19 17)"/><ellipse cx="21" cy="16" rx="1.3" ry="2.3"/><ellipse cx="23" cy="18" rx="1.3" ry="2.3"/><ellipse cx="25" cy="19" rx="1.3" ry="2.3"/><ellipse cx="28" cy="20" rx="1.3" ry="2.3" transform="rotate(-15 28 20)"/></g>';
   const shapes={
     'le-xuong-dong':'<path d="M7 20h18l-3 7H10Z" fill="var(--icon-accent)"/><path d="M11 19V9m5 10V6m5 13V9M9 29h14M11 6c2-2-1-2 0-4m5 1c2-2-1-2 0-3m5 6c2-2-1-2 0-4"/>',
     'gieo-sa':'<path d="m5 10 7 2 5-3c3-2 5 1 2 3l-4 3-5 1-5-1M5 9v9M5 27h23"/><path d="M14 20c-4-3-6 0-3 2 2 1 3-1 3-2Zm8-3c-4-3-6 0-3 2 2 1 3-1 3-2Zm3 7c-4-3-6 0-3 2 2 1 3-1 3-2Z" fill="var(--icon-accent)"/>',
@@ -27,7 +30,7 @@ function iconHoatDongCD(id){
     'tro-bong':hat+'<path d="M25 3v5m-2.5-2.5h5M5 12v4m-2-2h4" stroke="var(--icon-accent)"/>',
     'tham-dong':'<path d="m5 11 10-7 10 7Z" fill="var(--icon-accent)"/><path d="M10 12a5 5 0 0 0 10 0M7 28v-4a8 8 0 0 1 16 0v4M4 28h24M26 20v-5m-3 3 3 2 3-2"/>',
     'chac-hat':hat,
-    'chin-vang':'<g transform="translate(-4 0)">'+hat+'</g><path d="M25 27V12m0 7c-4 0-5-3-4-5 3 0 4 2 4 5Zm0 6c4 0 5-3 4-5-3 0-4 2-4 5Z" fill="var(--icon-accent)"/>',
+    'chin-vang':hat+'<path d="m10 27 5-5m-5 5 1-6" stroke="var(--icon-accent)"/>',
     'thu-hoach':'<path d="M17 4c12 0 16 16 5 20 5-6 4-12-5-14Z" fill="var(--icon-accent)"/><path d="m22 24-5 5-3-3 6-6M8 26V8m0 6-4-4m4 9 5-5m-5 9-4-4"/>',
     'ngay-hoi-gat':'<path d="m10 28 3-10L9 5m13 23-3-10 4-13M16 27V4"/><path d="m8 10 5 3m10-3-4 3M12 18h8v5h-8Z" fill="var(--icon-accent)"/><path d="M13 21 8 25m11-4 5 4M8 6l2-2 2 2m2-3 2-2 2 2m3 3 2-2 2 2"/>',
     'com-moi':'<path d="M4 18h24c-1 7-5 10-12 10S5 25 4 18Z" fill="var(--icon-accent)"/><path d="M7 17c1-5 5-7 9-7s8 2 9 7M11 7c3-3-2-3 0-6m6 6c3-3-2-3 0-6m6 6c3-3-2-3 0-6M10 30h12"/>'
@@ -37,13 +40,14 @@ function iconHoatDongCD(id){
 
 // Hàm thuần để kiểm chứng khoảng cách đường, biểu tượng và nhãn ở mọi bề rộng.
 function tinhBoCucTimelineCD(width,heights){
-  const mobile=width<680, center=mobile?46:width/2, amplitude=mobile?10:26;
-  const labelWidth=mobile?Math.max(110,width-120):Math.min(310,width/2-126);
+  const mobile=width<680, center=mobile?68:width/2, amplitude=mobile?28:Math.min(180,width*.18);
+  const labelEdge=mobile?142:center+amplitude+74;
+  const labelWidth=mobile?Math.max(110,width-152):Math.min(310,width/2-amplitude-86);
   let y=24;
   const points=heights.map((height,i)=>{
     const rowHeight=Math.max(160,height+64), cy=y+rowHeight/2;
     const right=mobile||i%2===0;
-    const p={x:center+(i%2?amplitude:-amplitude),y:cy,label:{x:right?(mobile?110:center+112):center-112-labelWidth,y:cy-height/2,width:labelWidth,height},right};
+    const p={x:center+(i%2?amplitude:-amplitude),y:cy,label:{x:right?labelEdge:center-amplitude-74-labelWidth,y:cy-height/2,width:labelWidth,height},right};
     y+=rowHeight;return p;
   });
   return {width,height:y+24,points,mobile};

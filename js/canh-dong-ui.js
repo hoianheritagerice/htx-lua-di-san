@@ -27,8 +27,10 @@ function veGioiThieuCD(ma){
   document.getElementById('cdMoTa').innerHTML=(nd.than||[]).map(k=>'<article><h3>'+k.h+'</h3>'+(k.p||[]).map(p=>'<p>'+p+'</p>').join('')+(k.ds?'<ul>'+k.ds.map(t=>'<li>'+t+'</li>').join('')+'</ul>':'')+'</article>').join('');
   const bia=document.getElementById('cdAnhBia');bia.src=nd.anh;bia.alt=chuCD(nd.ten);bia.hidden=false;bia.onerror=()=>{bia.hidden=true;};
   const so=SO_CHOT_CANH_DONG[ma];
-  document.getElementById('cdSoChot').innerHTML=[[so.soThua,'thửa ruộng'],[so.soHo,'hộ nông dân'],[so.dienTich.toLocaleString('vi-VN',{maximumFractionDigits:1}),'m² diện tích']].map(([n,t])=>'<div><strong>'+n+'</strong><span>'+t+'</span></div>').join('');
-  document.getElementById('cdNgayChot').textContent='Số liệu chốt '+SO_CHOT_CANH_DONG.ngayChot.split('-').reverse().join('/')+' · Tất cả hình thức canh tác';
+  const counters=document.getElementById('cdSoChot');dungDemSoTrong(counters);
+  const values=[[so.soThua,'thửa ruộng'],[so.soHo,'hộ nông dân'],[so.dienTich,'m² diện tích']];
+  counters.innerHTML=values.map(([,label])=>'<div><strong>0</strong><span>'+label+'</span></div>').join('');
+  counters.querySelectorAll('strong').forEach((el,i)=>demSoHienDan(el,values[i][0]));
   const tv=cfg.thuVien||{}, folder='img/canh-dong/'+ma.toLowerCase()+'/';
   ANH_CANH_DONG=cfg.anh.length?cfg.anh:Array.from({length:Math.max(0,Math.floor(Number(tv.soAnh)||0))},(_,i)=>{
     const file=String(i+1).padStart(2,'0')+'.'+(tv.duoi||'jpg');

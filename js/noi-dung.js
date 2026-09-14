@@ -85,15 +85,15 @@ trangChu: {
     tieuDe:  `Ba cánh đồng, một di sản`,
   },
 
-  /* --- Mục 4 con số. Riêng CON SỐ thì tự lấy từ Notion, không sửa ở đây --- */
+  /* --- Mục 4 con số. Số cố định cộng từ js/canh-dong-so-chot.js. --- */
   tacDong: {
     nhan:    `Tác động của chúng tôi`,
     tieuDe:  `Những con số từ cánh đồng thật`,
-    nhan1:   `diện tích canh tác<br>hữu cơ`,
+    nhan1:   `tổng diện tích<br>ba cánh đồng`,
     nhan2:   `hộ nông dân<br>xã viên tham gia`,
     nhan3:   `thửa ruộng<br>được ghi mã riêng`,
     nhan4:   `cánh đồng<br>di sản`,
-    ghiChu:  `* Diện tích, số hộ và số thửa lấy trực tiếp từ dữ liệu Notion của vụ đang canh tác, cộng từ cả 3 cánh đồng.`,
+    ghiChu:  `Tổng quy mô ba cánh đồng, bao gồm tất cả hình thức canh tác.`,
   },
 
   /* --- Mục để lại thông tin liên hệ --- */

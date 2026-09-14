@@ -204,6 +204,10 @@ const loai = ts.get('loai') || 'canh-dong';
 const ma   = ts.get('ma')   || Object.keys((DU_LIEU[loai]||DU_LIEU['canh-dong']).muc)[0];
 const nhom = DU_LIEU[loai] || DU_LIEU['canh-dong'];
 const m    = nhom.muc[ma]  || nhom.muc[Object.keys(nhom.muc)[0]];
+const MA_CANH_DONG = {'ong-dang':'CKOD','dong-cao':'CTDC','dong-mau':'CTDM'};
+// Các đường dẫn giới thiệu cũ vẫn mở được; nút quay lại dẫn đúng cánh đồng.
+const veCanhDong = loai === 'canh-dong' && MA_CANH_DONG[ma]
+  ? 'canh-dong.html?dong=' + MA_CANH_DONG[ma] : '';
 
 document.title = chuThuan(m.ten) + ' — HTX Lúa Di Sản Hội An';
 if(nhom.navId) document.getElementById(nhom.navId).classList.add('active');
@@ -220,7 +224,7 @@ document.getElementById('ctLoai').innerHTML = nhom.nhan + (m.phu ? ' · ' + m.ph
 document.getElementById('ctTen').innerHTML  = m.ten;
 document.getElementById('ctDan').innerHTML  = m.dan || '';
 const lai = document.getElementById('ctLai');
-lai.href = nhom.ve; lai.innerHTML = '← ' + nhom.veChu;
+lai.href = veCanhDong ? veCanhDong + '#gioi-thieu' : nhom.ve; lai.innerHTML = '← ' + nhom.veChu;
 if(m.so){
   document.getElementById('ctSoNhanh').innerHTML = m.so.map(function(s){
     return '<div class="sn-o"><div class="sn-so">'+s[0]+'</div><div class="sn-nhan">'+s[1]+'</div></div>';
@@ -245,7 +249,8 @@ if(m.gia){
 });
 const nut = m.nut || [[nhom.ve, nhom.veChu]];
 h += '<div class="dieu-huong">'+nut.map(function(n){
-       return '<a class="'+(n[2]||'')+'" href="'+n[0]+'">'+n[1]+'</a>';
+       const href = veCanhDong && n[0] === 'canh-dong.html' ? veCanhDong + '#ban-do-mua-vu' : n[0];
+       return '<a class="'+(n[2]||'')+'" href="'+href+'">'+n[1]+'</a>';
      }).join('')+'</div>';
 document.getElementById('ctThan').innerHTML = h;
 

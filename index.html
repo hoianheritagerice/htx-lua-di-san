@@ -206,7 +206,7 @@ footer ul a:hover{opacity:1;color:var(--vang)}
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
-<script src="js/noi-dung.js?v=1.0"></script>
+<script src="js/noi-dung.js?v=20260914c"></script>
 </head>
 <body>
 
@@ -340,7 +340,7 @@ footer ul a:hover{opacity:1;color:var(--vang)}
       <div class="td-o"><div class="so" id="tdDienTich">—</div><div class="nhan" data-nd="trangChu.tacDong.nhan1"></div></div>
       <div class="td-o"><div class="so" id="tdSoHo">—</div><div class="nhan" data-nd="trangChu.tacDong.nhan2"></div></div>
       <div class="td-o"><div class="so" id="tdThua">—</div><div class="nhan" data-nd="trangChu.tacDong.nhan3"></div></div>
-      <div class="td-o"><div class="so so-dem" data-so="3">0</div><div class="nhan" data-nd="trangChu.tacDong.nhan4"></div></div>
+      <div class="td-o"><div class="so" id="tdSoDong">0</div><div class="nhan" data-nd="trangChu.tacDong.nhan4"></div></div>
     </div>
     <div class="td-note" data-nd="trangChu.tacDong.ghiChu"></div>
   </div>
@@ -416,9 +416,9 @@ footer ul a:hover{opacity:1;color:var(--vang)}
 <script src="js/chung.js"></script>
 <script src="js/form-quan-tam.js"></script>
 <script src="js/hieu-ung.js"></script>
-<!-- Cộng số liệu thật của 3 cánh đồng cho mục "Những con số từ cánh đồng thật".
-     PHẢI đứng sau js/chung.js (cần goiAPI) và sau js/hieu-ung.js (để ghi đè
-     được data-so của ô "thửa ruộng"). -->
-<script src="js/so-lieu-tong.js?v=1.0"></script>
+<!-- Tổng các số cố định, không gọi Notion hoặc đọc bộ đệm số liệu mùa vụ. -->
+<script src="js/canh-dong-so-chot.js?v=20260914c"></script>
+<script src="js/dem-so.js?v=20260914c"></script>
+<script src="js/so-lieu-tong.js?v=20260914c"></script>
 </body>
 </html>

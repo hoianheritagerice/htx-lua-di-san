@@ -44,7 +44,7 @@
 #river .river-dot.le{background:#fff5ed;color:#82432e;border-color:#e4c5b0;--icon-accent:#e8b47e}
 #river .river-dot.trai{background:#fff8e6;color:#796021;border-color:#dfcea0;--icon-accent:#e6c775}
 #river .river-node:hover .river-dot{transform:none;box-shadow:0 0 0 5px #dae6ce}
-#river .river-label{position:absolute;transform:translateY(-50%);pointer-events:auto}
+#river .river-label{position:absolute;transform:none;pointer-events:auto}
 #river .river-label .t{display:block;font:600 19px/1.4 'Playfair Display',serif;color:#24472b}
 #river .river-label .d{display:block;font:400 12px/1.6 'Be Vietnam Pro',sans-serif;color:#68735e;margin-top:6px}
 #river .river-node.ngoai-goi .river-dot{opacity:1;background:#f8f6ef;box-shadow:none}

@@ -270,7 +270,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
   .river-label .t{font-size:13.5px}
 }
 </style>
-<link rel="stylesheet" href="css/canh-dong.css?v=20260914d">
+<link rel="stylesheet" href="css/canh-dong.css?v=20260916a">
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
@@ -508,6 +508,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 <!-- modal chi tiết mốc -->
 <div class="modal-phu" id="mpCT" role="dialog" aria-modal="true" aria-labelledby="ctTen">
   <div class="modal">
+    <button class="cd-dong-moc" type="button" aria-label="Đóng ảnh và chi tiết mốc" onclick="dongModal('mpCT');NUT_MOC_CU?.focus()">×</button>
     <div class="ct-head">
       <span class="ct-ic" id="ctIc"></span>
       <div><div class="ct-loai" id="ctLoai"></div><h2 class="ct-ten" id="ctTen"></h2></div>
@@ -541,7 +542,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 <script src="js/canh-dong-config.js?v=20260914e"></script>
 <script src="js/canh-dong-so-chot.js?v=20260914c"></script>
 <script src="js/dem-so.js?v=20260914c"></script>
-<script src="js/canh-dong-ui.js?v=20260914c"></script>
+<script src="js/canh-dong-ui.js?v=20260916a"></script>
 <script src="js/canh-dong-timeline.js?v=20260914d"></script>
 
 <script>
@@ -615,8 +616,10 @@ let HOM_NAY = new Date(); HOM_NAY.setHours(0,0,0,0);
 const LOAI_TXT = {nong:'Mốc nông học', le:'Lễ cúng · tâm linh', trai:'Trải nghiệm'};
 const LOAI_BG  = {nong:'#e6f2d8', le:'#f5e3d8', trai:'#faf0cf'};
 const LOAI_FG  = {nong:'#4f7325', le:'#9c4e28', trai:'#8a6910'};
+// ĐỔI TÊN MỐC: sửa ten (trên timeline), tenDay (trong cửa sổ ảnh), mo (mô tả).
+// Mã hoạt động ở MA_HOAT_DONG không đổi theo tên; giữ nguyên mã và thứ tự.
 let SU_KIEN = [
-  {ngay:'', ic:'ic-cung', loai:'le',   ten:'Lễ cúng xuống đồng', tenDay:'Lễ cúng xuống đồng (đầu mùa)',
+  {ngay:'', ic:'ic-cung', loai:'le',   ten:'Lễ Tịch điền - Xuống đồng', tenDay:'Lễ Tịch điền - Xuống đồng',
    mo:'Nghi lễ cầu cho mùa vụ thuận hòa, mưa gió điều hòa, trước ngày gieo sạ đầu tiên.'},
   {ngay:'', ic:'ic-gieo', loai:'nong', ten:'Gieo sạ', tenDay:'Ngày gieo sạ',
    mo:'Những hạt giống đã được ngâm ủ cẩn thận được gieo xuống ruộng. Từ đây, hạt bắt đầu bén rễ, nảy mầm và mở ra hành trình của một vụ lúa mới.'},
@@ -640,7 +643,7 @@ let SU_KIEN = [
    mo:'Khi phần lớn hạt lúa đã chín vàng, bà con bắt đầu thu hoạch. Đây là thành quả của nhiều tháng chăm sóc và cũng là lúc một hành trình mới của hạt gạo bắt đầu.'},
   {ngay:'', ic:'ic-bo',   loai:'trai', ten:'Ngày hội gặt', tenDay:'Trải nghiệm: Ngày hội gặt',
    mo:'Cùng gặt lúa, tuốt lúa, trải nghiệm xay giã theo cách truyền thống của làng.'},
-  {ngay:'', ic:'ic-com',  loai:'le',   ten:'Cúng cơm mới', tenDay:'Lễ cúng cơm mới (tạ ơn)',
+  {ngay:'', ic:'ic-com',  loai:'le',   ten:'Lễ cúng Tạ ơn & mừng Lúa mới', tenDay:'Lễ cúng Tạ ơn & mừng Lúa mới',
    mo:'Nấu nồi cơm từ gạo vụ mới, dâng cúng tạ ơn trời đất và tổ tiên đã cho mùa màng.'},
 ];
 
@@ -655,16 +658,21 @@ function veTimeline(){ veHanhTrinhCD(); }
 function moCT(i){
   NUT_MOC_CU = document.querySelectorAll('.river-node')[i];
   const s=SU_KIEN[i], ic=document.getElementById('ctIc');
-  ic.style.background=LOAI_BG[s.loai];ic.style.color=LOAI_FG[s.loai];
-  ic.innerHTML='<svg><use href="#'+s.ic+'"/></svg>';
+  ic.className='ct-ic '+s.loai+(NUT_MOC_CU?.classList.contains('trong-goi')?' trong-goi':'');
+  ic.innerHTML=iconHoatDongCD(s.id);
   const loai=document.getElementById('ctLoai');loai.textContent=LOAI_TXT[s.loai];loai.style.color=LOAI_FG[s.loai];
   document.getElementById('ctTen').textContent=s.tenDay;
   document.getElementById('ctNgay').textContent=s.ngay?s.ngay.split('-').reverse().join('/')+' · '+(s.trangThai||(s.duKien?'Dự kiến, chờ xác nhận':'Mốc mùa vụ')):'Chưa có ngày · HTX sẽ cập nhật lịch';
   document.getElementById('ctMo').textContent=s.mo;
   document.querySelector('#mpCT .cd-moc-anh')?.remove();
-  if(s.anhXacNhan){
-    const img=document.createElement('img');img.className='cd-moc-anh';img.src=s.anhXacNhan;img.alt=s.ten;img.addEventListener('error',()=>img.remove());
-    document.getElementById('ctMo').after(img);
+  const anh=anhHoatDongCD(s), modal=document.querySelector('#mpCT .modal');
+  modal.classList.toggle('co-anh',!!anh);
+  if(anh){
+    const figure=document.createElement('figure');figure.className='cd-moc-anh';
+    const img=document.createElement('img');img.src=anh.src;img.alt=anh.chu;img.decoding='async';
+    const caption=document.createElement('figcaption');caption.textContent=s.anhXacNhan?'Ảnh hoạt động':'Ảnh minh họa';
+    img.addEventListener('error',()=>{figure.replaceChildren();caption.textContent='Chưa tải được ảnh. Bạn vẫn có thể đọc mô tả bên dưới.';figure.append(caption);});
+    figure.append(img,caption);document.getElementById('ctMo').before(figure);
   }
   const goi=document.getElementById('ctGoi'), ds=cacGoiCD(s);
   goi.style.display='flex';
@@ -673,7 +681,8 @@ function moCT(i){
     goi.textContent=(co?'Có trong gói đang chọn. ':'')+'Gói tham gia: '+ds.map(k=>chuCD(noiDungCD().goi.muc[k].ten)).join(' · ')+'. Lịch và số người tham gia cần được HTX xác nhận.';
   }else goi.textContent=s.loai==='le'?'Hoạt động văn hóa của cánh đồng. Liên hệ HTX để biết lịch và điều kiện tham dự.':'Mốc canh tác của cánh đồng, không phải buổi trải nghiệm riêng của gói.';
   moModal('mpCT');
-  document.querySelector('#mpCT .dong').focus();
+  modal.scrollTop=0;
+  document.querySelector('#mpCT .cd-dong-moc').focus({preventScroll:true});
 }
 
 veTimeline();
@@ -687,9 +696,9 @@ veTimeline();
 const API_URL_TL = 'https://script.google.com/macros/s/AKfycbxkBLw-2LGnKPrc0m8cjogwqyv1kCyP5D1hN8A7Pt2IQ6n8QwRGQhD8ea8PAQzOVwjy/exec';
 /* 7 mốc nông học — TẤT CẢ lấy từ DB Vụ Mùa trong Notion, không ước lượng */
 const MOC_NOTION = {
-  'Gieo sạ':'gieoSa', 'Đẻ nhánh rộ':'deNhanh', 'Làm đòng':'donDong',
-  'Trổ bông':'troBong', 'Chắc hạt':'chacHat', 'Chín vàng':'chinVang',
-  'Thu hoạch':'thuHoach'
+  'gieo-sa':'gieoSa', 'de-nhanh':'deNhanh', 'lam-dong':'donDong',
+  'tro-bong':'troBong', 'chac-hat':'chacHat', 'chin-vang':'chinVang',
+  'thu-hoach':'thuHoach'
 };
 
 /* Lễ cúng và trải nghiệm KHÔNG có nguồn trong Notion. Thay vì để ngày
@@ -697,12 +706,12 @@ const MOC_NOTION = {
    TRƯỚC ngày trổ bông), neo chúng vào mốc nông học thật với độ lệch cố
    định. Notion đổi ngày thì chúng tự dịch theo, luôn đúng thứ tự. */
 const NEO_SU_KIEN = {
-  'Giai đoạn mạ':        ['gieoSa',    7],   // Notion không có mốc này — ước lượng
-  'Lễ cúng xuống đồng':  ['gieoSa',   -5],
-  'Cùng xuống giống':    ['gieoSa',    2],
-  'Thăm đồng lúa trổ':   ['troBong',   4],
-  'Ngày hội gặt':        ['thuHoach',  1],
-  'Cúng cơm mới':        ['thuHoach', 10]
+  'giai-doan-ma': ['gieoSa',    7],   // Notion không có mốc này — ước lượng
+  'le-xuong-dong':['gieoSa',   -5],
+  'xuong-giong': ['gieoSa',    2],
+  'tham-dong':   ['troBong',   4],
+  'ngay-hoi-gat':['thuHoach',  1],
+  'com-moi':     ['thuHoach', 10]
 };
 function congNgay(ngay, n){
   const d = new Date(ngay + 'T00:00:00Z');
@@ -729,7 +738,7 @@ async function napMocThat(ma){
     }
     const xacNhan=CAU_HINH_CANH_DONG.suKienTheoVu[ma+':'+vu]||{};
     SU_KIEN=MAU_SU_KIEN.map(mau=>{
-      const sk={...mau}, khoa=MOC_NOTION[sk.ten], neo=NEO_SU_KIEN[sk.ten];
+      const sk={...mau}, khoa=MOC_NOTION[sk.id], neo=NEO_SU_KIEN[sk.id];
       if(khoa&&r.season[khoa]){sk.ngay=r.season[khoa];sk.duKien=khoa==='thuHoach';}
       else if(neo&&r.season[neo[0]]){sk.ngay=congNgay(r.season[neo[0]],neo[1]);sk.duKien=true;}
       const that=xacNhan[sk.id];

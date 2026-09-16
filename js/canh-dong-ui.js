@@ -120,7 +120,11 @@ function khoiTaoCanhDong(){
   moc.querySelector('.dong').addEventListener('click',()=>NUT_MOC_CU?.focus());
   moc.addEventListener('keydown',e=>{
     if(e.key==='Escape'){dongModal('mpCT');NUT_MOC_CU?.focus();}
-    if(e.key==='Tab'){e.preventDefault();moc.querySelector('.dong').focus();}
+    if(e.key==='Tab'){
+      const buttons=Array.from(moc.querySelectorAll('button:not([disabled])'));
+      const at=buttons.indexOf(document.activeElement),next=(at+(e.shiftKey?-1:1)+buttons.length)%buttons.length;
+      e.preventDefault();buttons[next]?.focus();
+    }
   });
   chonDong(document.querySelector('[data-dong="'+DONG_HIEN_TAI+'"]'),ds[DONG_HIEN_TAI].ten,DONG_HIEN_TAI);
 }

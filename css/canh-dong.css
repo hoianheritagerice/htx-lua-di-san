@@ -39,16 +39,17 @@
 #river{max-width:960px;margin:30px auto 0}
 #river .river-node{position:absolute;width:64px;height:64px;border:0;background:none;padding:0;font:inherit;transform:translate(-50%,-50%);z-index:3;cursor:pointer}
 #river .river-node:focus-visible{outline:2px solid #1e4d2b;outline-offset:7px;border-radius:50%}
-#river .river-dot{width:64px;height:64px;border:1.5px solid #d4ddca;box-shadow:0 3px 10px #314b2410;background:#f8faf2;color:#315b32;--icon-accent:#c5d994;transition:box-shadow .18s,background .18s}
+#river .river-dot{width:64px;height:64px;border:1.5px solid #d4ddca;box-shadow:0 3px 10px #314b2410;transition:box-shadow .18s,background .18s}
+#river .river-dot,#mpCT .ct-ic{background:#f8faf2;color:#315b32;--icon-accent:#c5d994}
 #river .river-dot svg{width:37px;height:37px}
-#river .river-dot.le{background:#fff5ed;color:#82432e;border-color:#e4c5b0;--icon-accent:#e8b47e}
-#river .river-dot.trai{background:#fff8e6;color:#796021;border-color:#dfcea0;--icon-accent:#e6c775}
+#river .river-dot.le,#mpCT .ct-ic.le{background:#fff5ed;color:#82432e;border-color:#e4c5b0;--icon-accent:#e8b47e}
+#river .river-dot.trai,#mpCT .ct-ic.trai{background:#fff8e6;color:#796021;border-color:#dfcea0;--icon-accent:#e6c775}
 #river .river-node:hover .river-dot{transform:none;box-shadow:0 0 0 5px #dae6ce}
 #river .river-label{position:absolute;transform:none;pointer-events:auto}
 #river .river-label .t{display:block;font:600 19px/1.4 'Playfair Display',serif;color:#24472b}
 #river .river-label .d{display:block;font:400 12px/1.6 'Be Vietnam Pro',sans-serif;color:#68735e;margin-top:6px}
 #river .river-node.ngoai-goi .river-dot{opacity:1;background:#f8f6ef;box-shadow:none}
-#river .river-node.trong-goi .river-dot{border:2px solid #ad510b;background:#f5bc42;color:#4b2b09;--icon-accent:#fff4c7;box-shadow:0 0 0 6px #f4dba2,0 5px 15px #98581825}
+#river .river-node.trong-goi .river-dot,#mpCT .ct-ic.trong-goi{border:2px solid #ad510b;background:#f5bc42;color:#4b2b09;--icon-accent:#fff4c7;box-shadow:0 0 0 6px #f4dba2,0 5px 15px #98581825}
 #river .river-node.trong-goi .river-label .t{color:#91400b;font-weight:700}
 #river .cd-trong-goi{display:inline-block;background:#a7490c;color:#fff;font:600 10px/1.6 'Be Vietnam Pro',sans-serif;padding:3px 10px;border-radius:12px;margin-top:7px}
 #river .cd-tl-photo{display:block;width:100%;max-width:205px;margin-top:13px;border-radius:9px;overflow:hidden}
@@ -67,10 +68,16 @@
 .cd-today-label.phai::before{left:-11px;top:8px;border-right-color:#28552e}
 .cd-today-label.trai::before{right:-11px;top:8px;border-left-color:#28552e}
 .cd-today-dot{position:absolute;transform:translate(-50%,-50%);width:12px;height:12px;border:2px solid #fffdf8;border-radius:50%;background:#28552e;box-shadow:0 0 0 3px #c4d4b7}
-.modal .ct-ic{--icon-accent:#d3d99a}
-.modal .cd-moc-anh{margin:14px 0}
-.modal .cd-moc-anh img{width:100%;max-height:330px;object-fit:contain;border-radius:10px;background:#eff0e8}
-.modal .cd-moc-anh figcaption{font-size:11px;color:#6b735f;margin-top:6px}
+#mpCT .modal{position:relative;max-width:560px;max-height:92dvh;overflow-y:auto;overscroll-behavior:contain}
+#mpCT .modal.co-anh{max-width:960px}
+#mpCT .ct-head{padding-right:44px}
+#mpCT .ct-ten{overflow-wrap:anywhere}
+#mpCT .ct-mo{line-height:1.8}
+#mpCT .cd-dong-moc{position:sticky;top:0;float:right;z-index:2;width:38px;height:38px;margin:0 0 -38px;border:0;border-radius:50%;background:#edf0e4;color:#1e4d2b;font:28px/1 sans-serif;cursor:pointer}
+#mpCT .cd-dong-moc:focus-visible{outline:2px solid #28552e;outline-offset:3px}
+#mpCT .cd-moc-anh{margin:16px 0 20px}
+#mpCT .cd-moc-anh img{display:block;width:100%;height:auto;max-height:min(62dvh,640px);object-fit:contain;border-radius:10px;background:#eff0e8}
+#mpCT .cd-moc-anh figcaption{font-size:11px;color:#6b735f;margin-top:6px}
 .cd-lightbox{position:fixed;inset:0;margin:auto;width:min(1080px,94vw);max-height:94dvh;border:0;border-radius:16px;padding:20px;background:#fffdf8;color:#2b3524}
 .cd-lightbox::backdrop{background:rgba(16,29,19,.85)}
 .cd-lightbox-head,.cd-lightbox-foot{display:flex;align-items:center;justify-content:space-between;gap:16px}

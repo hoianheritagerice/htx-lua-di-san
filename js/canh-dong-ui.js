@@ -2,6 +2,13 @@
 let GOI_DANG_XEM = 'tat-ca';
 let ANH_CANH_DONG = [], ANH_DANG_XEM = 0;
 let NUT_MOC_CU = null;
+function muiTenLienKetCD(){
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('class','cd-link-arrow');svg.setAttribute('viewBox','0 0 20 20');
+  svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');
+  svg.innerHTML='<path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>';
+  return svg;
+}
 function noiDungCD(){ return typeof NOI_DUNG !== 'undefined' ? NOI_DUNG : window.NOI_DUNG; }
 function chuCD(s){ const e=document.createElement('span');e.innerHTML=s||'';return e.textContent; }
 function tenVuCD(ma){
@@ -44,7 +51,7 @@ function veGioiThieuCD(ma){
     b.append(img);b.addEventListener('click',()=>moAnhCD(i));grid.append(b);
   });
   document.getElementById('cdThuVienNhan').textContent=ANH_CANH_DONG.length?'Những góc nhìn về cánh đồng':'Bộ ảnh cánh đồng đang được bổ sung.';
-  const xem=document.getElementById('cdXemAnh');xem.hidden=!ANH_CANH_DONG.length;xem.textContent='Xem tất cả '+ANH_CANH_DONG.length+' ảnh ↗';
+  const xem=document.getElementById('cdXemAnh');xem.hidden=!ANH_CANH_DONG.length;xem.textContent='Xem tất cả '+ANH_CANH_DONG.length+' ảnh';xem.append(muiTenLienKetCD());
 }
 function veAnhLonCD(){
   const a=ANH_CANH_DONG[ANH_DANG_XEM], img=document.getElementById('cdAnhLon');
@@ -83,7 +90,7 @@ function veChonGoiCD(){
     const cfg=CAU_HINH_CANH_DONG.goi[GOI_DANG_XEM];
     const theoVu=CAU_HINH_CANH_DONG.quyenLoiTheoVu[DONG_HIEN_TAI+':'+VU_HIEN_TAI]?.[GOI_DANG_XEM];
     mo.textContent=quyenLoiCD(GOI_DANG_XEM).length+' hoạt động trong gói · '+cfg.doiTuong+' '+(theoVu?'Quyền lợi áp dụng cho mùa vụ này.':'Tham khảo quyền lợi chương trình hiện hành.')+' Lịch trải nghiệm sẽ được HTX xác nhận.';
-    const a=document.createElement('a');a.href='chi-tiet.html?loai=san-pham&ma='+GOI_DANG_XEM;a.textContent='Xem quyền lợi gói ↗';mo.append(a);
+    const a=document.createElement('a');a.href='chi-tiet.html?loai=san-pham&ma='+GOI_DANG_XEM;a.textContent='Xem quyền lợi gói';a.append(muiTenLienKetCD());mo.append(a);
   }
 }
 function apDungGoiCD(){

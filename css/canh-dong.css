@@ -1,4 +1,16 @@
 /* Tab Cánh đồng — ảnh bìa, thư viện và timeline có dải đường riêng. */
+.field-place::before{content:" · "}
+.cd-link-arrow{width:16px;height:16px;flex:none;vertical-align:middle}
+@media(max-width:720px){
+  .chon-bar .wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding-top:12px;padding-bottom:12px}
+  .chon-nhom{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .chon-nhom .cn-lbl{grid-column:1/-1;margin:0 0 2px}
+  .field-tab{min-width:0;min-height:58px;padding:9px 4px;border-radius:12px;line-height:1.35}
+  .field-name{display:block;font-size:clamp(12px,3.4vw,14px);white-space:nowrap}
+  .field-place{display:block;margin-top:3px;font-size:11px;font-weight:400;white-space:nowrap}
+  .field-place::before{content:none}
+  .chon-bar .vu-sel{margin-left:0;width:100%;min-width:0;min-height:42px;font-size:16px}
+}
 .cd-muc{display:flex;gap:28px;padding-top:22px;padding-bottom:22px;border-bottom:1px solid #ddd3ba;flex-wrap:wrap}
 .cd-muc a{font-size:13px;color:#526347;font-weight:600}
 .cd-muc a:hover{color:#1e4d2b;text-decoration:underline;text-underline-offset:6px}
@@ -24,7 +36,7 @@
 .cd-anh img{width:100%;height:100%;object-fit:cover;transition:transform .25s}
 .cd-anh button:hover img{transform:scale(1.035)}
 .cd-anh-chan{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:20px;font-size:12px;color:#67715b}
-.cd-anh-chan button{border:1px solid #b5bea7;border-radius:24px;padding:8px 16px;background:transparent;color:#1e4d2b;font:inherit;cursor:pointer;font-weight:600}
+.cd-anh-chan button{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex-shrink:0;border:1px solid #b5bea7;border-radius:24px;padding:8px 16px;background:transparent;color:#1e4d2b;font:inherit;cursor:pointer;font-weight:600}
 .cd-anh-chan button[hidden]{display:none}
 .cd-mo-ta{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px;margin-top:32px}
 .cd-mo-ta h3{font-size:21px;margin-bottom:12px}
@@ -35,7 +47,7 @@
 .cd-goi button{padding:10px 17px;border:1px solid #cfc8b4;border-radius:24px;background:#fffdf8;color:#405035;font:inherit;font-size:13px;cursor:pointer}
 .cd-goi button[aria-pressed="true"]{background:#1e4d2b;border-color:#1e4d2b;color:white}
 .cd-goi-mo{max-width:650px;margin:auto;text-align:center;min-height:66px;font-size:13px;line-height:1.8;color:#5a6350;position:relative}
-.cd-goi-mo a{text-decoration:underline;text-underline-offset:4px;color:#1e4d2b;display:inline-block;margin-left:8px}
+.cd-goi-mo a{text-decoration:underline;text-underline-offset:4px;color:#1e4d2b;display:inline-flex;align-items:center;gap:6px;margin-left:8px}
 #river{max-width:960px;margin:30px auto 0}
 #river .river-node{position:absolute;width:64px;height:64px;border:0;background:none;padding:0;font:inherit;transform:translate(-50%,-50%);z-index:3;cursor:pointer}
 #river .river-node:focus-visible{outline:2px solid #1e4d2b;outline-offset:7px;border-radius:50%}

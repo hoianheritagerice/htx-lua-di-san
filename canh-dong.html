@@ -270,7 +270,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
   .river-label .t{font-size:13.5px}
 }
 </style>
-<link rel="stylesheet" href="css/canh-dong.css?v=20260916a">
+<link rel="stylesheet" href="css/canh-dong.css?v=20260917a">
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
@@ -379,9 +379,9 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
   <div class="wrap">
     <div class="chon-nhom">
       <span class="cn-lbl">Cánh đồng</span>
-      <button class="field-tab active" data-dong="CKOD" aria-pressed="true" onclick="chonDong(this,'Ông Đảng','CKOD')">Ông Đảng · Cẩm Kim</button>
-      <button class="field-tab" data-dong="CTDC" aria-pressed="false" onclick="chonDong(this,'Đồng Cao','CTDC')">Đồng Cao · Cẩm Thanh</button>
-      <button class="field-tab" data-dong="CTDM" aria-pressed="false" onclick="chonDong(this,'Đồng Mẫu','CTDM')">Đồng Mẫu · Cẩm Thanh</button>
+      <button class="field-tab active" data-dong="CKOD" aria-label="Ông Đảng · Cẩm Kim" aria-pressed="true" onclick="chonDong(this,'Ông Đảng','CKOD')"><span class="field-name">Ông Đảng</span><span class="field-place">Cẩm Kim</span></button>
+      <button class="field-tab" data-dong="CTDC" aria-label="Đồng Cao · Cẩm Thanh" aria-pressed="false" onclick="chonDong(this,'Đồng Cao','CTDC')"><span class="field-name">Đồng Cao</span><span class="field-place">Cẩm Thanh</span></button>
+      <button class="field-tab" data-dong="CTDM" aria-label="Đồng Mẫu · Cẩm Thanh" aria-pressed="false" onclick="chonDong(this,'Đồng Mẫu','CTDM')"><span class="field-name">Đồng Mẫu</span><span class="field-place">Cẩm Thanh</span></button>
     </div>
     <!-- Danh sách vụ nạp từ máy chủ (CONFIG.VU trong Code.gs). Dòng dưới
          chỉ là bản dự phòng khi chưa gọi được API. -->
@@ -407,7 +407,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
       <img id="cdAnhBia" alt="" width="1600" height="650" decoding="async">
       <div class="cd-bia-noi"><p>Quy mô toàn cánh đồng</p><div id="cdSoChot" class="cd-so-chot"></div></div>
     </div>
-    <div class="cd-anh-chan"><span id="cdThuVienNhan">Thư viện ảnh cánh đồng</span><button type="button" id="cdXemAnh" hidden>Xem thư viện ảnh ↗</button></div>
+    <div class="cd-anh-chan"><span id="cdThuVienNhan">Thư viện ảnh cánh đồng</span><button type="button" id="cdXemAnh" hidden>Xem thư viện ảnh</button></div>
     <div id="cdAnh" class="cd-anh" aria-label="Ảnh đặc trưng cánh đồng" hidden></div>
     <div id="cdMoTa" class="cd-mo-ta"></div>
   </div>
@@ -538,11 +538,11 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
      Trước đây ghi cứng "1.0" nên sửa file xong máy xã viên vẫn chạy
      bản cũ trong bộ nhớ đệm mà không ai biết. Dùng ngày + chữ cái,
      khớp với quy ước bên ban-do.html. -->
-<script src="js/bieu-do-thoi-tiet.js?v=20260829f"></script>
-<script src="js/canh-dong-config.js?v=20260914e"></script>
+<script src="js/bieu-do-thoi-tiet.js?v=20260917a"></script>
+<script src="js/canh-dong-config.js?v=20260916c"></script>
 <script src="js/canh-dong-so-chot.js?v=20260914c"></script>
 <script src="js/dem-so.js?v=20260914c"></script>
-<script src="js/canh-dong-ui.js?v=20260916a"></script>
+<script src="js/canh-dong-ui.js?v=20260917a"></script>
 <script src="js/canh-dong-timeline.js?v=20260914d"></script>
 
 <script>
@@ -639,7 +639,7 @@ let SU_KIEN = [
    mo:'Sau khi hoa được thụ tinh, hạt lúa bắt đầu tích lũy dưỡng chất. Phần sữa bên trong dần đặc lại, hạt ngày càng đầy và chắc hơn.'},
   {ngay:'', ic:'ic-chac', loai:'nong', ten:'Chín vàng', tenDay:'Chín vàng',
    mo:'Bông lúa dần chuyển từ xanh sang vàng, hạt trở nên cứng và nặng hơn. Cả cánh đồng khoác lên màu vàng óng, báo hiệu mùa gặt đang đến gần.'},
-  {ngay:'', ic:'ic-gat',  loai:'nong', ten:'Thu hoạch', tenDay:'Ngày thu hoạch dự kiến',
+  {ngay:'', ic:'ic-gat',  loai:'nong', ten:'Thu hoạch', tenDay:'Ngày thu hoạch',
    mo:'Khi phần lớn hạt lúa đã chín vàng, bà con bắt đầu thu hoạch. Đây là thành quả của nhiều tháng chăm sóc và cũng là lúc một hành trình mới của hạt gạo bắt đầu.'},
   {ngay:'', ic:'ic-bo',   loai:'trai', ten:'Ngày hội gặt', tenDay:'Trải nghiệm: Ngày hội gặt',
    mo:'Cùng gặt lúa, tuốt lúa, trải nghiệm xay giã theo cách truyền thống của làng.'},
@@ -678,7 +678,7 @@ function moCT(i){
   goi.style.display='flex';
   if(ds.length){
     const co=GOI_DANG_XEM!=='tat-ca'&&ds.includes(GOI_DANG_XEM);
-    goi.textContent=(co?'Có trong gói đang chọn. ':'')+'Gói tham gia: '+ds.map(k=>chuCD(noiDungCD().goi.muc[k].ten)).join(' · ')+'. Lịch và số người tham gia cần được HTX xác nhận.';
+    goi.textContent=(co?'Có trong gói đang chọn. ':'')+'Gói tham gia: '+ds.map(k=>chuCD(noiDungCD().goi.muc[k].ten)).join(' · ')+'. Số người tham gia cần được HTX xác nhận.';
   }else goi.textContent=s.loai==='le'?'Hoạt động văn hóa của cánh đồng. Liên hệ HTX để biết lịch và điều kiện tham dự.':'Mốc canh tác của cánh đồng, không phải buổi trải nghiệm riêng của gói.';
   moModal('mpCT');
   modal.scrollTop=0;
@@ -694,30 +694,15 @@ veTimeline();
    Không lấy ngày từ một cánh đồng hay mùa vụ khác để thay thế.
    ================================================================== */
 const API_URL_TL = 'https://script.google.com/macros/s/AKfycbxkBLw-2LGnKPrc0m8cjogwqyv1kCyP5D1hN8A7Pt2IQ6n8QwRGQhD8ea8PAQzOVwjy/exec';
-/* 7 mốc nông học — TẤT CẢ lấy từ DB Vụ Mùa trong Notion, không ước lượng */
+/* 13 mốc đều lấy ngày từ đúng trang VỤ MÙA trong Notion. */
 const MOC_NOTION = {
   'gieo-sa':'gieoSa', 'de-nhanh':'deNhanh', 'lam-dong':'donDong',
   'tro-bong':'troBong', 'chac-hat':'chacHat', 'chin-vang':'chinVang',
-  'thu-hoach':'thuHoach'
+  'thu-hoach':'thuHoach',
+  'le-xuong-dong':'leTichDien', 'xuong-giong':'traiNghiemXuongGiong',
+  'giai-doan-ma':'giaiDoanMa', 'tham-dong':'traiNghiemThamDong',
+  'ngay-hoi-gat':'ngayHoiGat', 'com-moi':'leTaOnLuaMoi'
 };
-
-/* Lễ cúng và trải nghiệm KHÔNG có nguồn trong Notion. Thay vì để ngày
-   viết cứng (dễ rơi vào chỗ vô lý, ví dụ "Thăm đồng lúa trổ" lại nằm
-   TRƯỚC ngày trổ bông), neo chúng vào mốc nông học thật với độ lệch cố
-   định. Notion đổi ngày thì chúng tự dịch theo, luôn đúng thứ tự. */
-const NEO_SU_KIEN = {
-  'giai-doan-ma': ['gieoSa',    7],   // Notion không có mốc này — ước lượng
-  'le-xuong-dong':['gieoSa',   -5],
-  'xuong-giong': ['gieoSa',    2],
-  'tham-dong':   ['troBong',   4],
-  'ngay-hoi-gat':['thuHoach',  1],
-  'com-moi':     ['thuHoach', 10]
-};
-function congNgay(ngay, n){
-  const d = new Date(ngay + 'T00:00:00Z');
-  d.setUTCDate(d.getUTCDate() + n);
-  return d.toISOString().slice(0,10);
-}
 
 async function napMocThat(ma){
   const lan=++LAN_TAI_MOC, vu=VU_HIEN_TAI;
@@ -738,20 +723,22 @@ async function napMocThat(ma){
     }
     const xacNhan=CAU_HINH_CANH_DONG.suKienTheoVu[ma+':'+vu]||{};
     SU_KIEN=MAU_SU_KIEN.map(mau=>{
-      const sk={...mau}, khoa=MOC_NOTION[sk.id], neo=NEO_SU_KIEN[sk.id];
-      if(khoa&&r.season[khoa]){sk.ngay=r.season[khoa];sk.duKien=khoa==='thuHoach';}
-      else if(neo&&r.season[neo[0]]){sk.ngay=congNgay(r.season[neo[0]],neo[1]);sk.duKien=true;}
-      const that=xacNhan[sk.id];
-      if(that){
-        sk.ngay=that.ngay||'';sk.trangThai=that.trangThai||'Đã xác nhận lịch';
-        sk.duKien=sk.trangThai!=='Đã diễn ra';sk.anhXacNhan=that.anh||'';
+      const sk={...mau}, khoa=MOC_NOTION[sk.id];
+      if(khoa&&r.season[khoa]){
+        sk.ngay=r.season[khoa];
+        // API daXong đọc Trạng thái vụ. Vụ đã thu hoạch không còn gắn dự kiến.
+        sk.duKien=khoa==='thuHoach'&&r.season.daXong!==true;
+        if(khoa==='thuHoach'&&r.season.daXong===true)sk.trangThai='Đã thu hoạch';
       }
+      const that=xacNhan[sk.id];
+      // Cấu hình GitHub chỉ bổ sung ảnh; ngày và trạng thái cũ không ghi đè Notion.
+      if(that)sk.anhXacNhan=that.anh||'';
       return sk;
     });
     // Sắp xếp các mốc có ngày; giữ chỗ mốc thiếu ngày trong trình tự canh tác.
     const daCo=SU_KIEN.filter(s=>s.ngay).sort((a,b)=>a.ngay.localeCompare(b.ngay));
     let j=0;SU_KIEN=SU_KIEN.map(s=>s.ngay?daCo[j++]:s);
-    note.textContent=tenVuCD(vu)+' · '+CAU_HINH_CANH_DONG.dong[ma].ten+'. Mốc chưa có ngày sẽ được cập nhật. Lịch lễ cúng và trải nghiệm có nhãn “Dự kiến” cần HTX xác nhận; ngày đã qua không đồng nghĩa hoạt động đã diễn ra.';
+    note.textContent=tenVuCD(vu)+' · '+CAU_HINH_CANH_DONG.dong[ma].ten+'. Mốc chưa có ngày sẽ được cập nhật.';
     veTimeline();
   }catch(e){
     if(!conDung())return;

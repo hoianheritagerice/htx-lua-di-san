@@ -522,10 +522,7 @@ function veThoiTiet(r) {
     yMua: yMua, yNhiet: yNhiet, x: x, muaMax: muaMax
   });
 
-  oChu.innerHTML = 'Mưa, nhiệt độ và bức xạ lấy tự động từ Open-Meteo (kho ERA5). ' +
-    'Cột mưa <b>viền đậm</b> là ngày có số vũ kế đo tại ruộng — số đo tại ruộng luôn được ưu tiên hơn mô hình. ' +
-    'Rê dọc biểu đồ để đọc số từng ngày; chấm tròn dưới trục là nhật ký đồng, chạm vào để xem. ' +
-    'Chấm <b>rỗng ruột</b> là việc mới lên kế hoạch, chưa làm.';
+  oChu.textContent = 'Mưa, nhiệt độ và bức xạ lấy tự động từ Open-Meteo';
 }
 
 /* ======================================================================

@@ -26,9 +26,10 @@ const CAU_HINH_CANH_DONG = {
    * Có thể ghi đè quyền lợi từng vụ: 'CKOD:HT26': { 'doi-tac': [...] }.
    */
   quyenLoiTheoVu: {},
-  /* Ngày sự kiện do HTX xác nhận, ví dụ:
-   * 'CKOD:HT26': { 'ngay-hoi-gat': {ngay:'2026-09-12', trangThai:'Đã diễn ra', anh:'img/...jpg'} }
-   * Trạng thái: Dự kiến / Đã xác nhận lịch / Đã diễn ra / Hoãn / Hủy.
+  /* Ảnh riêng của từng vụ, ví dụ:
+   * 'CKOD:HT26': { 'ngay-hoi-gat': {anh:'img/...jpg'} }
+   * Ngày của mọi mốc sửa trong DB VỤ MÙA (Notion).
+   * Các khóa ngay/trangThai của cấu hình cũ không còn ghi đè ngày Notion.
    */
   suKienTheoVu: {}
 };

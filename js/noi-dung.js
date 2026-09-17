@@ -93,7 +93,7 @@ trangChu: {
     nhan2:   `hộ nông dân<br>xã viên tham gia`,
     nhan3:   `thửa ruộng<br>được ghi mã riêng`,
     nhan4:   `cánh đồng<br>di sản`,
-    ghiChu:  `Tổng quy mô ba cánh đồng, bao gồm tất cả hình thức canh tác.`,
+    ghiChu:  ``,
   },
 
   /* --- Mục để lại thông tin liên hệ --- */

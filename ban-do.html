@@ -87,6 +87,22 @@ body.nhung #trangthai{padding-top:10px}
 .nhan-dong-hanh.chua{fill:#655f55;font-weight:600}
 .nhan-dong-hanh.chua .dh-nhan-phu{fill:#655f55;font-weight:600}
 
+/* ===== Trải nghiệm "Thửa ruộng của tôi" ===== */
+.thua-cua-toi-banner{display:none;align-items:center;gap:10px;margin:0 16px 12px;padding:11px 13px;
+  background:#eef5e5;border:1.5px solid #a8c28b;border-radius:12px;color:#31511f;font-size:13px;line-height:1.4}
+.thua-cua-toi-banner.hien{display:flex}
+.thua-cua-toi-banner.loi{background:#fff2ef;border-color:#dbb0a7;color:#873b2e}
+.thua-cua-toi-banner strong{font-weight:700}
+.thua-cua-toi-banner .tc-icon{font-size:18px;line-height:1;flex:none}
+.khung-bando.dang-xem-thua-cua-toi .thua:not(.thua-cua-toi){opacity:.40}
+.khung-bando.dang-xem-thua-cua-toi .nhan-dong-hanh:not(.nhan-cua-toi){opacity:.32}
+.thua.thua-cua-toi{filter:brightness(1.10) drop-shadow(0 0 16px rgba(43,77,28,.62));
+  stroke:#214e2a!important;animation:thuaCuaToiNhip 1.8s ease-in-out infinite}
+.nhan-dong-hanh.nhan-cua-toi{opacity:1;filter:drop-shadow(0 1px 2px rgba(255,255,255,.85))}
+@keyframes thuaCuaToiNhip{0%,100%{filter:brightness(1.08) drop-shadow(0 0 9px rgba(43,77,28,.42))}
+  50%{filter:brightness(1.18) drop-shadow(0 0 22px rgba(43,77,28,.78))}}
+@media(prefers-reduced-motion:reduce){.thua.thua-cua-toi{animation:none}}
+
 /* ===== Popup Đồng hành ===== */
 .dh-phu-de{font-size:12.5px;color:#727a69;margin:3px 0 14px}
 .dh-tongquan{display:grid;grid-template-columns:124px 1fr;gap:16px;align-items:center;
@@ -150,6 +166,11 @@ body.nhung #trangthai{padding-top:10px}
 </div>
 
 <div id="trangthai">Đang kết nối dữ liệu…</div>
+
+<div class="thua-cua-toi-banner" id="thuaCuaToiBanner" aria-live="polite">
+  <span class="tc-icon">🌾</span>
+  <div id="thuaCuaToiText"><strong>Đây là thửa ruộng bạn đang đồng hành.</strong></div>
+</div>
 
 <!-- Thanh tiến độ mùa vụ + thông số chung (tự hiện khi có dữ liệu Notion) -->
 <div class="vu-panel" id="vuPanel" style="display:none">
@@ -440,7 +461,7 @@ body.nhung #trangthai{padding-top:10px}
      xong không lưu được.
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
-<script src="js/ban-do.js?v=20260920d"></script>
+<script src="js/ban-do.js?v=20260920e"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html
@@ -839,6 +860,12 @@ body.nhung #trangthai{padding-top:10px}
     try { zoomLv = 1; $('svgwrap').style.width = '100%'; } catch (e) {}
     veBanDo();
     napNotion();
+  }
+
+  /* Bước 5 — link từ QR/tài khoản. Gọi SAU khi MAP_DATA đã đổi đúng theo
+     ?dong=..., nếu gọi sớm thì target CTDC có thể bị tìm nhầm trong CKOD. */
+  if (typeof moThuaCuaToiTuURL === 'function') {
+    setTimeout(function(){ moThuaCuaToiTuURL(); }, 0);
   }
 
   console.log('[HTX] bản đồ nhúng 3.0');

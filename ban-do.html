@@ -79,6 +79,14 @@ body.nhung #trangthai{padding-top:10px}
 .i-dh-con{background:#ead07b;border-color:#a98b2f}
 .i-dh-du{background:#88a864;border-color:#4f7132}
 
+/* Nhãn tóm tắt trực tiếp trên thửa ở chế độ Đồng hành.
+   Dùng viền sáng quanh chữ thay vì hộp nền để không che hình dạng thửa. */
+.nhan-dong-hanh{pointer-events:none;text-anchor:middle;font-weight:700;fill:#26321f;
+  paint-order:stroke fill;stroke:rgba(255,255,255,.92);stroke-width:4px;stroke-linejoin:round}
+.nhan-dong-hanh .dh-nhan-phu{font-weight:600;fill:#4c5647}
+.nhan-dong-hanh.chua{fill:#655f55;font-weight:600}
+.nhan-dong-hanh.chua .dh-nhan-phu{fill:#655f55;font-weight:600}
+
 /* ===== Popup Đồng hành ===== */
 .dh-phu-de{font-size:12.5px;color:#727a69;margin:3px 0 14px}
 .dh-tongquan{display:grid;grid-template-columns:124px 1fr;gap:16px;align-items:center;
@@ -432,7 +440,7 @@ body.nhung #trangthai{padding-top:10px}
      xong không lưu được.
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
-<script src="js/ban-do.js?v=20260920c"></script>
+<script src="js/ban-do.js?v=20260920d"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html

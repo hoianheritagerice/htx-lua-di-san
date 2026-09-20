@@ -267,6 +267,34 @@ function apDungMauDongHanhMau(){
   MAP_DATA.plots.forEach((p,i)=>apDungTrangThaiDongHanhMau(i,p));
 }
 
+function noiDungNhanDongHanh(p){
+  const d = duLieuDongHanhMau(p);
+  const sanLuong = Math.max(0, Number(d.sanLuong)||0);
+  const da = Math.max(0, Math.min(sanLuong, Number(d.daDongHanh)||0));
+  const ds = Array.isArray(d.nguoi) ? d.nguoi : [];
+  if(!da || !ds.length){
+    return {chua:true, dong1:'Hãy trở thành', dong2:'người đầu tiên'};
+  }
+  return {
+    chua:false,
+    dong1: ds.length + ' người đồng hành',
+    dong2: Math.round(da).toLocaleString('vi-VN') + '/' + Math.round(sanLuong).toLocaleString('vi-VN') + ' kg'
+  };
+}
+
+/* Cập nhật nội dung nhãn khi đổi mùa mà không cần vẽ lại toàn bộ SVG. */
+function capNhatNhanDongHanhMau(){
+  if(!laCheDoDongHanh()) return;
+  MAP_DATA.plots.forEach((p,i)=>{
+    const nd = noiDungNhanDongHanh(p);
+    const g = $('dhNhan'+i), d1 = $('dhNhan1_'+i), d2 = $('dhNhan2_'+i);
+    if(!g || !d1 || !d2) return;
+    g.classList.toggle('chua', nd.chua);
+    d1.textContent = nd.dong1;
+    d2.textContent = nd.dong2;
+  });
+}
+
 /* ---------- vẽ bản đồ ---------- */
 /* ---------- vẽ bản đồ ---------- */
 function veBanDo(){
@@ -286,6 +314,21 @@ function veBanDo(){
     const lopThua = laCheDoDongHanh() ? 'thua dong-hanh-chua' : (laKhach() ? 'thua khach' : 'thua chua-ro');
     s += `<polygon id="thua${i}" class="${lopThua}" points="${pts}" stroke-width="${netVien}" data-sw="${netVien}" onclick="chonThua(${i})"/>`;
   });
+
+  /* Ở tab Đồng hành, thay tên nông hộ bằng một nhãn rất ngắn về tình trạng
+     đồng hành. Hai dòng giúp vẫn đọc được trên thửa hẹp/mobile mà không
+     che quá nhiều diện tích bản đồ. */
+  if(laCheDoDongHanh()) d.plots.forEach((p,i)=>{
+    const nd = noiDungNhanDongHanh(p);
+    const lx = p.cx, ly = p.cy;
+    const f = Math.max(44, Math.round(Math.max(d.viewW,d.viewH) * 0.0095));
+    const rot = p.rot ? ` transform="rotate(${p.rot} ${lx} ${ly})"` : '';
+    s += `<g id="dhNhan${i}" class="nhan-dong-hanh${nd.chua?' chua':''}"${rot}>`;
+    s += `<text id="dhNhan1_${i}" x="${lx}" y="${(ly-f*0.12).toFixed(1)}" font-size="${f}">${nd.dong1}</text>`;
+    s += `<text id="dhNhan2_${i}" class="dh-nhan-phu" x="${lx}" y="${(ly+f*1.02).toFixed(1)}" font-size="${Math.round(f*0.88)}">${nd.dong2}</text>`;
+    s += '</g>';
+  });
+
   const anTenHo = laCheDoDongHanh() || (laKhach() && !HIEN_TEN_HO_CHO_KHACH);
   if(!anTenHo) d.plots.forEach(p=>{
     const nhan = nhanThua(p);
@@ -380,6 +423,7 @@ function apDungKetQua(r){
     el.classList.add(!nd ? 'chua-ro' : (nd.viPham ? 'vi-pham' : (nd.organic ? 'huu-co' : 'khong-huu-co')));
   });
   if(laCheDoDongHanh()){
+    capNhatNhanDongHanhMau();
     const dem = {chua:0, con:0, du:0};
     MAP_DATA.plots.forEach(p=>dem[trangThaiDongHanhMau(p)]++);
     tt.textContent = 'Dữ liệu mẫu Đồng hành · ' + dem.chua + ' thửa chưa có · '
@@ -564,7 +608,7 @@ function moDongHanh(i){
   const ds = Array.isArray(d.nguoi) ? d.nguoi : [];
   $('dhDanhSach').innerHTML = ds.length
     ? ds.map(n=>'<div class="dh-nguoi"><span>' + escHtml(n.ten) + ' · ' + escHtml(n.diaPhuong) + '</span><b>' + fmtKg(n.kg) + '</b></div>').join('')
-    : '<div class="dh-trong">Chưa có người đồng hành với thửa này.</div>';
+    : '<div class="dh-trong">Chưa có người đồng hành với thửa này. <b>Hãy trở thành người đầu tiên.</b></div>';
 
   const nut = $('dhHanhDong');
   if(tt === 'du'){

@@ -185,25 +185,67 @@ function nhanThua(p){ return (p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim(
    daDongHanh: tổng kg từ các đơn ĐÃ XÁC NHẬN
    ================================================================== */
 const DONG_HANH_MAU = {
-  'CKOD:HT26:CUOC': {sanLuong:300, daDongHanh:100},
-  'CKOD:HT26:HUNG': {sanLuong:300, daDongHanh:300},
-  'CKOD:HT26:SAU':  {sanLuong:240, daDongHanh:120},
-  'CKOD:HT26:HUONG':{sanLuong:360, daDongHanh:360},
+  'CKOD:HT26:CUOC': {sanLuong:300, daDongHanh:100, nguoi:[
+    {ten:'Anh Quân', diaPhuong:'Hội An', kg:100}
+  ]},
+  'CKOD:HT26:HUNG': {sanLuong:300, daDongHanh:300, nguoi:[
+    {ten:'Anh Minh', diaPhuong:'Đà Nẵng', kg:100},
+    {ten:'Chị Hương', diaPhuong:'Hội An', kg:100},
+    {ten:'Anh Nam', diaPhuong:'Huế', kg:100}
+  ]},
+  'CKOD:HT26:SAU':  {sanLuong:240, daDongHanh:120, nguoi:[
+    {ten:'Chị Mai', diaPhuong:'Đà Nẵng', kg:70},
+    {ten:'Anh Bình', diaPhuong:'Hội An', kg:50}
+  ]},
+  'CKOD:HT26:HUONG':{sanLuong:360, daDongHanh:360, nguoi:[
+    {ten:'Anh Hùng', diaPhuong:'Hội An', kg:160},
+    {ten:'Chị Lan', diaPhuong:'Đà Nẵng', kg:100},
+    {ten:'Anh Sơn', diaPhuong:'Quảng Nam', kg:100}
+  ]},
 
-  'CTDC:HT26:PHUC': {sanLuong:300, daDongHanh:200},
-  'CTDC:HT26:LE1':  {sanLuong:250, daDongHanh:250},
-  'CTDC:HT26:PHO':  {sanLuong:320, daDongHanh:100},
-  'CTDC:HT26:BE1':  {sanLuong:280, daDongHanh:280},
+  'CTDC:HT26:PHUC': {sanLuong:300, daDongHanh:200, nguoi:[
+    {ten:'Anh Quân', diaPhuong:'Hội An', kg:100},
+    {ten:'Chị Mai', diaPhuong:'Đà Nẵng', kg:100}
+  ]},
+  'CTDC:HT26:LE1':  {sanLuong:250, daDongHanh:250, nguoi:[
+    {ten:'Anh Dũng', diaPhuong:'Hà Nội', kg:100},
+    {ten:'Chị An', diaPhuong:'Đà Nẵng', kg:50},
+    {ten:'Anh Long', diaPhuong:'Hội An', kg:100}
+  ]},
+  'CTDC:HT26:PHO':  {sanLuong:320, daDongHanh:100, nguoi:[
+    {ten:'Chị Hạnh', diaPhuong:'Hội An', kg:100}
+  ]},
+  'CTDC:HT26:BE1':  {sanLuong:280, daDongHanh:280, nguoi:[
+    {ten:'Anh Khoa', diaPhuong:'Đà Nẵng', kg:80},
+    {ten:'Chị Nga', diaPhuong:'Hội An', kg:100},
+    {ten:'Anh Hải', diaPhuong:'TP.HCM', kg:100}
+  ]},
 
-  'CTDM:HT26:TOAN': {sanLuong:300, daDongHanh:100},
-  'CTDM:HT26:CU':   {sanLuong:220, daDongHanh:220},
-  'CTDM:HT26:BE':   {sanLuong:260, daDongHanh:160},
-  'CTDM:HT26:HOI1': {sanLuong:300, daDongHanh:300},
+  'CTDM:HT26:TOAN': {sanLuong:300, daDongHanh:100, nguoi:[
+    {ten:'Anh Phúc', diaPhuong:'Hội An', kg:100}
+  ]},
+  'CTDM:HT26:CU':   {sanLuong:220, daDongHanh:220, nguoi:[
+    {ten:'Chị Thảo', diaPhuong:'Đà Nẵng', kg:120},
+    {ten:'Anh Lâm', diaPhuong:'Hội An', kg:100}
+  ]},
+  'CTDM:HT26:BE':   {sanLuong:260, daDongHanh:160, nguoi:[
+    {ten:'Anh Tân', diaPhuong:'Hội An', kg:60},
+    {ten:'Chị Vy', diaPhuong:'Đà Nẵng', kg:100}
+  ]},
+  'CTDM:HT26:HOI1': {sanLuong:300, daDongHanh:300, nguoi:[
+    {ten:'Anh Đức', diaPhuong:'Hội An', kg:100},
+    {ten:'Chị Thu', diaPhuong:'Đà Nẵng', kg:100},
+    {ten:'Anh Trí', diaPhuong:'Quảng Nam', kg:100}
+  ]},
 };
 
 function duLieuDongHanhMau(p){
   const vu = $('selVu') ? $('selVu').value : 'HT26';
-  return DONG_HANH_MAU[MAP_DATA.field + ':' + vu + ':' + p.code] || null;
+  /* Thửa chưa có người đồng hành vẫn phải có sản lượng để popup hiển thị.
+     300 kg chỉ là số mẫu cho giai đoạn chốt UI; sau này thay bằng sản lượng
+     gạo thật của mã sản phẩm. */
+  return DONG_HANH_MAU[MAP_DATA.field + ':' + vu + ':' + p.code]
+    || {sanLuong:300, daDongHanh:0, nguoi:[]};
 }
 
 function trangThaiDongHanhMau(p){
@@ -483,14 +525,65 @@ function veVuPanel(s, soHoDem){
     : 'Chưa thu hoạch';
 }
 
+/* ---------- popup Đồng hành ---------- */
+function fmtKg(n){ return Math.max(0, Number(n)||0).toLocaleString('vi-VN') + ' kg'; }
+
+function moDongHanh(i){
+  thuaDangChon = i;
+  document.querySelectorAll('.thua').forEach(e=>e.classList.remove('chon-active'));
+  const el = $('thua'+i); if(el) el.classList.add('chon-active');
+
+  const p = MAP_DATA.plots[i];
+  const d = duLieuDongHanhMau(p);
+  const sanLuong = Math.max(0, Number(d.sanLuong)||0);
+  const da = Math.max(0, Math.min(sanLuong, Number(d.daDongHanh)||0));
+  const con = Math.max(0, sanLuong - da);
+  const pct = sanLuong > 0 ? Math.round(da / sanLuong * 100) : 0;
+  const tt = da <= 0 ? 'chua' : (da >= sanLuong ? 'du' : 'con');
+  const ttChu = tt === 'chua' ? 'Chưa có người đồng hành'
+              : (tt === 'du' ? 'Đã đủ người đồng hành' : 'Còn ' + fmtKg(con) + ' để đồng hành');
+
+  const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
+  const nd = notionPlots[ma];
+  $('dhTieuDe').textContent = 'Thửa ' + (p.code || ma || '—');
+  $('dhPhuDe').textContent = nhanThua(p) + ' · ' + p.area + ' m²'
+    + (nd && nd.productCode ? ' · ' + nd.productCode : '');
+  $('dhSanLuong').textContent = fmtKg(sanLuong);
+  $('dhDaDongHanh').textContent = fmtKg(da);
+  $('dhConLai').textContent = fmtKg(con);
+  $('dhPhanTram').textContent = pct + '%';
+
+  const vong = $('dhVong');
+  vong.style.setProperty('--pct', Math.max(0, Math.min(100,pct)));
+  vong.style.setProperty('--vong', tt === 'du' ? '#4f7132' : (tt === 'con' ? '#a98b2f' : '#aaa394'));
+
+  const badge = $('dhTrangThai');
+  badge.className = 'dh-trangthai ' + tt;
+  badge.textContent = ttChu;
+
+  const ds = Array.isArray(d.nguoi) ? d.nguoi : [];
+  $('dhDanhSach').innerHTML = ds.length
+    ? ds.map(n=>'<div class="dh-nguoi"><span>' + escHtml(n.ten) + ' · ' + escHtml(n.diaPhuong) + '</span><b>' + fmtKg(n.kg) + '</b></div>').join('')
+    : '<div class="dh-trong">Chưa có người đồng hành với thửa này.</div>';
+
+  const nut = $('dhHanhDong');
+  if(tt === 'du'){
+    nut.disabled = true;
+    nut.textContent = 'Thửa này đã đủ người đồng hành';
+  }else{
+    /* Bước 3 mới chốt giao diện; chưa nối giỏ hàng/đơn hàng thật. */
+    nut.disabled = true;
+    nut.textContent = tt === 'chua' ? 'Trở thành người đồng hành đầu tiên' : 'Đồng hành cùng thửa này';
+  }
+  moModal('mpDongHanh');
+}
+
 /* ---------- chọn thửa ---------- */
 /* ---------- chọn thửa ---------- */
 function chonThua(i){
   if(laCheDoDongHanh()){
-    thuaDangChon = i;
-    document.querySelectorAll('.thua').forEach(e=>e.classList.remove('chon-active'));
-    $('thua'+i)?.classList.add('chon-active');
-    return; // Bước 2 mới mở popup Đồng hành với sản lượng và danh sách khách.
+    moDongHanh(i);
+    return;
   }
   if(laKhach()){ moModal('mpDN'); return; }    // khách vãng lai: không mở chi tiết thửa Canh tác
   if(cheDoChonNhieu){ tickThua(i); return; }   // đang chọn nhiều → chạm là tick

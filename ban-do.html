@@ -59,6 +59,16 @@ body.nhung .chon{display:none}
   padding:8px 16px;border-radius:22px;margin-right:8px;white-space:nowrap}
 .quay-lai:hover{background:#163a20}
 body.nhung #trangthai{padding-top:10px}
+
+/* ===== Chế độ bản đồ: Đồng hành / Canh tác ===== */
+.bd-chedo{display:flex;justify-content:center;gap:6px;margin:0 16px 12px;padding:4px;
+  background:#ebe7d9;border:1px solid #d8d0bb;border-radius:999px;width:max-content;max-width:calc(100% - 32px)}
+.bd-chedo button{border:0;background:transparent;color:#66705f;font:inherit;font-size:13px;font-weight:600;
+  padding:8px 16px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.bd-chedo button.active{background:#fff;color:var(--xanh-dam,#1e4d2b);box-shadow:0 1px 5px rgba(33,45,25,.12)}
+.bd-chedo button:focus-visible{outline:2px solid var(--xanh-dam,#1e4d2b);outline-offset:2px}
+.thua.dong-hanh-tam{fill:#eee5c9;stroke:#ad9e72}
+.thua.dong-hanh-tam:hover{filter:brightness(1.035)}
 </style>
 </head>
 <body>
@@ -80,6 +90,13 @@ body.nhung #trangthai{padding-top:10px}
     <option value="CTDM">Đồng Mẫu — Cẩm Thanh</option>
     <option value="CTDC">Đồng Cao — Cẩm Thanh</option>
   </select>
+</div>
+
+<div class="bd-chedo" id="bdCheDo" role="tablist" aria-label="Chế độ xem bản đồ">
+  <button type="button" id="tabDongHanh" class="active" role="tab" aria-selected="true"
+          onclick="chonCheDoBanDo('dong-hanh')">Đồng hành</button>
+  <button type="button" id="tabCanhTac" role="tab" aria-selected="false"
+          onclick="chonCheDoBanDo('canh-tac')">Canh tác</button>
 </div>
 
 <div id="trangthai">Đang kết nối dữ liệu…</div>
@@ -337,7 +354,7 @@ body.nhung #trangthai{padding-top:10px}
      xong không lưu được.
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
-<script src="js/ban-do.js?v=20260901a"></script>
+<script src="js/ban-do.js?v=20260920a"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html

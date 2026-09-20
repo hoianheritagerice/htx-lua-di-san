@@ -151,8 +151,112 @@ let xoayLv = 0;
 /* Chế độ public mới. Bước 1 chỉ tách lớp hiển thị; dữ liệu người đồng hành
    và ba trạng thái màu sẽ được nối ở các bước sau. */
 let CHE_DO_BAN_DO = 'dong-hanh';
+/* Chỉ được gán sau khi URL đã được xử lý xong và MAP_DATA đã trỏ đúng cánh đồng. */
+let THUA_CUA_TOI = null; // {field, season, code, index}
 
 function laCheDoDongHanh(){ return CHE_DO_BAN_DO === 'dong-hanh'; }
+
+function xoaHienThiThuaCuaToi(){
+  const khung = document.querySelector('.khung-bando');
+  if(khung) khung.classList.remove('dang-xem-thua-cua-toi');
+  document.querySelectorAll('.thua-cua-toi').forEach(el=>{
+    el.classList.remove('thua-cua-toi');
+    const sw = Number(el.dataset.sw || 0); if(sw) el.setAttribute('stroke-width', sw);
+  });
+  document.querySelectorAll('.nhan-cua-toi').forEach(el=>el.classList.remove('nhan-cua-toi'));
+}
+
+function anBannerThuaCuaToi(){
+  const b = $('thuaCuaToiBanner');
+  if(!b) return;
+  b.classList.remove('hien','loi');
+}
+
+function hienBannerThuaCuaToi(loi, noiDung){
+  const b = $('thuaCuaToiBanner'), t = $('thuaCuaToiText');
+  if(!b || !t) return;
+  b.classList.toggle('loi', !!loi);
+  b.classList.add('hien');
+  t.innerHTML = noiDung;
+}
+
+function canGiuaThuaCuaToi(i, coZoom){
+  const khung = document.querySelector('.khung-bando');
+  const svg = $('svgBanDo'), el = $('thua'+i);
+  if(!khung || !svg || !el) return;
+
+  if(coZoom){
+    const mucTieu = window.innerWidth <= 560 ? 2.25 : 1.85;
+    if(Math.abs(zoomLv - mucTieu) > 0.02) zoom(mucTieu / zoomLv);
+  }
+
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const svgRect = svg.getBoundingClientRect();
+    const vb = svg.viewBox && svg.viewBox.baseVal;
+    if(!vb || !vb.width || !vb.height || !svgRect.width || !svgRect.height) return;
+    const bb = el.getBBox();
+    const cx = bb.x + bb.width/2, cy = bb.y + bb.height/2;
+    const px = (cx - vb.x) / vb.width * svgRect.width;
+    const py = (cy - vb.y) / vb.height * svgRect.height;
+    khung.scrollLeft = Math.max(0, px - khung.clientWidth/2);
+    khung.scrollTop  = Math.max(0, py - khung.clientHeight/2);
+  }));
+}
+
+function capNhatHienThiThuaCuaToi(coZoom){
+  xoaHienThiThuaCuaToi();
+  if(!THUA_CUA_TOI){ anBannerThuaCuaToi(); return; }
+
+  if(!laCheDoDongHanh()){
+    anBannerThuaCuaToi();
+    return;
+  }
+
+  if(String(MAP_DATA.field).toUpperCase() !== THUA_CUA_TOI.field
+     || String($('selVu').value).toUpperCase() !== THUA_CUA_TOI.season){
+    anBannerThuaCuaToi();
+    return;
+  }
+
+  const i = MAP_DATA.plots.findIndex(p=>String(p.code||'').toUpperCase() === THUA_CUA_TOI.code);
+  if(i < 0){
+    hienBannerThuaCuaToi(true, '<strong>Không tìm thấy thửa ruộng từ đường dẫn này.</strong> Vui lòng kiểm tra lại đường dẫn.');
+    return;
+  }
+  THUA_CUA_TOI.index = i;
+
+  const el = $('thua'+i), nhan = $('dhNhan'+i), khung = document.querySelector('.khung-bando');
+  if(!el || !khung) return;
+  khung.classList.add('dang-xem-thua-cua-toi');
+  el.classList.add('thua-cua-toi');
+  const sw = Number(el.dataset.sw || 12);
+  el.setAttribute('stroke-width', Math.max(sw*2.5, sw+10));
+  if(nhan) nhan.classList.add('nhan-cua-toi');
+
+  const p = MAP_DATA.plots[i];
+  const d = duLieuDongHanhMau(p);
+  const ds = Array.isArray(d.nguoi) ? d.nguoi : [];
+  const phanCuaKhach = ds.length ? Number(ds[0].kg)||0 : 0; // dữ liệu mẫu
+  const pctCaNhan = d.sanLuong > 0 ? (phanCuaKhach / d.sanLuong * 100) : 0;
+  hienBannerThuaCuaToi(false,
+    '<strong>Đây là thửa ruộng bạn đang đồng hành.</strong> '
+    + (phanCuaKhach > 0 ? 'Bạn đang đồng hành với ' + pctCaNhan.toLocaleString('vi-VN',{maximumFractionDigits:1})
+       + '% sản lượng được phân bổ của thửa này.' : ''));
+  canGiuaThuaCuaToi(i, !!coZoom);
+}
+
+function moThuaCuaToiTuURL(){
+  const q = new URLSearchParams(location.search);
+  const code = String(q.get('cua-toi') || '').trim().toUpperCase();
+  if(!code) return;
+
+  const field = String(q.get('dong') || MAP_DATA.field || '').toUpperCase();
+  const season = String(q.get('vu') || ($('selVu') ? $('selVu').value : '') || '').toUpperCase();
+  THUA_CUA_TOI = {field, season, code, index:-1};
+
+  if(!laCheDoDongHanh()) chonCheDoBanDo('dong-hanh');
+  else capNhatHienThiThuaCuaToi(true);
+}
 
 function chonCheDoBanDo(cheDo){
   if(cheDo !== 'dong-hanh' && cheDo !== 'canh-tac') return;
@@ -173,6 +277,7 @@ function chonCheDoBanDo(cheDo){
       : (laKhach() ? 'Đăng nhập để xem trạng thái canh tác và nhật ký của từng thửa.' : 'Đang kết nối dữ liệu…');
   }
   capNhatGiaoDienKhach();
+  capNhatHienThiThuaCuaToi(false);
 }
 
 function nhanThua(p){ return (p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim(); }
@@ -350,6 +455,7 @@ function veBanDo(){
   s += '</g></svg>';
   $('svgwrap').innerHTML = s;
   apDungMauDongHanhMau();
+  capNhatHienThiThuaCuaToi(false);
 }
 
 /* ---------- xoay bản đồ ---------- */
@@ -1123,8 +1229,12 @@ goiAPI({ action: 'getCauHinh' }).then(function (r) {
 
 capNhatGiaoDienKhach();
 
-$('selVu').addEventListener('change', napNotion);
+$('selVu').addEventListener('change', function(){
+  THUA_CUA_TOI = null; xoaHienThiThuaCuaToi(); anBannerThuaCuaToi();
+  napNotion();
+});
 $('selDong').addEventListener('change', function(){
+  THUA_CUA_TOI = null; xoaHienThiThuaCuaToi(); anBannerThuaCuaToi();
   if(cheDoChonNhieu) huyChonNhieu();   // đổi đồng thì bỏ chọn nhiều (chỉ số thửa khác nhau)
   MAP_DATA = ALL_FIELDS[this.value];
   zoomLv = 1; $('svgwrap').style.width = '100%';

@@ -79,14 +79,6 @@ body.nhung #trangthai{padding-top:10px}
 .i-dh-con{background:#ead07b;border-color:#a98b2f}
 .i-dh-du{background:#88a864;border-color:#4f7132}
 
-/* Nhãn tóm tắt trực tiếp trên thửa ở chế độ Đồng hành.
-   Dùng viền sáng quanh chữ thay vì hộp nền để không che hình dạng thửa. */
-.nhan-dong-hanh{pointer-events:none;text-anchor:middle;font-weight:700;fill:#26321f;
-  paint-order:stroke fill;stroke:rgba(255,255,255,.92);stroke-width:4px;stroke-linejoin:round}
-.nhan-dong-hanh .dh-nhan-phu{font-weight:600;fill:#4c5647}
-.nhan-dong-hanh.chua{fill:#655f55;font-weight:600}
-.nhan-dong-hanh.chua .dh-nhan-phu{fill:#655f55;font-weight:600}
-
 /* ===== Trải nghiệm "Thửa ruộng của tôi" ===== */
 .thua-cua-toi-banner{display:none;align-items:center;gap:10px;margin:0 16px 12px;padding:11px 13px;
   background:#eef5e5;border:1.5px solid #a8c28b;border-radius:12px;color:#31511f;font-size:13px;line-height:1.4}
@@ -94,11 +86,19 @@ body.nhung #trangthai{padding-top:10px}
 .thua-cua-toi-banner.loi{background:#fff2ef;border-color:#dbb0a7;color:#873b2e}
 .thua-cua-toi-banner strong{font-weight:700}
 .thua-cua-toi-banner .tc-icon{font-size:18px;line-height:1;flex:none}
+.khung-bando{position:relative}
 .khung-bando.dang-xem-thua-cua-toi .thua:not(.thua-cua-toi){opacity:.40}
-.khung-bando.dang-xem-thua-cua-toi .nhan-dong-hanh:not(.nhan-cua-toi){opacity:.32}
 .thua.thua-cua-toi{filter:brightness(1.10) drop-shadow(0 0 16px rgba(43,77,28,.62));
   stroke:#214e2a!important;animation:thuaCuaToiNhip 1.8s ease-in-out infinite}
-.nhan-dong-hanh.nhan-cua-toi{opacity:1;filter:drop-shadow(0 1px 2px rgba(255,255,255,.85))}
+.thua-cua-toi-callout{display:none;position:absolute;z-index:8;pointer-events:none;max-width:245px;
+  padding:9px 12px;background:#fffdf7;border:1.5px solid #315d35;border-radius:10px;
+  box-shadow:0 5px 16px rgba(31,61,35,.18);color:#25482a;font-size:12.5px;font-weight:700;
+  line-height:1.35;text-align:center;transform:translate(-50%,-100%)}
+.thua-cua-toi-callout.hien{display:block}
+.thua-cua-toi-callout::after{content:"";position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);
+  width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:11px solid #315d35}
+.thua-cua-toi-callout::before{content:"";position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);
+  z-index:1;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #fffdf7}
 @keyframes thuaCuaToiNhip{0%,100%{filter:brightness(1.08) drop-shadow(0 0 9px rgba(43,77,28,.42))}
   50%{filter:brightness(1.18) drop-shadow(0 0 22px rgba(43,77,28,.78))}}
 @media(prefers-reduced-motion:reduce){.thua.thua-cua-toi{animation:none}}
@@ -128,9 +128,15 @@ body.nhung #trangthai{padding-top:10px}
 .dh-nguoi span{color:#394534}
 .dh-nguoi b{color:#26321f;white-space:nowrap}
 .dh-trong{font-size:13px;color:#7b8273;background:#f7f5ef;border-radius:10px;padding:12px}
-.dh-hanhdong{display:block;width:100%;margin-top:16px;border:0;border-radius:11px;padding:13px 14px;
-  background:var(--xanh-dam,#1e4d2b);color:#fff;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
-.dh-hanhdong[disabled]{background:#d8d6ce;color:#8c8a82;cursor:default}
+.dh-cua-toi{display:none;margin-top:14px;padding:11px 12px;background:#eef5e5;border:1px solid #b9cea2;
+  border-radius:11px;color:#31511f;font-size:12.8px;line-height:1.45}
+.dh-cua-toi.hien{display:block}
+.dh-hanhdong-row{display:flex;gap:9px;margin-top:16px}
+.dh-hanhdong{display:block;flex:1;border:0;border-radius:11px;padding:12px 13px;
+  background:var(--xanh-dam,#1e4d2b);color:#fff;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+.dh-hanhdong.phu{background:#fff;color:var(--xanh-dam,#1e4d2b);border:1.5px solid var(--xanh-dam,#1e4d2b)}
+.dh-hanhdong[disabled]{background:#d8d6ce;color:#8c8a82;cursor:default;border-color:#d8d6ce}
+@media(max-width:520px){.dh-hanhdong-row{flex-direction:column}}
 @media(max-width:420px){
   .dh-tongquan{grid-template-columns:96px 1fr;gap:12px;padding:12px}
   .dh-vong{width:88px;height:88px}.dh-vong-so{font-size:18px}
@@ -203,6 +209,7 @@ body.nhung #trangthai{padding-top:10px}
     <button onclick="huyChonNhieu()" class="cn-huy">Hủy</button>
   </div>
   <div id="svgwrap"></div>
+  <div class="thua-cua-toi-callout" id="thuaCuaToiCallout">Đây là thửa ruộng bạn đang đồng hành</div>
 </div>
 
 <div class="chuthich-donghanh" id="chuthichDongHanh">
@@ -243,7 +250,11 @@ body.nhung #trangthai{padding-top:10px}
       <div id="dhDanhSach" class="dh-danh-sach"></div>
     </div>
 
-    <button type="button" class="dh-hanhdong" id="dhHanhDong" disabled>Đồng hành cùng thửa này</button>
+    <div class="dh-cua-toi" id="dhCuaToi"></div>
+    <div class="dh-hanhdong-row">
+      <button type="button" class="dh-hanhdong" id="dhHanhDong" onclick="thongBaoDongHanhMau()">Đồng hành cùng thửa này</button>
+      <button type="button" class="dh-hanhdong phu" id="dhXemNhatKy" onclick="moNhatKyDongHanh()">Xem nhật ký thửa ruộng</button>
+    </div>
     <button class="dong" onclick="dongModal('mpDongHanh')">Đóng</button>
   </div>
 </div>
@@ -461,7 +472,7 @@ body.nhung #trangthai{padding-top:10px}
      xong không lưu được.
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
-<script src="js/ban-do.js?v=20260920e"></script>
+<script src="js/ban-do.js?v=20260921a"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html

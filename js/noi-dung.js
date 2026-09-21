@@ -157,7 +157,7 @@ trangSanPham: {
     dan: `Mỗi lựa chọn bên dưới dẫn tới một trải nghiệm khác nhau, nhưng cùng gặp nhau ở một điểm: kết nối người dùng với đất, người nông dân, lúa gạo và văn hóa Hội An.`,
   },
   suKienDocBan: {
-    tieuDe: `CHI TIẾT TRẢI NGHIỆM MICE: TỪ ĐỒNG ĐẤT ĐẾN BÀN TIỆC`,
+    tieuDe: `Chi tiết trải nghiệm MICE: Từ đồng đất đến bàn tiệc`,
     hanhTrinh: [
       { so:`1`, ten:`Chạm vào Đất`, moTa:`Tương tác với trâu cày, tự tay gieo mạ non, học cách cấy lúa truyền thống hoặc đập lúa.` },
       { so:`2`, ten:`Văn hóa & Tâm linh`, moTa:`Lắng nghe nông dân kể chuyện chuyển đổi sinh thái. Trực tiếp tham gia Lễ cúng xuống giống hoặc mừng mùa.` },
@@ -390,7 +390,6 @@ goi: {
       gia:    `95.000 VND`,
       giaDv:  `/ kg`,
       dongHanhToiThieu: `3 sào`,
-      quyCach: `Sổ điện tử`,
       nutMua: `Tôi quan tâm chương trình này`,
       tomTat: `Dành cho những doanh nghiệp mong muốn đầu tư dài hạn để cùng HTX và người nông dân gìn giữ đất, giống lúa bản địa và văn hóa lúa nước Hội An, như một phần trong chiến lược phát triển bền vững của mình.`,
       dan:    `Dành cho những doanh nghiệp mong muốn đầu tư dài hạn để cùng HTX và người nông dân gìn giữ đất, giống lúa bản địa và văn hóa lúa nước Hội An, như một phần trong chiến lược phát triển bền vững của mình.`,
@@ -438,10 +437,10 @@ goi: {
     'su-kien-doc-ban': {
       ten:    `Sự kiện độc bản`,
       phu:    `Tour · Trải nghiệm MICE`,
-      anh:    `img/hero-canh-dong.jpg`,
+      anh:    `img/timeline/12-ngay-hoi-gat.jpg`,
       nutMua: `Tôi quan tâm chương trình này`,
-      tomTat: `CHI TIẾT TRẢI NGHIỆM MICE: TỪ ĐỒNG ĐẤT ĐẾN BÀN TIỆC`,
-      dan:    `CHI TIẾT TRẢI NGHIỆM MICE: TỪ ĐỒNG ĐẤT ĐẾN BÀN TIỆC`,
+      tomTat: `Chi tiết trải nghiệm MICE: Từ đồng đất đến bàn tiệc`,
+      dan:    `Chi tiết trải nghiệm MICE: Từ đồng đất đến bàn tiệc`,
       than: [
         { h:`1. Chạm vào Đất`, p:[`Tương tác với trâu cày, tự tay gieo mạ non, học cách cấy lúa truyền thống hoặc đập lúa.`] },
         { h:`2. Văn hóa & Tâm linh`, p:[`Lắng nghe nông dân kể chuyện chuyển đổi sinh thái. Trực tiếp tham gia Lễ cúng xuống giống hoặc mừng mùa.`] },
@@ -451,7 +450,7 @@ goi: {
         { h:`Không gian Sự kiện`, p:[`Setup bàn ghế tre mộc mạc nhưng tinh tế ngay giữa đồng ruộng xanh mát.`] },
         { h:`Ẩm thực Bản địa`, p:[`Welcome drink thảo mộc (nước gạo, trà đậu ván), Teabreak bánh quê (bánh xoài, bánh ram), và Tiệc chính Mỳ Quảng trộn, Bánh đập.`] },
       ],
-      nut: [[`canh-dong.html#ban-do-mua-vu`,`Xem cánh đồng tổ chức`],[`ve-chung-toi.html`,`Tìm hiểu HTX`,`phu`]],
+      nut: [[`canh-dong.html#ban-do-mua-vu`,`Xem cánh đồng`],[`ve-chung-toi.html`,`Tìm hiểu HTX`,`phu`]],
     },
 
   },

@@ -112,7 +112,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
-<script src="js/noi-dung.js?v=20260914c"></script>
+<script src="js/noi-dung.js?v=20260921p"></script>
 <script src="js/canh-dong-so-chot.js?v=20260914c"></script>
 </head>
 <body>
@@ -240,7 +240,8 @@ let h = '';
    để cả hai là lặp. Muốn thêm ảnh MINH HOẠ KHÁC thì đặt m.anhPhu rồi mở
    lại khối dưới đây với biến đó — đừng dùng lại m.anh. */
 if(m.gia){
-  h += '<div class="mua-thanh"><div><div class="gia">'+m.gia+' <small>'+(m.giaDv||'')+'</small></div>'+
+  const phuGia = (m.giaDv||'') + (m.dongHanhToiThieu ? ' · Đồng hành tối thiểu ' + m.dongHanhToiThieu : '') + (m.quyCach ? ' · ' + m.quyCach : '');
+  h += '<div class="mua-thanh"><div><div class="gia">'+m.gia+' <small>'+phuGia+'</small></div>'+
        '<div style="font-size:12.5px;color:var(--xam)">Liên hệ HTX để được tư vấn chi tiết</div></div>'+
        '<div><button class="nut-mua nut-noi" onclick="moFormQuanTam(\''+chuThuan(m.ten).replace(/'/g,"")+'\')">'+(m.nutMua||'Tôi quan tâm gói này')+'</button></div></div>';
 }

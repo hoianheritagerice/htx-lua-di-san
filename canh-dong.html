@@ -274,7 +274,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
-<script src="js/noi-dung.js?v=20260921p"></script>
+<script src="js/noi-dung.js?v=20260921q"></script>
 </head>
 <body>
 
@@ -542,7 +542,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 <script src="js/canh-dong-config.js?v=20260921p"></script>
 <script src="js/canh-dong-so-chot.js?v=20260914c"></script>
 <script src="js/dem-so.js?v=20260914c"></script>
-<script src="js/canh-dong-ui.js?v=20260917a"></script>
+<script src="js/canh-dong-ui.js?v=20260921q"></script>
 <script src="js/canh-dong-timeline.js?v=20260914d"></script>
 
 <script>
@@ -555,6 +555,38 @@ let DONG_HIEN_TAI = 'CKOD';
 let VU_HIEN_TAI = 'HT26';
 let CHON_VU_THU_CONG = false;
 let LAN_TAI_MOC = 0, LAN_TAI_TT = 0;
+
+/* Khi mở trực tiếp #dongThoiGian, các khối bản đồ/thời tiết phía trên còn
+   tiếp tục nạp và đổi chiều cao. Trình duyệt đã nhảy đúng hash trước đó,
+   nên nội dung phía trên nở ra làm timeline bị đẩy xuống, trông như tự
+   nhảy ngược về bản đồ. Giữ neo trong vài giây đầu; hễ người dùng chủ động
+   cuộn/chạm/bấm phím thì nhường quyền ngay. */
+(function giuNeoSauKhiTaiBatDongBo(){
+  if(location.hash !== '#dongThoiGian') return;
+  let conGiu = true, ro = null, timer = null;
+  const dich = () => document.getElementById('dongThoiGian');
+  const neo = () => {
+    if(!conGiu) return;
+    const el=dich(); if(!el) return;
+    const y=el.getBoundingClientRect().top + window.scrollY - 92;
+    window.scrollTo({top:Math.max(0,y),behavior:'auto'});
+  };
+  const dung = () => {
+    if(!conGiu) return; conGiu=false;
+    if(ro) ro.disconnect(); if(timer) clearTimeout(timer);
+  };
+  ['wheel','touchstart','pointerdown','keydown'].forEach(ev=>
+    window.addEventListener(ev,dung,{once:true,passive:true})
+  );
+  document.addEventListener('DOMContentLoaded',()=>{
+    requestAnimationFrame(()=>requestAnimationFrame(neo));
+    if('ResizeObserver' in window){
+      ro=new ResizeObserver(()=>requestAnimationFrame(neo));
+      ro.observe(document.body);
+    }
+    timer=setTimeout(dung,6500);
+  });
+})();
 
 function srcBanDo(ma){
   return 'ban-do.html?nhung=1&dong=' + ma + '&vu=' + VU_HIEN_TAI + '&cb=' + VER_BANDO;

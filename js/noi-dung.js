@@ -157,7 +157,7 @@ trangSanPham: {
     dan: `Mỗi lựa chọn bên dưới dẫn tới một trải nghiệm khác nhau, nhưng cùng gặp nhau ở một điểm: kết nối người dùng với đất, người nông dân, lúa gạo và văn hóa Hội An.`,
   },
   suKienDocBan: {
-    tieuDe: `Chi tiết trải nghiệm MICE: Từ đồng đất đến bàn tiệc`,
+    tieuDe: `Trải nghiệm MICE: Từ đồng ruộng đến bàn ăn`,
     hanhTrinh: [
       { so:`1`, ten:`Chạm vào Đất`, moTa:`Tương tác với trâu cày, tự tay gieo mạ non, học cách cấy lúa truyền thống hoặc đập lúa.` },
       { so:`2`, ten:`Văn hóa & Tâm linh`, moTa:`Lắng nghe nông dân kể chuyện chuyển đổi sinh thái. Trực tiếp tham gia Lễ cúng xuống giống hoặc mừng mùa.` },
@@ -278,7 +278,6 @@ giaTri: {
     'thuan-tu-nhien': {
       ten:  `Canh tác thuận tự nhiên`,
       phu:  `Giá trị 1`,
-      icon: `🌱`,
       anh:  `img/gt-thuan-tu-nhien.jpg`,
       dan:  `Không dùng bất cứ phân thuốc hóa học nào — nuôi dưỡng đất và giữ hệ sinh thái đồng ruộng khỏe mạnh.`,
       than: [
@@ -296,7 +295,6 @@ giaTri: {
     'minh-bach': {
       ten:  `Minh bạch nguồn gốc`,
       phu:  `Giá trị 2`,
-      icon: `🔍`,
       anh:  `img/gt-minh-bach.jpg`,
       dan:  `Mỗi lô ruộng có mã riêng, gắn tên nông dân và nhật ký sản xuất công khai.`,
       than: [
@@ -314,7 +312,6 @@ giaTri: {
     'ben-vung': {
       ten:  `Cùng nhau bền vững`,
       phu:  `Giá trị 3`,
-      icon: `🤝`,
       anh:  `img/gt-ben-vung.jpg`,
       dan:  `Hợp tác xã chia sẻ lợi ích với xã viên, giữ nghề nông sống được với chính đồng đất quê.`,
       than: [
@@ -439,8 +436,8 @@ goi: {
       phu:    `Tour · Trải nghiệm MICE`,
       anh:    `img/timeline/12-ngay-hoi-gat.jpg`,
       nutMua: `Tôi quan tâm chương trình này`,
-      tomTat: `Chi tiết trải nghiệm MICE: Từ đồng đất đến bàn tiệc`,
-      dan:    `Chi tiết trải nghiệm MICE: Từ đồng đất đến bàn tiệc`,
+      tomTat: `Từ đồng ruộng đến bàn ăn. Khách được chào đón trên cánh đồng, xuống đồng gặt lúa, chơi với rơm, tham gia xay bột – tráng bánh đập và thưởng thức chính những món vừa làm.`,
+      dan:    `Từ đồng ruộng đến bàn ăn. Khách được chào đón trên cánh đồng, xuống đồng gặt lúa, chơi với rơm, tham gia xay bột – tráng bánh đập và thưởng thức chính những món vừa làm.`,
       than: [
         { h:`1. Chạm vào Đất`, p:[`Tương tác với trâu cày, tự tay gieo mạ non, học cách cấy lúa truyền thống hoặc đập lúa.`] },
         { h:`2. Văn hóa & Tâm linh`, p:[`Lắng nghe nông dân kể chuyện chuyển đổi sinh thái. Trực tiếp tham gia Lễ cúng xuống giống hoặc mừng mùa.`] },

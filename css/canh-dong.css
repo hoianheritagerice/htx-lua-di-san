@@ -1,6 +1,7 @@
 /* Tab Cánh đồng — ảnh bìa, thư viện và timeline có dải đường riêng. */
 .field-place::before{content:" · "}
 .cd-link-arrow{width:16px;height:16px;flex:none;vertical-align:middle}
+.map-head .mo-bando{display:inline-flex;align-items:center;justify-content:center;gap:7px}
 @media(max-width:720px){
   .chon-bar .wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding-top:12px;padding-bottom:12px}
   .chon-nhom{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}

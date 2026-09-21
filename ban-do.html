@@ -478,7 +478,7 @@ body.nhung #trangthai{padding-top:10px}
      xong không lưu được.
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
-<script src="js/ban-do.js?v=20260921c"></script>
+<script src="js/ban-do.js?v=20260921d"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html
@@ -882,7 +882,10 @@ body.nhung #trangthai{padding-top:10px}
   /* Bước 5 — link từ QR/tài khoản. Gọi SAU khi MAP_DATA đã đổi đúng theo
      ?dong=..., nếu gọi sớm thì target CTDC có thể bị tìm nhầm trong CKOD. */
   if (typeof moThuaCuaToiTuURL === 'function') {
-    setTimeout(function(){ moThuaCuaToiTuURL(); }, 0);
+    /* Áp ngay và thử lại sau một nhịp ngắn. GitHub Pages/Apps Script có thể
+       hoàn tất các bước khởi tạo ở thứ tự khác nhau tùy mạng và cache. */
+    setTimeout(function(){ moThuaCuaToiTuURL(true); }, 0);
+    setTimeout(function(){ moThuaCuaToiTuURL(false); }, 500);
   }
 
   console.log('[HTX] bản đồ nhúng 3.0');

@@ -270,11 +270,11 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
   .river-label .t{font-size:13.5px}
 }
 </style>
-<link rel="stylesheet" href="css/canh-dong.css?v=20260917a">
+<link rel="stylesheet" href="css/canh-dong.css?v=20260921a">
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
-<script src="js/noi-dung.js?v=20260914c"></script>
+<script src="js/noi-dung.js?v=20260921q"></script>
 </head>
 <body>
 
@@ -419,7 +419,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
     <div class="map-box">
       <div class="map-head">
         <h2>Bản đồ canh tác — <span id="tenDong">Ông Đảng</span></h2>
-        <button class="mo-bando nut-noi" onclick="location.href='ban-do.html?dong='+DONG_HIEN_TAI+'&vu='+VU_HIEN_TAI">Mở toàn màn hình ↗</button>
+        <button class="mo-bando nut-noi" onclick="location.href='ban-do.html?dong='+DONG_HIEN_TAI+'&vu='+VU_HIEN_TAI">Mở toàn màn hình <svg class="cd-link-arrow" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
       <!-- Bản đồ thật, nhúng thẳng vào tab Cánh Đồng.
            Dùng iframe để js/ban-do.js chạy nguyên vẹn trong môi trường của
@@ -539,10 +539,10 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
      bản cũ trong bộ nhớ đệm mà không ai biết. Dùng ngày + chữ cái,
      khớp với quy ước bên ban-do.html. -->
 <script src="js/bieu-do-thoi-tiet.js?v=20260917a"></script>
-<script src="js/canh-dong-config.js?v=20260916c"></script>
+<script src="js/canh-dong-config.js?v=20260921p"></script>
 <script src="js/canh-dong-so-chot.js?v=20260914c"></script>
 <script src="js/dem-so.js?v=20260914c"></script>
-<script src="js/canh-dong-ui.js?v=20260917a"></script>
+<script src="js/canh-dong-ui.js?v=20260921q"></script>
 <script src="js/canh-dong-timeline.js?v=20260914d"></script>
 
 <script>
@@ -555,6 +555,38 @@ let DONG_HIEN_TAI = 'CKOD';
 let VU_HIEN_TAI = 'HT26';
 let CHON_VU_THU_CONG = false;
 let LAN_TAI_MOC = 0, LAN_TAI_TT = 0;
+
+/* Khi mở trực tiếp #dongThoiGian, các khối bản đồ/thời tiết phía trên còn
+   tiếp tục nạp và đổi chiều cao. Trình duyệt đã nhảy đúng hash trước đó,
+   nên nội dung phía trên nở ra làm timeline bị đẩy xuống, trông như tự
+   nhảy ngược về bản đồ. Giữ neo trong vài giây đầu; hễ người dùng chủ động
+   cuộn/chạm/bấm phím thì nhường quyền ngay. */
+(function giuNeoSauKhiTaiBatDongBo(){
+  if(location.hash !== '#dongThoiGian') return;
+  let conGiu = true, ro = null, timer = null;
+  const dich = () => document.getElementById('dongThoiGian');
+  const neo = () => {
+    if(!conGiu) return;
+    const el=dich(); if(!el) return;
+    const y=el.getBoundingClientRect().top + window.scrollY - 92;
+    window.scrollTo({top:Math.max(0,y),behavior:'auto'});
+  };
+  const dung = () => {
+    if(!conGiu) return; conGiu=false;
+    if(ro) ro.disconnect(); if(timer) clearTimeout(timer);
+  };
+  ['wheel','touchstart','pointerdown','keydown'].forEach(ev=>
+    window.addEventListener(ev,dung,{once:true,passive:true})
+  );
+  document.addEventListener('DOMContentLoaded',()=>{
+    requestAnimationFrame(()=>requestAnimationFrame(neo));
+    if('ResizeObserver' in window){
+      ro=new ResizeObserver(()=>requestAnimationFrame(neo));
+      ro.observe(document.body);
+    }
+    timer=setTimeout(dung,6500);
+  });
+})();
 
 function srcBanDo(ma){
   return 'ban-do.html?nhung=1&dong=' + ma + '&vu=' + VU_HIEN_TAI + '&cb=' + VER_BANDO;
@@ -643,7 +675,7 @@ let SU_KIEN = [
    mo:'Khi phần lớn hạt lúa đã chín vàng, bà con bắt đầu thu hoạch. Đây là thành quả của nhiều tháng chăm sóc và cũng là lúc một hành trình mới của hạt gạo bắt đầu.'},
   {ngay:'', ic:'ic-bo',   loai:'trai', ten:'Ngày hội gặt', tenDay:'Trải nghiệm: Ngày hội gặt',
    mo:'Cùng gặt lúa, tuốt lúa, trải nghiệm xay giã theo cách truyền thống của làng.'},
-  {ngay:'', ic:'ic-com',  loai:'le',   ten:'Lễ cúng Tạ ơn & mừng Lúa mới', tenDay:'Lễ cúng Tạ ơn & mừng Lúa mới',
+  {ngay:'', ic:'ic-com',  loai:'le',   ten:'Lễ Cúng mừng Lúa mới', tenDay:'Lễ Cúng mừng Lúa mới',
    mo:'Nấu nồi cơm từ gạo vụ mới, dâng cúng tạ ơn trời đất và tổ tiên đã cho mùa màng.'},
 ];
 

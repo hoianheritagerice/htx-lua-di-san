@@ -1,3 +1,4 @@
+/* Deep-link timeline: canh-dong.html giữ vị trí #dongThoiGian khi các khối phía trên nạp bất đồng bộ. */
 /* Giao diện giới thiệu, thư viện ảnh và quyền lợi gói. Không ghi Notion. */
 let GOI_DANG_XEM = 'tat-ca';
 let ANH_CANH_DONG = [], ANH_DANG_XEM = 0;

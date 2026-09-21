@@ -81,6 +81,36 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .dieu-huong a{background:var(--xanh-dam);color:#fff;padding:13px 26px;border-radius:26px;font-weight:600;font-size:14.5px}
 .dieu-huong a.phu{background:transparent;border:1.6px solid var(--xanh-dam);color:var(--xanh-dam)}
 
+/* ===== Chi tiết sản phẩm / tour ===== */
+body.ct-san-pham .than{padding:64px 0 72px}
+body.ct-san-pham #ctThan{max-width:930px}
+body.ct-san-pham .mua-thanh{border-radius:22px;padding:24px 26px;background:linear-gradient(180deg,#fffdf9,#faf7ef);box-shadow:0 12px 34px rgba(47,57,39,.07);border-color:#dfd6c1}
+body.ct-san-pham .mua-thanh .gia{font-size:30px}
+body.ct-san-pham .mua-thanh .gia small{display:block;margin-top:5px;font-size:12.5px;line-height:1.6}
+body.ct-san-pham .khoi{background:rgba(255,253,248,.9);border:1px solid #e4dcc9;border-radius:20px;padding:24px 25px;margin-bottom:18px;box-shadow:0 8px 24px rgba(49,58,40,.045)}
+body.ct-san-pham .khoi h2{font-size:clamp(23px,2.8vw,29px);margin-bottom:16px}
+body.ct-san-pham .khoi p{font-size:14.6px;line-height:1.85;color:#505c48}
+body.ct-san-pham .ds{display:grid;gap:10px}
+body.ct-san-pham .ds li{border:1px solid #ebe4d3;background:#fbf9f2;border-radius:14px;padding:15px 16px 15px 48px;font-size:14px;line-height:1.78;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+body.ct-san-pham .ds li:hover{transform:translateY(-1px);border-color:#c8d2b5;box-shadow:0 8px 20px rgba(48,62,39,.055)}
+body.ct-san-pham .ds li::before{content:"";left:16px;top:18px;width:17px;height:17px;border-radius:50%;background:#dfeacb;border:4px solid #f5f1e7;box-shadow:0 0 0 1px #a9bd8e}
+body.ct-san-pham .dieu-huong{margin-top:30px}
+body.ct-san-pham .dieu-huong a{transition:transform .2s ease,box-shadow .2s ease}
+body.ct-san-pham .dieu-huong a:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(28,61,36,.12)}
+body.ct-su-kien-doc-ban .ct-hero h1{max-width:21ch;text-transform:none}
+body.ct-su-kien-doc-ban .ct-hero .dan{font-family:'Playfair Display',serif;font-size:20px;line-height:1.55}
+body.ct-su-kien-doc-ban .khoi{padding:22px 24px}
+body.ct-su-kien-doc-ban .khoi:nth-of-type(-n+4){border-color:#d9c98e;background:#fbf6e6}
+body.ct-su-kien-doc-ban .khoi:nth-of-type(n+5){background:#173f29;color:#edf3e8;border-color:#2d5d3d}
+body.ct-su-kien-doc-ban .khoi:nth-of-type(n+5) h2{color:#f0d16b}
+body.ct-su-kien-doc-ban .khoi:nth-of-type(n+5) p{color:#dce8d8}
+@media(prefers-reduced-motion:no-preference){
+  body.ct-san-pham .mua-thanh,body.ct-san-pham .khoi{animation:ctFade .45s cubic-bezier(.22,.75,.25,1) both}
+  body.ct-san-pham .khoi:nth-child(2){animation-delay:.04s}
+  body.ct-san-pham .khoi:nth-child(3){animation-delay:.08s}
+  @keyframes ctFade{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+}
+
 /* xem thêm mục khác cùng loại */
 .khac{padding:52px 0 70px;background:var(--nen-2)}
 .khac h2{text-align:center;font-size:clamp(22px,2.8vw,30px);margin-bottom:26px}
@@ -112,7 +142,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
-<script src="js/noi-dung.js?v=20260914c"></script>
+<script src="js/noi-dung.js?v=20260921q"></script>
 <script src="js/canh-dong-so-chot.js?v=20260914c"></script>
 </head>
 <body>
@@ -205,6 +235,10 @@ const loai = ts.get('loai') || 'canh-dong';
 const ma   = ts.get('ma')   || Object.keys((DU_LIEU[loai]||DU_LIEU['canh-dong']).muc)[0];
 const nhom = DU_LIEU[loai] || DU_LIEU['canh-dong'];
 const m    = nhom.muc[ma]  || nhom.muc[Object.keys(nhom.muc)[0]];
+if(loai === 'san-pham'){
+  document.body.classList.add('ct-san-pham','ct-'+ma);
+  if(ma === 'su-kien-doc-ban') document.body.classList.add('ct-su-kien-doc-ban');
+}
 const MA_CANH_DONG = {'ong-dang':'CKOD','dong-cao':'CTDC','dong-mau':'CTDM'};
 // Các đường dẫn giới thiệu cũ vẫn mở được; nút quay lại dẫn đúng cánh đồng.
 const veCanhDong = loai === 'canh-dong' && MA_CANH_DONG[ma]
@@ -223,7 +257,9 @@ if(m.anh){
 }
 document.getElementById('ctLoai').innerHTML = nhom.nhan + (m.phu ? ' · ' + m.phu : '');
 document.getElementById('ctTen').innerHTML  = m.ten;
-document.getElementById('ctDan').innerHTML  = m.dan || '';
+document.getElementById('ctDan').innerHTML  = (ma === 'su-kien-doc-ban')
+  ? String(m.dan||'').replace('MICE','<span style="color:var(--vang)">MICE</span>')
+  : (m.dan || '');
 const lai = document.getElementById('ctLai');
 lai.href = veCanhDong ? veCanhDong + '#gioi-thieu' : nhom.ve; lai.innerHTML = '← ' + nhom.veChu;
 const soChot = loai === 'canh-dong' ? SO_CHOT_CANH_DONG[MA_CANH_DONG[ma]] : null;
@@ -240,12 +276,13 @@ let h = '';
    để cả hai là lặp. Muốn thêm ảnh MINH HOẠ KHÁC thì đặt m.anhPhu rồi mở
    lại khối dưới đây với biến đó — đừng dùng lại m.anh. */
 if(m.gia){
-  h += '<div class="mua-thanh"><div><div class="gia">'+m.gia+' <small>'+(m.giaDv||'')+'</small></div>'+
+  const phuGia = (m.giaDv||'') + (m.dongHanhToiThieu ? ' · Đồng hành tối thiểu ' + m.dongHanhToiThieu : '');
+  h += '<div class="mua-thanh"><div><div class="gia">'+m.gia+' <small>'+phuGia+'</small></div>'+
        '<div style="font-size:12.5px;color:var(--xam)">Liên hệ HTX để được tư vấn chi tiết</div></div>'+
        '<div><button class="nut-mua nut-noi" onclick="moFormQuanTam(\''+chuThuan(m.ten).replace(/'/g,"")+'\')">'+(m.nutMua||'Tôi quan tâm gói này')+'</button></div></div>';
 }
-(m.than||[]).forEach(function(k){
-  h += '<div class="khoi"><h2>'+k.h+'</h2>';
+(m.than||[]).forEach(function(k,idx){
+  h += '<div class="khoi'+(loai==='san-pham'?' khoi-sanpham':'')+'"><h2>'+k.h+'</h2>';
   if(k.p)  h += k.p.map(function(x){return '<p>'+x+'</p>';}).join('');
   if(k.ds) h += '<ul class="ds">'+k.ds.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
   h += '</div>';

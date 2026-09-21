@@ -8,222 +8,187 @@
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <style>
-:root{--nen:#f5f2e8;--nen-2:#efe9d8;--muc:#2b3524;--xanh-dam:#1e4d2b;--xanh-la:#6f9e4b;--xanh-rong:#8bc34a;--dat:#e3d9c4;--dat-som:#b5734a;--vang:#c9a227;--trang:#fffdf8;--xam:#8a9180}
+:root{--nen:#f5f2e8;--nen-2:#eee7d6;--muc:#2b3524;--xanh-dam:#1e4d2b;--xanh-la:#6f9e4b;--dat-som:#b5734a;--vang:#c9a227;--trang:#fffdf8;--xam:#7d8574;--line:#dfd6c0}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--nen);color:var(--muc);line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--nen);color:var(--muc);line-height:1.65;-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-height:1.15;color:var(--xanh-dam)}
 a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
 .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
-.eyebrow{font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--dat-som)}
-.topbar{background:var(--xanh-dam);color:#f3ede0;font-size:12.5px;text-align:center;padding:7px 16px}
-.topbar b{color:var(--vang)}
-header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1px solid #e4dcc8}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;color:var(--dat-som)}
+header{position:sticky;top:0;z-index:50;background:rgba(255,253,248,.96);border-bottom:1px solid #e4dcc8;backdrop-filter:blur(10px)}
 .nav{display:flex;align-items:center;gap:20px;height:72px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand .logo{width:46px;height:46px;flex:none;object-fit:contain;transition:transform .35s cubic-bezier(.34,1.3,.64,1)}
-.brand:hover .logo{transform:rotate(-6deg) scale(1.06)}
-.brand .bname{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--xanh-dam);line-height:1.05}
-.brand .bname small{display:block;font-family:'Be Vietnam Pro',sans-serif;font-weight:400;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--xam)}
-.nav .menu{display:flex;gap:28px;margin-left:26px;flex:1}
-.nav .menu a{font-size:14.5px;font-weight:500;padding:6px 0;position:relative;color:var(--muc)}
+.brand{display:flex;align-items:center;gap:12px}.brand .logo{width:46px;height:46px;object-fit:contain}
+.brand .bname{font:700 18px/1.05 'Playfair Display',serif;color:var(--xanh-dam)}
+.brand .bname small{display:block;font:400 10px/1.3 'Be Vietnam Pro',sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--xam)}
+.nav .menu{display:flex;gap:28px;margin-left:26px;flex:1}.nav .menu a{font-size:14.5px;font-weight:500;padding:6px 0;position:relative}
 .nav .menu a::after{content:"";position:absolute;left:0;right:100%;bottom:-2px;height:2px;background:var(--dat-som);transition:right .25s}
-.nav .menu a:hover::after,.nav .menu a.active::after{right:0}
-.nav .menu a.active{color:var(--xanh-dam);font-weight:600}
-.nav .acts{display:flex;align-items:center;gap:14px}
-.nav .acts .dangnhap{border:1.5px solid var(--xanh-dam);color:var(--xanh-dam);border-radius:22px;padding:8px 16px;font-weight:600;background:none;cursor:pointer;font-family:inherit;font-size:14px}
-.nav .acts .dangnhap:hover{background:var(--xanh-dam);color:#fff}
-.nav .acts a.icon{position:relative;font-size:14px}
-.nav .acts .dem{position:absolute;top:-8px;right:-10px;background:var(--dat-som);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center}
-.burger{display:none;background:none;border:none;font-size:24px;color:var(--xanh-dam);cursor:pointer}
+.nav .menu a:hover::after,.nav .menu a.active::after{right:0}.nav .menu a.active{color:var(--xanh-dam);font-weight:600}
+.nav .acts{display:flex;align-items:center}.dangnhap{border:1.5px solid var(--xanh-dam);color:var(--xanh-dam);border-radius:22px;padding:8px 16px;font:600 14px 'Be Vietnam Pro';background:none;cursor:pointer}
+.dangnhap:hover{background:var(--xanh-dam);color:#fff}.burger{display:none;background:none;border:none;font-size:24px;color:var(--xanh-dam);cursor:pointer}
 .mau-banner{background:#fff3d6;border-bottom:1px solid #e6cf94;color:#8a5a00;font-size:12.5px;text-align:center;padding:8px 16px}
-
-.shero{background:linear-gradient(120deg,rgba(30,77,43,.9),rgba(30,77,43,.5)),repeating-linear-gradient(115deg,#3c6b3a 0 3px,#437043 3px 26px);color:#fff;padding:60px 0 52px}
-.shero h1{color:#fff;font-size:clamp(32px,5vw,52px);max-width:18ch}
-.shero p{max-width:56ch;margin-top:16px;color:#eef3e6;font-size:16.5px}
-
-.goi-sec{padding:56px 0}
-.goi{display:grid;grid-template-columns:0.9fr 1.1fr;gap:38px;align-items:center;background:var(--trang);border:1px solid #e6ddc8;border-radius:20px;padding:30px;margin-bottom:30px}
-.goi:nth-child(even){grid-template-columns:1.1fr 0.9fr}
-.goi:nth-child(even) .goi-hinh{order:2}
-.goi-hinh{aspect-ratio:4/3;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:600;text-align:center;padding:18px}
-.goi:nth-child(1) .goi-hinh{background:linear-gradient(140deg,#7fae57,#3c6b3a)}
-.goi:nth-child(2) .goi-hinh{background:linear-gradient(140deg,#c9a227,#8a6d1c)}
-.goi:nth-child(3) .goi-hinh{background:linear-gradient(140deg,#b5734a,#7d4a2b)}
-.goi-tag{font-size:11.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dat-som)}
-.goi h2{font-size:clamp(24px,3vw,32px);margin:6px 0 10px}
-.goi .mo{font-size:15px;color:#4d5643;margin-bottom:16px}
-.goi ul{list-style:none;margin-bottom:18px}
-.goi ul li{font-size:14.5px;padding:6px 0 6px 28px;position:relative}
-.goi ul li::before{content:"🌾";position:absolute;left:0;top:5px;font-size:14px}
-.goi .hoatdong{font-size:12.5px;color:#6b5a3a;background:#faf6ea;border:1px dashed #d8c48f;border-radius:10px;padding:10px 13px;margin-bottom:18px}
-.goi .hoatdong b{color:var(--dat-som)}
-.goi .gia-hang{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.goi .gia{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--xanh-dam)}
-.goi .gia small{font-family:'Be Vietnam Pro',sans-serif;font-size:12px;font-weight:400;color:var(--xam)}
-.goi .them-gio{background:var(--xanh-dam);color:#fff;border:none;font-family:inherit;font-weight:600;font-size:14.5px;padding:13px 24px;border-radius:26px;cursor:pointer}
-.goi .them-gio:hover{background:#163a20}
-
-/* bảng đối chiếu gói × hoạt động mùa vụ */
-.doi-chieu{padding:60px 0;background:var(--nen-2)}
-.doi-chieu .sec-head{text-align:center;max-width:640px;margin:0 auto 30px}
-.doi-chieu .sec-head h2{font-size:clamp(26px,3.4vw,36px);margin-top:8px}
-.dc-table{max-width:820px;margin:0 auto;background:var(--trang);border:1px solid #e6ddc8;border-radius:16px;overflow:hidden}
-.dc-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border-bottom:1px solid #ece5d2}
-.dc-row:last-child{border-bottom:none}
-.dc-row.head{background:var(--xanh-dam);color:#fff;font-weight:600;font-size:12.5px}
-.dc-row.head>div{text-align:center}
-.dc-row.head>div:first-child{text-align:left}
-.dc-cell{padding:13px 14px;font-size:13.5px;display:flex;align-items:center;justify-content:center}
-.dc-cell:first-child{justify-content:flex-start;font-weight:600;color:var(--xanh-dam);font-size:13px}
-.dc-cell .yes{color:var(--xanh-la);font-size:18px;font-weight:700}
-.dc-cell .no{color:#cfc8b4;font-size:16px}
-.dc-note{text-align:center;font-size:12.5px;color:var(--xam);margin-top:16px}
-
-footer{background:#182e1a;color:#c9d3c0;font-size:14px;padding:40px 0 24px}
-footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
-footer .fb{font-family:'Playfair Display',serif;font-size:18px;color:#fff}
-footer .fl{display:flex;gap:20px;font-size:13.5px}
-footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
-
-.modal-phu{position:fixed;inset:0;background:rgba(20,28,15,.55);display:none;align-items:center;justify-content:center;z-index:80;padding:16px}
-.modal-phu.mo{display:flex}
-.modal{background:#fff;width:100%;max-width:420px;border-radius:18px;padding:26px 24px 30px}
-.modal h2{font-size:22px;margin-bottom:6px}
-.modal p.sub{font-size:13px;color:#6b7263;margin-bottom:16px}
-.form-o{margin-bottom:13px}.form-o label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:#41503a}
-.form-o input{width:100%;font-family:inherit;font-size:14px;padding:11px;border:1.5px solid #cfc8b4;border-radius:9px;background:#fdfcf8}
-.nut-gui{width:100%;padding:14px;border:none;border-radius:11px;background:var(--xanh-dam);color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px}
-.dong{display:block;margin:14px auto 0;background:none;border:none;color:#8a9180;font-size:13px;cursor:pointer;font-family:inherit}
-
-@media(max-width:820px){.goi,.goi:nth-child(even){grid-template-columns:1fr}.goi:nth-child(even) .goi-hinh{order:0}.dc-row{grid-template-columns:1.6fr .8fr .8fr .8fr}}
-@media(max-width:680px){.nav .menu,.nav .acts .dangnhap span{display:none}.burger{display:block}.dc-cell{padding:10px 6px;font-size:12px}}
+.shero{position:relative;overflow:hidden;min-height:520px;display:flex;align-items:flex-end;background:#173e25;color:#fff;padding:92px 0 66px}
+.shero .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.58}
+.shero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,49,27,.94) 0%,rgba(15,49,27,.72) 48%,rgba(15,49,27,.30) 100%)}
+.shero .wrap{position:relative;z-index:2;width:100%}.shero .eyebrow{color:#e4c85b}
+.shero h1{color:#fff;font-size:clamp(36px,5.6vw,62px);max-width:13ch;margin:9px 0 17px}
+.shero p{max-width:58ch;color:#edf3e8;font-size:16.5px;line-height:1.8}
+.sp-jump{position:sticky;top:72px;z-index:35;background:rgba(245,242,232,.94);backdrop-filter:blur(10px);border-bottom:1px solid #ddd4bd}
+.sp-jump .wrap{display:flex;gap:8px;padding-top:10px;padding-bottom:10px;overflow-x:auto;scrollbar-width:none}.sp-jump .wrap::-webkit-scrollbar{display:none}
+.sp-jump a{flex:none;border:1px solid #d4cbb5;background:#fffdf8;border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:600;color:#526047;transition:.18s}
+.sp-jump a:hover{background:var(--xanh-dam);border-color:var(--xanh-dam);color:#fff}
+.chon-cach{padding:64px 0 54px}.sec-head{max-width:760px;margin-bottom:28px}.sec-head.center{text-align:center;margin-left:auto;margin-right:auto}
+.sec-head h2{font-size:clamp(29px,4vw,43px);margin:8px 0 12px}.sec-head p{color:#59634f;font-size:15px;line-height:1.8}
+.lua-chon{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.lua-card{min-height:360px;position:relative;border-radius:20px;overflow:hidden;background:#294e31;color:#fff;border:1px solid #d8d0bb;box-shadow:0 8px 28px rgba(45,52,34,.08)}
+.lua-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.56;transition:transform .5s}
+.lua-card::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(18,45,25,.94) 0%,rgba(18,45,25,.48) 65%,rgba(18,45,25,.12))}
+.lua-card:hover img{transform:scale(1.035)}.lua-noi{position:absolute;z-index:2;inset:auto 22px 22px}
+.lua-loai{font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:#edd46f}
+.lua-card h3{color:#fff;font-size:26px;margin:6px 0 8px}.lua-mo{font-size:13px;line-height:1.6;color:#e7ede3;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.lua-meta{margin-top:13px;font-size:12px;color:#f4e8ba}.lua-link{display:inline-flex;align-items:center;gap:7px;margin-top:15px;font-size:13px;font-weight:700;color:#fff}
+.sp-sec{scroll-margin-top:138px;padding:76px 0}.sp-sec.alt{background:var(--nen-2)}
+.sp-photo,.sp-copy,.j-step,.ev{will-change:transform}
+@media(prefers-reduced-motion:no-preference){
+  .sp-photo,.sp-copy{animation:spFadeUp .5s cubic-bezier(.22,.75,.25,1) both}
+  .sp-copy{animation-delay:.06s}
+  @keyframes spFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+}
+.sp-grid{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:54px;align-items:start}
+.sp-media{position:sticky;top:148px}.sp-photo{aspect-ratio:4/3;border-radius:22px;overflow:hidden;background:#d9d1bc;box-shadow:0 16px 42px rgba(42,52,34,.12)}
+.sp-photo img{width:100%;height:100%;object-fit:cover}.sp-price{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sp-chip{background:var(--trang);border:1px solid var(--line);border-radius:14px;padding:13px 15px}
+.sp-chip span{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:#7d8574;font-weight:700}
+.sp-chip strong{display:block;margin-top:3px;color:var(--xanh-dam);font-size:16px}
+.sp-kicker{font-size:12px;color:var(--dat-som);font-weight:700;letter-spacing:1.3px;text-transform:uppercase}
+.sp-copy h2{font-size:clamp(31px,4.2vw,46px);margin:7px 0 10px}.sp-tagline{font:500 20px/1.45 'Playfair Display',serif;color:#4a5a40;margin-bottom:17px}
+.sp-dan{font-size:15px;color:#505c48;line-height:1.85}.audience{margin:23px 0;background:#fffdf8;border:1px solid #dfd7c3;border-radius:16px;padding:17px 18px}
+.audience b{display:block;color:var(--xanh-dam);font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}.audience p{font-size:13.5px;color:#526047}
+.quyen-title{font-size:21px;margin:30px 0 12px}.acc{display:grid;gap:8px}
+.acc{gap:10px}
+.acc details{background:rgba(255,253,248,.86);border:1px solid #e3dbc8;border-radius:16px;overflow:hidden;transition:border-color .24s ease,box-shadow .24s ease,transform .24s ease}
+.acc details:hover{border-color:#c9d2b4;transform:translateY(-1px)}
+.acc details[open]{border-color:#b7c89e;box-shadow:0 12px 30px rgba(50,65,40,.075)}
+.acc summary{cursor:pointer;list-style:none;padding:17px 50px 17px 18px;position:relative;font-size:13.8px;font-weight:600;color:#304329;line-height:1.55}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"+";position:absolute;right:17px;top:50%;transform:translateY(-50%);font-size:21px;font-weight:400;color:#708263;transition:transform .22s ease}
+.acc details[open] summary::after{content:"−";transform:translateY(-50%) rotate(180deg)}
+.acc .acc-body{padding:15px 18px 18px;font-size:13.2px;line-height:1.82;color:#596452;border-top:1px solid #eee8d9;background:rgba(250,248,241,.62)}
+.dac-quyen{margin-top:26px;background:#173f27;color:#eef3e9;border-radius:20px;padding:24px}.dac-quyen h3{color:#f0d16b;font-size:25px;margin-bottom:14px}
+.dac-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.dq{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:13px;padding:14px;font-size:12.8px;line-height:1.65}.dq b{color:#fff}
+.sp-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:999px;padding:12px 19px;font:600 13.5px 'Be Vietnam Pro';border:1.5px solid var(--xanh-dam);cursor:pointer}
+.btn.chinh{background:var(--xanh-dam);color:#fff}.btn.phu{background:transparent;color:var(--xanh-dam)}.btn:hover{transform:translateY(-1px)}
+.event-sec{scroll-margin-top:138px;background:#143e28;color:#edf3e8;padding:76px 0 82px;position:relative;overflow:hidden}
+.event-sec::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 8%,rgba(201,162,39,.14),transparent 32%),linear-gradient(135deg,transparent 0 63%,rgba(255,255,255,.018) 63% 64%,transparent 64%)}
+.event-sec .wrap{position:relative}.event-sec .eyebrow{color:#e7c85d}
+.event-head{max-width:820px}.event-sec h2{color:#fff;font-size:clamp(30px,4.2vw,46px);max-width:21ch;margin:9px 0 12px;font-weight:600;text-transform:none}
+.event-sec h2 .mice{color:#f0d16b;font-style:italic}
+.event-lead{max-width:760px;color:#cfdccc;font-size:14px;line-height:1.75}
+.journey{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:34px}
+.j-step{position:relative;background:#f8f3e3;color:#2c3827;border-radius:19px;padding:22px 18px 22px;min-height:250px;border:1px solid rgba(226,207,136,.9);transition:transform .24s ease,box-shadow .24s ease}
+.j-step:hover{transform:translateY(-3px);box-shadow:0 15px 30px rgba(6,27,15,.16)}
+.j-step .num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#17482c;color:#f0d16b;border:1px solid #d7bd61;font-weight:700;margin-bottom:20px}
+.j-step h3{font-size:21px;margin-bottom:10px;line-height:1.25}.j-step h3.keep-line{white-space:nowrap;font-size:19px}
+.j-step p{font-size:13px;line-height:1.78;color:#4c5645}
+.event-values{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.ev{border:1px solid rgba(231,200,93,.30);background:rgba(255,255,255,.055);border-radius:17px;padding:19px;transition:background .22s ease,transform .22s ease}
+.ev:hover{background:rgba(255,255,255,.085);transform:translateY(-2px)}
+.ev h3{color:#f0d16b;font-size:20px;margin-bottom:8px}.ev p{font-size:13px;line-height:1.78;color:#e4ece0}
+.event-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}.event-actions .btn.chinh{background:#f0d16b;color:#183321;border-color:#f0d16b}.event-actions .btn.phu{color:#fff;border-color:#b7c9b4}
+.lien-ket{padding:70px 0}.link-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+.link-card{background:#fffdf8;border:1px solid #ded5bf;border-radius:17px;padding:22px;transition:.18s}.link-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(46,56,38,.09);border-color:#bdca9e}
+.link-card .n{font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dat-som);font-weight:700}.link-card h3{font-size:23px;margin:5px 0 8px}.link-card p{font-size:13px;color:#66705e;line-height:1.7}.link-card span{display:inline-block;margin-top:12px;color:var(--xanh-dam);font-size:13px;font-weight:700}
+footer{background:#182e1a;color:#c9d3c0;font-size:14px;padding:40px 0 24px}.foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.fb{font-family:'Playfair Display',serif;font-size:18px;color:#fff}.ft-logo{width:38px;height:38px;display:inline-block;vertical-align:middle;margin-right:8px}.fl{display:flex;gap:20px;font-size:13.5px}.fl a{opacity:.85}.fl a:hover{opacity:1;color:var(--vang)}
+.modal-phu{position:fixed;inset:0;background:rgba(20,28,15,.55);display:none;align-items:center;justify-content:center;z-index:80;padding:16px}.modal-phu.mo{display:flex}
+.modal{background:#fff;width:100%;max-width:420px;border-radius:18px;padding:26px 24px 30px}.modal h2{font-size:22px;margin-bottom:6px}.modal p.sub{font-size:13px;color:#6b7263;margin-bottom:16px}
+.form-o{margin-bottom:13px}.form-o label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:#41503a}.form-o input{width:100%;font-family:inherit;font-size:14px;padding:11px;border:1.5px solid #cfc8b4;border-radius:9px;background:#fdfcf8}
+.nut-gui{width:100%;padding:14px;border:none;border-radius:11px;background:var(--xanh-dam);color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px}.dong{display:block;margin:14px auto 0;background:none;border:none;color:#8a9180;font-size:13px;cursor:pointer;font-family:inherit}
+@media(max-width:900px){.lua-chon{grid-template-columns:1fr 1fr}.lua-card:last-child{grid-column:1/-1}.sp-grid{grid-template-columns:1fr}.sp-media{position:relative;top:auto;max-width:680px}.journey{grid-template-columns:1fr 1fr}.event-values,.link-grid{grid-template-columns:1fr}.dac-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.nav .menu,.nav .acts .dangnhap span{display:none}.burger{display:block}.shero{min-height:440px;padding-bottom:48px}.sp-jump{top:72px}.lua-chon{grid-template-columns:1fr}.lua-card:last-child{grid-column:auto}.lua-card{min-height:315px}.sp-sec{padding:58px 0}.sp-price{grid-template-columns:1fr}.journey{grid-template-columns:1fr}.j-step{min-height:0}.sp-actions,.event-actions{flex-direction:column}.btn{width:100%}}
 </style>
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
-<!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
-<script src="js/noi-dung.js?v=1.0"></script>
+<script src="js/noi-dung.js?v=20260921q"></script>
 </head>
 <body>
-
 <header>
   <div class="wrap nav">
-    <a href="index.html" class="brand">
-      <img src="img/logo.png" class="logo" alt="Logo HTX Lúa Di Sản Hội An" width="46" height="46">
-      <span class="bname">HTX Lúa Di Sản<small>Hội An</small></span>
-    </a>
-    <nav class="menu">
-      <a href="index.html">Trang chủ</a>
-      <a href="ve-chung-toi.html">Về chúng tôi</a>
-      <a href="san-pham.html" class="active">Sản phẩm</a>
-      <a href="canh-dong.html">Cánh Đồng</a>
-    </nav>
-    <div class="acts">
-      <button class="dangnhap nut-noi" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button>
-      <button class="burger" aria-label="Mở menu" aria-expanded="false">☰</button>
-    </div>
+    <a href="index.html" class="brand"><img src="img/logo.png" class="logo" alt="Logo HTX Lúa Di Sản Hội An" width="46" height="46"><span class="bname">HTX Lúa Di Sản<small>Hội An</small></span></a>
+    <nav class="menu"><a href="index.html">Trang chủ</a><a href="ve-chung-toi.html">Về chúng tôi</a><a href="san-pham.html" class="active">Sản phẩm</a><a href="canh-dong.html">Cánh Đồng</a></nav>
+    <div class="acts"><button class="dangnhap nut-noi" onclick="moModal('mpDN')"><span>Đăng nhập</span>👤</button><button class="burger" aria-label="Mở menu" aria-expanded="false">☰</button></div>
   </div>
 </header>
-
 <div class="mau-banner" data-nd="chung.bangThongBao"></div>
-<section class="shero hero-anh">
+<section class="shero">
   <img class="hero-bg" src="img/hero-san-pham.jpg" alt="" onerror="this.classList.add('loi')">
   <div class="wrap">
-    <div class="eyebrow" style="color:var(--vang)" data-nd="trangSanPham.hero.nhan"></div>
+    <div class="eyebrow" data-nd="trangSanPham.hero.nhan"></div>
     <h1 data-nd="trangSanPham.hero.tieuDe"></h1>
     <p data-nd="trangSanPham.hero.dan"></p>
   </div>
 </section>
-
-<section class="goi-sec">
+<nav class="sp-jump" aria-label="Đi nhanh đến chương trình">
+  <div class="wrap"><a href="#gieo-mam">Người gieo mầm</a><a href="#doi-tac">Đối tác cách mạng di sản</a><a href="#su-kien-doc-ban">Sự kiện độc bản</a></div>
+</nav>
+<section class="chon-cach">
   <div class="wrap">
-
-    <div class="goi the-noi" style="cursor:default">
-      <div class="goi-hinh khung-anh ti-le-4-3"><span class="goi-y"></span><img class="anh-that" src="img/goi-1-gieo-mam.jpg" alt="Gói Người gieo mầm"></div>
-      <div>
-        <div class="goi-tag" data-nd="goi.muc.gieo-mam.phu"></div>
-        <h2><a href="chi-tiet.html?loai=san-pham&ma=gieo-mam" style="border-bottom:2px solid transparent;transition:border-color .25s" onmouseover="this.style.borderColor='var(--dat-som)'" onmouseout="this.style.borderColor='transparent'" data-nd="goi.muc.gieo-mam.ten"></a></h2>
-        <p class="mo" data-nd="goi.muc.gieo-mam.dan"></p>
-        <ul data-nd-ds="goi.muc.gieo-mam.quyenLoi"></ul>
-        <div class="hoatdong" data-nd="goi.muc.gieo-mam.hoatDong"></div>
-        <div class="gia-hang">
-          <div class="gia" data-nd-gia="goi.muc.gieo-mam"></div>
-          <button class="them-gio nut-noi" data-nd="goi.muc.gieo-mam.nutMua" onclick="moFormQuanTam(tenGoi('gieo-mam'))"></button><a class="nut-noi" href="chi-tiet.html?loai=san-pham&ma=gieo-mam" style="display:inline-block;margin-left:10px;border:1.6px solid var(--xanh-dam);color:var(--xanh-dam);font-weight:600;font-size:14.5px;padding:13px 22px;border-radius:26px">Xem chi tiết →</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="goi the-noi" style="cursor:default">
-      <div class="goi-hinh khung-anh ti-le-4-3"><span class="goi-y"></span><img class="anh-that" src="img/goi-2-dong-kien-tao.jpg" alt="Gói Người đồng kiến tạo"></div>
-      <div>
-        <div class="goi-tag" data-nd="goi.muc.dong-kien-tao.phu"></div>
-        <h2><a href="chi-tiet.html?loai=san-pham&ma=dong-kien-tao" style="border-bottom:2px solid transparent;transition:border-color .25s" onmouseover="this.style.borderColor='var(--dat-som)'" onmouseout="this.style.borderColor='transparent'" data-nd="goi.muc.dong-kien-tao.ten"></a></h2>
-        <p class="mo" data-nd="goi.muc.dong-kien-tao.dan"></p>
-        <ul data-nd-ds="goi.muc.dong-kien-tao.quyenLoi"></ul>
-        <div class="hoatdong" data-nd="goi.muc.dong-kien-tao.hoatDong"></div>
-        <div class="gia-hang">
-          <div class="gia" data-nd-gia="goi.muc.dong-kien-tao"></div>
-          <button class="them-gio nut-noi" data-nd="goi.muc.dong-kien-tao.nutMua" onclick="moFormQuanTam(tenGoi('dong-kien-tao'))"></button><a class="nut-noi" href="chi-tiet.html?loai=san-pham&ma=dong-kien-tao" style="display:inline-block;margin-left:10px;border:1.6px solid var(--xanh-dam);color:var(--xanh-dam);font-weight:600;font-size:14.5px;padding:13px 22px;border-radius:26px">Xem chi tiết →</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="goi the-noi" style="cursor:default">
-      <div class="goi-hinh khung-anh ti-le-4-3"><span class="goi-y"></span><img class="anh-that" src="img/goi-3-doi-tac.jpg" alt="Gói Đối tác kiến tạo di sản"></div>
-      <div>
-        <div class="goi-tag" data-nd="goi.muc.doi-tac.phu"></div>
-        <h2><a href="chi-tiet.html?loai=san-pham&ma=doi-tac" style="border-bottom:2px solid transparent;transition:border-color .25s" onmouseover="this.style.borderColor='var(--dat-som)'" onmouseout="this.style.borderColor='transparent'" data-nd="goi.muc.doi-tac.ten"></a></h2>
-        <p class="mo" data-nd="goi.muc.doi-tac.dan"></p>
-        <ul data-nd-ds="goi.muc.doi-tac.quyenLoi"></ul>
-        <div class="hoatdong" data-nd="goi.muc.doi-tac.hoatDong"></div>
-        <div class="gia-hang">
-          <div class="gia" data-nd-gia="goi.muc.doi-tac"></div>
-          <button class="them-gio nut-noi" data-nd="goi.muc.doi-tac.nutMua" onclick="moFormQuanTam(tenGoi('doi-tac'))"></button><a class="nut-noi" href="chi-tiet.html?loai=san-pham&ma=doi-tac" style="display:inline-block;margin-left:10px;border:1.6px solid var(--xanh-dam);color:var(--xanh-dam);font-weight:600;font-size:14.5px;padding:13px 22px;border-radius:26px">Xem chi tiết →</a>
-        </div>
-      </div>
-    </div>
-
+    <div class="sec-head center"><div class="eyebrow" data-nd="trangSanPham.loiDan.nhan"></div><h2 data-nd="trangSanPham.loiDan.tieuDe"></h2><p data-nd="trangSanPham.loiDan.dan"></p></div>
+    <div class="lua-chon" id="luaChonSP"></div>
   </div>
 </section>
-
-<!-- ĐỐI CHIẾU GÓI × HOẠT ĐỘNG MÙA VỤ -->
-<section class="doi-chieu">
+<section class="sp-sec" id="gieo-mam"><div class="wrap"><div class="sp-grid" id="gieoMamNoi"></div></div></section>
+<section class="sp-sec alt" id="doi-tac"><div class="wrap"><div class="sp-grid" id="doiTacNoi"></div></div></section>
+<section class="event-sec" id="su-kien-doc-ban">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow" data-nd="trangSanPham.doiChieu.nhan"></div>
-      <h2 data-nd="trangSanPham.doiChieu.tieuDe"></h2>
-    </div>
-    <div class="dc-table" data-nd-bang="trangSanPham.doiChieu"></div>
-    <div class="dc-note" data-nd="trangSanPham.doiChieu.ghiChu"></div>
+    <div class="event-head"><div class="eyebrow">Sự kiện độc bản · Tour <span style="color:#f0d16b">MICE</span></div><h2 id="eventTitle"></h2><div class="event-lead">Sự kiện độc bản</div></div>
+    <div class="journey" id="eventJourney"></div><div class="event-values" id="eventValues"></div>
+    <div class="event-actions"><button class="btn chinh nut-noi" onclick="moFormQuanTam(tenGoi('su-kien-doc-ban'))">Tôi quan tâm chương trình này</button><a class="btn phu" href="canh-dong.html#ban-do-mua-vu">Xem cánh đồng ↗</a><a class="btn phu" href="ve-chung-toi.html">Tìm hiểu HTX ↗</a></div>
   </div>
 </section>
-
-<footer>
+<section class="lien-ket">
   <div class="wrap">
-    <div class="fb"><img class="ft-logo" src="img/logo.png" alt="Logo HTX Lúa Di Sản Hội An" width="38" height="38"><span data-nd="chung.tenDayDu"></span></div>
-    <div class="fl">
-      <a href="index.html">Trang chủ</a>
-      <a href="ve-chung-toi.html">Về chúng tôi</a>
-      <a href="san-pham.html">Sản phẩm</a>
-      <a href="canh-dong.html">Cánh Đồng</a>
+    <div class="sec-head center"><div class="eyebrow">Đi tiếp trong cùng một hành trình</div><h2>Từ sản phẩm sang cánh đồng, mùa vụ và câu chuyện HTX</h2></div>
+    <div class="link-grid">
+      <a class="link-card" href="canh-dong.html#ban-do-mua-vu"><div class="n">01 · Cánh đồng</div><h3>Xem nơi mình đang đồng hành</h3><p>Bản đồ từng thửa, trạng thái đồng hành và thông tin của từng cánh đồng.</p><span>Xem bản đồ ↗</span></a>
+      <a class="link-card" href="canh-dong.html#dongThoiGian"><div class="n">02 · Mùa vụ & trải nghiệm</div><h3>Đi theo một vụ lúa</h3><p>Xem các mốc mùa vụ và những trải nghiệm gắn với chương trình.</p><span>Xem dòng thời gian ↗</span></a>
+      <a class="link-card" href="ve-chung-toi.html"><div class="n">03 · Về chúng tôi</div><h3>Hiểu vì sao HTX chọn cách làm này</h3><p>Đi từ sản phẩm về triết lý canh tác, minh bạch và giá trị cộng đồng.</p><span>Tìm hiểu HTX ↗</span></a>
     </div>
   </div>
-</footer>
-
-<div class="modal-phu" id="mpDN">
-  <div class="modal">
-    <h2 data-nd="chung.dangNhap.tieuDe"></h2>
-    <p class="sub" data-nd="chung.dangNhap.dan"></p>
-    <div class="form-o"><label data-nd="chung.dangNhap.nhanUser"></label><input id="dnUser"></div>
-    <div class="form-o"><label data-nd="chung.dangNhap.nhanPass"></label><input id="dnPass" type="password"></div>
-    <div class="fqt-loi" id="dnLoi" style="color:#b03c2a;font-size:13px;min-height:18px"></div><button class="nut-gui nut-noi" id="dnGui" onclick="dangNhap()" data-nd="chung.dangNhap.nut"></button>
-    <button class="dong" onclick="dongModal('mpDN')">Đóng</button>
-  </div>
-</div>
-
+</section>
+<footer><div class="wrap foot"><div class="fb"><img class="ft-logo" src="img/logo.png" alt="Logo HTX Lúa Di Sản Hội An"><span data-nd="chung.tenDayDu"></span></div><div class="fl"><a href="index.html">Trang chủ</a><a href="ve-chung-toi.html">Về chúng tôi</a><a href="san-pham.html">Sản phẩm</a><a href="canh-dong.html">Cánh Đồng</a></div></div></footer>
+<div class="modal-phu" id="mpDN"><div class="modal"><h2 data-nd="chung.dangNhap.tieuDe"></h2><p class="sub" data-nd="chung.dangNhap.dan"></p><div class="form-o"><label data-nd="chung.dangNhap.nhanUser"></label><input id="dnUser"></div><div class="form-o"><label data-nd="chung.dangNhap.nhanPass"></label><input id="dnPass" type="password"></div><div class="fqt-loi" id="dnLoi" style="color:#b03c2a;font-size:13px;min-height:18px"></div><button class="nut-gui nut-noi" id="dnGui" onclick="dangNhap()" data-nd="chung.dangNhap.nut"></button><button class="dong" onclick="dongModal('mpDN')">Đóng</button></div></div>
 <script>
+(function(){
+  var nd=window.NOI_DUNG||{}, goi=nd.goi&&nd.goi.muc||{}, page=nd.trangSanPham||{};
+  function clean(s){return String(s||'').replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ');}
+  function arrow(){return '<svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
+  function card(ma,img,loai){
+    var g=goi[ma]||{}, meta=g.gia ? g.gia+' / kg · Đồng hành tối thiểu '+g.dongHanhToiThieu : 'Tour · Trải nghiệm MICE';
+    return '<a class="lua-card the-noi" href="#'+(ma==='su-kien-doc-ban'?'su-kien-doc-ban':ma)+'"><img src="'+img+'" alt=""><div class="lua-noi"><div class="lua-loai">'+loai+'</div><h3>'+g.ten+'</h3><div class="lua-mo">'+clean(g.tomTat)+'</div><div class="lua-meta">'+meta+'</div><div class="lua-link">Khám phá '+arrow()+'</div></div></a>';
+  }
+  document.getElementById('luaChonSP').innerHTML=card('gieo-mam','img/goi-1-gieo-mam.jpg','Gói sào ruộng')+card('doi-tac','img/goi-3-doi-tac.jpg','Gói sào ruộng')+card('su-kien-doc-ban','img/timeline/12-ngay-hoi-gat.jpg','Tour · Trải nghiệm MICE');
+  function accItem(html){var m=String(html||'').match(/<b>(.*?)<\/b><br>([\s\S]*)/);return m?'<details><summary>'+m[1]+'</summary><div class="acc-body">'+m[2]+'</div></details>':'<details><summary>Xem chi tiết</summary><div class="acc-body">'+html+'</div></details>';}
+  function packageHtml(ma){
+    var g=goi[ma]||{}, premium=ma==='doi-tac';
+    var meta='<div class="sp-price"><div class="sp-chip"><span>Giá bán lẻ</span><strong>'+g.gia+' / kg</strong></div><div class="sp-chip"><span>Đồng hành tối thiểu</span><strong>'+g.dongHanhToiThieu+'</strong></div></div>';
+    var benefits=(g.quyenLoi||[]).map(accItem).join('');
+    var special=premium&&g.dacQuyen?'<div class="dac-quyen"><h3>CÁC LỢI ÍCH ĐẶC QUYỀN KHÁC:</h3><div class="dac-grid">'+g.dacQuyen.map(function(x){return '<div class="dq">'+x+'</div>';}).join('')+'</div></div>':'';
+    var tagline=g.tagline?'<div class="sp-tagline">'+g.tagline+'</div>':'';
+    return '<div class="sp-media"><div class="sp-photo"><img src="'+g.anh+'" alt="'+clean(g.ten)+'"></div>'+meta+'</div><div class="sp-copy"><div class="sp-kicker">'+g.phu+'</div><h2>'+g.ten+'</h2>'+tagline+'<p class="sp-dan">'+g.dan+'</p><div class="audience"><b>Phù hợp với ai?</b><p>'+g.phuHop+'</p></div><h3 class="quyen-title">'+(premium?'CÁC LỢI ÍCH CƠ BẢN':'Người gieo mầm nhận được gì?')+'</h3><div class="acc">'+benefits+'</div>'+special+'<div class="sp-actions"><button class="btn chinh nut-noi" onclick="moFormQuanTam(tenGoi(\''+ma+'\'))">'+g.nutMua+'</button><a class="btn phu" href="canh-dong.html#ban-do-mua-vu">Xem cánh đồng đồng hành '+arrow()+'</a><a class="btn phu" href="canh-dong.html#dongThoiGian">Xem mùa vụ & trải nghiệm '+arrow()+'</a></div></div>';
+  }
+  document.getElementById('gieoMamNoi').innerHTML=packageHtml('gieo-mam');
+  document.getElementById('doiTacNoi').innerHTML=packageHtml('doi-tac');
+  var sk=page.suKienDocBan||{}, et=document.getElementById('eventTitle');
+  et.innerHTML=String(sk.tieuDe||'').replace('MICE','<span class="mice">MICE</span>');
+  document.getElementById('eventJourney').innerHTML=(sk.hanhTrinh||[]).map(function(x){
+    var keep=x.ten.indexOf('Farm-to-Table')>=0?' class="keep-line"':'';
+    return '<article class="j-step"><div class="num">'+x.so+'</div><h3'+keep+'>'+x.ten+'</h3><p>'+x.moTa+'</p></article>';
+  }).join('');
+  document.getElementById('eventValues').innerHTML=(sk.giaTri||[]).map(function(x){return '<article class="ev"><h3>'+x.ten+'</h3><p>'+x.moTa+'</p></article>';}).join('');
+})();
 </script>
-<script src="js/chung.js"></script>
+<script src="js/chung.js?v=20260921p"></script>
 <script src="js/form-quan-tam.js"></script>
 <script src="js/hieu-ung.js"></script>
 </body>

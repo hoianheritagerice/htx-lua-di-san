@@ -148,8 +148,248 @@ let cheDoChonNhieu = false;
 let thuaDaChonNhieu = new Set();   // chỉ số các thửa đã tick
 let zoomLv = 1;
 let xoayLv = 0;
+/* Chế độ public mới. Bước 1 chỉ tách lớp hiển thị; dữ liệu người đồng hành
+   và ba trạng thái màu sẽ được nối ở các bước sau. */
+let CHE_DO_BAN_DO = 'dong-hanh';
+/* Chỉ được gán sau khi URL đã được xử lý xong và MAP_DATA đã trỏ đúng cánh đồng. */
+let THUA_CUA_TOI = null; // {field, season, code, index}
+
+function laCheDoDongHanh(){ return CHE_DO_BAN_DO === 'dong-hanh'; }
+
+function xoaHienThiThuaCuaToi(){
+  const khung = document.querySelector('.khung-bando');
+  if(khung) khung.classList.remove('dang-xem-thua-cua-toi');
+  document.querySelectorAll('.thua-cua-toi').forEach(el=>{
+    el.classList.remove('thua-cua-toi');
+    const sw = Number(el.dataset.sw || 0); if(sw) el.setAttribute('stroke-width', sw);
+  });
+  const callout = $('thuaCuaToiCallout');
+  if(callout) callout.classList.remove('hien');
+}
+
+function anBannerThuaCuaToi(){
+  const b = $('thuaCuaToiBanner');
+  if(!b) return;
+  b.classList.remove('hien','loi');
+}
+
+function hienBannerThuaCuaToi(loi, noiDung){
+  const b = $('thuaCuaToiBanner'), t = $('thuaCuaToiText');
+  if(!b || !t) return;
+  b.classList.toggle('loi', !!loi);
+  b.classList.add('hien');
+  t.innerHTML = noiDung;
+}
+
+function canGiuaThuaCuaToi(i, coZoom){
+  const khung = document.querySelector('.khung-bando');
+  const svg = $('svgBanDo'), el = $('thua'+i);
+  if(!khung || !svg || !el) return;
+
+  if(coZoom){
+    const mucTieu = window.innerWidth <= 560 ? 2.25 : 1.85;
+    if(Math.abs(zoomLv - mucTieu) > 0.02) zoom(mucTieu / zoomLv);
+  }
+
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const svgRect = svg.getBoundingClientRect();
+    const vb = svg.viewBox && svg.viewBox.baseVal;
+    if(!vb || !vb.width || !vb.height || !svgRect.width || !svgRect.height) return;
+    const bb = el.getBBox();
+    const cx = bb.x + bb.width/2, cy = bb.y + bb.height/2;
+    const px = (cx - vb.x) / vb.width * svgRect.width;
+    const py = (cy - vb.y) / vb.height * svgRect.height;
+    khung.scrollLeft = Math.max(0, px - khung.clientWidth/2);
+    khung.scrollTop  = Math.max(0, py - khung.clientHeight/2);
+    if(THUA_CUA_TOI && THUA_CUA_TOI.index === i) datConTroThuaCuaToi(i);
+  }));
+}
+
+function datConTroThuaCuaToi(i){
+  const khung = document.querySelector('.khung-bando');
+  const el = $('thua'+i), callout = $('thuaCuaToiCallout');
+  if(!khung || !el || !callout || !laCheDoDongHanh()) return;
+
+  requestAnimationFrame(()=>{
+    const kr = khung.getBoundingClientRect();
+    const er = el.getBoundingClientRect();
+    if(!er.width || !er.height) return;
+    const cx = er.left - kr.left + khung.scrollLeft + er.width/2;
+    const top = er.top - kr.top + khung.scrollTop;
+    callout.style.left = cx + 'px';
+    callout.style.top = Math.max(46, top - 13) + 'px';
+    callout.classList.add('hien');
+  });
+}
+
+function capNhatHienThiThuaCuaToi(coZoom){
+  xoaHienThiThuaCuaToi();
+  if(!THUA_CUA_TOI){ anBannerThuaCuaToi(); return; }
+
+  if(!laCheDoDongHanh()){
+    anBannerThuaCuaToi();
+    return;
+  }
+
+  if(String(MAP_DATA.field).toUpperCase() !== THUA_CUA_TOI.field
+     || String($('selVu').value).toUpperCase() !== THUA_CUA_TOI.season){
+    anBannerThuaCuaToi();
+    return;
+  }
+
+  const i = MAP_DATA.plots.findIndex(p=>String(p.code||'').toUpperCase() === THUA_CUA_TOI.code);
+  if(i < 0){
+    hienBannerThuaCuaToi(true, '<strong>Không tìm thấy thửa ruộng từ đường dẫn này.</strong> Vui lòng kiểm tra lại đường dẫn.');
+    return;
+  }
+  THUA_CUA_TOI.index = i;
+
+  const el = $('thua'+i), khung = document.querySelector('.khung-bando');
+  if(!el || !khung) return;
+  khung.classList.add('dang-xem-thua-cua-toi');
+  el.classList.add('thua-cua-toi');
+  const sw = Number(el.dataset.sw || 12);
+  el.setAttribute('stroke-width', Math.max(sw*2.5, sw+10));
+  datConTroThuaCuaToi(i);
+
+  const p = MAP_DATA.plots[i];
+  const d = duLieuDongHanhMau(p);
+  const ds = Array.isArray(d.nguoi) ? d.nguoi : [];
+  const phanCuaKhach = ds.length ? Number(ds[0].kg)||0 : 0; // dữ liệu mẫu
+  const pctCaNhan = d.sanLuong > 0 ? (phanCuaKhach / d.sanLuong * 100) : 0;
+  hienBannerThuaCuaToi(false,
+    '<strong>Đây là thửa ruộng bạn đang đồng hành.</strong> '
+    + (phanCuaKhach > 0 ? 'Bạn đang đồng hành với ' + pctCaNhan.toLocaleString('vi-VN',{maximumFractionDigits:1})
+       + '% sản lượng được phân bổ của thửa này.' : ''));
+  canGiuaThuaCuaToi(i, !!coZoom);
+}
+
+function moThuaCuaToiTuURL(){
+  const q = new URLSearchParams(location.search);
+  const code = String(q.get('cua-toi') || '').trim().toUpperCase();
+  if(!code) return;
+
+  const field = String(q.get('dong') || MAP_DATA.field || '').toUpperCase();
+  const season = String(q.get('vu') || ($('selVu') ? $('selVu').value : '') || '').toUpperCase();
+  THUA_CUA_TOI = {field, season, code, index:-1};
+
+  if(!laCheDoDongHanh()) chonCheDoBanDo('dong-hanh');
+  else capNhatHienThiThuaCuaToi(true);
+}
+
+function chonCheDoBanDo(cheDo){
+  if(cheDo !== 'dong-hanh' && cheDo !== 'canh-tac') return;
+  CHE_DO_BAN_DO = cheDo;
+
+  const bDH = $('tabDongHanh'), bCT = $('tabCanhTac');
+  if(bDH){ bDH.classList.toggle('active', laCheDoDongHanh()); bDH.setAttribute('aria-selected', laCheDoDongHanh() ? 'true' : 'false'); }
+  if(bCT){ bCT.classList.toggle('active', !laCheDoDongHanh()); bCT.setAttribute('aria-selected', !laCheDoDongHanh() ? 'true' : 'false'); }
+
+  /* Vẽ lại từ cùng dữ liệu bản đồ. Canh tác giữ nguyên logic cũ; Đồng hành
+     hiện lớp nền trung tính cho tới khi nối dữ liệu khách ở bước kế tiếp. */
+  veBanDo();
+  if(ketQuaCuoi) apDungKetQua(ketQuaCuoi);
+  else {
+    const tt = $('trangthai');
+    if(tt) tt.textContent = laCheDoDongHanh()
+      ? 'Chế độ Đồng hành — đang hiển thị dữ liệu mẫu để chốt màu và chú giải.'
+      : (laKhach() ? 'Đăng nhập để xem trạng thái canh tác và nhật ký của từng thửa.' : 'Đang kết nối dữ liệu…');
+  }
+  capNhatGiaoDienKhach();
+  capNhatHienThiThuaCuaToi(false);
+}
 
 function nhanThua(p){ return (p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim(); }
+
+/* ==================================================================
+   DỮ LIỆU MẪU CHẾ ĐỘ ĐỒNG HÀNH — CHỈ DÙNG ĐỂ CHỐT UX/UI TRÊN GITHUB.
+   Sau này toàn bộ khối này sẽ được thay bằng dữ liệu Supabase.
+
+   sanLuong: sản lượng GẠO của thửa (kg)
+   daDongHanh: tổng kg từ các đơn ĐÃ XÁC NHẬN
+   ================================================================== */
+const DONG_HANH_MAU = {
+  'CKOD:HT26:CUOC': {sanLuong:300, daDongHanh:100, nguoi:[
+    {ten:'Anh Quân', diaPhuong:'Hội An', kg:100}
+  ]},
+  'CKOD:HT26:HUNG': {sanLuong:300, daDongHanh:300, nguoi:[
+    {ten:'Anh Minh', diaPhuong:'Đà Nẵng', kg:100},
+    {ten:'Chị Hương', diaPhuong:'Hội An', kg:100},
+    {ten:'Anh Nam', diaPhuong:'Huế', kg:100}
+  ]},
+  'CKOD:HT26:SAU':  {sanLuong:240, daDongHanh:120, nguoi:[
+    {ten:'Chị Mai', diaPhuong:'Đà Nẵng', kg:70},
+    {ten:'Anh Bình', diaPhuong:'Hội An', kg:50}
+  ]},
+  'CKOD:HT26:HUONG':{sanLuong:360, daDongHanh:360, nguoi:[
+    {ten:'Anh Hùng', diaPhuong:'Hội An', kg:160},
+    {ten:'Chị Lan', diaPhuong:'Đà Nẵng', kg:100},
+    {ten:'Anh Sơn', diaPhuong:'Quảng Nam', kg:100}
+  ]},
+
+  'CTDC:HT26:PHUC': {sanLuong:300, daDongHanh:200, nguoi:[
+    {ten:'Anh Quân', diaPhuong:'Hội An', kg:100},
+    {ten:'Chị Mai', diaPhuong:'Đà Nẵng', kg:100}
+  ]},
+  'CTDC:HT26:LE1':  {sanLuong:250, daDongHanh:250, nguoi:[
+    {ten:'Anh Dũng', diaPhuong:'Hà Nội', kg:100},
+    {ten:'Chị An', diaPhuong:'Đà Nẵng', kg:50},
+    {ten:'Anh Long', diaPhuong:'Hội An', kg:100}
+  ]},
+  'CTDC:HT26:PHO':  {sanLuong:320, daDongHanh:100, nguoi:[
+    {ten:'Chị Hạnh', diaPhuong:'Hội An', kg:100}
+  ]},
+  'CTDC:HT26:BE1':  {sanLuong:280, daDongHanh:280, nguoi:[
+    {ten:'Anh Khoa', diaPhuong:'Đà Nẵng', kg:80},
+    {ten:'Chị Nga', diaPhuong:'Hội An', kg:100},
+    {ten:'Anh Hải', diaPhuong:'TP.HCM', kg:100}
+  ]},
+
+  'CTDM:HT26:TOAN': {sanLuong:300, daDongHanh:100, nguoi:[
+    {ten:'Anh Phúc', diaPhuong:'Hội An', kg:100}
+  ]},
+  'CTDM:HT26:CU':   {sanLuong:220, daDongHanh:220, nguoi:[
+    {ten:'Chị Thảo', diaPhuong:'Đà Nẵng', kg:120},
+    {ten:'Anh Lâm', diaPhuong:'Hội An', kg:100}
+  ]},
+  'CTDM:HT26:BE':   {sanLuong:260, daDongHanh:160, nguoi:[
+    {ten:'Anh Tân', diaPhuong:'Hội An', kg:60},
+    {ten:'Chị Vy', diaPhuong:'Đà Nẵng', kg:100}
+  ]},
+  'CTDM:HT26:HOI1': {sanLuong:300, daDongHanh:300, nguoi:[
+    {ten:'Anh Đức', diaPhuong:'Hội An', kg:100},
+    {ten:'Chị Thu', diaPhuong:'Đà Nẵng', kg:100},
+    {ten:'Anh Trí', diaPhuong:'Quảng Nam', kg:100}
+  ]},
+};
+
+function duLieuDongHanhMau(p){
+  const vu = $('selVu') ? $('selVu').value : 'HT26';
+  /* Thửa chưa có người đồng hành vẫn phải có sản lượng để popup hiển thị.
+     300 kg chỉ là số mẫu cho giai đoạn chốt UI; sau này thay bằng sản lượng
+     gạo thật của mã sản phẩm. */
+  return DONG_HANH_MAU[MAP_DATA.field + ':' + vu + ':' + p.code]
+    || {sanLuong:300, daDongHanh:0, nguoi:[]};
+}
+
+function trangThaiDongHanhMau(p){
+  const d = duLieuDongHanhMau(p);
+  if(!d || !d.daDongHanh) return 'chua';
+  return d.daDongHanh >= d.sanLuong ? 'du' : 'con';
+}
+
+function apDungTrangThaiDongHanhMau(i,p,el){
+  el = el || $('thua'+i);
+  if(!el) return;
+  el.classList.remove('khach','huu-co','vi-pham','khong-huu-co','chua-ro',
+                      'dong-hanh-chua','dong-hanh-con','dong-hanh-du');
+  el.classList.add('dong-hanh-' + trangThaiDongHanhMau(p));
+}
+
+function apDungMauDongHanhMau(){
+  if(!laCheDoDongHanh()) return;
+  MAP_DATA.plots.forEach((p,i)=>apDungTrangThaiDongHanhMau(i,p));
+}
 
 /* ---------- vẽ bản đồ ---------- */
 /* ---------- vẽ bản đồ ---------- */
@@ -167,10 +407,13 @@ function veBanDo(){
   });
   d.plots.forEach((p,i)=>{
     const pts = p.points.map(pt=>pt.join(',')).join(' ');
-    const lopThua = laKhach() ? 'thua khach' : 'thua chua-ro';
+    const lopThua = laCheDoDongHanh() ? 'thua dong-hanh-chua' : (laKhach() ? 'thua khach' : 'thua chua-ro');
     s += `<polygon id="thua${i}" class="${lopThua}" points="${pts}" stroke-width="${netVien}" data-sw="${netVien}" onclick="chonThua(${i})"/>`;
   });
-  const anTenHo = laKhach() && !HIEN_TEN_HO_CHO_KHACH;
+
+  /* Đồng hành chỉ dùng MÀU để biểu thị trạng thái. Tên hộ và diện tích
+     vẫn hiển thị như bản đồ bình thường để tổng quan sạch, dễ đọc. */
+  const anTenHo = !laCheDoDongHanh() && laKhach() && !HIEN_TEN_HO_CHO_KHACH;
   if(!anTenHo) d.plots.forEach(p=>{
     const nhan = nhanThua(p);
     const lx = p.lx || p.cx, ly = p.ly || p.cy;
@@ -190,6 +433,8 @@ function veBanDo(){
   });
   s += '</g></svg>';
   $('svgwrap').innerHTML = s;
+  apDungMauDongHanhMau();
+  capNhatHienThiThuaCuaToi(false);
 }
 
 /* ---------- xoay bản đồ ---------- */
@@ -210,6 +455,9 @@ function capNhatXoay(){
   const W = d.viewW*c + d.viewH*si, H = d.viewW*si + d.viewH*c;
   svg.setAttribute('viewBox', `${(cx - W/2).toFixed(1)} ${(cy - H/2).toFixed(1)} ${W.toFixed(1)} ${H.toFixed(1)}`);
   g.setAttribute('transform', `rotate(${xoayLv.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)})`);
+  if(THUA_CUA_TOI && THUA_CUA_TOI.index >= 0 && laCheDoDongHanh()){
+    requestAnimationFrame(()=>datConTroThuaCuaToi(THUA_CUA_TOI.index));
+  }
 }
 
 function zoom(f){
@@ -217,6 +465,9 @@ function zoom(f){
   $('svgwrap').style.width = (zoomLv*100)+'%';
   const svg = document.querySelector('#svgwrap svg');
   if(svg) svg.style.maxHeight = (zoomLv > 1) ? 'none' : '72vh';
+  if(THUA_CUA_TOI && THUA_CUA_TOI.index >= 0 && laCheDoDongHanh()){
+    requestAnimationFrame(()=>datConTroThuaCuaToi(THUA_CUA_TOI.index));
+  }
 }
 
 /* ---------- nạp dữ liệu Notion & tô màu ---------- */
@@ -241,6 +492,12 @@ function apDungKetQua(r){
       khop++;
       if(nd.organic) hoHuuCo.add(p.farmer.trim().toUpperCase());
     }
+    /* Đồng hành có bộ màu riêng, không dùng màu trạng thái canh tác. Bước 1
+       mới chỉ dùng màu nền trung tính; ba trạng thái sẽ thêm ở bước sau. */
+    if(laCheDoDongHanh()){
+      apDungTrangThaiDongHanhMau(i,p,el);
+      return;
+    }
     /* Khách: giữ nguyên một màu xanh nhạt, không tô trạng thái canh tác */
     if(laKhach()){
       el.classList.remove('huu-co','khong-huu-co','chua-ro');
@@ -256,9 +513,16 @@ function apDungKetQua(r){
        Phải hỏi viPham TRƯỚC, vì máy chủ đặt organic=false cho lô vi phạm. */
     el.classList.add(!nd ? 'chua-ro' : (nd.viPham ? 'vi-pham' : (nd.organic ? 'huu-co' : 'khong-huu-co')));
   });
-  tt.textContent = laKhach()
-    ? 'Đăng nhập để xem trạng thái canh tác và nhật ký của từng thửa.'
-    : `Đã khớp ${khop}/${MAP_DATA.plots.length} thửa (vụ ${$('selVu').value}).`;
+  if(laCheDoDongHanh()){
+    const dem = {chua:0, con:0, du:0};
+    MAP_DATA.plots.forEach(p=>dem[trangThaiDongHanhMau(p)]++);
+    tt.textContent = 'Dữ liệu mẫu Đồng hành · ' + dem.chua + ' thửa chưa có · '
+      + dem.con + ' thửa còn sản lượng · ' + dem.du + ' thửa đã đủ.';
+  }else{
+    tt.textContent = laKhach()
+      ? 'Đăng nhập để xem trạng thái canh tác và nhật ký của từng thửa.'
+      : `Đã khớp ${khop}/${MAP_DATA.plots.length} thửa (vụ ${$('selVu').value}).`;
+  }
   veVuPanel(r.season, hoHuuCo.size);
 }
 
@@ -395,10 +659,98 @@ function veVuPanel(s, soHoDem){
     : 'Chưa thu hoạch';
 }
 
+/* ---------- popup Đồng hành ---------- */
+function fmtKg(n){ return Math.max(0, Number(n)||0).toLocaleString('vi-VN') + ' kg'; }
+
+function moDongHanh(i){
+  thuaDangChon = i;
+  document.querySelectorAll('.thua').forEach(e=>e.classList.remove('chon-active'));
+  const el = $('thua'+i); if(el) el.classList.add('chon-active');
+
+  const p = MAP_DATA.plots[i];
+  const d = duLieuDongHanhMau(p);
+  const sanLuong = Math.max(0, Number(d.sanLuong)||0);
+  const da = Math.max(0, Math.min(sanLuong, Number(d.daDongHanh)||0));
+  const con = Math.max(0, sanLuong - da);
+  const pct = sanLuong > 0 ? Math.round(da / sanLuong * 100) : 0;
+  const tt = da <= 0 ? 'chua' : (da >= sanLuong ? 'du' : 'con');
+  const ttChu = tt === 'chua' ? 'Chưa có người đồng hành'
+              : (tt === 'du' ? 'Đã đủ người đồng hành' : 'Còn ' + fmtKg(con) + ' để đồng hành');
+
+  const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
+  const nd = notionPlots[ma];
+  /* Popup Đồng hành: mã sản phẩm là thông tin nhận diện chính.
+     Dòng phụ chỉ giữ người canh tác + diện tích để gọn và dễ quét. */
+  $('dhTieuDe').textContent = (nd && nd.productCode) ? nd.productCode : 'Chưa có mã sản phẩm';
+  $('dhPhuDe').textContent = nhanThua(p) + ' · ' + p.area + ' m²';
+  $('dhSanLuong').textContent = fmtKg(sanLuong);
+  $('dhDaDongHanh').textContent = fmtKg(da);
+  $('dhConLai').textContent = fmtKg(con);
+  $('dhPhanTram').textContent = pct + '%';
+
+  const vong = $('dhVong');
+  vong.style.setProperty('--pct', Math.max(0, Math.min(100,pct)));
+  vong.style.setProperty('--vong', tt === 'du' ? '#4f7132' : (tt === 'con' ? '#a98b2f' : '#aaa394'));
+
+  const badge = $('dhTrangThai');
+  badge.className = 'dh-trangthai ' + tt;
+  badge.textContent = ttChu;
+
+  const ds = Array.isArray(d.nguoi) ? d.nguoi : [];
+  $('dhDanhSach').innerHTML = ds.length
+    ? ds.map(n=>'<div class="dh-nguoi"><span>' + escHtml(n.ten) + ' · ' + escHtml(n.diaPhuong) + '</span><b>' + fmtKg(n.kg) + '</b></div>').join('')
+    : '<div class="dh-trong">Chưa có người đồng hành với thửa này. <b>Hãy trở thành người đầu tiên.</b></div>';
+
+  const nut = $('dhHanhDong');
+  nut.disabled = false;
+  nut.style.display = '';
+  if(tt === 'du'){
+    nut.style.display = 'none';
+  }else if(tt === 'chua'){
+    nut.textContent = 'Trở thành người đầu tiên';
+  }else{
+    nut.textContent = 'Tăng sản lượng đồng hành';
+  }
+
+  const cuaToi = $('dhCuaToi');
+  const laThuaCuaToi = !!(THUA_CUA_TOI
+    && THUA_CUA_TOI.field === String(MAP_DATA.field).toUpperCase()
+    && THUA_CUA_TOI.season === String($('selVu').value).toUpperCase()
+    && THUA_CUA_TOI.code === String(p.code||'').toUpperCase());
+  if(cuaToi){
+    if(laThuaCuaToi && ds.length){
+      const kgCuaToi = Number(ds[0].kg)||0; // dữ liệu mẫu; Supabase sau này lấy đúng allocation của khách
+      const pctCuaToi = sanLuong > 0 ? (kgCuaToi/sanLuong*100) : 0;
+      cuaToi.innerHTML = '<strong>Đây là thửa ruộng bạn đang đồng hành.</strong><br>'
+        + 'Bạn đang đồng hành với ' + pctCuaToi.toLocaleString('vi-VN',{maximumFractionDigits:1})
+        + '% sản lượng được phân bổ của thửa này.';
+      cuaToi.classList.add('hien');
+    }else{
+      cuaToi.classList.remove('hien');
+      cuaToi.innerHTML = '';
+    }
+  }
+  moModal('mpDongHanh');
+}
+
+function thongBaoDongHanhMau(){
+  alert('Đây đang là bản preview bằng dữ liệu mẫu. Nút này sẽ được nối với đơn hàng/Supabase ở giai đoạn triển khai dữ liệu khách thật.');
+}
+
+function moNhatKyDongHanh(){
+  dongModal('mpDongHanh');
+  moNhatKy();
+}
+
 /* ---------- chọn thửa ---------- */
 /* ---------- chọn thửa ---------- */
 function chonThua(i){
-  if(laKhach()){ moModal('mpDN'); return; }    // khách vãng lai: không mở chi tiết thửa
+  if(Date.now() < (window.BANDO_VUA_KEO_DEN || 0)) return;
+  if(laCheDoDongHanh()){
+    moDongHanh(i);
+    return;
+  }
+  if(laKhach()){ moModal('mpDN'); return; }    // khách vãng lai: không mở chi tiết thửa Canh tác
   if(cheDoChonNhieu){ tickThua(i); return; }   // đang chọn nhiều → chạm là tick
   thuaDangChon = i;
   document.querySelectorAll('.thua').forEach(e=>e.classList.remove('chon-active'));
@@ -527,7 +879,7 @@ async function moNhatKy(){
   const p = MAP_DATA.plots[thuaDangChon];
   const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
   if(!nd){ alert('Thửa này chưa có dữ liệu nên chưa xem được nhật ký.'); return; }
-  dongModal('mpThua'); moModal('mpNK');
+  dongModal('mpThua'); dongModal('mpDongHanh'); moModal('mpNK');
   $('nkMa').textContent = nd.productCode;
   $('nkDS').innerHTML = '<div class="trong">Đang tải…</div>';
   try{
@@ -803,14 +1155,16 @@ kbando.addEventListener('wheel', function(e){
      30 ≈ 7,6 lần, tức chạm trần phóng to chỉ với một cái lướt tay. Chuột bi
      có nấc thì lại vừa, nên lỗi chỉ lộ ra với người dùng bàn di.
 
-     Cách chữa: quy deltaY về cùng đơn vị pixel rồi mũ hoá. Vuốt nhẹ trên bàn
-     di (deltaY≈5) cho 1,0055 mỗi sự kiện — 30 sự kiện mới được 1,18 lần.
-     Một nấc chuột bi (deltaY≈100) cho 1,10. Cả hai đều êm. */
+     Cách chữa: quy deltaY về cùng đơn vị pixel rồi mũ hoá, đồng thời giữ
+     mỗi nhịp desktop tối đa khoảng 5%. Trackpad delta nhỏ vẫn tăng rất nhẹ,
+     còn một nấc chuột bi không còn nhảy vọt ngay từ bước zoom đầu. */
   let dy = e.deltaY;
   if (e.deltaMode === 1) dy *= 16;         // deltaY tính theo DÒNG
   else if (e.deltaMode === 2) dy *= 100;   // deltaY tính theo TRANG
-  dy = Math.max(-120, Math.min(120, dy));  // chặn cú lăn giật cục
-  const buoc = Math.min(1.10, Math.max(1/1.10, Math.exp(-dy * 0.0011)));
+  /* Desktop: giảm gần một nửa độ nhạy. Một nấc chuột khoảng 100px giờ
+     chỉ zoom ~4,6% thay vì ~10%; trackpad vẫn mượt vì delta nhỏ. */
+  dy = Math.max(-100, Math.min(100, dy));
+  const buoc = Math.min(1.05, Math.max(1/1.05, Math.exp(-dy * 0.00045)));
 
   const cu = zoomLv;
   zoom(buoc);
@@ -820,6 +1174,45 @@ kbando.addEventListener('wheel', function(e){
     kbando.scrollTop  = my*r - (e.clientY - rect.top);
   }
 }, {passive:false});
+
+/* ---- Desktop: giữ chuột trái và kéo để di chuyển bản đồ ----
+   Chỉ bật với thiết bị có chuột chính xác; touch/mobile giữ nguyên luồng
+   pinch hiện có. Kéo quá 5px sẽ chặn click thửa ngay sau mouseup. */
+let dangKeoChuot = false, daKeoChuot = false;
+let keoX0 = 0, keoY0 = 0, scrollX0 = 0, scrollY0 = 0;
+
+kbando.addEventListener('mousedown', function(e){
+  if(e.button !== 0 || !window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  if(e.target.closest('button,a,input,select,textarea')) return;
+  dangKeoChuot = true; daKeoChuot = false;
+  keoX0 = e.clientX; keoY0 = e.clientY;
+  scrollX0 = kbando.scrollLeft; scrollY0 = kbando.scrollTop;
+});
+
+window.addEventListener('mousemove', function(e){
+  if(!dangKeoChuot) return;
+  const dx = e.clientX - keoX0, dy = e.clientY - keoY0;
+  if(!daKeoChuot && Math.hypot(dx,dy) > 5){
+    daKeoChuot = true;
+    kbando.classList.add('dang-keo');
+  }
+  if(!daKeoChuot) return;
+  e.preventDefault();
+  kbando.scrollLeft = scrollX0 - dx;
+  kbando.scrollTop  = scrollY0 - dy;
+  if(THUA_CUA_TOI && THUA_CUA_TOI.index >= 0 && laCheDoDongHanh()){
+    datConTroThuaCuaToi(THUA_CUA_TOI.index);
+  }
+}, {passive:false});
+
+window.addEventListener('mouseup', function(){
+  if(!dangKeoChuot) return;
+  if(daKeoChuot) window.BANDO_VUA_KEO_DEN = Date.now() + 180;
+  dangKeoChuot = false; daKeoChuot = false;
+  kbando.classList.remove('dang-keo');
+});
+
+kbando.addEventListener('dragstart', function(e){ e.preventDefault(); });
 
 let veo2ngon = 0, veoGoc = null;
 function goc2ngon(e){
@@ -853,10 +1246,12 @@ kbando.addEventListener('touchend', function(){ veo2ngon = 0; veoGoc = null; });
    Được gọi lại sau khi đăng nhập hoặc đăng xuất (xem js/chung.js). */
 function capNhatGiaoDienKhach(){
   const khach = laKhach();
+  const ctDH = $('chuthichDongHanh');
+  if(ctDH) ctDH.style.display = laCheDoDongHanh() ? 'flex' : 'none';
   const ct = document.querySelector('.chuthich');
-  if(ct) ct.style.display = khach ? 'none' : '';
+  if(ct) ct.style.display = (!laCheDoDongHanh() && !khach) ? '' : 'none';
   const nutNhieu = $('btnChonNhieu');
-  if(nutNhieu) nutNhieu.style.display = khach ? 'none' : '';
+  if(nutNhieu) nutNhieu.style.display = (!laCheDoDongHanh() && !khach) ? '' : 'none';
   if(khach && cheDoChonNhieu && typeof huyChonNhieu === 'function') huyChonNhieu();
 }
 
@@ -890,8 +1285,18 @@ goiAPI({ action: 'getCauHinh' }).then(function (r) {
 
 capNhatGiaoDienKhach();
 
-$('selVu').addEventListener('change', napNotion);
+window.addEventListener('resize', function(){
+  if(THUA_CUA_TOI && THUA_CUA_TOI.index >= 0 && laCheDoDongHanh()){
+    datConTroThuaCuaToi(THUA_CUA_TOI.index);
+  }
+});
+
+$('selVu').addEventListener('change', function(){
+  THUA_CUA_TOI = null; xoaHienThiThuaCuaToi(); anBannerThuaCuaToi();
+  napNotion();
+});
 $('selDong').addEventListener('change', function(){
+  THUA_CUA_TOI = null; xoaHienThiThuaCuaToi(); anBannerThuaCuaToi();
   if(cheDoChonNhieu) huyChonNhieu();   // đổi đồng thì bỏ chọn nhiều (chỉ số thửa khác nhau)
   MAP_DATA = ALL_FIELDS[this.value];
   zoomLv = 1; $('svgwrap').style.width = '100%';

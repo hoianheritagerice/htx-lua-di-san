@@ -59,6 +59,94 @@ body.nhung .chon{display:none}
   padding:8px 16px;border-radius:22px;margin-right:8px;white-space:nowrap}
 .quay-lai:hover{background:#163a20}
 body.nhung #trangthai{padding-top:10px}
+
+/* ===== Chế độ bản đồ: Đồng hành / Canh tác ===== */
+.bd-chedo{display:flex;justify-content:center;gap:6px;margin:0 16px 12px;padding:4px;
+  background:#ebe7d9;border:1px solid #d8d0bb;border-radius:999px;width:max-content;max-width:calc(100% - 32px)}
+.bd-chedo button{border:0;background:transparent;color:#66705f;font:inherit;font-size:13px;font-weight:600;
+  padding:8px 16px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.bd-chedo button.active{background:#fff;color:var(--xanh-dam,#1e4d2b);box-shadow:0 1px 5px rgba(33,45,25,.12)}
+.bd-chedo button:focus-visible{outline:2px solid var(--xanh-dam,#1e4d2b);outline-offset:2px}
+/* Ba trạng thái Đồng hành — tách hoàn toàn khỏi bộ màu Canh tác. */
+.thua.dong-hanh-chua{fill:#ece8de;stroke:#aaa394}
+.thua.dong-hanh-con{fill:#ead07b;stroke:#a98b2f}
+.thua.dong-hanh-du{fill:#88a864;stroke:#4f7132}
+.thua.dong-hanh-chua:hover,.thua.dong-hanh-con:hover,.thua.dong-hanh-du:hover{filter:brightness(1.04)}
+.chuthich-donghanh{display:flex;gap:16px;padding:0 16px 18px;font-size:12.5px;flex-wrap:wrap}
+.chuthich-donghanh span{display:inline-flex;align-items:center;gap:6px}
+.chuthich-donghanh i{width:16px;height:16px;border-radius:4px;display:inline-block;border:1.5px solid}
+.i-dh-chua{background:#ece8de;border-color:#aaa394}
+.i-dh-con{background:#ead07b;border-color:#a98b2f}
+.i-dh-du{background:#88a864;border-color:#4f7132}
+
+/* ===== Trải nghiệm "Thửa ruộng của tôi" ===== */
+.thua-cua-toi-banner{display:none;align-items:center;gap:10px;margin:0 16px 12px;padding:11px 13px;
+  background:#eef5e5;border:1.5px solid #a8c28b;border-radius:12px;color:#31511f;font-size:13px;line-height:1.4}
+.thua-cua-toi-banner.hien{display:flex}
+.thua-cua-toi-banner.loi{background:#fff2ef;border-color:#dbb0a7;color:#873b2e}
+.thua-cua-toi-banner strong{font-weight:700}
+.thua-cua-toi-banner .tc-icon{font-size:18px;line-height:1;flex:none}
+.khung-bando{position:relative}
+.khung-bando.dang-xem-thua-cua-toi .thua:not(.thua-cua-toi){opacity:.40}
+.thua.thua-cua-toi{filter:brightness(1.10) drop-shadow(0 0 16px rgba(43,77,28,.62));
+  stroke:#214e2a!important;animation:thuaCuaToiNhip 1.8s ease-in-out infinite}
+.thua-cua-toi-callout{display:none;position:absolute;z-index:8;pointer-events:none;max-width:245px;
+  padding:9px 12px;background:#fffdf7;border:1.5px solid #315d35;border-radius:10px;
+  box-shadow:0 5px 16px rgba(31,61,35,.18);color:#25482a;font-size:12.5px;font-weight:700;
+  line-height:1.35;text-align:center;transform:translate(-50%,-100%)}
+.thua-cua-toi-callout.hien{display:block}
+.thua-cua-toi-callout::after{content:"";position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);
+  width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:11px solid #315d35}
+.thua-cua-toi-callout::before{content:"";position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);
+  z-index:1;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #fffdf7}
+
+@media (hover:hover) and (pointer:fine){
+  .khung-bando{cursor:grab}
+  .khung-bando.dang-keo{cursor:grabbing;user-select:none}
+  .khung-bando.dang-keo .thua{cursor:grabbing}
+}
+@keyframes thuaCuaToiNhip{0%,100%{filter:brightness(1.08) drop-shadow(0 0 9px rgba(43,77,28,.42))}
+  50%{filter:brightness(1.18) drop-shadow(0 0 22px rgba(43,77,28,.78))}}
+@media(prefers-reduced-motion:reduce){.thua.thua-cua-toi{animation:none}}
+
+/* ===== Popup Đồng hành ===== */
+.dh-phu-de{font-size:12.5px;color:#727a69;margin:3px 0 14px}
+.dh-tongquan{display:grid;grid-template-columns:124px 1fr;gap:16px;align-items:center;
+  background:#f8f6ef;border:1px solid #e3ddcc;border-radius:15px;padding:14px;margin-top:4px}
+.dh-vong{--pct:0;--vong:#a98b2f;position:relative;width:108px;height:108px;border-radius:50%;
+  background:conic-gradient(var(--vong) calc(var(--pct)*1%),#e4e0d5 0);display:grid;place-items:center;margin:auto}
+.dh-vong::before{content:"";position:absolute;inset:10px;background:#fff;border-radius:50%}
+.dh-vong-so{position:relative;z-index:1;text-align:center;font-weight:700;color:#334126;font-size:21px;line-height:1.05}
+.dh-vong-so small{display:block;font-size:10.5px;font-weight:500;color:#7d8475;margin-top:4px}
+.dh-so-lieu{display:grid;gap:8px}
+.dh-so-hang{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:#68705f}
+.dh-so-hang b{color:#26321f;font-size:14px;text-align:right}
+.dh-trangthai{display:inline-flex;align-items:center;gap:7px;margin-top:11px;padding:7px 11px;
+  border-radius:999px;font-size:12.5px;font-weight:600}
+.dh-trangthai.chua{background:#efede7;color:#665f54}
+.dh-trangthai.con{background:#f7edca;color:#725d18}
+.dh-trangthai.du{background:#e0ecd3;color:#355421}
+.dh-muc{margin-top:18px}
+.dh-muc h3{font-size:13.5px;color:#304125;margin-bottom:9px}
+.dh-danh-sach{border-top:1px solid #ece7da}
+.dh-nguoi{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #ece7da;
+  font-size:13px;line-height:1.35}
+.dh-nguoi span{color:#394534}
+.dh-nguoi b{color:#26321f;white-space:nowrap}
+.dh-trong{font-size:13px;color:#7b8273;background:#f7f5ef;border-radius:10px;padding:12px}
+.dh-cua-toi{display:none;margin-top:14px;padding:11px 12px;background:#eef5e5;border:1px solid #b9cea2;
+  border-radius:11px;color:#31511f;font-size:12.8px;line-height:1.45}
+.dh-cua-toi.hien{display:block}
+.dh-hanhdong-row{display:flex;gap:9px;margin-top:16px}
+.dh-hanhdong{display:block;flex:1;border:0;border-radius:11px;padding:12px 13px;
+  background:var(--xanh-dam,#1e4d2b);color:#fff;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+.dh-hanhdong.phu{background:#fff;color:var(--xanh-dam,#1e4d2b);border:1.5px solid var(--xanh-dam,#1e4d2b)}
+.dh-hanhdong[disabled]{background:#d8d6ce;color:#8c8a82;cursor:default;border-color:#d8d6ce}
+@media(max-width:520px){.dh-hanhdong-row{flex-direction:column}}
+@media(max-width:420px){
+  .dh-tongquan{grid-template-columns:96px 1fr;gap:12px;padding:12px}
+  .dh-vong{width:88px;height:88px}.dh-vong-so{font-size:18px}
+}
 </style>
 </head>
 <body>
@@ -82,7 +170,19 @@ body.nhung #trangthai{padding-top:10px}
   </select>
 </div>
 
+<div class="bd-chedo" id="bdCheDo" role="tablist" aria-label="Chế độ xem bản đồ">
+  <button type="button" id="tabDongHanh" class="active" role="tab" aria-selected="true"
+          onclick="chonCheDoBanDo('dong-hanh')">Đồng hành</button>
+  <button type="button" id="tabCanhTac" role="tab" aria-selected="false"
+          onclick="chonCheDoBanDo('canh-tac')">Canh tác</button>
+</div>
+
 <div id="trangthai">Đang kết nối dữ liệu…</div>
+
+<div class="thua-cua-toi-banner" id="thuaCuaToiBanner" aria-live="polite">
+  <span class="tc-icon">🌾</span>
+  <div id="thuaCuaToiText"><strong>Đây là thửa ruộng bạn đang đồng hành.</strong></div>
+</div>
 
 <!-- Thanh tiến độ mùa vụ + thông số chung (tự hiện khi có dữ liệu Notion) -->
 <div class="vu-panel" id="vuPanel" style="display:none">
@@ -115,6 +215,13 @@ body.nhung #trangthai{padding-top:10px}
     <button onclick="huyChonNhieu()" class="cn-huy">Hủy</button>
   </div>
   <div id="svgwrap"></div>
+  <div class="thua-cua-toi-callout" id="thuaCuaToiCallout">Đây là thửa ruộng bạn đang đồng hành</div>
+</div>
+
+<div class="chuthich-donghanh" id="chuthichDongHanh">
+  <span><i class="i-dh-chua"></i> Chưa có người đồng hành</span>
+  <span><i class="i-dh-con"></i> Còn sản lượng</span>
+  <span><i class="i-dh-du"></i> Đã đủ người đồng hành</span>
 </div>
 
 <div class="chuthich">
@@ -122,6 +229,40 @@ body.nhung #trangthai{padding-top:10px}
   <span><i class="i-vp"></i> Hữu cơ nhưng vi phạm quy trình</span>
   <span><i class="i-khc"></i> Không hữu cơ</span>
   <span><i class="i-cr"></i> Chưa có dữ liệu</span>
+</div>
+
+<!-- Modal Đồng hành — tách riêng khỏi modal Canh tác để khách xem công khai -->
+<div class="modal-phu" id="mpDongHanh">
+  <div class="modal">
+    <h2 id="dhTieuDe">Thửa ruộng</h2>
+    <div class="dh-phu-de" id="dhPhuDe"></div>
+
+    <div class="dh-tongquan">
+      <div class="dh-vong" id="dhVong">
+        <div class="dh-vong-so"><span id="dhPhanTram">0%</span><small>đã đồng hành</small></div>
+      </div>
+      <div>
+        <div class="dh-so-lieu">
+          <div class="dh-so-hang"><span>Sản lượng thửa ruộng</span><b id="dhSanLuong">—</b></div>
+          <div class="dh-so-hang"><span>Đã đồng hành</span><b id="dhDaDongHanh">—</b></div>
+          <div class="dh-so-hang"><span>Còn lại</span><b id="dhConLai">—</b></div>
+        </div>
+        <div class="dh-trangthai chua" id="dhTrangThai">Chưa có người đồng hành</div>
+      </div>
+    </div>
+
+    <div class="dh-muc">
+      <h3>Những người cùng đồng hành</h3>
+      <div id="dhDanhSach" class="dh-danh-sach"></div>
+    </div>
+
+    <div class="dh-cua-toi" id="dhCuaToi"></div>
+    <div class="dh-hanhdong-row">
+      <button type="button" class="dh-hanhdong" id="dhHanhDong" onclick="thongBaoDongHanhMau()">Đồng hành cùng thửa này</button>
+      <button type="button" class="dh-hanhdong phu" id="dhXemNhatKy" onclick="moNhatKyDongHanh()">Xem nhật ký thửa ruộng</button>
+    </div>
+    <button class="dong" onclick="dongModal('mpDongHanh')">Đóng</button>
+  </div>
 </div>
 
 <!-- Modal chi tiết thửa -->
@@ -337,7 +478,7 @@ body.nhung #trangthai{padding-top:10px}
      xong không lưu được.
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
-<script src="js/ban-do.js?v=20260901a"></script>
+<script src="js/ban-do.js?v=20260921c"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html
@@ -738,8 +879,15 @@ body.nhung #trangthai{padding-top:10px}
     napNotion();
   }
 
+  /* Bước 5 — link từ QR/tài khoản. Gọi SAU khi MAP_DATA đã đổi đúng theo
+     ?dong=..., nếu gọi sớm thì target CTDC có thể bị tìm nhầm trong CKOD. */
+  if (typeof moThuaCuaToiTuURL === 'function') {
+    setTimeout(function(){ moThuaCuaToiTuURL(); }, 0);
+  }
+
   console.log('[HTX] bản đồ nhúng 3.0');
 })();
 </script>
+<!-- Vercel preview trigger: feature/dong-hanh-step-1 -->
 </body>
 </html>

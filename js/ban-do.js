@@ -744,6 +744,7 @@ function moNhatKyDongHanh(){
 /* ---------- chọn thửa ---------- */
 /* ---------- chọn thửa ---------- */
 function chonThua(i){
+  if(Date.now() < (window.BANDO_VUA_KEO_DEN || 0)) return;
   if(laCheDoDongHanh()){
     moDongHanh(i);
     return;
@@ -1153,14 +1154,16 @@ kbando.addEventListener('wheel', function(e){
      30 ≈ 7,6 lần, tức chạm trần phóng to chỉ với một cái lướt tay. Chuột bi
      có nấc thì lại vừa, nên lỗi chỉ lộ ra với người dùng bàn di.
 
-     Cách chữa: quy deltaY về cùng đơn vị pixel rồi mũ hoá. Vuốt nhẹ trên bàn
-     di (deltaY≈5) cho 1,0055 mỗi sự kiện — 30 sự kiện mới được 1,18 lần.
-     Một nấc chuột bi (deltaY≈100) cho 1,10. Cả hai đều êm. */
+     Cách chữa: quy deltaY về cùng đơn vị pixel rồi mũ hoá, đồng thời giữ
+     mỗi nhịp desktop tối đa khoảng 5%. Trackpad delta nhỏ vẫn tăng rất nhẹ,
+     còn một nấc chuột bi không còn nhảy vọt ngay từ bước zoom đầu. */
   let dy = e.deltaY;
   if (e.deltaMode === 1) dy *= 16;         // deltaY tính theo DÒNG
   else if (e.deltaMode === 2) dy *= 100;   // deltaY tính theo TRANG
-  dy = Math.max(-120, Math.min(120, dy));  // chặn cú lăn giật cục
-  const buoc = Math.min(1.10, Math.max(1/1.10, Math.exp(-dy * 0.0011)));
+  /* Desktop: giảm gần một nửa độ nhạy. Một nấc chuột khoảng 100px giờ
+     chỉ zoom ~4,6% thay vì ~10%; trackpad vẫn mượt vì delta nhỏ. */
+  dy = Math.max(-100, Math.min(100, dy));
+  const buoc = Math.min(1.05, Math.max(1/1.05, Math.exp(-dy * 0.00045)));
 
   const cu = zoomLv;
   zoom(buoc);
@@ -1170,6 +1173,45 @@ kbando.addEventListener('wheel', function(e){
     kbando.scrollTop  = my*r - (e.clientY - rect.top);
   }
 }, {passive:false});
+
+/* ---- Desktop: giữ chuột trái và kéo để di chuyển bản đồ ----
+   Chỉ bật với thiết bị có chuột chính xác; touch/mobile giữ nguyên luồng
+   pinch hiện có. Kéo quá 5px sẽ chặn click thửa ngay sau mouseup. */
+let dangKeoChuot = false, daKeoChuot = false;
+let keoX0 = 0, keoY0 = 0, scrollX0 = 0, scrollY0 = 0;
+
+kbando.addEventListener('mousedown', function(e){
+  if(e.button !== 0 || !window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  if(e.target.closest('button,a,input,select,textarea')) return;
+  dangKeoChuot = true; daKeoChuot = false;
+  keoX0 = e.clientX; keoY0 = e.clientY;
+  scrollX0 = kbando.scrollLeft; scrollY0 = kbando.scrollTop;
+});
+
+window.addEventListener('mousemove', function(e){
+  if(!dangKeoChuot) return;
+  const dx = e.clientX - keoX0, dy = e.clientY - keoY0;
+  if(!daKeoChuot && Math.hypot(dx,dy) > 5){
+    daKeoChuot = true;
+    kbando.classList.add('dang-keo');
+  }
+  if(!daKeoChuot) return;
+  e.preventDefault();
+  kbando.scrollLeft = scrollX0 - dx;
+  kbando.scrollTop  = scrollY0 - dy;
+  if(THUA_CUA_TOI && THUA_CUA_TOI.index >= 0 && laCheDoDongHanh()){
+    datConTroThuaCuaToi(THUA_CUA_TOI.index);
+  }
+}, {passive:false});
+
+window.addEventListener('mouseup', function(){
+  if(!dangKeoChuot) return;
+  if(daKeoChuot) window.BANDO_VUA_KEO_DEN = Date.now() + 180;
+  dangKeoChuot = false; daKeoChuot = false;
+  kbando.classList.remove('dang-keo');
+});
+
+kbando.addEventListener('dragstart', function(e){ e.preventDefault(); });
 
 let veo2ngon = 0, veoGoc = null;
 function goc2ngon(e){

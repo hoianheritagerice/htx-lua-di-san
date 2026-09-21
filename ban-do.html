@@ -99,6 +99,12 @@ body.nhung #trangthai{padding-top:10px}
   width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:11px solid #315d35}
 .thua-cua-toi-callout::before{content:"";position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);
   z-index:1;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #fffdf7}
+
+@media (hover:hover) and (pointer:fine){
+  .khung-bando{cursor:grab}
+  .khung-bando.dang-keo{cursor:grabbing;user-select:none}
+  .khung-bando.dang-keo .thua{cursor:grabbing}
+}
 @keyframes thuaCuaToiNhip{0%,100%{filter:brightness(1.08) drop-shadow(0 0 9px rgba(43,77,28,.42))}
   50%{filter:brightness(1.18) drop-shadow(0 0 22px rgba(43,77,28,.78))}}
 @media(prefers-reduced-motion:reduce){.thua.thua-cua-toi{animation:none}}
@@ -472,7 +478,7 @@ body.nhung #trangthai{padding-top:10px}
      xong không lưu được.
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
-<script src="js/ban-do.js?v=20260921a"></script>
+<script src="js/ban-do.js?v=20260921b"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html

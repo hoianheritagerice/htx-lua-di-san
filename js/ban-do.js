@@ -153,6 +153,11 @@ let xoayLv = 0;
 let CHE_DO_BAN_DO = 'dong-hanh';
 /* Chỉ được gán sau khi URL đã được xử lý xong và MAP_DATA đã trỏ đúng cánh đồng. */
 let THUA_CUA_TOI = null; // {field, season, code, index}
+/* Deep link ?cua-toi=... phải sống qua toàn bộ quá trình khởi tạo bất đồng bộ.
+   Nếu Apps Script tải danh sách vụ hoặc bản đồ vẽ lại sau đó, target vẫn
+   được áp lại. Chỉ thao tác đổi vụ/cánh đồng của người dùng mới xoá target. */
+const DEEP_LINK_THUA_CUA_TOI = new URLSearchParams(location.search).has('cua-toi');
+let DANG_AP_DEEP_LINK = false;
 
 function laCheDoDongHanh(){ return CHE_DO_BAN_DO === 'dong-hanh'; }
 
@@ -264,17 +269,45 @@ function capNhatHienThiThuaCuaToi(coZoom){
   canGiuaThuaCuaToi(i, !!coZoom);
 }
 
-function moThuaCuaToiTuURL(){
+function moThuaCuaToiTuURL(coZoom=true){
   const q = new URLSearchParams(location.search);
   const code = String(q.get('cua-toi') || '').trim().toUpperCase();
   if(!code) return;
 
   const field = String(q.get('dong') || MAP_DATA.field || '').toUpperCase();
   const season = String(q.get('vu') || ($('selVu') ? $('selVu').value : '') || '').toUpperCase();
-  THUA_CUA_TOI = {field, season, code, index:-1};
 
-  if(!laCheDoDongHanh()) chonCheDoBanDo('dong-hanh');
-  else capNhatHienThiThuaCuaToi(true);
+  DANG_AP_DEEP_LINK = true;
+  try{
+    /* Chốt lại đúng cánh đồng/mùa từ URL mỗi lần deep link được áp.
+       Không phát sự kiện change để tránh listener coi đây là thao tác tay. */
+    if(field && ALL_FIELDS[field] && String(MAP_DATA.field).toUpperCase() !== field){
+      MAP_DATA = ALL_FIELDS[field];
+      if($('selDong')) $('selDong').value = field;
+      zoomLv = 1;
+      if($('svgwrap')) $('svgwrap').style.width = '100%';
+      veBanDo();
+    }
+    if(season && $('selVu')){
+      const sel = $('selVu');
+      let co = false;
+      for(let i=0;i<sel.options.length;i++){
+        if(String(sel.options[i].value).toUpperCase() === season){ co=true; break; }
+      }
+      if(!co){
+        const opt = document.createElement('option');
+        opt.value = season; opt.textContent = season;
+        sel.appendChild(opt);
+      }
+      sel.value = season;
+    }
+
+    THUA_CUA_TOI = {field, season, code, index:-1};
+    if(!laCheDoDongHanh()) chonCheDoBanDo('dong-hanh');
+    else capNhatHienThiThuaCuaToi(!!coZoom);
+  }finally{
+    DANG_AP_DEEP_LINK = false;
+  }
 }
 
 function chonCheDoBanDo(cheDo){
@@ -524,6 +557,9 @@ function apDungKetQua(r){
       : `Đã khớp ${khop}/${MAP_DATA.plots.length} thửa (vụ ${$('selVu').value}).`;
   }
   veVuPanel(r.season, hoHuuCo.size);
+  if(DEEP_LINK_THUA_CUA_TOI && THUA_CUA_TOI){
+    capNhatHienThiThuaCuaToi(false);
+  }
 }
 
 async function napNotion(){
@@ -1281,6 +1317,9 @@ goiAPI({ action: 'getCauHinh' }).then(function (r) {
   }).join('');
   sel.value = r.vu.DS.some(function (v) { return v.ma === dangChon; })
             ? dangChon : (r.vu.HIEN_TAI || r.vu.DS[0].ma);
+  if(DEEP_LINK_THUA_CUA_TOI && typeof moThuaCuaToiTuURL === 'function'){
+    moThuaCuaToiTuURL(false);
+  }
 }).catch(function () {});
 
 capNhatGiaoDienKhach();
@@ -1292,11 +1331,15 @@ window.addEventListener('resize', function(){
 });
 
 $('selVu').addEventListener('change', function(){
-  THUA_CUA_TOI = null; xoaHienThiThuaCuaToi(); anBannerThuaCuaToi();
+  if(!DANG_AP_DEEP_LINK){
+    THUA_CUA_TOI = null; xoaHienThiThuaCuaToi(); anBannerThuaCuaToi();
+  }
   napNotion();
 });
 $('selDong').addEventListener('change', function(){
-  THUA_CUA_TOI = null; xoaHienThiThuaCuaToi(); anBannerThuaCuaToi();
+  if(!DANG_AP_DEEP_LINK){
+    THUA_CUA_TOI = null; xoaHienThiThuaCuaToi(); anBannerThuaCuaToi();
+  }
   if(cheDoChonNhieu) huyChonNhieu();   // đổi đồng thì bỏ chọn nhiều (chỉ số thửa khác nhau)
   MAP_DATA = ALL_FIELDS[this.value];
   zoomLv = 1; $('svgwrap').style.width = '100%';

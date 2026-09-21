@@ -679,9 +679,10 @@ function moDongHanh(i){
 
   const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
   const nd = notionPlots[ma];
-  $('dhTieuDe').textContent = 'Thửa ' + (p.code || ma || '—');
-  $('dhPhuDe').textContent = nhanThua(p) + ' · ' + p.area + ' m²'
-    + (nd && nd.productCode ? ' · ' + nd.productCode : '');
+  /* Popup Đồng hành: mã sản phẩm là thông tin nhận diện chính.
+     Dòng phụ chỉ giữ người canh tác + diện tích để gọn và dễ quét. */
+  $('dhTieuDe').textContent = (nd && nd.productCode) ? nd.productCode : 'Chưa có mã sản phẩm';
+  $('dhPhuDe').textContent = nhanThua(p) + ' · ' + p.area + ' m²';
   $('dhSanLuong').textContent = fmtKg(sanLuong);
   $('dhDaDongHanh').textContent = fmtKg(da);
   $('dhConLai').textContent = fmtKg(con);

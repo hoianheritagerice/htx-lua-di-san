@@ -390,7 +390,7 @@ goi: {
       nutMua: `Tôi quan tâm chương trình này`,
       tomTat: `Dành cho những doanh nghiệp mong muốn đầu tư dài hạn để cùng HTX và người nông dân gìn giữ đất, giống lúa bản địa và văn hóa lúa nước Hội An, như một phần trong chiến lược phát triển bền vững của mình.`,
       dan:    `Dành cho những doanh nghiệp mong muốn đầu tư dài hạn để cùng HTX và người nông dân gìn giữ đất, giống lúa bản địa và văn hóa lúa nước Hội An, như một phần trong chiến lược phát triển bền vững của mình.`,
-      phuHop: `Doanh nghiệp KS, Nhà hàng, Resort<br>Doanh nghiệp tiên phong coi phát triển bền vững là chiến lược dài hạn, cần dữ liệu carbon minh bạch và muốn ghi dấu ấn thương hiệu ngay trên cánh đồng di sản Hội An.`,
+      phuHop: `Doanh nghiệp Khách sạn, Nhà hàng, Resort<br>Doanh nghiệp tiên phong coi phát triển bền vững là chiến lược dài hạn, cần dữ liệu carbon minh bạch và muốn ghi dấu ấn thương hiệu ngay trên cánh đồng di sản Hội An.`,
       quyenLoi: [
         `<b>1. Gạo tươi giao định kỳ hàng tháng hoặc theo nhu cầu đã thỏa thuận</b><br>Lúa đã mua được lưu trữ và xay xát thành gạo tươi theo mô hình "Ăn tới đâu, xát tới đó"  tại xưởng gạo của HTX. Gạo tươi được giao tận nhà, trường học, công ty... định kỳ theo thỏa thuận và miễn phí vận chuyển.`,
         `<b>2. Làm quà tặng</b><br>Thiết kế bao bì quà tặng, câu chuyện truyền thông và nội dung đồng thương hiệu gắn với hành trình của chính sào ruộng doanh nghiệp đồng hành để làm quà tặng nội bộ, quà tặng cho các tổ chức từ thiện, quà tặng cho đối tác, thực đơn nhà hàng/khách sạn...`,
@@ -408,7 +408,7 @@ goi: {
         `<b>4. Nhận diện & ESG:</b><br>Bảng tên định danh thương hiệu cắm trực tiếp tại ruộng và báo cáo kiểm toán Carbon (Offset Footprint)`,
       ],
       than: [
-        { h:`Phù hợp với ai?`, p:[`Doanh nghiệp KS, Nhà hàng, Resort`,`Doanh nghiệp tiên phong coi phát triển bền vững là chiến lược dài hạn, cần dữ liệu carbon minh bạch và muốn ghi dấu ấn thương hiệu ngay trên cánh đồng di sản Hội An.`] },
+        { h:`Phù hợp với ai?`, p:[`Doanh nghiệp Khách sạn, Nhà hàng, Resort`,`Doanh nghiệp tiên phong coi phát triển bền vững là chiến lược dài hạn, cần dữ liệu carbon minh bạch và muốn ghi dấu ấn thương hiệu ngay trên cánh đồng di sản Hội An.`] },
         { h:`CÁC LỢI ÍCH CƠ BẢN`, ds:[
           `1. Gạo tươi giao định kỳ hàng tháng hoặc theo nhu cầu đã thỏa thuận<br>Lúa đã mua được lưu trữ và xay xát thành gạo tươi theo mô hình "Ăn tới đâu, xát tới đó"  tại xưởng gạo của HTX. Gạo tươi được giao tận nhà, trường học, công ty... định kỳ theo thỏa thuận và miễn phí vận chuyển.`,
           `2. Làm quà tặng<br>Thiết kế bao bì quà tặng, câu chuyện truyền thông và nội dung đồng thương hiệu gắn với hành trình của chính sào ruộng doanh nghiệp đồng hành để làm quà tặng nội bộ, quà tặng cho các tổ chức từ thiện, quà tặng cho đối tác, thực đơn nhà hàng/khách sạn...`,

@@ -18,6 +18,7 @@ for(const width of [276,316,331,346,370,386,500,636,679,680,681,724,820,960]){
     boxes.forEach((box,i)=>{
       assert(box.x>=0&&box.x+box.width<=width,`Overflow x at ${width}/${i}`);
       assert(box.y>=0&&box.y+box.height<=layout.height,`Overflow y at ${width}/${i}`);
+      if(layout.mobile)assert(box.x>Math.max(...layout.points.map(p=>p.x))+40,`Mobile scene crosses the timeline at ${width}/${i}`);
       for(const obstacle of obstacles)assert(!context.chamNhauCD(box,obstacle,2),`Content collision at ${width}/${i}`);
       boxes.slice(i+1).forEach(other=>assert(!context.chamNhauCD(box,other,0),'Scene collision'));
       // Hôm nay uses the path lane; check placements at and between all nodes.

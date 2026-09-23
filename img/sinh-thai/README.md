@@ -10,4 +10,6 @@ Lúa được vẽ theo ảnh `img/timeline/` và hình trong `iconHoatDongCD`: 
 
 Kiểm tra: chạy ba tệp `tests/timeline-ecosystem*.test.cjs`. Trang `tests/timeline-preview.html` giúp xem trang thật trong các bề rộng phổ biến. Các kiểm tra hình học và vòng đời không thay thế việc kiểm tra chuyển động trên trình duyệt/điện thoại thật.
 
-Chỉnh sửa preview tiếp theo: rắn, cua và châu chấu dùng chính các pixel từ bản phác thảo đã duyệt. Cảnh rắn/cua mỗi nơi một con; chim và trùn có lúa dày hơn; tổ chim dùng cả hai chim con trong ảnh gốc, nhỏ hơn chim mẹ và nằm giữa các dảnh lúa; chuồn chuồn đậu trên lá trong cảnh cận.
+Chỉnh sửa preview tiếp theo: rắn, cua và châu chấu được đối chiếu với bản phác thảo đã duyệt. Cảnh rắn/cua mỗi nơi một con; chim và trùn có lúa dày hơn; tổ chim dùng cả hai chim con trong ảnh gốc, nhỏ hơn chim mẹ và nằm giữa các dảnh lúa; chuồn chuồn đậu trên lá trong cảnh cận.
+
+Bản chuyển động mới: `ran-truon.png` gồm 8 tư thế rắn cuộn, duỗi thành chữ S và thu lại; `cua-bo.png` gồm 4 pha chân cua; `chau-chau-nhay.png` gồm 4 pha co chân, bật, bay và đáp. Cả ba được tạo bằng imagegen tích hợp, dùng bản phác thảo đã duyệt làm hình tham chiếu; ảnh nguồn của người dùng không bị sửa. Mỗi ảnh là atlas trên nền trong suốt; phần màu đỏ đô được xử lý khi hiển thị. Prompt chính: giữ cùng gương mặt, tỷ lệ và nét vẽ tay từ nhân vật tương ứng trong ảnh gốc; thay tư thế thân/chân theo tuần tự; không bối cảnh, chữ, đổ bóng hay con vật khác.

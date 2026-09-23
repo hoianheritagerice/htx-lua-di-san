@@ -9,7 +9,7 @@ const crop={frog:[52,62,273,268],dragonfly:[393,56,325,271],snake:[765,55,299,27
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
 const lerp=(a,b,t)=>a+(b-a)*t;
 const smooth=t=>t*t*(3-2*t);
-function makeSprites(image,atlas,canvas,motion){
+function makeSprites(image,atlas,canvas,motion,snakeAtlas,crabAtlas,hopperAtlas){
   function cut(img,rect,trim=true){
     const c=canvas(Math.ceil(rect[2]),Math.ceil(rect[3])),g=c.getContext('2d');
     g.drawImage(img,...rect,0,0,c.width,c.height);
@@ -48,6 +48,9 @@ function makeSprites(image,atlas,canvas,motion){
       sprites[name+'Frames']=Array.from({length:4},(_,col)=>cut(motion,[col*320,rows[row][0],320,rows[row][1]].map(v=>v*motion.width/1280),false));
     });
   }
+  if(snakeAtlas)sprites.snakeFrames=Array.from({length:8},(_,i)=>cut(snakeAtlas,[(i%4)*snakeAtlas.width/4,Math.floor(i/4)*snakeAtlas.height/2,snakeAtlas.width/4,snakeAtlas.height/2]));
+  if(crabAtlas)sprites.crabFrames=Array.from({length:4},(_,i)=>cut(crabAtlas,[i*crabAtlas.width/4,0,crabAtlas.width/4,crabAtlas.height]));
+  if(hopperAtlas)sprites.hopperFrames=Array.from({length:4},(_,i)=>cut(hopperAtlas,[i*hopperAtlas.width/4,0,hopperAtlas.width/4,hopperAtlas.height]));
   return sprites;
 }
 function path(g,fn,color=INK,width=1.6,alpha=1){g.save();g.strokeStyle=color;g.globalAlpha*=alpha;g.lineWidth=width;g.lineCap='round';g.lineJoin='round';g.beginPath();fn(g);g.stroke();g.restore();}
@@ -198,39 +201,48 @@ function nest(g,s,t,stage){
  flyingBird(g,s,px,py,91,t,true);
  if(q>=3&&q<=7)ellipse(g,px-31,py-40,2,1,'#a18f61',.75);
 }
+function snakePose(t){
+ const cycle=7,phase=((t%cycle)+cycle)%cycle/cycle;
+ const index=Math.floor(phase*14),frames=[0,1,2,3,4,5,6,7,6,5,4,3,2,1];
+ return {x:160-42*Math.cos(phase*Math.PI*2),y:150,frame:frames[index],phase:index<=7?'stretch':'gather'};
+}
 function snake(g,s,t,stage){
- field(g,t,stage);
- const x=158+43*Math.sin(t*.43),y=150+Math.sin(t*1.1)*.8;
- // Retain the exact coiled snake from the approved sheet; a small traveling
- // undulation changes the body without redrawing its head, spots or coils.
- bend(g,s.snake,x,y,107,t*.57,1.5);
+ field(g,t,stage);const p=snakePose(t),im=s.snakeFrames?.[p.frame];
+ if(im){
+  // All frames share a source scale: as the coils open, the body gets longer
+  // and the neck becomes lower while the head remains connected to the tail.
+  sprite(g,im,p.x,p.y,im.width*.43,{angle:Math.sin(t*1.2)*.015});
+ }else sprite(g,s.snake,p.x,p.y,107);
 }
-function crabPose(t){const q=((t%12)+12)%12;
- const emergence=q<2?smooth(q/2):q<6?1:q<8?1-smooth((q-6)/2):0;
- return {x:lerp(53,172,emergence)+(q>=2&&q<6?Math.sin((q-2)*1.5)*8:0),emergence,phase:q<2?'emerge':q<6?'forage':q<8?'retreat':'hidden'};
-}
+function crabPose(t){const q=t*.43;return {x:160+69*Math.sin(q),y:148+Math.sin(t*12)*.6,frame:Math.abs(Math.cos(q))<.15?3:Math.floor(t*7)%4,phase:Math.abs(Math.cos(q))<.15?'pause':'walk'};}
 function crab(g,s,t,stage){
- pond(g,t,157);
- path(g,p=>{p.moveTo(17,146);p.quadraticCurveTo(95,137,134,148);p.moveTo(167,148);p.quadraticCurveTo(242,141,305,149);},SOIL,1.5);
- [39,247,279].forEach((x,i)=>rice(g,x,146,t,stage,i?.85:.72));
- g.save();g.fillStyle='#d7c5ad';g.beginPath();g.ellipse(75,146,29,17,0,Math.PI,Math.PI*2);g.fill();g.fillStyle='#a48b76';g.beginPath();g.ellipse(75,146,19,11,0,Math.PI,Math.PI*2);g.fill();g.restore();
+ pond(g,t,167);
+ path(g,p=>{p.moveTo(16,147);p.quadraticCurveTo(161,142,304,147);},SOIL,1.3);
+ [32,72,248,285].forEach((x,i)=>rice(g,x,147,t,stage,.65+(i%2)*.18));
  const p=crabPose(t);
- // The cave wall hides the original full crab until it comes out.
- g.save();g.beginPath();g.rect(84,0,232,192);g.clip();
- sprite(g,s.crab,p.x,149+Math.sin(t*9)*p.emergence*.4,90);
- g.restore();
- path(g,a=>{a.moveTo(56,148);a.quadraticCurveTo(76,152,96,148);},SOIL,1.5);
+ sprite(g,s.crabFrames?.[p.frame]||s.crab,p.x,p.y,118);
 }
 function snail(g,s,t,stage){field(g,t,stage);for(let i=0;i<2;i++){
  const x=139+Math.sin(t*.19-i*.5)*58-i*42,y=146+i*14,w=i?37:57,flip=Math.cos(t*.19-i*.5)>0;
  path(g,p=>{p.moveTo(x+(flip?-1:1)*w*.35,y+1);p.quadraticCurveTo(x-30,y+2,x-45,y+1);},WATER,1,.32);
  bend(g,s.snail,x,y,w,t*.27, .65,true,flip);
  }}
-function grasshopper(g,s,t,stage){fullField(g,t,stage);for(let i=0;i<2;i++){
- const u=t*.52+i*1.4,x=161+79*Math.sin(u),y=(i?100:79)+Math.sin(u*2+i)*9,w=i?47:68;
- // The approved wing, hind legs and antennae move together without distortion.
- sprite(g,s.grasshopper,x,y,w,{angle:Math.cos(u)*.065});
- }}
+function grasshopperPose(t,i){
+ const q=((t+i*1.17)%5.6+5.6)%5.6,base=55+i*52,reverse=Math.floor((t+i*1.17)/5.6)%2===1;
+ const from=reverse?base+13:base-13,to=reverse?base-13:base+13,ground=117+i%2*6;
+ if(q<1)return {x:from,y:ground,frame:0,phase:'crouch'};
+ if(q<1.25){const u=(q-1)/.25;return {x:lerp(from,to,u*.12),y:ground-12*u,frame:1,phase:'push'};}
+ if(q<2.55){const u=(q-1.25)/1.3;return {x:lerp(from,to,.12+.78*smooth(u)),y:ground-12-52*Math.sin(Math.PI*u),frame:2,phase:'air'};}
+ if(q<2.9){const u=(q-2.55)/.35;return {x:lerp(from,to,.9+.1*smooth(u)),y:ground-12+12*u,frame:3,phase:'land'};}
+ return {x:to,y:ground,frame:0,phase:'rest'};
+}
+function grasshopper(g,s,t,stage){
+ fullField(g,t,stage);
+ for(let i=0;i<5;i++){
+  const p=grasshopperPose(t,i),w=[39,34,30,35,32][i];
+  sprite(g,s.hopperFrames?.[p.frame]||s.grasshopper,p.x,p.y,w,{angle:p.phase==='air'?Math.sin(t*2+i)*.06:0});
+ }
+}
 function draw(g,s,type,t,stage='tillering'){
  g.clearRect(0,0,320,192);g.save();g.fillStyle='#f5f2e8';g.fillRect(0,0,320,192);
  if(type==='frog'){
@@ -240,5 +252,5 @@ function draw(g,s,type,t,stage='tillering'){
  }else ({fish,duck,worm,dragonfly,mouse,bird,nest,snake,crab,snail,grasshopper}[type]||fish)(g,s,t,stage);
  g.restore();
 }
-root.HeSinhThaiArt={makeSprites,draw,frogPose,crop,habitat,habitats,riceSpec,duckPose,dragonflyPose,mousePose,crabPose};
+root.HeSinhThaiArt={makeSprites,draw,frogPose,crop,habitat,habitats,riceSpec,duckPose,dragonflyPose,mousePose,crabPose,snakePose,grasshopperPose};
 })(typeof window==='undefined'?globalThis:window);

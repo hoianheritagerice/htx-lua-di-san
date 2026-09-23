@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const types=['frog','dragonfly','fish','snail','duck','worm','grasshopper','bird','nest','mouse','snake','crab','fish'];
-const names={frog:'Ếch nhảy giữa bờ và nước',dragonfly:'Chuồn chuồn vỗ cánh rồi đậu trên lúa',fish:'Đàn cá nhỏ trong dòng nước',snail:'Ốc bò trên bờ ẩm',duck:'Vịt bơi giữa bụi lúa',worm:'Trùn ngọ nguậy dưới đất',grasshopper:'Châu chấu bay trên ngọn lúa',bird:'Chim lớn và chim nhỏ vỗ cánh bay',nest:'Hai chim non há miệng chờ mớm mồi',mouse:'Chuột chạy tới cắn gốc lúa',snake:'Rắn trườn trên bờ',crab:'Cua chui vào hang rồi trở ra'};
+const names={frog:'Ếch nhảy giữa bờ và nước',dragonfly:'Chuồn chuồn vỗ cánh rồi đậu trên lúa',fish:'Đàn cá nhỏ trong dòng nước',snail:'Ốc bò trên bờ ẩm',duck:'Vịt bơi giữa bụi lúa',worm:'Trùn ngọ nguậy dưới đất',grasshopper:'Năm châu chấu nhỏ bật nhảy trên lúa',bird:'Chim lớn và chim nhỏ vỗ cánh bay',nest:'Hai chim non há miệng chờ mớm mồi',mouse:'Chuột chạy tới cắn gốc lúa',snake:'Rắn uốn mình trườn trên bờ',crab:'Cua bò trên bờ với chân đổi nhịp'};
 let layer,observer,sprites,loading,frame=0,last=0,paused=false,control,reduced;
 const scenes=[];
 function placements(layout){return layout.points.map((p,i)=>{
@@ -14,8 +14,8 @@ function placements(layout){return layout.points.map((p,i)=>{
 function load(){
  if(loading)return loading;
  const get=src=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(new Error('Không tải được hình hệ sinh thái'));im.src=src;});
- loading=Promise.all([get('img/sinh-thai/ban-phac-thao-da-duyet.png'),get('img/sinh-thai/ech-chuyen-dong.png'),get('img/sinh-thai/cu-dan-chuyen-dong.png')]).then(([approved,frog,motion])=>{
- sprites=window.HeSinhThaiArt.makeSprites(approved,frog,(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;},motion);
+ loading=Promise.all([get('img/sinh-thai/ban-phac-thao-da-duyet.png'),get('img/sinh-thai/ech-chuyen-dong.png'),get('img/sinh-thai/cu-dan-chuyen-dong.png'),get('img/sinh-thai/ran-truon.png'),get('img/sinh-thai/cua-bo.png'),get('img/sinh-thai/chau-chau-nhay.png')]).then(([approved,frog,motion,snake,crab,hopper])=>{
+ sprites=window.HeSinhThaiArt.makeSprites(approved,frog,(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;},motion,snake,crab,hopper);
  scenes.forEach(s=>{if(s.visible)paint(s);});schedule();
  }).catch(()=>{loading=null;scenes.forEach(s=>s.el.classList.remove('eco-ready'));});
  return loading;

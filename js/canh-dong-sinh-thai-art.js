@@ -48,7 +48,17 @@ function makeSprites(image,atlas,canvas,motion,snakeAtlas,crabAtlas,hopperAtlas)
       sprites[name+'Frames']=Array.from({length:4},(_,col)=>cut(motion,[col*320,rows[row][0],320,rows[row][1]].map(v=>v*motion.width/1280),false));
     });
   }
-  if(snakeAtlas)sprites.snakeFrames=Array.from({length:8},(_,i)=>cut(snakeAtlas,[(i%4)*snakeAtlas.width/4,Math.floor(i/4)*snakeAtlas.height/2,snakeAtlas.width/4,snakeAtlas.height/2]));
+  if(snakeAtlas){
+    sprites.snakeFrames=Array.from({length:8},(_,i)=>cut(snakeAtlas,[(i%4)*snakeAtlas.width/4,Math.floor(i/4)*snakeAtlas.height/2,snakeAtlas.width/4,snakeAtlas.height/2]));
+    // Every approved pose includes a permanently extended tongue. Its fork is
+    // isolated at the right edge of each pose; erase that slice in a second
+    // display frame and switch between the two without changing the drawing.
+    sprites.snakeQuietFrames=sprites.snakeFrames.map(im=>{
+      const quiet=canvas(im.width,im.height),q=quiet.getContext('2d');
+      q.drawImage(im,0,0);q.clearRect(im.width-46,0,46,im.height);
+      return quiet;
+    });
+  }
   if(crabAtlas)sprites.crabFrames=Array.from({length:4},(_,i)=>cut(crabAtlas,[i*crabAtlas.width/4,0,crabAtlas.width/4,crabAtlas.height]));
   if(hopperAtlas)sprites.hopperFrames=Array.from({length:4},(_,i)=>cut(hopperAtlas,[i*hopperAtlas.width/4,0,hopperAtlas.width/4,hopperAtlas.height]));
   return sprites;
@@ -204,15 +214,16 @@ function nest(g,s,t,stage){
 function snakePose(t){
  const cycle=7,phase=((t%cycle)+cycle)%cycle/cycle;
  const index=Math.floor(phase*14),frames=[0,1,2,3,4,5,6,7,6,5,4,3,2,1];
- return {x:160-42*Math.cos(phase*Math.PI*2),y:150,frame:frames[index],phase:index<=7?'stretch':'gather'};
+ const flick=((t%2.3)+2.3)%2.3;
+ return {x:160-42*Math.cos(phase*Math.PI*2),y:150,frame:frames[index],phase:index<=7?'stretch':'gather',tongueOut:(flick>.42&&flick<.59)||(flick>.73&&flick<.89)};
 }
 function snake(g,s,t,stage){
  field(g,t,stage);const p=snakePose(t),im=s.snakeFrames?.[p.frame];
  if(im){
-  // All frames share a source scale: as the coils open, the body gets longer
-  // and the neck becomes lower while the head remains connected to the tail.
-  sprite(g,im,p.x,p.y,im.width*.43,{angle:Math.sin(t*1.2)*.015});
- }else sprite(g,s.snake,p.x,p.y,107);
+  // Keep the snake smaller than the surrounding rice and briefly show its
+  // original forked tongue in two quick flicks between longer retractions.
+  sprite(g,p.tongueOut?im:s.snakeQuietFrames[p.frame],p.x,p.y,im.width*.31,{angle:Math.sin(t*1.2)*.015});
+ }else sprite(g,s.snake,p.x,p.y,78);
 }
 function crabPose(t){const q=t*.43;return {x:160+69*Math.sin(q),y:148+Math.sin(t*12)*.6,frame:Math.abs(Math.cos(q))<.15?3:Math.floor(t*7)%4,phase:Math.abs(Math.cos(q))<.15?'pause':'walk'};}
 function crab(g,s,t,stage){
@@ -222,11 +233,21 @@ function crab(g,s,t,stage){
  const p=crabPose(t);
  sprite(g,s.crabFrames?.[p.frame]||s.crab,p.x,p.y,118);
 }
-function snail(g,s,t,stage){field(g,t,stage);for(let i=0;i<2;i++){
- const x=139+Math.sin(t*.19-i*.5)*58-i*42,y=146+i*14,w=i?37:57,flip=Math.cos(t*.19-i*.5)>0;
- path(g,p=>{p.moveTo(x+(flip?-1:1)*w*.35,y+1);p.quadraticCurveTo(x-30,y+2,x-45,y+1);},WATER,1,.32);
- bend(g,s.snail,x,y,w,t*.27, .65,true,flip);
- }}
+function snail(g,s,t,stage){
+ // First shoots have only a few narrow leaves: both snails graze their tips.
+ path(g,p=>{p.moveTo(19,153);p.quadraticCurveTo(156,149,301,153);},SOIL,1.2,.65);
+ [36,58,82,151,193,256,282].forEach((x,i)=>rice(g,x,152,t,'seedling',i===3||i===4?.78:.56+(i%2)*.09));
+ for(let i=0;i<2;i++){
+  const cycle=((t+i*3.5)%7+7)%7,approach=smooth(clamp(cycle/2.3)),retreat=smooth(clamp((cycle-5.5)/1.5));
+  const chew=cycle>2.3&&cycle<5.5?Math.sin((cycle-2.3)*14)*1.6:0;
+  const x=(i?230:99)+(i?-1:1)*(approach-retreat)*20,y=i?155:151,w=i?32:43,flip=i===0;
+  const tip=i?194:150,leafBend=(approach-retreat)*2+chew;
+  // A tender leaf flexes toward the mouth during each short feeding pause.
+  path(g,p=>{p.moveTo(tip,151);p.quadraticCurveTo(tip+(i?9:-9),135,tip+(i?7:-7)+leafBend,132+Math.abs(chew));},'#81916c',1,.8);
+  path(g,p=>{p.moveTo(x+(flip?-1:1)*w*.36,y+1);p.quadraticCurveTo(x+(flip?-13:13),y+2,x+(flip?-22:22),y+1);},WATER,.8,.28);
+  bend(g,s.snail,x,y+chew*.18,w,t*.34,.55,true,flip);
+ }
+}
 function grasshopperPose(t,i){
  const q=((t+i*1.17)%5.6+5.6)%5.6,base=55+i*52,reverse=Math.floor((t+i*1.17)/5.6)%2===1;
  const from=reverse?base+13:base-13,to=reverse?base-13:base+13,ground=117+i%2*6;
@@ -245,11 +266,8 @@ function grasshopper(g,s,t,stage){
 }
 function draw(g,s,type,t,stage='tillering'){
  g.clearRect(0,0,320,192);g.save();g.fillStyle='#f5f2e8';g.fillRect(0,0,320,192);
- if(type==='frog'){
-  frog(g,s,t);
-  // Keep the approved main frog choreography; a smaller companion rests on the bank.
-  sprite(g,s.frogFrames[0],34,165,30,{squash:1+Math.sin(t*2)*.018});
- }else ({fish,duck,worm,dragonfly,mouse,bird,nest,snake,crab,snail,grasshopper}[type]||fish)(g,s,t,stage);
+ if(type==='frog')frog(g,s,t);
+ else ({fish,duck,worm,dragonfly,mouse,bird,nest,snake,crab,snail,grasshopper}[type]||fish)(g,s,t,stage);
  g.restore();
 }
 root.HeSinhThaiArt={makeSprites,draw,frogPose,crop,habitat,habitats,riceSpec,duckPose,dragonflyPose,mousePose,crabPose,snakePose,grasshopperPose};

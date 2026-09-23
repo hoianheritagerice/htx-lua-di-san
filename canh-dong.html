@@ -107,7 +107,7 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .tt-thua{display:inline-block;background:rgba(255,255,255,.16);border-radius:5px;padding:1px 7px;
   font-size:11.5px;font-weight:600;white-space:nowrap;vertical-align:1px}
 .bando-nhung{width:100%;height:78vh;min-height:460px;border:0;display:block;background:#f6f5ee}
-@media(max-width:640px){.bando-nhung{height:70vh;min-height:380px}}
+@media(max-width:640px){.bando-nhung{height:82vh;height:82dvh;min-height:460px;max-height:700px}}
 .map-placeholder{aspect-ratio:16/8;background:radial-gradient(circle at 30% 40%,rgba(139,195,74,.25),transparent 40%),radial-gradient(circle at 70% 60%,rgba(201,162,39,.2),transparent 40%),linear-gradient(135deg,#eef0e3,#e3ddc8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#7c8468;text-align:center;padding:24px}
 .map-placeholder .ic{font-size:44px}
 .map-placeholder small{max-width:44ch;font-size:12.5px}
@@ -271,6 +271,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 }
 </style>
 <link rel="stylesheet" href="css/canh-dong.css?v=20260921a">
+<link rel="stylesheet" href="css/canh-dong-sinh-thai.css?v=20260923f">
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
@@ -543,12 +544,14 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 <script src="js/canh-dong-so-chot.js?v=20260914c"></script>
 <script src="js/dem-so.js?v=20260914c"></script>
 <script src="js/canh-dong-ui.js?v=20260921q"></script>
-<script src="js/canh-dong-timeline.js?v=20260914d"></script>
+<script src="js/canh-dong-sinh-thai-art.js?v=20260923g"></script>
+<script src="js/canh-dong-sinh-thai.js?v=20260923h"></script>
+<script src="js/canh-dong-timeline.js?v=20260923h"></script>
 
 <script>
 /* MỘT chỗ duy nhất khai báo phiên bản bản đồ. Đổi số này khi sửa
    ban-do.html để trình duyệt buộc phải tải bản mới. */
-const VER_BANDO = '3.0';
+const VER_BANDO = '3.1';
 let DONG_HIEN_TAI = 'CKOD';
 /* Vụ đang xem. Đổi ở ô chọn vụ; bản đồ nhúng, dòng thời gian và biểu đồ
    thời tiết đều bám theo biến này. */

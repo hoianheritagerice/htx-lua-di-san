@@ -516,14 +516,12 @@ function apDungKetQua(r){
     if(parts.length >= 2) notionPlots[parts[1].toUpperCase()] = pl;
   });
   let khop = 0;
-  const hoHuuCo = new Set();   // 1 người 2 thửa (LONG1/LONG2…) chỉ tính 1 hộ
   MAP_DATA.plots.forEach((p,i)=>{
     const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
     const nd = notionPlots[ma];
     const el = $('thua'+i);
     if(nd){
       khop++;
-      if(nd.organic) hoHuuCo.add(p.farmer.trim().toUpperCase());
     }
     /* Đồng hành có bộ màu riêng, không dùng màu trạng thái canh tác. Bước 1
        mới chỉ dùng màu nền trung tính; ba trạng thái sẽ thêm ở bước sau. */
@@ -556,7 +554,7 @@ function apDungKetQua(r){
       ? 'Đăng nhập để xem trạng thái canh tác và nhật ký của từng thửa.'
       : `Đã khớp ${khop}/${MAP_DATA.plots.length} thửa (vụ ${$('selVu').value}).`;
   }
-  veVuPanel(r.season, hoHuuCo.size);
+  veVuPanel(r.season);
   if(DEEP_LINK_THUA_CUA_TOI && THUA_CUA_TOI){
     capNhatHienThiThuaCuaToi(false);
   }
@@ -638,7 +636,7 @@ window.addEventListener('resize', function(){
   henXepLai = setTimeout(xepHangMocNhan_, 150);
 });
 
-function veVuPanel(s, soHoDem){
+function veVuPanel(s){
   const panel = $('vuPanel');
   if(!s || !s.gieoSa || !s.thuHoach){ panel.style.display='none'; return; }
   panel.style.display='block';
@@ -682,17 +680,6 @@ function veVuPanel(s, soHoDem){
     ? `🌾 Đang giai đoạn: <b>${giaiDoanHT}</b> — ngày thứ <b>${quaNgay}</b> sau gieo sạ (${Math.round(pct)}%)`
     : (nay > end ? `✅ Vụ đã kết thúc — tổng ${tongNgay} ngày canh tác` : `🌱 Vụ chưa bắt đầu — gieo sạ ngày ${s.gieoSa}`);
 
-  // 3 thông số tổng
-  $('tsDienTich').textContent = s.tongDienTich != null
-    ? (s.tongDienTich >= 10000
-        ? (s.tongDienTich/10000).toFixed(2).replace('.',',') + ' ha'
-        : Math.round(s.tongDienTich).toLocaleString('vi-VN') + ' m²')
-    : '—';
-  $('tsSoHo').textContent = (soHoDem > 0) ? soHoDem + ' hộ'
-    : (s.soHo != null ? s.soHo + ' hộ' : '—');
-  $('tsSanLuong').textContent = (s.tongSanLuong != null && s.tongSanLuong > 0)
-    ? Math.round(s.tongSanLuong).toLocaleString('vi-VN') + ' kg'
-    : 'Chưa thu hoạch';
 }
 
 /* ---------- popup Đồng hành ---------- */
@@ -1348,4 +1335,3 @@ $('selDong').addEventListener('change', function(){
 });
 if(API_URL.startsWith('http')) napNotion();
 else $('trangthai').textContent = 'Đang kết nối dữ liệu…';
-

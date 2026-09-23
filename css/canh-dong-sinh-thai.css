@@ -1,0 +1,9 @@
+.cd-ecosystem{position:absolute;inset:0;pointer-events:none;z-index:2;contain:layout style}
+.eco-caption{position:relative;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 18px;margin:20px auto 0;color:#783e48;font-size:12px}
+.eco-control{font:inherit;font-size:11px;color:#654d46;background:transparent;border:1px solid #cdbeb2;border-radius:20px;padding:8px 12px;min-height:44px;cursor:pointer}
+.eco-control:hover{background:#eee5da}.eco-control:focus-visible{outline:2px solid #783e48;outline-offset:3px}
+.eco-scene{position:absolute;overflow:hidden;contain:layout paint;opacity:0;transition:opacity .7s ease;border-radius:22px;isolation:isolate}
+.eco-scene.eco-ready.eco-entered{opacity:1;transform:translateY(0)}
+.eco-scene canvas{width:100%;height:100%;display:block}
+@media(max-width:700px){.eco-caption{font-size:11px;gap:5px 12px}}
+@media(prefers-reduced-motion:reduce){.eco-scene{transition:none;transform:none}.eco-control{display:none}}

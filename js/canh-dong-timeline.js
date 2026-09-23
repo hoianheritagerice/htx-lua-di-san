@@ -46,7 +46,8 @@ function tinhBoCucTimelineCD(width,heights){
   let y=24;
   const points=heights.map((height,i)=>{
     // Neo mốc vào tên/ngày; ảnh kéo dài xuống dưới, không đẩy tên xa biểu tượng.
-    const rowHeight=Math.max(160,height+64), cy=y+48;
+    const sceneHeight=Math.min(340,width-8)*.6;
+    const rowHeight=mobile?Math.max(160,height+64)+sceneHeight+32:Math.max(190,height+64), cy=y+48;
     // Chữ và ảnh nằm phía ngoài, cùng bên với mốc; cách mép vòng tròn 20px.
     const right=mobile||i%2===1;
     const p={x:center+(i%2?amplitude:-amplitude),y:cy,label:{x:right?labelEdge:center-amplitude-52-labelWidth,y:cy-26,width:labelWidth,height},right};
@@ -63,6 +64,7 @@ function viTriHomNayCD(layout,anchor){
     return {box,anchor:{x:near.x,y:near.y+32},huong:'duoi',ganMoc:true};
   }
   const obstacles=points.flatMap(p=>[p.label,{x:p.x-34,y:p.y-34,width:68,height:68}]);
+  if(window.HeSinhThaiCD)obstacles.push(...window.HeSinhThaiCD.placements(layout));
   const ds=[
     {x:anchor.x+16,y:anchor.y-h/2,huong:'phai'},
     {x:anchor.x-w-16,y:anchor.y-h/2,huong:'trai'},
@@ -92,7 +94,9 @@ function xepTimelineCD(){
   const base=tinhBoCucTimelineCD(width,nodes.map(()=>100));
   nodes.forEach((node,i)=>{node.querySelector('.river-label').style.width=base.points[i].label.width+'px';});
   const heights=nodes.map(node=>node.querySelector('.river-label').offsetHeight||100+(node.querySelector('.cd-tl-photo')?140:0));
-  const layout=tinhBoCucTimelineCD(width,heights);BO_CUC_TIMELINE_CD=layout;
+  const layout=tinhBoCucTimelineCD(width,heights);
+  layout.points.forEach((p,i)=>{p.eventId=nodes[i].dataset.hoatDong;});
+  BO_CUC_TIMELINE_CD=layout;
   river.style.height=layout.height+'px';
   nodes.forEach((node,i)=>{
     const p=layout.points[i],label=node.querySelector('.river-label');
@@ -109,6 +113,7 @@ function xepTimelineCD(){
   const last=layout.points.at(-1);d+=' L '+last.x+' '+(last.y+32);
   document.getElementById('riverBase').setAttribute('d',d);document.getElementById('riverDone').setAttribute('d',d);
   veHomNayCD(layout);
+  if(window.HeSinhThaiCD)window.HeSinhThaiCD.render(river,layout);
 }
 function veHomNayCD(layout){
   const river=document.getElementById('river');river.querySelector('.cd-today')?.remove();

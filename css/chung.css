@@ -94,11 +94,6 @@ svg{display:block;width:100%;height:auto;max-height:72vh}
   .moc-nhan{font-size:9.5px}
   .moc-nhan small{font-size:8.5px}
 }
-.vu-thongso{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 8px}
-.ts-o{background:#f7f4ea;border-radius:9px;padding:9px 6px;text-align:center}
-.ts-o .ts-so{font-size:16px;font-weight:700;color:var(--xanh-dam)}
-.ts-o .ts-ten{font-size:10.5px;color:#78826b;margin-top:2px}
-@media(max-width:420px){.ts-o .ts-so{font-size:14px}}
 
 /* ---------- modal ---------- */
 .modal-phu{position:fixed;inset:0;background:rgba(20,28,15,.55);display:none;align-items:flex-end;justify-content:center;z-index:50}

@@ -46,7 +46,8 @@ function tinhBoCucTimelineCD(width,heights){
   let y=24;
   const points=heights.map((height,i)=>{
     // Neo mốc vào tên/ngày; ảnh kéo dài xuống dưới, không đẩy tên xa biểu tượng.
-    const rowHeight=Math.max(160,height+64), cy=y+48;
+    const sceneHeight=Math.min(300,width-12)*.6;
+    const rowHeight=mobile?Math.max(160,height+64)+sceneHeight+32:Math.max(190,height+64), cy=y+48;
     // Chữ và ảnh nằm phía ngoài, cùng bên với mốc; cách mép vòng tròn 20px.
     const right=mobile||i%2===1;
     const p={x:center+(i%2?amplitude:-amplitude),y:cy,label:{x:right?labelEdge:center-amplitude-52-labelWidth,y:cy-26,width:labelWidth,height},right};

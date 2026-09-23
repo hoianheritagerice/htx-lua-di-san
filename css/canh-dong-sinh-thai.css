@@ -1,70 +1,9 @@
-/* Deep wine ink on the existing cream background; deliberately no filled cards. */
-.cd-ecosystem{position:absolute;inset:0;color:#783e48;pointer-events:none;z-index:2;contain:layout style}
+.cd-ecosystem{position:absolute;inset:0;pointer-events:none;z-index:2;contain:layout style}
 .eco-caption{position:relative;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 18px;margin:20px auto 0;color:#783e48;font-size:12px}
-.eco-control{font:inherit;font-size:11px;color:#654d46;background:transparent;border:1px solid #cdbeb2;border-radius:20px;padding:8px 12px;min-height:36px;cursor:pointer}
+.eco-control{font:inherit;font-size:11px;color:#654d46;background:transparent;border:1px solid #cdbeb2;border-radius:20px;padding:8px 12px;min-height:44px;cursor:pointer}
 .eco-control:hover{background:#eee5da}.eco-control:focus-visible{outline:2px solid #783e48;outline-offset:3px}
-.eco-scene{position:absolute;overflow:hidden;contain:layout paint;isolation:isolate}
-.eco-animal{position:absolute;width:100px;height:96px;left:calc(50% - 50px);top:14px;transform-origin:50% 85%}
-.eco-animal svg,.eco-fish svg{display:block;width:100%;height:100%;overflow:visible}
-.eco-scene svg g{transform-box:fill-box;transform-origin:center}
-.eco-scene *{animation-delay:var(--eco-delay,0s)!important;animation-play-state:paused!important}
-.eco-visible *{animation-play-state:running!important}
-.eco-paused *{animation-play-state:paused!important}
-.eco-breathe{animation:eco-breathe 4.8s ease-in-out infinite;transform-origin:50% 90%!important}
-.eco-eye{transform-box:fill-box;transform-origin:center;animation:eco-blink 6.2s infinite}
-.eco-frog{animation:eco-hop 9s ease-in-out infinite}
-.eco-grasshopper{animation:eco-hop 11s ease-in-out infinite}
-.eco-hover{animation:eco-hover 3.2s ease-in-out infinite}
-.eco-wings{animation:eco-wing 260ms ease-in-out infinite}
-.eco-dragonfly{animation:eco-drift 8s ease-in-out infinite}
-.eco-sway{animation:eco-sway 5s ease-in-out infinite;transform-origin:50% 90%!important}
-.eco-tongue{animation:eco-tongue 4.5s ease-in-out infinite}
-.eco-tail{animation:eco-tail 3.1s ease-in-out infinite;transform-origin:95% 90%!important}
-.eco-chicks{animation:eco-chicks 3.2s ease-in-out infinite;transform-origin:50% 100%!important}
-.eco-bird-body{animation:eco-bird 6s ease-in-out infinite;transform-origin:50% 95%!important}
-.eco-bird-wing{animation:eco-tail 4.2s ease-in-out infinite}
-.eco-wriggle{animation:eco-wriggle 3.5s ease-in-out infinite}
-.eco-snail{animation:eco-crawl 14s ease-in-out infinite}
-.eco-snail-head{animation:eco-sway 4.6s ease-in-out infinite;transform-origin:50% 100%!important}
-.eco-duck-body{animation:eco-breathe 3s ease-in-out infinite}
-.eco-duck{animation:eco-waddle 7s ease-in-out infinite}
-.eco-duck-feet{animation:eco-feet 1.2s ease-in-out infinite;transform-origin:50% 0%;transform-box:fill-box}
-.eco-crab{animation:eco-scuttle 8s ease-in-out infinite}
-.eco-claws{animation:eco-claw 2.8s ease-in-out infinite;transform-origin:50% 100%!important}
-.eco-crab-legs{animation:eco-feet 850ms ease-in-out infinite}
-.eco-school{position:absolute;inset:0;animation:eco-swim 12s ease-in-out infinite}
-.eco-fish{position:absolute;width:51px;height:46px;animation:eco-fish-bob 2.8s ease-in-out infinite}
-.eco-fish-0{left:17%;top:10%;--eco-delay:-.4s}
-.eco-fish-1{left:44%;top:34%;width:43px;--eco-delay:-1.5s}
-.eco-fish-2{left:15%;top:58%;width:38px;--eco-delay:-2.2s}
-.eco-fish-3{left:66%;top:61%;width:32px;--eco-delay:-.9s}
-.eco-fish-tail{animation:eco-tail-fin 650ms ease-in-out infinite;transform-origin:0% 50%!important}
-.eco-bubble{position:absolute;width:5px;height:5px;border:1px solid currentColor;border-radius:50%;left:12%;top:48%;opacity:0;animation:eco-bubble 4s ease-out infinite}
-.eco-bubble-2{left:71%;top:66%;width:3px;height:3px;--eco-delay:-2s}
-.eco-mobile .eco-animal{width:55px;height:50px;left:calc(50% - 27px);top:1px}
-.eco-mobile .eco-fish{width:32px;height:25px}
-.eco-mobile .eco-fish-1{width:29px}.eco-mobile .eco-fish-2{width:25px}.eco-mobile .eco-fish-3{width:22px}
-.eco-mobile .eco-fish-2,.eco-mobile .eco-fish-3{top:46%}
-@keyframes eco-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.015,.97)}}
-@keyframes eco-blink{0%,42%,46%,100%{transform:scaleY(1)}44%{transform:scaleY(.12)}}
-@keyframes eco-hop{0%,68%,88%,100%{transform:translate(0,0)}72%{transform:scale(1.07,.9)}78%{transform:translate(7px,-9px) rotate(3deg)}83%{transform:translate(9px,0) scale(1.05,.94)}}
-@keyframes eco-hover{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-@keyframes eco-wing{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.68)}}
-@keyframes eco-drift{0%,100%{transform:translateX(-7px) rotate(-4deg)}50%{transform:translateX(8px) rotate(4deg)}}
-@keyframes eco-sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(4deg)}}
-@keyframes eco-tongue{0%,75%,100%{opacity:0}80%,92%{opacity:1}}
-@keyframes eco-tail{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(5deg)}}
-@keyframes eco-chicks{0%,100%{transform:translateY(1px)}35%{transform:translateY(-4px) rotate(-3deg)}65%{transform:translateY(-1px) rotate(2deg)}}
-@keyframes eco-bird{0%,30%,100%{transform:rotate(0)}42%,52%{transform:rotate(9deg)}75%{transform:rotate(-4deg)}}
-@keyframes eco-wriggle{0%,100%{transform:scaleX(.95) skewY(-3deg)}50%{transform:scaleX(1.03) skewY(3deg)}}
-@keyframes eco-crawl{0%,100%{transform:translateX(-9px)}50%{transform:translateX(9px)}}
-@keyframes eco-waddle{0%,100%{transform:translateX(-5px) rotate(-3deg)}25%,75%{transform:rotate(3deg)}50%{transform:translateX(5px) rotate(-3deg)}}
-@keyframes eco-feet{0%,100%{transform:skewX(-5deg)}50%{transform:skewX(5deg)}}
-@keyframes eco-scuttle{0%,35%,100%{transform:translateX(-7px)}50%,85%{transform:translateX(7px)}}
-@keyframes eco-claw{0%,100%{transform:scaleX(1) rotate(-2deg)}50%{transform:scaleX(1.05) rotate(2deg)}}
-@keyframes eco-swim{0%,100%{transform:translateX(7px)}50%{transform:translateX(-9px)}}
-@keyframes eco-fish-bob{0%,100%{transform:translateY(-2px) rotate(-3deg)}50%{transform:translateY(2px) rotate(3deg)}}
-@keyframes eco-tail-fin{0%,100%{transform:scaleX(.78) skewY(-5deg)}50%{transform:scaleX(1) skewY(5deg)}}
-@keyframes eco-bubble{0%{opacity:0;transform:translateY(0)}20%{opacity:.5}100%{opacity:0;transform:translateY(-18px)}}
-@media(max-width:700px){.eco-caption{font-size:11px;gap:5px 12px}.eco-control{min-height:44px}}
-@media(prefers-reduced-motion:reduce){.eco-scene *{animation:none!important}.eco-control{display:none}.eco-tongue{opacity:0}}
+.eco-scene{position:absolute;overflow:hidden;contain:layout paint;opacity:0;transition:opacity .7s ease;border-radius:22px;isolation:isolate}
+.eco-scene.eco-ready.eco-entered{opacity:1;transform:translateY(0)}
+.eco-scene canvas{width:100%;height:100%;display:block}
+@media(max-width:700px){.eco-caption{font-size:11px;gap:5px 12px}}
+@media(prefers-reduced-motion:reduce){.eco-scene{transition:none;transform:none}.eco-control{display:none}}

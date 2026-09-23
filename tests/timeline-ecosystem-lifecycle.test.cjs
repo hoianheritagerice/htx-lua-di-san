@@ -33,7 +33,7 @@ doc.hidden=true;doc.events.visibilitychange();assert.equal(frames.size,0);
 doc.hidden=false;doc.events.visibilitychange();assert.equal(frames.size,1);
 media.matches=true;media.change();assert.equal(frames.size,0);assert.equal(painted.at(-1).time,0);
 win.HeSinhThaiCD.render(river,{...layout,width:316});assert.equal(river.children.length,1);assert.equal(layer.children.length,1);
-assert.equal(scene.children[0].width,600,'Canvas is capped to 2x pixel density');
+assert.equal(scene.children[0].width,616,'Mobile scene fills the available width at capped 2x density');
 win.HeSinhThaiCD.render(river,{...layout,points:layout.points.map(p=>({...p,eventId:'lam-dong'}))});
 assert.equal(scene.dataset.animal,'worm');assert.equal(painted.at(-1).stage,'booting');
 win.HeSinhThaiCD.render(river,{...layout,points:layout.points.map(p=>({...p,eventId:'de-nhanh'}))});

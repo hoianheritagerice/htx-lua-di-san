@@ -7,7 +7,7 @@ let layer,observer,sprites,loading,frame=0,last=0,paused=false,control,reduced;
 const scenes=[];
 function placements(layout){return layout.points.map((p,i)=>{
  const info=p.eventId?window.HeSinhThaiArt.habitat(p.eventId):{type:types[i%types.length],stage:'tillering'};
- if(layout.mobile){const w=Math.min(300,layout.width-12);return {x:(layout.width-w)/2,y:Math.max(p.label.y+p.label.height+14,p.y+86),width:w,height:w*.6,...info};}
+ if(layout.mobile){const w=Math.min(340,layout.width-8);return {x:(layout.width-w)/2,y:Math.max(p.label.y+p.label.height+14,p.y+86),width:w,height:w*.6,...info};}
  const w=Math.min(260,p.label.width),h=w*.6,x=p.right?layout.width-p.label.x-p.label.width:layout.width/2+(layout.width/2-p.label.x-p.label.width);
  return {x:x+(p.label.width-w)/2,y:p.y+3,width:w,height:h,...info};
 });}

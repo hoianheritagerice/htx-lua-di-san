@@ -63,6 +63,7 @@ function viTriHomNayCD(layout,anchor){
     return {box,anchor:{x:near.x,y:near.y+32},huong:'duoi',ganMoc:true};
   }
   const obstacles=points.flatMap(p=>[p.label,{x:p.x-34,y:p.y-34,width:68,height:68}]);
+  if(window.HeSinhThaiCD)obstacles.push(...window.HeSinhThaiCD.placements(layout));
   const ds=[
     {x:anchor.x+16,y:anchor.y-h/2,huong:'phai'},
     {x:anchor.x-w-16,y:anchor.y-h/2,huong:'trai'},
@@ -109,6 +110,7 @@ function xepTimelineCD(){
   const last=layout.points.at(-1);d+=' L '+last.x+' '+(last.y+32);
   document.getElementById('riverBase').setAttribute('d',d);document.getElementById('riverDone').setAttribute('d',d);
   veHomNayCD(layout);
+  if(window.HeSinhThaiCD)window.HeSinhThaiCD.render(river,layout);
 }
 function veHomNayCD(layout){
   const river=document.getElementById('river');river.querySelector('.cd-today')?.remove();

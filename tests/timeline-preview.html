@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kiểm tra hiển thị timeline</title>
+<style>
+body{margin:0;background:#deded7;color:#263629;font:14px system-ui}header{padding:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}select,button{font:inherit;padding:8px}main{overflow:auto;padding:0 16px 16px}iframe{display:block;margin:auto;background:#f5f2e8;border:1px solid #bbb;width:390px;height:780px}
+</style>
+<header><label>Chiều rộng màn hình <select id="width"><option>320</option><option>360</option><option selected>390</option><option>430</option><option>768</option><option>1280</option></select></label><button id="timeline">Đến các mốc timeline</button><span>Trang kiểm tra dành cho người bảo trì.</span></header>
+<main><iframe id="preview" title="Bản kiểm tra cánh đồng" src="../canh-dong.html#dongThoiGian"></iframe></main>
+<script>
+const frame=document.getElementById('preview');
+document.getElementById('width').addEventListener('change',e=>frame.style.width=e.target.value+'px');
+document.getElementById('timeline').addEventListener('click',()=>{
+  const doc=frame.contentDocument,river=doc.getElementById('river');
+  if(river)frame.contentWindow.scrollTo({top:river.getBoundingClientRect().top+frame.contentWindow.scrollY-250,behavior:'instant'});
+});
+</script>
+</html>

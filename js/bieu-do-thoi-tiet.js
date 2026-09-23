@@ -72,6 +72,12 @@ function nhanThuaNK(e) {
 
 /* ---------- tiện ích dùng chung ---------- */
 function soNgayTT(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
+function ngayHomNayTT() {
+  const d = new Date();
+  const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0');
+  const n = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + n;
+}
 function escTT(t) {
   return String(t == null ? '' : t).replace(/[&<>"]/g,
     c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -280,9 +286,22 @@ function veThoiTiet(r) {
      có một trục bên trái là mm, còn nhiệt độ vẽ trên thang ẩn 15–40°C
      không nhãn — nhìn không đọc được số nào. */
   const W = 1000, H = 360, L = 46, R = 46, T = 46, B = 78;
-  const nssMax = Math.max(100,
+  /* Trục KHÔNG được kết thúc theo ngày cuối cùng có số thời tiết.
+     Với vụ đang canh tác, dữ liệu Open-Meteo có thể chậm 1–vài ngày;
+     trục vẫn phải thể hiện trọn hành trình tới ngày thu hoạch dự kiến.
+     Nếu đã quá ngày dự kiến mà vụ vẫn chưa chốt, kéo tiếp tới hôm nay.
+     Phần chưa có dữ liệu để trống — tuyệt đối không nội suy/bịa số. */
+  const nssThuHoach = r.season && r.season.thuHoach
+    ? soNgayTT(gieo, r.season.thuHoach) : null;
+  const nssHomNay = r.season && r.season.daXong !== true
+    ? soNgayTT(gieo, ngayHomNayTT()) : null;
+  const nssMax = Math.max(
+    100,
     ...tt.map(d => soNgayTT(gieo, d.ngay)),
-    ...chamNK.map(e => soNgayTT(gieo, e.ngay)));
+    ...chamNK.map(e => soNgayTT(gieo, e.ngay)),
+    nssThuHoach == null ? -Infinity : nssThuHoach,
+    nssHomNay == null ? -Infinity : nssHomNay
+  );
   /* Trục bắt đầu từ SỐ ÂM. Mọi phép so sánh biên bên dưới phải dùng
      nssMin chứ không phải 0 — sót một chỗ là mất luôn tuần Chuẩn bị mà
      không báo lỗi gì. */
@@ -376,7 +395,7 @@ function veThoiTiet(r) {
   if (HIEN_THI.nhiet)    g += '<text x="' + (W - R + 7) + '" y="' + (T - 6) + '" text-anchor="start" font-size="10" font-weight="600" fill="' + MAU_NHIET + '">°C</text>';
 
   /* ---------- 3. CỘT MƯA ---------- */
-  const bw = Math.max(2, (pw / nssMax) * 0.8);
+  const bw = Math.max(2, (pw / Math.max(1, nssMax - nssMin)) * 0.8);
   if (HIEN_THI.mua) {
     tt.forEach(d => {
       const n = soNgayTT(gieo, d.ngay);
@@ -442,7 +461,7 @@ function veThoiTiet(r) {
   }
 
   /* ---------- 6. VẠCH HÔM NAY ---------- */
-  const nHN = soNgayTT(gieo, new Date().toISOString().slice(0, 10));
+  const nHN = soNgayTT(gieo, ngayHomNayTT());
   if (nHN >= nssMin && nHN <= nssMax) {
     const xh = x(nHN);
     g += '<line x1="' + xh.toFixed(1) + '" y1="22" x2="' + xh.toFixed(1) + '" y2="' + (yE + 11) +

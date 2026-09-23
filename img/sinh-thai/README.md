@@ -9,3 +9,5 @@ Prompt tạo bộ tư thế mới: dùng bản phác thảo đã duyệt làm th
 Lúa được vẽ theo ảnh `img/timeline/` và hình trong `iconHoatDongCD`: lá dài nhọn, dảnh chung gốc, đòng còn trong bẹ, bông xuất hiện từ mốc trổ, hạt đổi màu khi chín. Ghép cảnh bằng ID hoạt động, không dùng vị trí sau khi sắp ngày.
 
 Kiểm tra: chạy ba tệp `tests/timeline-ecosystem*.test.cjs`. Trang `tests/timeline-preview.html` giúp xem trang thật trong các bề rộng phổ biến. Các kiểm tra hình học và vòng đời không thay thế việc kiểm tra chuyển động trên trình duyệt/điện thoại thật.
+
+Chỉnh sửa preview tiếp theo: rắn, cua và châu chấu dùng chính các pixel từ bản phác thảo đã duyệt. Cảnh rắn/cua mỗi nơi một con; chim và trùn có lúa dày hơn; tổ chim dùng cả hai chim con trong ảnh gốc, nhỏ hơn chim mẹ và nằm giữa các dảnh lúa; chuồn chuồn đậu trên lá trong cảnh cận.

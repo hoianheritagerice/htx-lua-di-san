@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const types=['frog','dragonfly','fish','snail','duck','worm','grasshopper','bird','nest','mouse','snake','crab','fish'];
-const names={frog:'Ếch nhảy giữa bờ và nước',dragonfly:'Chuồn chuồn vỗ cánh rồi đậu trên lúa',fish:'Đàn cá nhỏ trong dòng nước',snail:'Ốc bò trên bờ ẩm',duck:'Vịt bơi giữa bụi lúa',worm:'Trùn ngọ nguậy dưới đất',grasshopper:'Châu chấu nhảy trên bờ',bird:'Chim lớn và chim nhỏ vỗ cánh bay',nest:'Hai chim non há miệng chờ mớm mồi',mouse:'Chuột chạy tới cắn gốc lúa',snake:'Rắn trườn trên bờ',crab:'Cua chui vào hang rồi trở ra'};
+const names={frog:'Ếch nhảy giữa bờ và nước',dragonfly:'Chuồn chuồn vỗ cánh rồi đậu trên lúa',fish:'Đàn cá nhỏ trong dòng nước',snail:'Ốc bò trên bờ ẩm',duck:'Vịt bơi giữa bụi lúa',worm:'Trùn ngọ nguậy dưới đất',grasshopper:'Châu chấu bay trên ngọn lúa',bird:'Chim lớn và chim nhỏ vỗ cánh bay',nest:'Hai chim non há miệng chờ mớm mồi',mouse:'Chuột chạy tới cắn gốc lúa',snake:'Rắn trườn trên bờ',crab:'Cua chui vào hang rồi trở ra'};
 let layer,observer,sprites,loading,frame=0,last=0,paused=false,control,reduced;
 const scenes=[];
 function placements(layout){return layout.points.map((p,i)=>{

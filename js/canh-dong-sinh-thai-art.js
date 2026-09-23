@@ -48,10 +48,6 @@ function makeSprites(image,atlas,canvas,motion){
       sprites[name+'Frames']=Array.from({length:4},(_,col)=>cut(motion,[col*320,rows[row][0],320,rows[row][1]].map(v=>v*motion.width/1280),false));
     });
   }
-  sprites.snakeHead=cut(image,[931,76,110,70]);
-  // Separate original crab body and claws; the walking legs are articulated below.
-  sprites.crabBody=cut(image,[799,810,178,137]);
-  sprites.crabClaw=cut(image,[763,747,83,101]);
   return sprites;
 }
 function path(g,fn,color=INK,width=1.6,alpha=1){g.save();g.strokeStyle=color;g.globalAlpha*=alpha;g.lineWidth=width;g.lineCap='round';g.lineJoin='round';g.beginPath();fn(g);g.stroke();g.restore();}
@@ -128,6 +124,10 @@ function rice(g,x,y,t,stage='tillering',scale=1,disturb=0){
  g.restore();
 }
 function field(g,t,stage,y=147){path(g,p=>{p.moveTo(21,y);p.quadraticCurveTo(158,y-5,300,y);},SOIL,1.2,.65);[[42,.72],[76,.82],[246,.88],[282,.72]].forEach(([x,k])=>rice(g,x,y,t,stage,k));}
+function fullField(g,t,stage,y=151){
+ path(g,p=>{p.moveTo(16,y);p.quadraticCurveTo(160,y-5,304,y);},SOIL,1.2,.65);
+ for(let i=0;i<11;i++)rice(g,32+i*26,y,t,stage,.66+(i%3)*.09);
+}
 function wake(g,x,y,t,dir=1,size=1){for(let j=0;j<3;j++){const age=(t*.65+j/3)%1;ellipse(g,x-dir*(12+age*28)*size,y+age*3,(8+age*17)*size,(2+age*3)*size,WATER,(1-age)*.6);}}
 function fish(g,s,t,stage){g.save();g.fillStyle='#e5ece3';g.globalAlpha=.7;g.beginPath();g.ellipse(169,124,127,40,0,0,Math.PI*2);g.fill();g.restore();pond(g,t,120);field(g,t,stage);for(let i=0;i<5;i++){const u=t*.44+i*.19,x=164+48*Math.cos(u)+[-22,28,-12,38,5][i],y=121+[0,8,23,33,19][i]+Math.sin(t*1.1+i)*2;const flip=Math.sin(u)<0;bend(g,s.fish,x,y,[43,34,29,25,21][i],t+i,2.1,true,flip);wake(g,x,y+3,t+i,flip?1:-1,.45);}for(let i=0;i<3;i++){const u=(t*.28+i*.31)%1;ellipse(g,69+i*64,155-u*68,1.5,1.5,WATER,Math.sin(u*Math.PI)*.5);}}
 function duckPose(t,i=0){const u=t*.31-i*.35,dir=Math.cos(u)>=0?1:-1;return {x:156+59*Math.sin(u)-dir*i*57,y:131+i*16+Math.sin(t*1.7-i)*.7,dir,frame:(t+i*1.3)%9>6.8?2:Math.floor(t*.8+i)%2};}
@@ -143,8 +143,8 @@ function duck(g,s,t,stage){pond(g,t,133);field(g,t,stage,135);
 function worm(g,s,t,stage){
  g.save();g.fillStyle='#eee3d3';g.beginPath();g.moveTo(24,87);g.quadraticCurveTo(144,77,295,87);g.lineTo(287,172);g.quadraticCurveTo(167,181,31,171);g.closePath();g.fill();g.restore();
  path(g,p=>{p.moveTo(24,87);p.quadraticCurveTo(155,77,295,87);},SOIL,1.5);
- [52,108,209,268].forEach((x,i)=>{
-  rice(g,x,84,t,stage,.66);
+ for(let i=0;i<11;i++)rice(g,36+i*25,84,t,stage,.65+(i%3)*.06);
+ [43,83,123,163,203,243,283].forEach(x=>{
   for(let j=0;j<4;j++)path(g,p=>{p.moveTo(x,84);p.quadraticCurveTo(x+(j-1.5)*5,96,x+(j-1.5)*8,110+(j%2)*7);p.moveTo(x+(j-1.5)*4,98);p.lineTo(x+(j-1.5)*11,105);},SOIL,.7,.65);
  });
  for(let i=0;i<28;i++)ellipse(g,37+(i*67)%245,99+(i*19)%65,.65,.65,SOIL,.5);
@@ -154,17 +154,16 @@ function worm(g,s,t,stage){
  }
 }
 function dragonflyPose(t,i,stage){
- const q=(t+i*3.7)%12,base=i?83:239,tip=riceSpec[stage].height*.8;
- const perchY=147-Math.max(19,tip*.68);
- if(q<3)return {x:base,y:perchY,frame:3,perched:true,flip:i===1};
+ const q=(t+i*3.7)%12,base=i?209:110,perchY=i?111:92,sway=Math.sin(t*.85+1.7+i)*3;
+ if(q<3)return {x:base+sway,y:perchY,frame:3,perched:true,flip:i===1};
  const u=(q-3)/9;
- return {x:base+(i?-1:1)*Math.sin(u*Math.PI*2)*67,y:perchY-Math.sin(u*Math.PI)*46,frame:[0,1,2,1][Math.floor(t*15+i)%4],perched:false,flip:Math.cos(u*Math.PI*2)*(i?-1:1)<0};
+ return {x:base+sway+(i?-1:1)*Math.sin(u*Math.PI*2)*37,y:perchY-Math.sin(u*Math.PI)*28,frame:[0,1,2,1][Math.floor(t*15+i)%4],perched:false,flip:Math.cos(u*Math.PI*2)*(i?-1:1)<0};
 }
-function dragonfly(g,s,t,stage){pond(g,t,154);field(g,t,stage);
- // A slender bank reed is the perch before rice has emerged.
- if(riceSpec[stage].height===0)[83,239].forEach(x=>path(g,p=>{p.moveTo(x,147);p.quadraticCurveTo(x-4,134,x+5,126);},'#919574',1));
- [239,83].forEach(x=>rice(g,x,147,t,stage,.8));
- for(let i=0;i<2;i++){const p=dragonflyPose(t,i,stage);sprite(g,s.dragonflyFrames[p.frame],p.x,p.y+5,i?48:66,{flip:p.flip,angle:p.perched?-.08:Math.sin(t+i)*.05});}
+function dragonfly(g,s,t,stage){
+ // Close view: the insects land on the tips of rice leaves, above the water.
+ rice(g,108,166,t,stage,2.9);rice(g,212,167,t,stage,2.2);
+ path(g,p=>{p.moveTo(16,169);p.quadraticCurveTo(156,165,307,171);},SOIL,1,.55);
+ for(let i=0;i<2;i++){const p=dragonflyPose(t,i,stage);sprite(g,s.dragonflyFrames[p.frame],p.x,p.y+5,i?55:72,{flip:p.flip,angle:p.perched?-.06:Math.sin(t+i)*.05});}
 }
 function mousePose(t,i=0){const q=(t+i*1.8)%10,a=i?277:58,b=i?225:130;
  if(q<2.5)return {x:lerp(a,b,smooth(q/2.5)),run:true,flip:i===1};
@@ -181,67 +180,56 @@ function mouse(g,s,t,stage){field(g,t,stage);
  }
 }
 function flyingBird(g,s,x,y,w,t,flip=false){const frame=[0,1,2,3,2,1][Math.floor(t*9)%6];sprite(g,s.birdFrames[frame],x,y,w,{flip});}
-function bird(g,s,t,stage){field(g,t,stage);for(let i=0;i<2;i++){
- const u=t*.43-i*.48,x=159+91*Math.sin(u),y=99+i*29-Math.cos(u*2)*17;
- flyingBird(g,s,x,y,i?49:70,t+i*.27,Math.cos(u)<0);
+function bird(g,s,t,stage){fullField(g,t,stage);for(let i=0;i<2;i++){
+ const u=t*.43-i*.55,x=159+81*Math.sin(u),y=91+i*22-Math.cos(u*2)*12;
+ flyingBird(g,s,x,y,i?55:79,t+i*.27,Math.cos(u)<0);
  }}
-function nest(g,s,t,stage){field(g,t,stage);path(g,p=>{p.moveTo(100,164);p.quadraticCurveTo(163,142,231,142);p.moveTo(205,145);p.lineTo(234,156);},SOIL,2);
- const im=s.nest,w=92,h=w*im.height/im.width,x=159,y=151;
- // Preserve the basket pixels, animate the two chicks independently above its rim.
+function nest(g,s,t,stage){
+ // The rice culms support a compact nest. Keep both original chicks and basket.
+ rice(g,115,160,t,stage,1.2);rice(g,161,162,t,stage,1.31);rice(g,204,159,t,stage,1.16);
+ rice(g,52,164,t,stage,.75);rice(g,273,164,t,stage,.81);
+ const im=s.nest,w=75,h=w*im.height/im.width,x=158,y=113,split=.56;
  for(let i=0;i<2;i++){
-  const cx=143+i*31,cy=123+Math.sin(t*3+i)*2+(i?4:0),r=i?9:11;
-  g.save();g.fillStyle='#f5f2e8';g.strokeStyle=INK;g.lineWidth=1.65;g.beginPath();g.moveTo(cx-r-3,cy+12);g.quadraticCurveTo(cx-r,cy+4,cx-r,cy-4);g.bezierCurveTo(cx-r-1,cy-20,cx+r+5,cy-20,cx+r,cy-3);g.quadraticCurveTo(cx+r-1,cy+7,cx+r+4,cy+12);g.fill();g.stroke();
-  g.fillStyle=INK;g.beginPath();g.arc(cx+3,cy-9,1.7,0,Math.PI*2);g.fill();
-  const gape=3+3*(.5+.5*Math.sin(t*4+i));g.beginPath();g.moveTo(cx+r-1,cy-7);g.lineTo(cx+r+9,cy-9-gape);g.lineTo(cx+r+3,cy-3);g.lineTo(cx+r+8,cy+gape);g.lineTo(cx+r-1,cy+1);g.stroke();g.restore();
+  const sourceX=i*im.width/2;
+  g.drawImage(im,sourceX,0,im.width/2,im.height*split,x-w/2+i*w/2,y-h+Math.sin(t*2.8+i*1.9)*1.6,w/2,h*split);
  }
- g.drawImage(im,0,im.height*.53,im.width,im.height*.47,x-w/2,y-h*.47,w,h*.47);
- const q=t%11,u=q/11,px=254-Math.sin(u*Math.PI)*69,py=65+Math.sin(u*Math.PI)*38;
- flyingBird(g,s,px,py,56,t,true);
- path(g,p=>{p.moveTo(px-21,py-29);p.quadraticCurveTo(px-24,py-21,px-20,py-18);},INK,1.2);
+ g.drawImage(im,0,im.height*split,im.width,im.height*(1-split),x-w/2,y-h*(1-split),w,h*(1-split));
+ const q=t%11,arrive=smooth(clamp((q-1)/2)),leave=smooth(clamp((q-7)/2)),px=lerp(264,217,arrive)+leave*47,py=lerp(99,123,arrive)-leave*24;
+ flyingBird(g,s,px,py,91,t,true);
+ if(q>=3&&q<=7)ellipse(g,px-31,py-40,2,1,'#a18f61',.75);
 }
-function snake(g,s,t,stage){field(g,t,stage);for(let i=0;i<2;i++){
- const q=t*.32+i*.8,angle=Math.atan2(-Math.sin(q)*.65,Math.cos(q)),length=i?64:94;
- g.save();g.translate(157+Math.sin(q)*49,i?157:132);
- const pts=Array.from({length:37},(_,k)=>{const u=k/36;const along=(u-.5)*length,wave=Math.sin(u*Math.PI*3-t*3+i)*4.2*(1-u);return {x:Math.cos(angle)*along-Math.sin(angle)*wave,y:Math.sin(angle)*along*.28+Math.cos(angle)*wave};});
- const trace=p=>{p.moveTo(pts[0].x,pts[0].y);pts.slice(1).forEach(a=>p.lineTo(a.x,a.y));};
- path(g,trace,INK,i?7:10);path(g,trace,'#f5f2e8',i?4:7);
- for(let k=5;k<33;k+=6)ellipse(g,pts[k].x,pts[k].y,1.8,i?1.4:2.2,INK,.8);
- const head=pts.at(-1);sprite(g,s.snakeHead,head.x,head.y+3,i?18:24,{angle:Math.atan2(Math.sin(angle)*.28,Math.cos(angle))});
- if(t%3<.35&&Math.abs(Math.cos(angle))>.7)path(g,p=>{const d=Math.sign(Math.cos(angle)),x=head.x+d*(i?12:16),y=head.y;p.moveTo(x,y);p.lineTo(x+d*5,y-1);p.lineTo(x+d*7,y-3);p.moveTo(x+d*5,y-1);p.lineTo(x+d*7,y+1);},INK,.8);
+function snake(g,s,t,stage){
+ field(g,t,stage);
+ const x=158+43*Math.sin(t*.43),y=150+Math.sin(t*1.1)*.8;
+ // Retain the exact coiled snake from the approved sheet; a small traveling
+ // undulation changes the body without redrawing its head, spots or coils.
+ bend(g,s.snake,x,y,107,t*.57,1.5);
+}
+function crabPose(t){const q=((t%12)+12)%12;
+ const emergence=q<2?smooth(q/2):q<6?1:q<8?1-smooth((q-6)/2):0;
+ return {x:lerp(53,172,emergence)+(q>=2&&q<6?Math.sin((q-2)*1.5)*8:0),emergence,phase:q<2?'emerge':q<6?'forage':q<8?'retreat':'hidden'};
+}
+function crab(g,s,t,stage){
+ pond(g,t,157);
+ path(g,p=>{p.moveTo(17,146);p.quadraticCurveTo(95,137,134,148);p.moveTo(167,148);p.quadraticCurveTo(242,141,305,149);},SOIL,1.5);
+ [39,247,279].forEach((x,i)=>rice(g,x,146,t,stage,i?.85:.72));
+ g.save();g.fillStyle='#d7c5ad';g.beginPath();g.ellipse(75,146,29,17,0,Math.PI,Math.PI*2);g.fill();g.fillStyle='#a48b76';g.beginPath();g.ellipse(75,146,19,11,0,Math.PI,Math.PI*2);g.fill();g.restore();
+ const p=crabPose(t);
+ // The cave wall hides the original full crab until it comes out.
+ g.save();g.beginPath();g.rect(84,0,232,192);g.clip();
+ sprite(g,s.crab,p.x,149+Math.sin(t*9)*p.emergence*.4,90);
  g.restore();
- }}
-function crabPose(t,i=0){const q=(t+i*4)%12;
- // Both animals have a complete out / forage / retreat / hidden cycle.
- const emergence=q<2?smooth(q/2):q<7?1:q<9?1-smooth((q-7)/2):0;
- return {x:lerp(i?250:68,i?172:142,emergence),emergence,walking:q<2||(q>=7&&q<9),phase:q<2?'emerge':q<7?'forage':q<9?'retreat':'hidden'};
-}
-function crabBody(g,s,x,y,k,t,walking){g.save();g.translate(x,y);g.scale(k,k);
- for(let side of [-1,1])for(let j=0;j<4;j++){
-  const stride=walking?Math.sin(t*15+j*1.8+side)*4:Math.sin(t*2+j)*.5;
-  path(g,p=>{p.moveTo(side*15,-12+j*5);p.quadraticCurveTo(side*29,-19+j*7,side*(35+stride),j*5-5);p.lineTo(side*(30+stride),j*5+3);},INK,1.6);
- }
- for(let side of [-1,1]){const angle=side*(.2+Math.sin(t*3+side)*.13);path(g,p=>{p.moveTo(side*16,-12);p.quadraticCurveTo(side*27,-22,side*24,-32);},INK,2);sprite(g,s.crabClaw,side*24,-28,18,{flip:side<0,angle});}
- sprite(g,s.crabBody,0,7,42);g.restore();}
-function crab(g,s,t,stage){pond(g,t,150);field(g,t,stage,137);
- for(let i=0;i<2;i++){
-  const hx=i?260:59,hy=i?158:132,k=i?.55:.8,p=crabPose(t,i);
-  g.save();g.fillStyle='#ddcfb9';g.beginPath();g.ellipse(hx,hy,30*k,24*k,0,Math.PI,Math.PI*2);g.fill();g.fillStyle='#9b806e';g.beginPath();g.ellipse(hx,hy,19*k,14*k,0,Math.PI,Math.PI*2);g.fill();g.restore();
-  // The bank occludes the body as it walks through the mouth of the burrow.
-  g.save();g.beginPath();g.rect(i?95:hx,hy-53,i?hx-95:180,80);g.clip();
-  if(p.emergence>0)crabBody(g,s,p.x,hy-3,k,t+i,p.walking);g.restore();
-  path(g,a=>{a.moveTo(hx-20*k,hy+1);a.quadraticCurveTo(hx,hy+4,hx+20*k,hy+1);},SOIL,2);
- }
+ path(g,a=>{a.moveTo(56,148);a.quadraticCurveTo(76,152,96,148);},SOIL,1.5);
 }
 function snail(g,s,t,stage){field(g,t,stage);for(let i=0;i<2;i++){
  const x=139+Math.sin(t*.19-i*.5)*58-i*42,y=146+i*14,w=i?37:57,flip=Math.cos(t*.19-i*.5)>0;
  path(g,p=>{p.moveTo(x+(flip?-1:1)*w*.35,y+1);p.quadraticCurveTo(x-30,y+2,x-45,y+1);},WATER,1,.32);
  bend(g,s.snail,x,y,w,t*.27, .65,true,flip);
  }}
-function grasshopper(g,s,t,stage){field(g,t,stage);for(let i=0;i<2;i++){
- const q=(t+i*2.2)%10,rev=q>=5,u=q%5,a=rev?(i?266:192):(i?160:83),b=rev?(i?160:83):(i?266:192),k=clamp((u-1.6)/1.1),jump=u>=1.6&&u<2.7;
- const x=lerp(a,b,k),y=143+i*15-(jump?Math.sin(k*Math.PI)*64:0),w=i?42:62;
- sprite(g,s.grasshopper,x,y,w,{flip:rev,angle:jump?-.2*Math.sin(k*Math.PI):0,squash:u>1.35&&u<1.6?.84:1});
- if(jump)path(g,p=>{const side=rev?1:-1;p.moveTo(x+side*7,y-7);p.lineTo(x+side*25,y+5);p.lineTo(x+side*33,y+3);},INK,1.2);
+function grasshopper(g,s,t,stage){fullField(g,t,stage);for(let i=0;i<2;i++){
+ const u=t*.52+i*1.4,x=161+79*Math.sin(u),y=(i?100:79)+Math.sin(u*2+i)*9,w=i?47:68;
+ // The approved wing, hind legs and antennae move together without distortion.
+ sprite(g,s.grasshopper,x,y,w,{angle:Math.cos(u)*.065});
  }}
 function draw(g,s,type,t,stage='tillering'){
  g.clearRect(0,0,320,192);g.save();g.fillStyle='#f5f2e8';g.fillRect(0,0,320,192);

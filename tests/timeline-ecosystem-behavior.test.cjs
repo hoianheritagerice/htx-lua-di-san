@@ -1,0 +1,35 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs'),vm=require('node:vm');
+const context=vm.createContext({});
+vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../js/canh-dong-sinh-thai-art.js'),'utf8'),context);
+const art=context.HeSinhThaiArt;
+assert.equal(art.habitat('giai-doan-ma').type,'dragonfly');
+assert.equal(art.habitat('lam-dong').stage,'booting');
+assert.equal(art.habitat('tro-bong').stage,'heading');
+assert.equal(art.habitat('chac-hat').stage,'filling');
+assert.equal(art.habitat('chin-vang').stage,'ripe');
+assert.equal(art.habitat('com-moi').stage,'stubble');
+assert(art.riceSpec.seedling.height<art.riceSpec.tillering.height);
+assert(art.riceSpec.tillering.tillers>art.riceSpec.seedling.tillers);
+for(let i=0;i<2;i++){
+ const phase=t=>art.crabPose(t-i*4,i);
+ assert.equal(phase(0).emergence,0);
+ assert.equal(phase(4).emergence,1);
+ assert.equal(phase(10).emergence,0);
+ assert.equal(phase(12).emergence,0);
+ assert.notEqual(phase(1).x,phase(4).x);
+}
+const perched=art.dragonflyPose(1,0,'seedling'),landed=art.dragonflyPose(12,0,'seedling');
+assert(perched.perched&&landed.perched);
+assert.equal(perched.x,landed.x);assert.equal(perched.y,landed.y);
+assert(!art.dragonflyPose(6,0,'seedling').perched);
+assert(art.dragonflyPose(6,0,'seedling').y<perched.y);
+assert(art.mousePose(1).run);assert(!art.mousePose(4).run);
+assert.equal(art.mousePose(3).x,art.mousePose(5).x,'Nibbling stays at the rice base');
+assert(art.mousePose(8).run);
+for(let t=0;t<20;t+=.1){
+ const a=art.duckPose(t),b=art.duckPose(t,1);
+ assert(Math.abs(a.y-b.y)>13,'Duckling swims in a separate lane');
+ for(const p of [a,b])assert(p.x>35&&p.x<285);
+}
+console.log('Rice stages, landing, nibbling, burrow entry/exit and separate duck lanes passed.');

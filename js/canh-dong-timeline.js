@@ -94,7 +94,9 @@ function xepTimelineCD(){
   const base=tinhBoCucTimelineCD(width,nodes.map(()=>100));
   nodes.forEach((node,i)=>{node.querySelector('.river-label').style.width=base.points[i].label.width+'px';});
   const heights=nodes.map(node=>node.querySelector('.river-label').offsetHeight||100+(node.querySelector('.cd-tl-photo')?140:0));
-  const layout=tinhBoCucTimelineCD(width,heights);BO_CUC_TIMELINE_CD=layout;
+  const layout=tinhBoCucTimelineCD(width,heights);
+  layout.points.forEach((p,i)=>{p.eventId=nodes[i].dataset.hoatDong;});
+  BO_CUC_TIMELINE_CD=layout;
   river.style.height=layout.height+'px';
   nodes.forEach((node,i)=>{
     const p=layout.points[i],label=node.querySelector('.river-label');

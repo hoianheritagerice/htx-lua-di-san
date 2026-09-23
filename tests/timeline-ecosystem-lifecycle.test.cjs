@@ -14,7 +14,7 @@ class Element{
 }
 const doc={hidden:false,events:{},createElement:tag=>new Element(tag),createTextNode:t=>t,addEventListener(k,v){this.events[k]=v;}};
 const media={matches:false,addEventListener(k,f){this.change=f;}};
-const win={IntersectionObserver:true,devicePixelRatio:2,matchMedia:()=>media,HeSinhThaiArt:{makeSprites:()=>({}),draw:(g,s,type,time,stage)=>painted.push({type,time,stage}),habitat:id=>id==='lam-dong'?{type:'worm',stage:'booting'}:{type:'duck',stage:'tillering'},frogPose:t=>({phase:t?'jump':'rest'})}};
+const win={IntersectionObserver:true,devicePixelRatio:2,matchMedia:()=>media,HeSinhThaiArt:{makeSprites:()=>({}),draw:(g,s,type,time,stage,transparent)=>painted.push({type,time,stage,transparent}),habitat:id=>id==='lam-dong'?{type:'worm',stage:'booting'}:{type:'duck',stage:'tillering'},frogPose:t=>({phase:t?'jump':'rest'})}};
 const context=vm.createContext({window:win,document:doc,console,Image:class{set src(v){Promise.resolve().then(()=>this.onload());}},IntersectionObserver:class{constructor(cb){notify=cb;}observe(){}unobserve(){}},requestAnimationFrame:cb=>{const id=next++;frames.set(id,cb);return id;},cancelAnimationFrame:id=>frames.delete(id)});
 vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/canh-dong-sinh-thai.js'),'utf8'),context);
 function flush(now){const q=[...frames.values()];frames.clear();q.forEach(cb=>cb(now));}
@@ -24,6 +24,7 @@ win.HeSinhThaiCD.render(river,layout);const layer=river.children[0],scene=layer.
 assert.equal(frames.size,0,'Offscreen scene must not run');
 notify([{target:scene,isIntersecting:true,intersectionRatio:.3}]);
 await new Promise(setImmediate);assert.equal(frames.size,1,'Visible scene starts one loop');
+assert.equal(painted.at(-1).transparent,true,'Mobile scene has no opaque rectangular backdrop');
 flush(100);flush(116);assert(painted.some(p=>p.time>0));
 control.events.click();assert.equal(frames.size,0);assert.equal(control.attrs['aria-pressed'],'true');
 control.events.click();assert.equal(frames.size,1);
@@ -33,7 +34,7 @@ doc.hidden=true;doc.events.visibilitychange();assert.equal(frames.size,0);
 doc.hidden=false;doc.events.visibilitychange();assert.equal(frames.size,1);
 media.matches=true;media.change();assert.equal(frames.size,0);assert.equal(painted.at(-1).time,0);
 win.HeSinhThaiCD.render(river,{...layout,width:316});assert.equal(river.children.length,1);assert.equal(layer.children.length,1);
-assert.equal(scene.children[0].width,616,'Mobile scene fills the available width at capped 2x density');
+assert.equal(scene.children[0].width,408,'Compact mobile scene uses capped 2x pixel density');
 win.HeSinhThaiCD.render(river,{...layout,points:layout.points.map(p=>({...p,eventId:'lam-dong'}))});
 assert.equal(scene.dataset.animal,'worm');assert.equal(painted.at(-1).stage,'booting');
 win.HeSinhThaiCD.render(river,{...layout,points:layout.points.map(p=>({...p,eventId:'de-nhanh'}))});

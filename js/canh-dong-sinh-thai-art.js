@@ -264,8 +264,8 @@ function grasshopper(g,s,t,stage){
   sprite(g,s.hopperFrames?.[p.frame]||s.grasshopper,p.x,p.y,w,{angle:p.phase==='air'?Math.sin(t*2+i)*.06:0});
  }
 }
-function draw(g,s,type,t,stage='tillering'){
- g.clearRect(0,0,320,192);g.save();g.fillStyle='#f5f2e8';g.fillRect(0,0,320,192);
+function draw(g,s,type,t,stage='tillering',transparent=false){
+ g.clearRect(0,0,320,192);g.save();if(!transparent){g.fillStyle='#f5f2e8';g.fillRect(0,0,320,192);}
  if(type==='frog')frog(g,s,t);
  else ({fish,duck,worm,dragonfly,mouse,bird,nest,snake,crab,snail,grasshopper}[type]||fish)(g,s,t,stage);
  g.restore();

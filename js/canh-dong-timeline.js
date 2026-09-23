@@ -40,13 +40,13 @@ function iconHoatDongCD(id){
 
 // Hàm thuần để kiểm chứng khoảng cách đường, biểu tượng và nhãn ở mọi bề rộng.
 function tinhBoCucTimelineCD(width,heights){
-  const mobile=width<680, center=mobile?68:width/2, amplitude=mobile?28:Math.min(76,width*.09);
-  const labelEdge=mobile?142:center+amplitude+52;
-  const labelWidth=mobile?Math.max(110,width-152):Math.min(280,width/2-amplitude-64);
+  const mobile=width<680, center=mobile?44:width/2, amplitude=mobile?10:Math.min(76,width*.09);
+  const labelEdge=mobile?104:center+amplitude+52;
+  const labelWidth=mobile?Math.max(92,width-114):Math.min(280,width/2-amplitude-64);
   let y=24;
   const points=heights.map((height,i)=>{
     // Neo mốc vào tên/ngày; ảnh kéo dài xuống dưới, không đẩy tên xa biểu tượng.
-    const sceneHeight=Math.min(340,width-8)*.6;
+    const sceneHeight=Math.min(240,width-112)*.6;
     const rowHeight=mobile?Math.max(160,height+64)+sceneHeight+32:Math.max(190,height+64), cy=y+48;
     // Chữ và ảnh nằm phía ngoài, cùng bên với mốc; cách mép vòng tròn 20px.
     const right=mobile||i%2===1;

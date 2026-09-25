@@ -79,6 +79,38 @@ function quyenLoiCD(maGoi){
   return rieng && rieng[maGoi] || CAU_HINH_CANH_DONG.goi[maGoi]?.hoatDong || [];
 }
 function cacGoiCD(sk){return Object.keys(CAU_HINH_CANH_DONG.goi).filter(k=>quyenLoiCD(k).includes(sk.id));}
+function suKienTrongGoiCD(){
+  if(GOI_DANG_XEM==='tat-ca')return [];
+  const ids=new Set(quyenLoiCD(GOI_DANG_XEM));
+  return SU_KIEN.filter(s=>ids.has(s.id));
+}
+function cuonDenSuKienCD(id){
+  // Recalculate after package badges change label height; resolve by ID after API reordering.
+  if(typeof xepTimelineCD==='function')xepTimelineCD();
+  requestAnimationFrame(()=>{
+    const node=document.getElementById('su-kien-'+id);if(!node)return;
+    const label=node.querySelector('.river-label');
+    const top=Math.min(node.getBoundingClientRect().top,label?.getBoundingClientRect().top??Infinity);
+    const occupied=['header','.chon-bar'].reduce((height,selector)=>{
+      const el=document.querySelector(selector);if(!el)return height;
+      const style=getComputedStyle(el);
+      return height+(['sticky','fixed'].includes(style.position)?el.getBoundingClientRect().height:0);
+    },0);
+    node.focus({preventScroll:true});
+    window.scrollTo({top:Math.max(0,window.scrollY+top-occupied-20),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  });
+}
+function veSuKienGoiCD(){
+  const list=document.getElementById('cdGoiSuKien');if(!list)return;
+  const events=suKienTrongGoiCD();list.replaceChildren();list.hidden=!events.length;
+  events.forEach(s=>{
+    const button=document.createElement('button');button.type='button';button.className='cd-goi-su-kien-nut';
+    button.setAttribute('aria-label','Đến sự kiện '+s.ten);button.setAttribute('aria-controls','su-kien-'+s.id);
+    const icon=document.createElement('span');icon.className='cd-goi-su-kien-logo '+s.loai;icon.innerHTML=iconHoatDongCD(s.id);
+    const title=document.createElement('span');title.className='cd-goi-su-kien-ten';title.textContent=s.ten;
+    button.append(icon,title);button.addEventListener('click',()=>cuonDenSuKienCD(s.id));list.append(button);
+  });
+}
 function veChonGoiCD(){
   const o=document.getElementById('cdChonGoi');o.replaceChildren();
   [['tat-ca','Toàn bộ timeline'],...Object.entries(CAU_HINH_CANH_DONG.goi).map(([k,v])=>[k,chuCD(noiDungCD().goi.muc[k]?.ten||v.nhan)])].forEach(([k,t])=>{
@@ -101,6 +133,7 @@ function apDungGoiCD(){
     node.querySelector('.cd-trong-goi')?.remove();
     if(co){const b=document.createElement('span');b.className='cd-trong-goi';b.textContent='Có trong gói';node.querySelector('.river-label').append(b);}
   });
+  veSuKienGoiCD();
   if(typeof henXepTimelineCD==='function')henXepTimelineCD();
 }
 async function layDuLieuCD(body){

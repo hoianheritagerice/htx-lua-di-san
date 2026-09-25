@@ -20,14 +20,13 @@ vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/canh-dong-sinh-thai.j
 function flush(now){const q=[...frames.values()];frames.clear();q.forEach(cb=>cb(now));}
 (async()=>{
 const river=new Element('river'),layout={mobile:true,width:346,points:[{x:40,y:72,right:true,label:{x:142,y:46,width:194,height:220}}]};
-win.HeSinhThaiCD.render(river,layout);const layer=river.children[0],scene=layer.children[0],control=river.caption.children[1];
+win.HeSinhThaiCD.render(river,layout);const layer=river.children[0],scene=layer.children[0];
 assert.equal(frames.size,0,'Offscreen scene must not run');
 notify([{target:scene,isIntersecting:true,intersectionRatio:.3}]);
 await new Promise(setImmediate);assert.equal(frames.size,1,'Visible scene starts one loop');
 assert.equal(painted.at(-1).transparent,true,'Mobile scene has no opaque rectangular backdrop');
 flush(100);flush(116);assert(painted.some(p=>p.time>0));
-control.events.click();assert.equal(frames.size,0);assert.equal(control.attrs['aria-pressed'],'true');
-control.events.click();assert.equal(frames.size,1);
+assert.equal(river.caption,undefined,'Do not render an ecosystem caption or motion control');
 notify([{target:scene,isIntersecting:false,intersectionRatio:0}]);assert.equal(frames.size,0);
 notify([{target:scene,isIntersecting:true,intersectionRatio:.3}]);assert.equal(painted.at(-1).time,0,'Re-entry starts with the resting pose');
 doc.hidden=true;doc.events.visibilitychange();assert.equal(frames.size,0);
@@ -39,5 +38,5 @@ win.HeSinhThaiCD.render(river,{...layout,points:layout.points.map(p=>({...p,even
 assert.equal(scene.dataset.animal,'worm');assert.equal(painted.at(-1).stage,'booting');
 win.HeSinhThaiCD.render(river,{...layout,points:layout.points.map(p=>({...p,eventId:'de-nhanh'}))});
 assert.equal(scene.dataset.animal,'duck');assert.equal(painted.at(-1).stage,'tillering');
-console.log('Scroll entry/re-entry, offscreen pause, user pause/resume, hidden tab, reduced motion and resize passed.');
+console.log('Scroll entry/re-entry, offscreen pause, hidden tab, reduced motion and resize passed.');
 })();

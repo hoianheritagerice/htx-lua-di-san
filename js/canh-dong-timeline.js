@@ -159,7 +159,7 @@ function veHomNayCD(layout){
 function veHanhTrinhCD(){
   const river=document.getElementById('river');river.querySelectorAll('.river-node,.cd-today').forEach(n=>n.remove());
   SU_KIEN.forEach((s,i)=>{
-    const node=document.createElement('button');node.type='button';node.className='river-node';node.dataset.hoatDong=s.id;
+    const node=document.createElement('button');node.type='button';node.className='river-node';node.dataset.hoatDong=s.id;node.id='su-kien-'+s.id;
     const date=s.ngay?s.ngay.split('-').reverse().slice(0,2).join('/'):'Chưa có ngày';
     const status=s.trangThai||(s.ngay?(s.duKien?'Dự kiến':'Mốc mùa vụ'):'');
     node.setAttribute('aria-label',s.ten+' · '+date+(status?' · '+status:''));
@@ -174,7 +174,6 @@ function veHanhTrinhCD(){
     }
     node.addEventListener('click',()=>moCT(i));river.append(node);
   });
-  ['gieo-sa','le-xuong-dong','tham-dong'].forEach((id,i)=>{const chip=document.querySelectorAll('.tl-legend .chip')[i];if(chip)chip.innerHTML=iconHoatDongCD(id);});
   apDungGoiCD();xepTimelineCD();
 }
 window.addEventListener('resize',henXepTimelineCD,{passive:true});

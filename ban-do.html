@@ -148,6 +148,7 @@ body.nhung #trangthai{padding-top:10px}
   .dh-vong{width:88px;height:88px}.dh-vong-so{font-size:18px}
 }
 </style>
+<link rel="stylesheet" href="css/mobile-ui.css?v=20260925a">
 </head>
 <body>
 
@@ -159,7 +160,7 @@ body.nhung #trangthai{padding-top:10px}
 
 <div class="chon">
   <!-- Chỉ hiện khi mở toàn màn hình; trong iframe cả khối .chon đã bị ẩn. -->
-  <a id="nutQuayLai" class="quay-lai" href="canh-dong.html">← Cánh Đồng</a>
+  <a id="nutQuayLai" class="quay-lai" href="canh-dong.html"><svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h12m-5-5 5 5-5 5" transform="rotate(180 10 10)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Cánh Đồng</a>
   <label>Mùa vụ</label>
   <select id="selVu"><option value="HT26">Hè Thu 2026</option></select>
   <label>Cánh đồng</label>
@@ -227,9 +228,9 @@ body.nhung #trangthai{padding-top:10px}
 </div>
 
 <!-- Modal Đồng hành — tách riêng khỏi modal Canh tác để khách xem công khai -->
-<div class="modal-phu" id="mpDongHanh">
-  <div class="modal">
-    <h2 id="dhTieuDe">Thửa ruộng</h2>
+<div class="modal-phu" id="mpDongHanh" role="dialog" aria-modal="true" aria-labelledby="dhTieuDe">
+  <div class="modal" tabindex="-1">
+    <div class="dh-dialog-head"><h2 id="dhTieuDe">Thửa ruộng</h2><button type="button" class="dh-close" aria-label="Đóng thông tin người đồng hành" onclick="dongModal('mpDongHanh')">×</button></div>
     <div class="dh-phu-de" id="dhPhuDe"></div>
 
     <div class="dh-tongquan">
@@ -473,7 +474,7 @@ body.nhung #trangthai{padding-top:10px}
      xong không lưu được.
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
-<script src="js/ban-do.js?v=20260923a"></script>
+<script src="js/ban-do.js?v=20260925a"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html
@@ -805,7 +806,7 @@ body.nhung #trangthai{padding-top:10px}
               + (e.desc ? escHtml(e.desc) : '') + dinhKemHtml(e.media) + '</div>'
               + '<button class="nk-xemthem" onclick="toggleMota(' + idx + ')" id="nkbtn' + idx + '">Xem thêm ▾</button>'
             : '';
-          var lnk = e.url ? '<div><a href="' + linkNotion(e.url) + '" target="_blank" rel="noopener">Xem chi tiết trên Notion ↗</a></div>' : '';
+          var lnk = e.url ? '<div><a href="' + linkNotion(e.url) + '" target="_blank" rel="noopener">Xem chi tiết trên Notion <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>' : '';
           return '<div class="nkmuc"><div class="nk-ngay">' + dongNgay + '</div>'
                + '<div class="nk-tieude">' + e.title + '</div>'
                + '<div>' + nhanNhatKy(e) + '</div>' + them + lnk + '</div>';
@@ -887,5 +888,6 @@ body.nhung #trangthai{padding-top:10px}
 })();
 </script>
 <!-- Vercel preview trigger: feature/dong-hanh-step-1 -->
+<script src="js/map-dialog.js?v=20260925a"></script>
 </body>
 </html>

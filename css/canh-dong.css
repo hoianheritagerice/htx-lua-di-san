@@ -49,6 +49,17 @@
 .cd-goi button[aria-pressed="true"]{background:#1e4d2b;border-color:#1e4d2b;color:white}
 .cd-goi-mo{max-width:650px;margin:auto;text-align:center;min-height:66px;font-size:13px;line-height:1.8;color:#5a6350;position:relative}
 .cd-goi-mo a{text-decoration:underline;text-underline-offset:4px;color:#1e4d2b;display:inline-flex;align-items:center;gap:6px;margin-left:8px}
+.cd-goi-su-kien{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:680px;margin:16px auto 26px;position:relative}
+.cd-goi-su-kien[hidden]{display:none}
+.cd-goi-su-kien-nut{display:flex;align-items:center;gap:12px;width:100%;min-width:0;min-height:76px;padding:12px 16px;border:1px solid #dfc7a0;border-radius:14px;background:#fffaf0;color:#653c21;text-align:left;font:600 14px/1.5 'Be Vietnam Pro',sans-serif;cursor:pointer}
+.cd-goi-su-kien-nut:hover{background:#fff1d5;border-color:#b9853f}
+.cd-goi-su-kien-nut:focus-visible{outline:3px solid #315b32;outline-offset:3px}
+.cd-goi-su-kien-logo{display:grid;place-items:center;width:44px;height:44px;flex:0 0 44px;border-radius:50%;background:#e9f0df;color:#315b32;--icon-accent:#c5d994}
+.cd-goi-su-kien-logo.le{background:#fae9dc;color:#82432e;--icon-accent:#e8b47e}
+.cd-goi-su-kien-logo.trai{background:#fff0c9;color:#796021;--icon-accent:#e6c775}
+.cd-goi-su-kien-logo svg{display:block;width:30px;height:30px}
+.cd-goi-su-kien-ten{min-width:0;overflow-wrap:anywhere}
+@media(max-width:540px){.cd-goi-su-kien{grid-template-columns:minmax(0,1fr);gap:8px}.cd-goi-su-kien-nut{min-height:68px;padding:10px 12px;font-size:13px}}
 #river{max-width:960px;margin:30px auto 0}
 #river .river-node{position:absolute;width:64px;height:64px;border:0;background:none;padding:0;font:inherit;transform:translate(-50%,-50%);z-index:3;cursor:pointer}
 #river .river-node:focus-visible{outline:2px solid #1e4d2b;outline-offset:7px;border-radius:50%}
@@ -69,10 +80,6 @@
 #river .river-label[style*="right"] .cd-tl-photo{margin-left:auto}
 #river .cd-tl-photo img{display:block;width:100%;height:auto;aspect-ratio:400/260;object-fit:cover;border-radius:9px}
 #river .cd-tl-photo>span{display:block;font-size:10px;line-height:1.5;color:#6b735f;margin-top:5px}
-.tl-legend .chip{--icon-accent:#d4dda8}
-.tl-legend .chip.nong{color:#315b32;background:#e9f0df}
-.tl-legend .chip.le{color:#82432e;background:#fae9dc;--icon-accent:#e8b47e}
-.tl-legend .chip.trai{color:#796021;background:#fff0c9;--icon-accent:#e6c775}
 .cd-today{position:absolute;inset:0;z-index:4;pointer-events:none}
 .cd-today-label{position:absolute;display:block;width:80px;height:28px;text-align:center;border-radius:8px;background:#28552e;color:#fff;font:600 11px/28px 'Be Vietnam Pro',sans-serif;white-space:nowrap;box-shadow:0 0 0 4px #f5f2e8}
 .cd-today-label::before{content:"";position:absolute;width:0;height:0;border:6px solid transparent}

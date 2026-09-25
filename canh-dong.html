@@ -125,10 +125,6 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .phase-now b{color:var(--xanh-dam)}
 @keyframes beat{0%,100%{box-shadow:0 0 0 4px rgba(139,195,74,.28)}50%{box-shadow:0 0 0 8px rgba(139,195,74,.12)}}
 
-.tl-legend{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin:20px 0 8px;font-size:13px;position:relative}
-.tl-legend span.lg{display:inline-flex;align-items:center;gap:8px}
-.tl-legend .chip{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
-.tl-legend .chip svg{width:17px;height:17px}
 .chip.nong{background:#e6f2d8;color:#4f7325}
 .chip.le{background:#f5e3d8;color:#9c4e28}
 .chip.trai{background:#faf0cf;color:#8a6910}
@@ -270,8 +266,8 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
   .river-label .t{font-size:13.5px}
 }
 </style>
-<link rel="stylesheet" href="css/canh-dong.css?v=20260921a">
-<link rel="stylesheet" href="css/canh-dong-sinh-thai.css?v=20260923f">
+<link rel="stylesheet" href="css/canh-dong.css?v=20260925c">
+<link rel="stylesheet" href="css/canh-dong-sinh-thai.css?v=20260925c">
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
@@ -470,11 +466,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
     </div>
     <div class="cd-goi" role="group" aria-label="Xem timeline theo gói" id="cdChonGoi"></div>
     <div class="cd-goi-mo" id="cdGoiMo" aria-live="polite"></div>
-    <div class="tl-legend">
-      <span class="lg"><span class="chip nong"><svg><use href="#ic-gieo"/></svg></span> Mốc nông học</span>
-      <span class="lg"><span class="chip le"><svg><use href="#ic-cung"/></svg></span> Lễ cúng · tâm linh</span>
-      <span class="lg"><span class="chip trai"><svg><use href="#ic-ma"/></svg></span> Trải nghiệm gắn với gói</span>
-    </div>
+    <nav class="cd-goi-su-kien" id="cdGoiSuKien" aria-label="Sự kiện trong gói đã chọn" hidden></nav>
     <div class="river" id="river">
       <svg class="path" viewBox="0 0 100 100" preserveAspectRatio="none">
         <defs><linearGradient id="gRiver" x1="0" y1="0" x2="0" y2="1">
@@ -544,10 +536,10 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 <script src="js/canh-dong-config.js?v=20260921p"></script>
 <script src="js/canh-dong-so-chot.js?v=20260914c"></script>
 <script src="js/dem-so.js?v=20260914c"></script>
-<script src="js/canh-dong-ui.js?v=20260921q"></script>
+<script src="js/canh-dong-ui.js?v=20260925c"></script>
 <script src="js/canh-dong-sinh-thai-art.js?v=20260923i"></script>
-<script src="js/canh-dong-sinh-thai.js?v=20260923i"></script>
-<script src="js/canh-dong-timeline.js?v=20260923i"></script>
+<script src="js/canh-dong-sinh-thai.js?v=20260925c"></script>
+<script src="js/canh-dong-timeline.js?v=20260925c"></script>
 
 <script>
 /* MỘT chỗ duy nhất khai báo phiên bản bản đồ. Đổi số này khi sửa

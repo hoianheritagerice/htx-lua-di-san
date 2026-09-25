@@ -3,7 +3,7 @@
 'use strict';
 const types=['frog','dragonfly','fish','snail','duck','worm','grasshopper','bird','nest','mouse','snake','crab','fish'];
 const names={frog:'Ếch nhảy giữa bờ và nước',dragonfly:'Chuồn chuồn vỗ cánh rồi đậu trên lúa',fish:'Đàn cá nhỏ trong dòng nước',snail:'Ốc bò trên bờ ẩm',duck:'Vịt bơi giữa bụi lúa',worm:'Trùn ngọ nguậy dưới đất',grasshopper:'Năm châu chấu nhỏ bật nhảy trên lúa',bird:'Chim lớn và chim nhỏ vỗ cánh bay',nest:'Hai chim non há miệng chờ mớm mồi',mouse:'Chuột chạy tới cắn gốc lúa',snake:'Rắn uốn mình trườn trên bờ',crab:'Cua bò trên bờ với chân đổi nhịp'};
-let layer,observer,sprites,loading,frame=0,last=0,paused=false,control,reduced;
+let layer,observer,sprites,loading,frame=0,last=0,reduced;
 const scenes=[];
 function placements(layout){return layout.points.map((p,i)=>{
  const info=p.eventId?window.HeSinhThaiArt.habitat(p.eventId):{type:types[i%types.length],stage:'tillering'};
@@ -20,7 +20,7 @@ function load(){
  }).catch(()=>{loading=null;scenes.forEach(s=>s.el.classList.remove('eco-ready'));});
  return loading;
 }
-function stopped(){return paused||document.hidden||reduced?.matches;}
+function stopped(){return document.hidden||reduced?.matches;}
 function paint(s){if(!sprites)return;const g=s.canvas.getContext('2d');g.setTransform(s.canvas.width/320,0,0,s.canvas.height/192,0,0);window.HeSinhThaiArt.draw(g,sprites,s.type,s.time,s.stage,s.mobile);s.el.classList.add('eco-ready');s.el.dataset.phase=s.type==='frog'?window.HeSinhThaiArt.frogPose(s.time).phase:'habitat';}
 function schedule(){if(frame||!sprites||stopped()||!scenes.some(s=>s.visible))return;last=0;frame=requestAnimationFrame(tick);}
 function tick(now){frame=0;if(stopped())return;const dt=last?Math.min((now-last)/1000,.05):0;last=now;for(const s of scenes)if(s.visible){s.time+=dt;paint(s);}if(scenes.some(s=>s.visible))frame=requestAnimationFrame(tick);}
@@ -30,9 +30,6 @@ function create(river){
  reduced=window.matchMedia('(prefers-reduced-motion: reduce)');reduced.addEventListener('change',sync);
  document.addEventListener('visibilitychange',sync);
  if('IntersectionObserver' in window)observer=new IntersectionObserver(entries=>{for(const e of entries){const s=scenes.find(s=>s.el===e.target);if(!s)continue;const visible=e.isIntersecting&&e.intersectionRatio>=.22;if(visible&&!s.visible){s.time=0;s.el.classList.add('eco-entered');}s.visible=visible;s.el.classList.toggle('eco-visible',visible);if(visible){load();paint(s);}}if(!scenes.some(s=>s.visible)){cancelAnimationFrame(frame);frame=0;last=0;}schedule();},{threshold:[0,.22]});
- const caption=document.createElement('p');caption.className='eco-caption';caption.append(document.createTextNode('Những cư dân nhỏ của đồng ruộng'));
- control=document.createElement('button');control.type='button';control.className='eco-control';control.textContent='Tạm dừng chuyển động';control.setAttribute('aria-pressed','false');
- control.addEventListener('click',()=>{paused=!paused;control.setAttribute('aria-pressed',String(paused));control.textContent=paused?'Bật chuyển động':'Tạm dừng chuyển động';sync();});caption.append(control);river.before(caption);
 }
 function render(river,layout){
  if(!layer)create(river);

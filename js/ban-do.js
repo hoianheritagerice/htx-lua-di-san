@@ -341,6 +341,8 @@ function nhanThua(p){ return (p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim(
    sanLuong: sản lượng GẠO của thửa (kg)
    daDongHanh: tổng kg từ các đơn ĐÃ XÁC NHẬN
    ================================================================== */
+/* Đối chiếu HT26 ngày 25/09/2026: các thửa mẫu đều hữu cơ, không vi phạm
+   và có nhật ký. Phúc, Toàn, Hội 1 được thay bằng Cậy, Tư 7, Ngọc. */
 const DONG_HANH_MAU = {
   'CKOD:HT26:CUOC': {sanLuong:300, daDongHanh:100, nguoi:[
     {ten:'Anh Quân', diaPhuong:'Hội An', kg:100}
@@ -360,7 +362,7 @@ const DONG_HANH_MAU = {
     {ten:'Anh Sơn', diaPhuong:'Quảng Nam', kg:100}
   ]},
 
-  'CTDC:HT26:PHUC': {sanLuong:300, daDongHanh:200, nguoi:[
+  'CTDC:HT26:CAY': {sanLuong:300, daDongHanh:200, nguoi:[
     {ten:'Anh Quân', diaPhuong:'Hội An', kg:100},
     {ten:'Chị Mai', diaPhuong:'Đà Nẵng', kg:100}
   ]},
@@ -378,7 +380,7 @@ const DONG_HANH_MAU = {
     {ten:'Anh Hải', diaPhuong:'TP.HCM', kg:100}
   ]},
 
-  'CTDM:HT26:TOAN': {sanLuong:300, daDongHanh:100, nguoi:[
+  'CTDM:HT26:TU7': {sanLuong:300, daDongHanh:100, nguoi:[
     {ten:'Anh Phúc', diaPhuong:'Hội An', kg:100}
   ]},
   'CTDM:HT26:CU':   {sanLuong:220, daDongHanh:220, nguoi:[
@@ -389,7 +391,7 @@ const DONG_HANH_MAU = {
     {ten:'Anh Tân', diaPhuong:'Hội An', kg:60},
     {ten:'Chị Vy', diaPhuong:'Đà Nẵng', kg:100}
   ]},
-  'CTDM:HT26:HOI1': {sanLuong:300, daDongHanh:300, nguoi:[
+  'CTDM:HT26:NGOC': {sanLuong:300, daDongHanh:300, nguoi:[
     {ten:'Anh Đức', diaPhuong:'Hội An', kg:100},
     {ten:'Chị Thu', diaPhuong:'Đà Nẵng', kg:100},
     {ten:'Anh Trí', diaPhuong:'Quảng Nam', kg:100}
@@ -732,7 +734,7 @@ function moDongHanh(i){
   }else if(tt === 'chua'){
     nut.textContent = 'Trở thành người đầu tiên';
   }else{
-    nut.textContent = 'Tăng sản lượng đồng hành';
+    nut.textContent = 'Thêm sản lượng đồng hành';
   }
 
   const cuaToi = $('dhCuaToi');

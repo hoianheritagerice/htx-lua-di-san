@@ -60,7 +60,7 @@ trangChu: {
     nhan:    `Hợp tác xã lúa hữu cơ · Từ 3 cánh đồng di sản`,
     tieuDe:  `Hạt gạo mang <em>câu chuyện</em> của đất và người Hội&nbsp;An`,
     dan:     `Từ những thửa ruộng ven sông Thu&nbsp;Bồn ở Cẩm&nbsp;Kim và Cẩm&nbsp;Thanh, chúng tôi canh tác lúa hữu cơ — không dùng bất cứ phân bón hay thuốc hóa học nào — và minh bạch từng khâu. Anh/chị có thể xem nhật ký của chính thửa ruộng làm ra hạt gạo mình ăn.`,
-    nut1:    `Xem sản phẩm →`,
+    nut1:    `Xem sản phẩm <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     nut2:    `Khám phá Cánh Đồng`,
   },
 
@@ -70,7 +70,7 @@ trangChu: {
     tieuDe:  `Giữ lại giống lúa của ông cha, trên chính cánh đồng quê`,
     doan1:   `Hợp tác xã Lúa&nbsp;Di&nbsp;Sản ra đời từ mong muốn giữ gìn những giống lúa bản địa và cách canh tác thuận tự nhiên trên các cánh đồng Ông&nbsp;Đảng, Đồng&nbsp;Cao, Đồng&nbsp;Mẫu.`,
     doan2:   `Mỗi lô ruộng được ghi mã riêng, gắn với tên người nông dân canh tác, ngày gieo sạ, ngày thu hoạch — tất cả công khai để anh/chị yên tâm về nguồn gốc.`,
-    nut:     `Đọc câu chuyện đầy đủ →`,
+    nut:     `Đọc câu chuyện đầy đủ <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   },
 
   /* --- Tiêu đề mục 3 gói (chữ trong từng thẻ nằm ở khối `goi`) --- */
@@ -137,7 +137,7 @@ veChungToi: {
   canhDongHead: {
     nhan:    `Cộng đồng canh tác`,
     tieuDe:  `Ba cánh đồng di sản`,
-    nut:     `Khám phá Cánh Đồng →`,
+    nut:     `Khám phá Cánh Đồng <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   },
 },
 

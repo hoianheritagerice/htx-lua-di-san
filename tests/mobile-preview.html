@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Kiểm tra giao diện mobile — HTX</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#e7e9e4;color:#233d2a;font:14px/1.5 system-ui}header{padding:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}select,button,a{font:inherit;padding:8px;border:1px solid #b8c4b6;border-radius:6px;background:white;color:inherit}main{padding:12px;overflow:auto}iframe{display:block;width:390px;height:844px;border:1px solid #8a9983;background:#f5f2e8;margin:auto}p{margin:0 12px}
+</style>
+</head>
+<body>
+<header><strong>Kiểm tra mobile</strong><label>Kích thước <select id="size"><option>320 × 568</option><option>360 × 800</option><option selected>390 × 844</option><option>430 × 932</option><option>768 × 1024</option><option>844 × 390</option><option>1280 × 800</option></select></label><button data-page="san-pham.html#gieo-mam">Sản phẩm</button><button data-page="canh-dong.html#ban-do-mua-vu">Cánh đồng</button><button data-page="ban-do.html">Bản đồ riêng</button><a id="open" href="../san-pham.html#gieo-mam" target="_blank" rel="noopener">Mở trang trực tiếp</a></header>
+<p>Cuộn bên trong khung: kiểm tra tên gói, ảnh, giá; mở chi tiết; chuyển gói. Với bản đồ, chạm thửa ruộng rồi đóng hộp thông tin.</p>
+<main><iframe id="preview" title="Trang kiểm tra mobile" src="../san-pham.html#gieo-mam"></iframe></main>
+<script>
+const frame=document.getElementById('preview'),size=document.getElementById('size');
+size.addEventListener('change',()=>{const [w,h]=size.value.split(' × ').map(Number);frame.style.width=w+'px';frame.style.height=h+'px';});
+document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>{const url='../'+button.dataset.page;frame.src=url;document.getElementById('open').href=url;}));
+</script>
+</body>
+</html>

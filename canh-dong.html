@@ -275,7 +275,8 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
-<script src="js/noi-dung.js?v=20260921q"></script>
+<script src="js/noi-dung.js?v=20260925a"></script>
+<link rel="stylesheet" href="css/mobile-ui.css?v=20260925a">
 </head>
 <body>
 
@@ -452,7 +453,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
         <div class="sm-nhan">Phần tiếp theo</div>
         <div class="sm-ten">Dòng thời gian mùa vụ</div>
         <div class="sm-mo">Trọn hành trình một vụ lúa — từ lễ cúng xuống đồng đến mâm cơm mới</div>
-        <div class="sm-mui">↓</div>
+        <div class="sm-mui"><svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h12m-5-5 5 5-5 5" transform="rotate(90 10 10)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </a>
     </div>
   </div>
@@ -502,7 +503,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 <dialog class="cd-lightbox" id="cdLightbox" aria-labelledby="cdAnhTen">
   <div class="cd-lightbox-head"><h2 id="cdAnhTen">Ảnh cánh đồng</h2><button type="button" id="cdDongAnh" aria-label="Đóng thư viện ảnh">✕</button></div>
   <div class="cd-lightbox-body"><img id="cdAnhLon" alt=""><p id="cdAnhLoi" hidden>Ảnh này chưa tải được. Bạn có thể xem ảnh tiếp theo.</p></div>
-  <div class="cd-lightbox-foot"><button type="button" id="cdAnhTruoc" aria-label="Ảnh trước">←</button><p id="cdAnhChu" aria-live="polite"></p><button type="button" id="cdAnhSau" aria-label="Ảnh tiếp theo">→</button></div>
+  <div class="cd-lightbox-foot"><button type="button" id="cdAnhTruoc" aria-label="Ảnh trước"><svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h12m-5-5 5 5-5 5" transform="rotate(180 10 10)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p id="cdAnhChu" aria-live="polite"></p><button type="button" id="cdAnhSau" aria-label="Ảnh tiếp theo"><svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h12m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
   <div id="cdAnhLuoi" class="cd-anh-luoi"></div>
 </dialog>
 
@@ -875,7 +876,7 @@ async function napThoiTiet(ma){
 </script>
 <button class="noi-sang-muc" id="noiSangMuc" type="button"
         onclick="document.getElementById('dongThoiGian').scrollIntoView({behavior:'smooth'})">
-  Dòng thời gian mùa vụ ↓
+  Dòng thời gian mùa vụ <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h12m-5-5 5 5-5 5" transform="rotate(90 10 10)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
 <script>
 /* Viên nổi chỉ hiện khi người xem đang ở phần trên VÀ đã cuộn qua khỏi
@@ -897,5 +898,6 @@ async function napThoiTiet(ma){
 <script src="js/chung.js?v=20260829f"></script>
 <script src="js/form-quan-tam.js"></script>
 <script src="js/hieu-ung.js"></script>
+<script src="js/map-dialog.js?v=20260925a"></script>
 </body>
 </html>

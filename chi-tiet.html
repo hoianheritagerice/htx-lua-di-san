@@ -142,8 +142,9 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
-<script src="js/noi-dung.js?v=20260921q"></script>
+<script src="js/noi-dung.js?v=20260925a"></script>
 <script src="js/canh-dong-so-chot.js?v=20260914c"></script>
+<link rel="stylesheet" href="css/mobile-ui.css?v=20260925a">
 </head>
 <body>
 
@@ -169,7 +170,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
 <div class="mau-banner" data-nd="chung.bangThongBao"></div>
 <section class="ct-hero hero-anh" id="ctHero">
   <div class="wrap">
-    <a class="lai" id="ctLai" href="index.html">← Quay lại</a>
+    <a class="lai" id="ctLai" href="index.html"><svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h12m-5-5 5 5-5 5" transform="rotate(180 10 10)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Quay lại</a>
     <div class="eyebrow" id="ctLoai" style="color:var(--vang)"></div>
     <h1 id="ctTen">Đang tải…</h1>
     <p class="dan" id="ctDan"></p>
@@ -214,7 +215,7 @@ footer .fl a{opacity:.85}footer .fl a:hover{opacity:1;color:var(--vang)}
 <script>
 /* =====================================================================
    NỘI DUNG 9 TRANG CHI TIẾT KHÔNG CÒN NẰM Ở ĐÂY.
-   Toàn bộ chữ đã dời sang  js/noi-dung.js  — mở file đó mà sửa.
+   Toàn bộ chữ đã dời sang  js/noi-dung.js?v=20260925a  — mở file đó mà sửa.
    Ở đây chỉ còn phần ghép ba nhóm lại theo địa chỉ trang:
        chi-tiet.html?loai=canh-dong&ma=ong-dang
        chi-tiet.html?loai=gia-tri&ma=minh-bach
@@ -261,7 +262,7 @@ document.getElementById('ctDan').innerHTML  = (ma === 'su-kien-doc-ban')
   ? String(m.dan||'').replace('MICE','<span style="color:var(--vang)">MICE</span>')
   : (m.dan || '');
 const lai = document.getElementById('ctLai');
-lai.href = veCanhDong ? veCanhDong + '#gioi-thieu' : nhom.ve; lai.innerHTML = '← ' + nhom.veChu;
+lai.href = veCanhDong ? veCanhDong + '#gioi-thieu' : nhom.ve; lai.innerHTML = '<svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h12m-5-5 5 5-5 5" transform="rotate(180 10 10)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> ' + nhom.veChu;
 const soChot = loai === 'canh-dong' ? SO_CHOT_CANH_DONG[MA_CANH_DONG[ma]] : null;
 const soHienThi = soChot ? [[soChot.soThua,'thửa ruộng'],[soChot.soHo,'hộ nông dân'],[soChot.dienTich.toLocaleString('vi-VN',{maximumFractionDigits:1}),'m² diện tích']] : m.so;
 if(soHienThi){
@@ -304,7 +305,7 @@ document.getElementById('khacLuoi').innerHTML = Object.keys(nhom.muc)
       '<div class="ko-loai">'+(x.phu||nhom.nhan)+'</div>'+
       '<div class="ko-ten">'+x.ten+'</div>'+
       '<div class="ko-mo">'+(x.dan||'')+'</div>'+
-      '<span class="dau-bam">→</span></a>';
+      '<span class="dau-bam"><svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>';
   }).join('');
 
 </script>

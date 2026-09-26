@@ -16,11 +16,9 @@ const CAU_HINH_CANH_DONG = {
   // Ảnh timeline chung: bật sau khi upload đủ bộ tên file trong hướng dẫn.
   anhTimeline: {bat:true, thuMuc:'img/timeline', duoi:'jpg'},
   goi: {
-    /* Hai gói sào ruộng hiện hành. Trong từng vụ, quyền lợi trải nghiệm
-       nêu rõ Lễ Tịch Điền và Lễ cúng mừng lúa mới; các hoạt động Tour/MICE
-       thuộc "Sự kiện độc bản" là chương trình riêng, không trộn vào selector gói. */
-    'gieo-mam': {nhan:'Người gieo mầm', hoatDong:['le-xuong-dong','com-moi'], doiTuong:'Trải nghiệm dành cho Người gieo mầm.'},
-    'doi-tac': {nhan:'Đối tác cách mạng di sản', hoatDong:['le-xuong-dong','com-moi'], doiTuong:'Trải nghiệm dành cho Đối tác cách mạng di sản.'}
+    /* Hai gói sào ruộng cùng tham gia bốn lễ hội thường niên trong hai vụ. */
+    'gieo-mam': {nhan:'Người gieo mầm di sản', hoatDong:['le-xuong-dong','com-moi'], doiTuong:'Trải nghiệm dành cho Người gieo mầm di sản.'},
+    'doi-tac': {nhan:'Cách mạng di sản', hoatDong:['le-xuong-dong','com-moi'], doiTuong:'Trải nghiệm dành cho Cách mạng di sản.'}
   },
   /* Chỉ gán các trải nghiệm được mô tả trong gói hiện có.
    * Lễ cúng chưa được nêu rõ trong quyền lợi gói nên vẫn hiện công khai,

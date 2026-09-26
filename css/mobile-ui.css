@@ -40,6 +40,7 @@ body.nhung .modal,#mpDongHanh .modal{min-width:0;max-height:calc(100vh - 24px);m
   .sp-media{position:sticky;top:calc(var(--sp-header-height,73px) + var(--sp-jump-height,61px));z-index:30;max-width:none;display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px 14px;padding:12px 0 14px;background:var(--nen);border-bottom:1px solid var(--line);margin-bottom:22px;isolation:isolate}
   .sp-sec.alt .sp-media{background:var(--nen-2)}
   .sp-heading{grid-column:1/-1;min-width:0}
+  .sp-media .sp-heading{margin-bottom:0}
   .sp-heading h2{font-size:24px;line-height:1.2;margin:3px 0 0;overflow-wrap:anywhere}
   .sp-heading .sp-kicker{font-size:10px;letter-spacing:.6px;line-height:1.4}
   .sp-media .sp-photo{aspect-ratio:1;align-self:center;border-radius:12px;box-shadow:none;animation:none;will-change:auto}
@@ -47,6 +48,7 @@ body.nhung .modal,#mpDongHanh .modal{min-width:0;max-height:calc(100vh - 24px);m
   .sp-media .sp-chip{border:0;border-radius:0;background:transparent;padding:0;min-width:0}
   .sp-media .sp-chip span{font-size:9px;letter-spacing:.3px;line-height:1.4}
   .sp-media .sp-chip strong{font-size:14px;margin-top:1px;line-height:1.4}
+  .sp-media .sp-tax{grid-column:1/-1;margin-top:0}
   .sp-copy{position:relative;z-index:0;animation:none;will-change:auto}
   .sp-copy summary,.sp-copy button,.sp-copy a{scroll-margin-top:calc(var(--sp-header-height,73px) + var(--sp-jump-height,61px) + var(--sp-summary-height,200px) + 12px)}
   .sp-jump a[aria-current="location"]{background:var(--xanh-dam);border-color:var(--xanh-dam);color:#fff}

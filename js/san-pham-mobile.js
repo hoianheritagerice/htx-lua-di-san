@@ -1,7 +1,7 @@
-/* Move the same heading, so visual and reading order agree at each breakpoint. */
+/* Keep each package title beside its image as the content scrolls past. */
 (function(){
   'use strict';
-  const query=matchMedia('(max-width:900px)'), root=document.documentElement;
+  const root=document.documentElement;
   const header=document.querySelector('body>header'), jump=document.querySelector('.sp-jump');
   const packages=Array.from(document.querySelectorAll('.sp-sec'));
   function measure(){
@@ -13,11 +13,11 @@
     packages.forEach(section=>{
       const heading=section.querySelector('.sp-heading');
       heading.querySelector('h2').setAttribute('data-hien-bo','');
-      section.querySelector(query.matches?'.sp-media':'.sp-copy').prepend(heading);
+      section.querySelector('.sp-media').prepend(heading);
     });
     measure();
   }
-  arrange();query.addEventListener('change',arrange);
+  arrange();
   const observer=new ResizeObserver(measure);
   [header,jump,...packages.map(s=>s.querySelector('.sp-media'))].forEach(el=>observer.observe(el));
   window.addEventListener('resize',measure,{passive:true});

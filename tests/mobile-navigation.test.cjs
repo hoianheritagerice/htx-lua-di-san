@@ -8,8 +8,8 @@ function element(height=100){
     getBoundingClientRect(){return {height,top:0,bottom:height};},getClientRects(){return [{}];},
     focus(){this.focused=true;},querySelector(){return null;}};
 }
-test('Each package keeps exactly one heading and follows viewport/header changes',()=>{
-  const header=element(73),jump=element(59),root=element(),mq={matches:true,addEventListener(k,fn){this.change=fn;}},events={};
+test('Each package keeps its heading with the sticky photo and follows header changes',()=>{
+  const header=element(73),jump=element(59),root=element(),events={};
   let position='sticky',resize;
   const sections=['gieo-mam','doi-tac'].map(id=>{
     const section=element(1000),media=element(188),copy=element(),heading=element(),h2=element();
@@ -20,12 +20,11 @@ test('Each package keeps exactly one heading and follows viewport/header changes
   });
   const links=sections.map(s=>Object.assign(element(),{hash:'#'+s.id}));jump.querySelectorAll=()=>links;
   const doc={documentElement:root,querySelector:s=>({'body>header':header,'.sp-jump':jump,'.event-sec':element(10)}[s]),querySelectorAll:()=>sections};
-  vm.runInNewContext(source('js/san-pham-mobile.js'),{document:doc,matchMedia:()=>mq,getComputedStyle:()=>({position}),ResizeObserver:class{constructor(cb){resize=cb;}observe(){}},window:{addEventListener(k,fn){events[k]=fn;}},requestAnimationFrame:fn=>fn()});
+  vm.runInNewContext(source('js/san-pham-mobile.js'),{document:doc,getComputedStyle:()=>({position}),ResizeObserver:class{constructor(cb){resize=cb;}observe(){}},window:{addEventListener(k,fn){events[k]=fn;}},requestAnimationFrame:fn=>fn()});
   sections.forEach(s=>assert.equal(s.heading.owner,s.media));
   assert.equal(root.style['--sp-header-height'],'73px');assert.equal(root.style['--sp-jump-height'],'59px');
   sections.forEach(s=>assert.equal(s.style['--sp-summary-height'],'188px'));
-  mq.matches=false;mq.change();sections.forEach(s=>assert.equal(s.heading.owner,s.copy));
-  mq.matches=true;mq.change();sections.forEach(s=>assert.equal(s.heading.owner,s.media));
+  events.resize();sections.forEach(s=>assert.equal(s.heading.owner,s.media));
   position='relative';resize();assert.equal(root.style['--sp-header-height'],'0px','Landscape must not retain the desktop header offset');
 });
 test('Embedded map expands only for its own same-origin messages and restores layout',()=>{

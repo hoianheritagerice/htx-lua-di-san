@@ -55,11 +55,12 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,253,248,.96);border-
   @keyframes spFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 }
 .sp-grid{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:54px;align-items:start}
-.sp-media{position:sticky;top:148px}.sp-photo{aspect-ratio:4/3;border-radius:22px;overflow:hidden;background:#d9d1bc;box-shadow:0 16px 42px rgba(42,52,34,.12)}
+.sp-media{position:sticky;top:148px;align-self:start}.sp-media .sp-heading{margin-bottom:18px}.sp-photo{aspect-ratio:4/3;border-radius:22px;overflow:hidden;background:#d9d1bc;box-shadow:0 16px 42px rgba(42,52,34,.12)}
 .sp-photo img{width:100%;height:100%;object-fit:cover}.sp-price{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .sp-chip{background:var(--trang);border:1px solid var(--line);border-radius:14px;padding:13px 15px}
 .sp-chip span{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:#7d8574;font-weight:700}
 .sp-chip strong{display:block;margin-top:3px;color:var(--xanh-dam);font-size:16px}
+.sp-tax{font-size:11px;color:#65715b;margin-top:10px;line-height:1.6}
 .sp-kicker{font-size:12px;color:var(--dat-som);font-weight:700;letter-spacing:1.3px;text-transform:uppercase}
 .sp-copy h2{font-size:clamp(31px,4.2vw,46px);margin:7px 0 10px}.sp-tagline{font:500 20px/1.45 'Playfair Display',serif;color:#4a5a40;margin-bottom:17px}
 .sp-dan{font-size:15px;color:#505c48;line-height:1.85}.audience{margin:23px 0;background:#fffdf8;border:1px solid #dfd7c3;border-radius:16px;padding:17px 18px}
@@ -78,14 +79,13 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,253,248,.96);border-
 .dac-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.dq{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:13px;padding:14px;font-size:12.8px;line-height:1.65}.dq b{color:#fff}
 .sp-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:999px;padding:12px 19px;font:600 13.5px 'Be Vietnam Pro';border:1.5px solid var(--xanh-dam);cursor:pointer}
 .btn.chinh{background:var(--xanh-dam);color:#fff}.btn.phu{background:transparent;color:var(--xanh-dam)}.btn:hover{transform:translateY(-1px)}
-.event-sec{scroll-margin-top:138px;background:#143e28;color:#edf3e8;padding:76px 0 82px;position:relative;overflow:hidden}
+.event-sec{scroll-margin-top:138px;background:#143e28;color:#edf3e8;padding:76px 0 82px;position:relative;overflow:clip}
 .event-sec::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 8%,rgba(201,162,39,.14),transparent 32%),linear-gradient(135deg,transparent 0 63%,rgba(255,255,255,.018) 63% 64%,transparent 64%)}
-.event-sec .wrap{position:relative}.event-sec .eyebrow{color:#e7c85d}
+.event-sec .wrap{position:relative}.event-sec .eyebrow{color:#e7c85d}.event-layout{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:54px;align-items:start}.event-media{position:sticky;top:148px}.event-media img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:22px;margin-top:18px}
 .event-head{max-width:820px}.event-sec h2{color:#fff;font-size:clamp(30px,4.2vw,46px);max-width:21ch;margin:9px 0 12px;font-weight:600;text-transform:none}
-.event-sec h2 .mice{color:#f0d16b;font-style:italic}
 .event-lead{max-width:760px;color:#cfdccc;font-size:14px;line-height:1.75}
-.journey{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:34px}
-.j-step{position:relative;background:#f8f3e3;color:#2c3827;border-radius:19px;padding:22px 18px 22px;min-height:250px;border:1px solid rgba(226,207,136,.9);transition:transform .24s ease,box-shadow .24s ease}
+.journey{display:grid;grid-template-columns:1fr;gap:14px}
+.j-step{position:relative;background:#f8f3e3;color:#2c3827;border-radius:19px;padding:22px 18px 22px;min-height:175px;border:1px solid rgba(226,207,136,.9);transition:transform .24s ease,box-shadow .24s ease}
 .j-step:hover{transform:translateY(-3px);box-shadow:0 15px 30px rgba(6,27,15,.16)}
 .j-step .num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#17482c;color:#f0d16b;border:1px solid #d7bd61;font-weight:700;margin-bottom:20px}
 .j-step h3{font-size:21px;margin-bottom:10px;line-height:1.25}.j-step h3.keep-line{white-space:nowrap;font-size:19px}
@@ -104,13 +104,13 @@ footer{background:#182e1a;color:#c9d3c0;font-size:14px;padding:40px 0 24px}.foot
 .modal{background:#fff;width:100%;max-width:420px;border-radius:18px;padding:26px 24px 30px}.modal h2{font-size:22px;margin-bottom:6px}.modal p.sub{font-size:13px;color:#6b7263;margin-bottom:16px}
 .form-o{margin-bottom:13px}.form-o label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:#41503a}.form-o input{width:100%;font-family:inherit;font-size:14px;padding:11px;border:1.5px solid #cfc8b4;border-radius:9px;background:#fdfcf8}
 .nut-gui{width:100%;padding:14px;border:none;border-radius:11px;background:var(--xanh-dam);color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px}.dong{display:block;margin:14px auto 0;background:none;border:none;color:#8a9180;font-size:13px;cursor:pointer;font-family:inherit}
-@media(max-width:900px){.lua-chon{grid-template-columns:1fr 1fr}.lua-card:last-child{grid-column:1/-1}.sp-grid{grid-template-columns:1fr}.sp-media{position:relative;top:auto;max-width:680px}.journey{grid-template-columns:1fr 1fr}.event-values,.link-grid{grid-template-columns:1fr}.dac-grid{grid-template-columns:1fr}}
-@media(max-width:680px){.nav .menu,.nav .acts .dangnhap span{display:none}.burger{display:block}.shero{min-height:440px;padding-bottom:48px}.sp-jump{top:72px}.lua-chon{grid-template-columns:1fr}.lua-card:last-child{grid-column:auto}.lua-card{min-height:315px}.sp-sec{padding:58px 0}.sp-price{grid-template-columns:1fr}.journey{grid-template-columns:1fr}.j-step{min-height:0}.sp-actions,.event-actions{flex-direction:column}.btn{width:100%}}
+@media(max-width:900px){.lua-chon{grid-template-columns:1fr 1fr}.lua-card:last-child{grid-column:1/-1}.sp-grid,.event-layout{grid-template-columns:1fr}.sp-media{position:relative;top:auto;max-width:680px}.event-media{position:relative;top:auto}.event-media img{max-width:680px}.event-values,.link-grid{grid-template-columns:1fr}.dac-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.nav .menu,.nav .acts .dangnhap span{display:none}.burger{display:block}.shero{min-height:440px;padding-bottom:48px}.sp-jump{top:72px}.lua-chon{grid-template-columns:1fr}.lua-card:last-child{grid-column:auto}.lua-card{min-height:315px}.sp-sec{padding:58px 0}.sp-price{grid-template-columns:1fr}.j-step{min-height:0}.sp-actions,.event-actions{flex-direction:column}.btn{width:100%}}
 </style>
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
-<script src="js/noi-dung.js?v=20260925b"></script>
-<link rel="stylesheet" href="css/mobile-ui.css?v=20260925a">
+<script src="js/noi-dung.js?v=20260926a"></script>
+<link rel="stylesheet" href="css/mobile-ui.css?v=20260926a">
 </head>
 <body class="page-products">
 <header>
@@ -130,7 +130,7 @@ footer{background:#182e1a;color:#c9d3c0;font-size:14px;padding:40px 0 24px}.foot
   </div>
 </section>
 <nav class="sp-jump" aria-label="Đi nhanh đến chương trình">
-  <div class="wrap"><a href="#gieo-mam">Người gieo mầm</a><a href="#doi-tac">Đối tác cách mạng di sản</a><a href="#su-kien-doc-ban">Sự kiện độc bản</a></div>
+  <div class="wrap"><a href="#gieo-mam">Người gieo mầm di sản</a><a href="#doi-tac">Cách mạng di sản</a><a href="#su-kien-doc-ban">Sự kiện di sản thường niên</a></div>
 </nav>
 <section class="chon-cach">
   <div class="wrap">
@@ -142,8 +142,10 @@ footer{background:#182e1a;color:#c9d3c0;font-size:14px;padding:40px 0 24px}.foot
 <section class="sp-sec alt" id="doi-tac"><div class="wrap"><div class="sp-grid" id="doiTacNoi"></div></div></section>
 <section class="event-sec" id="su-kien-doc-ban">
   <div class="wrap">
-    <div class="event-head"><div class="eyebrow">Sự kiện độc bản · Tour <span style="color:#f0d16b">MICE</span></div><h2 id="eventTitle"></h2><div class="event-lead">Sự kiện độc bản</div></div>
-    <div class="journey" id="eventJourney"></div><div class="event-values" id="eventValues"></div>
+    <div class="event-layout">
+      <div class="event-media"><div class="event-head"><div class="eyebrow">Bốn lễ hội · Hai mùa vụ</div><h2 id="eventTitle"></h2><div class="event-lead" id="eventLead"></div></div><img src="img/timeline/12-ngay-hoi-gat.jpg" alt="Thu hoạch lúa trong mùa vụ"></div>
+      <div class="journey" id="eventJourney"></div>
+    </div>
     <div class="event-actions"><button class="btn chinh nut-noi" onclick="moFormQuanTam(tenGoi('su-kien-doc-ban'))">Tôi quan tâm chương trình này</button><a class="btn phu" href="canh-dong.html#ban-do-mua-vu">Xem cánh đồng <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="btn phu" href="ve-chung-toi.html">Tìm hiểu HTX <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
   </div>
 </section>
@@ -165,14 +167,14 @@ footer{background:#182e1a;color:#c9d3c0;font-size:14px;padding:40px 0 24px}.foot
   function clean(s){return String(s||'').replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ');}
   function arrow(){return '<svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
   function card(ma,img,loai){
-    var g=goi[ma]||{}, meta=g.gia ? g.gia+' / kg · Đồng hành tối thiểu '+g.dongHanhToiThieu : 'Tour · Trải nghiệm MICE';
+    var g=goi[ma]||{}, meta=g.gia ? g.gia+'/kg · Chưa gồm VAT · Đồng hành tối thiểu '+g.dongHanhToiThieu : 'Bốn lễ hội · Hai mùa vụ';
     return '<a class="lua-card the-noi" href="#'+(ma==='su-kien-doc-ban'?'su-kien-doc-ban':ma)+'"><img src="'+img+'" alt=""><div class="lua-noi"><div class="lua-loai">'+loai+'</div><h3>'+g.ten+'</h3><div class="lua-mo">'+clean(g.tomTat)+'</div><div class="lua-meta">'+meta+'</div><div class="lua-link">Khám phá '+arrow()+'</div></div></a>';
   }
-  document.getElementById('luaChonSP').innerHTML=card('gieo-mam','img/goi-1-gieo-mam.jpg','Gói sào ruộng')+card('doi-tac','img/goi-3-doi-tac.jpg','Gói sào ruộng')+card('su-kien-doc-ban','img/timeline/12-ngay-hoi-gat.jpg','Tour · Trải nghiệm MICE');
+  document.getElementById('luaChonSP').innerHTML=card('gieo-mam','img/goi-1-gieo-mam.jpg','Gói sào ruộng')+card('doi-tac','img/goi-3-doi-tac.jpg','Gói sào ruộng')+card('su-kien-doc-ban','img/timeline/12-ngay-hoi-gat.jpg','Bốn lễ hội · Hai mùa vụ');
   function accItem(html){var m=String(html||'').match(/<b>(.*?)<\/b><br>([\s\S]*)/);return m?'<details><summary>'+m[1]+'</summary><div class="acc-body">'+m[2]+'</div></details>':'<details><summary>Xem chi tiết</summary><div class="acc-body">'+html+'</div></details>';}
   function packageHtml(ma){
     var g=goi[ma]||{}, premium=ma==='doi-tac';
-    var meta='<div class="sp-price"><div class="sp-chip"><span>Giá bán lẻ</span><strong>'+g.gia+' / kg</strong></div><div class="sp-chip"><span>Đồng hành tối thiểu</span><strong>'+g.dongHanhToiThieu+'</strong></div></div>';
+    var meta='<div class="sp-price"><div class="sp-chip"><span>Mức giá</span><strong>'+g.gia+'/kg</strong></div><div class="sp-chip"><span>Đồng hành tối thiểu</span><strong>'+g.dongHanhToiThieu+'</strong></div></div><div class="sp-tax">Giá chưa bao gồm VAT'+(g.giaSao?' · '+g.giaSao+' · '+g.sanLuongSao:'')+'</div>';
     var benefits=(g.quyenLoi||[]).map(accItem).join('');
     var special=premium&&g.dacQuyen?'<div class="dac-quyen"><h3>CÁC LỢI ÍCH ĐẶC QUYỀN KHÁC:</h3><div class="dac-grid">'+g.dacQuyen.map(function(x){return '<div class="dq">'+x+'</div>';}).join('')+'</div></div>':'';
     var tagline=g.tagline?'<div class="sp-tagline">'+g.tagline+'</div>':'';
@@ -181,17 +183,17 @@ footer{background:#182e1a;color:#c9d3c0;font-size:14px;padding:40px 0 24px}.foot
   document.getElementById('gieoMamNoi').innerHTML=packageHtml('gieo-mam');
   document.getElementById('doiTacNoi').innerHTML=packageHtml('doi-tac');
   var sk=page.suKienDocBan||{}, et=document.getElementById('eventTitle');
-  et.innerHTML=String(sk.tieuDe||'').replace('MICE','<span class="mice">MICE</span>');
+  et.textContent=sk.tieuDe||'';
+  document.getElementById('eventLead').textContent=sk.dan||'';
   document.getElementById('eventJourney').innerHTML=(sk.hanhTrinh||[]).map(function(x){
     var keep=x.ten.indexOf('Farm-to-Table')>=0?' class="keep-line"':'';
     return '<article class="j-step"><div class="num">'+x.so+'</div><h3'+keep+'>'+x.ten+'</h3><p>'+x.moTa+'</p></article>';
   }).join('');
-  document.getElementById('eventValues').innerHTML=(sk.giaTri||[]).map(function(x){return '<article class="ev"><h3>'+x.ten+'</h3><p>'+x.moTa+'</p></article>';}).join('');
 })();
 </script>
 <script src="js/chung.js?v=20260921p"></script>
 <script src="js/form-quan-tam.js"></script>
-<script src="js/san-pham-mobile.js?v=20260925a"></script>
+<script src="js/san-pham-mobile.js?v=20260926a"></script>
 <script src="js/hieu-ung.js"></script>
 </body>
 </html>

@@ -174,8 +174,7 @@ body.nhung #trangthai{padding-top:10px}
 <div class="bd-chedo" id="bdCheDo" role="tablist" aria-label="Chế độ xem bản đồ">
   <button type="button" id="tabDongHanh" class="active" role="tab" aria-selected="true"
           onclick="chonCheDoBanDo('dong-hanh')">Đồng hành</button>
-  <!-- Tạm ẩn lựa chọn Canh tác; giữ nguyên mã và dữ liệu để bật lại sau. -->
-  <button type="button" id="tabCanhTac" role="tab" aria-selected="false" hidden
+  <button type="button" id="tabCanhTac" role="tab" aria-selected="false"
           onclick="chonCheDoBanDo('canh-tac')">Canh tác</button>
 </div>
 
@@ -240,11 +239,12 @@ body.nhung #trangthai{padding-top:10px}
       </div>
       <div>
         <div class="dh-so-lieu">
-          <div class="dh-so-hang"><span>Sản lượng thửa ruộng</span><b id="dhSanLuong">—</b></div>
+          <div class="dh-so-hang"><span>Sản lượng ước tính</span><b id="dhSanLuong">—</b></div>
           <div class="dh-so-hang"><span>Đã đồng hành</span><b id="dhDaDongHanh">—</b></div>
           <div class="dh-so-hang"><span>Còn lại</span><b id="dhConLai">—</b></div>
         </div>
         <div class="dh-trangthai chua" id="dhTrangThai">Chưa có người đồng hành</div>
+        <small>Ước tính 300 kg/500 m², làm tròn đến 20 kg gần nhất.</small>
       </div>
     </div>
 
@@ -475,7 +475,7 @@ body.nhung #trangthai{padding-top:10px}
      xong không lưu được.
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
-<script src="js/ban-do.js?v=20260925b"></script>
+<script src="js/ban-do.js?v=20261001a"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html

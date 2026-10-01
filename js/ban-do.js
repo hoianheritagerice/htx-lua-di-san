@@ -338,73 +338,77 @@ function nhanThua(p){ return (p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim(
    DỮ LIỆU MẪU CHẾ ĐỘ ĐỒNG HÀNH — CHỈ DÙNG ĐỂ CHỐT UX/UI TRÊN GITHUB.
    Sau này toàn bộ khối này sẽ được thay bằng dữ liệu Supabase.
 
-   sanLuong: sản lượng GẠO của thửa (kg)
+   Sản lượng ước tính của từng thửa được tính từ diện tích bản đồ.
    daDongHanh: tổng kg từ các đơn ĐÃ XÁC NHẬN
    ================================================================== */
 /* Đối chiếu HT26 ngày 25/09/2026: các thửa mẫu đều hữu cơ, không vi phạm
    và có nhật ký. Phúc, Toàn, Hội 1 được thay bằng Cậy, Tư 7, Ngọc. */
 const DONG_HANH_MAU = {
-  'CKOD:HT26:CUOC': {sanLuong:300, daDongHanh:100, nguoi:[
+  'CKOD:HT26:CUOC': {daDongHanh:100, nguoi:[
     {ten:'Anh Quân', diaPhuong:'Hội An', kg:100}
   ]},
-  'CKOD:HT26:HUNG': {sanLuong:300, daDongHanh:300, nguoi:[
+  'CKOD:HT26:HUNG': {daDongHanh:300, nguoi:[
     {ten:'Anh Minh', diaPhuong:'Đà Nẵng', kg:100},
     {ten:'Chị Hương', diaPhuong:'Hội An', kg:100},
     {ten:'Anh Nam', diaPhuong:'Huế', kg:100}
   ]},
-  'CKOD:HT26:SAU':  {sanLuong:240, daDongHanh:120, nguoi:[
+  'CKOD:HT26:SAU':  {daDongHanh:120, nguoi:[
     {ten:'Chị Mai', diaPhuong:'Đà Nẵng', kg:70},
     {ten:'Anh Bình', diaPhuong:'Hội An', kg:50}
   ]},
-  'CKOD:HT26:HUONG':{sanLuong:360, daDongHanh:360, nguoi:[
+  'CKOD:HT26:HUONG':{daDongHanh:360, nguoi:[
     {ten:'Anh Hùng', diaPhuong:'Hội An', kg:160},
     {ten:'Chị Lan', diaPhuong:'Đà Nẵng', kg:100},
     {ten:'Anh Sơn', diaPhuong:'Quảng Nam', kg:100}
   ]},
 
-  'CTDC:HT26:CAY': {sanLuong:300, daDongHanh:200, nguoi:[
+  'CTDC:HT26:CAY': {daDongHanh:200, nguoi:[
     {ten:'Anh Quân', diaPhuong:'Hội An', kg:100},
     {ten:'Chị Mai', diaPhuong:'Đà Nẵng', kg:100}
   ]},
-  'CTDC:HT26:LE1':  {sanLuong:250, daDongHanh:250, nguoi:[
+  'CTDC:HT26:LE1':  {daDongHanh:250, nguoi:[
     {ten:'Anh Dũng', diaPhuong:'Hà Nội', kg:100},
     {ten:'Chị An', diaPhuong:'Đà Nẵng', kg:50},
     {ten:'Anh Long', diaPhuong:'Hội An', kg:100}
   ]},
-  'CTDC:HT26:PHO':  {sanLuong:320, daDongHanh:100, nguoi:[
+  'CTDC:HT26:PHO':  {daDongHanh:100, nguoi:[
     {ten:'Chị Hạnh', diaPhuong:'Hội An', kg:100}
   ]},
-  'CTDC:HT26:BE1':  {sanLuong:280, daDongHanh:280, nguoi:[
+  'CTDC:HT26:BE1':  {daDongHanh:280, nguoi:[
     {ten:'Anh Khoa', diaPhuong:'Đà Nẵng', kg:80},
     {ten:'Chị Nga', diaPhuong:'Hội An', kg:100},
     {ten:'Anh Hải', diaPhuong:'TP.HCM', kg:100}
   ]},
 
-  'CTDM:HT26:TU7': {sanLuong:300, daDongHanh:100, nguoi:[
+  'CTDM:HT26:TU7': {daDongHanh:100, nguoi:[
     {ten:'Anh Phúc', diaPhuong:'Hội An', kg:100}
   ]},
-  'CTDM:HT26:CU':   {sanLuong:220, daDongHanh:220, nguoi:[
+  'CTDM:HT26:CU':   {daDongHanh:220, nguoi:[
     {ten:'Chị Thảo', diaPhuong:'Đà Nẵng', kg:120},
     {ten:'Anh Lâm', diaPhuong:'Hội An', kg:100}
   ]},
-  'CTDM:HT26:BE':   {sanLuong:260, daDongHanh:160, nguoi:[
+  'CTDM:HT26:BE':   {daDongHanh:160, nguoi:[
     {ten:'Anh Tân', diaPhuong:'Hội An', kg:60},
     {ten:'Chị Vy', diaPhuong:'Đà Nẵng', kg:100}
   ]},
-  'CTDM:HT26:NGOC': {sanLuong:300, daDongHanh:300, nguoi:[
+  'CTDM:HT26:NGOC': {daDongHanh:300, nguoi:[
     {ten:'Anh Đức', diaPhuong:'Hội An', kg:100},
     {ten:'Chị Thu', diaPhuong:'Đà Nẵng', kg:100},
     {ten:'Anh Trí', diaPhuong:'Quảng Nam', kg:100}
   ]},
 };
 
+function sanLuongUocTinh(p){
+  const dienTich = Number(p.area);
+  return Number.isFinite(dienTich) && dienTich > 0
+    ? Math.round(dienTich * 300 / 500 / 20) * 20 : 0;
+}
+
 function duLieuDongHanhMau(p){
   const vu = $('selVu') ? $('selVu').value : 'HT26';
-  /* Thửa chưa có người đồng hành vẫn phải có sản lượng để popup hiển thị.
-     300 kg chỉ là số mẫu cho giai đoạn chốt UI; sau này thay bằng sản lượng
-     gạo thật của mã sản phẩm. */
-  return DONG_HANH_MAU[MAP_DATA.field + ':' + vu + ':' + p.code]
-    || {sanLuong:300, daDongHanh:0, nguoi:[]};
+  const mau = DONG_HANH_MAU[MAP_DATA.field + ':' + vu + ':' + p.code];
+  return {sanLuong:sanLuongUocTinh(p), daDongHanh:mau ? mau.daDongHanh : 0,
+          nguoi:mau ? mau.nguoi : []};
 }
 
 function trangThaiDongHanhMau(p){

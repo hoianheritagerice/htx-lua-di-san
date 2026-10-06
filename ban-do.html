@@ -134,7 +134,7 @@ body.nhung #trangthai{padding-top:10px}
 .dh-nguoi span{color:#394534}
 .dh-nguoi b{color:#26321f;white-space:nowrap}
 .dh-trong{font-size:13px;color:#7b8273;background:#f7f5ef;border-radius:10px;padding:12px}
-.dh-cua-toi{display:none;margin-top:14px;padding:11px 12px;background:#eef5e5;border:1px solid #b9cea2;
+.dh-cua-toi{display:none;margin:0 0 14px;padding:11px 12px;background:#eef5e5;border:1px solid #b9cea2;
   border-radius:11px;color:#31511f;font-size:12.8px;line-height:1.45}
 .dh-cua-toi.hien{display:block}
 .dh-hanhdong-row{display:flex;gap:9px;margin-top:16px}
@@ -232,6 +232,7 @@ body.nhung #trangthai{padding-top:10px}
   <div class="modal" tabindex="-1">
     <div class="dh-dialog-head"><h2 id="dhTieuDe">Thửa ruộng</h2><button type="button" class="dh-close" aria-label="Đóng thông tin người đồng hành" onclick="dongModal('mpDongHanh')">×</button></div>
     <div class="dh-phu-de" id="dhPhuDe"></div>
+    <div class="dh-cua-toi" id="dhCuaToi" aria-live="polite"></div>
 
     <div class="dh-tongquan">
       <div class="dh-vong" id="dhVong">
@@ -244,7 +245,6 @@ body.nhung #trangthai{padding-top:10px}
           <div class="dh-so-hang"><span>Còn lại</span><b id="dhConLai">—</b></div>
         </div>
         <div class="dh-trangthai chua" id="dhTrangThai">Chưa có người đồng hành</div>
-        <small>Ước tính 300 kg/500 m², làm tròn đến 20 kg gần nhất.</small>
       </div>
     </div>
 
@@ -253,7 +253,6 @@ body.nhung #trangthai{padding-top:10px}
       <div id="dhDanhSach" class="dh-danh-sach"></div>
     </div>
 
-    <div class="dh-cua-toi" id="dhCuaToi"></div>
     <div class="dh-hanhdong-row">
       <button type="button" class="dh-hanhdong" id="dhHanhDong" onclick="thongBaoDongHanhMau()">Đồng hành cùng thửa này</button>
       <button type="button" class="dh-hanhdong phu" id="dhXemNhatKy" onclick="moNhatKyDongHanh()">Xem nhật ký thửa ruộng</button>
@@ -475,7 +474,7 @@ body.nhung #trangthai{padding-top:10px}
      xong không lưu được.
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
-<script src="js/ban-do.js?v=20261001a"></script>
+<script src="js/ban-do.js?v=20261006b"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html

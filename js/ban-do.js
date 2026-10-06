@@ -209,6 +209,7 @@ function canGiuaThuaCuaToi(i, coZoom){
     if(!er.width || !er.height) return;
     khung.scrollLeft += er.left + er.width/2 - (kr.left + khung.clientWidth/2);
     khung.scrollTop  += er.top + er.height/2 - (kr.top + khung.clientHeight/2);
+    ghimDieuKhienBanDo();
     if(THUA_CUA_TOI && THUA_CUA_TOI.index === i) datConTroThuaCuaToi(i);
   }));
 }
@@ -1187,6 +1188,12 @@ veBanDo();
 /* ---- zoom bằng lăn chuột & véo 2 ngón ---- */
 /* ---- zoom bằng lăn chuột & véo 2 ngón ---- */
 const kbando = document.querySelector('.khung-bando');
+function ghimDieuKhienBanDo(){
+  const nut = kbando.querySelector('.zoombtns');
+  if(nut) nut.style.transform = 'translate(' + kbando.scrollLeft + 'px,' + kbando.scrollTop + 'px)';
+}
+kbando.addEventListener('scroll', ghimDieuKhienBanDo, {passive:true});
+ghimDieuKhienBanDo();
 kbando.addEventListener('wheel', function(e){
   e.preventDefault();
   const rect = kbando.getBoundingClientRect();

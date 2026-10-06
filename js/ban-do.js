@@ -747,18 +747,21 @@ function moDongHanh(i){
     && THUA_CUA_TOI.season === String($('selVu').value).toUpperCase()
     && THUA_CUA_TOI.code === String(p.code||'').toUpperCase());
   if(cuaToi){
-    if(laThuaCuaToi && ds.length){
-      const kgCuaToi = Number(ds[0].kg)||0; // dữ liệu mẫu; Supabase sau này lấy đúng allocation của khách
+    if(laThuaCuaToi){
+      const kgCuaToi = ds.length ? Number(ds[0].kg)||0 : 0; // dữ liệu mẫu; phân bổ riêng sẽ lấy từ API
       const pctCuaToi = sanLuong > 0 ? (kgCuaToi/sanLuong*100) : 0;
-      cuaToi.innerHTML = '<strong>Đây là thửa ruộng bạn đang đồng hành.</strong><br>'
-        + 'Bạn đang đồng hành với ' + pctCuaToi.toLocaleString('vi-VN',{maximumFractionDigits:1})
-        + '% sản lượng được phân bổ của thửa này.';
+      cuaToi.innerHTML = '<strong>Đây là thửa ruộng bạn đang đồng hành.</strong>'
+        + (kgCuaToi > 0 ? '<br>Bạn đang đồng hành với '
+          + pctCuaToi.toLocaleString('vi-VN',{maximumFractionDigits:1})
+          + '% sản lượng được phân bổ của thửa này.' : '');
       cuaToi.classList.add('hien');
     }else{
       cuaToi.classList.remove('hien');
       cuaToi.innerHTML = '';
     }
   }
+  const bangDongHanh = document.querySelector('#mpDongHanh .modal');
+  if(bangDongHanh) bangDongHanh.scrollTop = 0;
   moModal('mpDongHanh');
 }
 

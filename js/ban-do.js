@@ -363,7 +363,7 @@ function chonCheDoBanDo(cheDo){
   else {
     const tt = $('trangthai');
     if(tt) tt.textContent = laCheDoDongHanh()
-      ? 'Chế độ Đồng hành — đang hiển thị dữ liệu mẫu để chốt màu và chú giải.'
+      ? 'Chế độ Đồng hành — đang tải dữ liệu bản đồ.'
       : (laKhach() ? 'Đăng nhập để xem trạng thái canh tác và nhật ký của từng thửa.' : 'Đang kết nối dữ liệu…');
   }
   capNhatGiaoDienKhach();
@@ -373,70 +373,16 @@ function chonCheDoBanDo(cheDo){
 function nhanThua(p){ return (p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim(); }
 
 /* ==================================================================
-   DỮ LIỆU MẪU CHẾ ĐỘ ĐỒNG HÀNH — CHỈ DÙNG ĐỂ CHỐT UX/UI TRÊN GITHUB.
-   Sau này toàn bộ khối này sẽ được thay bằng dữ liệu Supabase.
+   DỮ LIỆU ĐỒNG HÀNH ĐÃ XÁC NHẬN
+   Các thửa không có trong danh sách này chưa ghi nhận người đồng hành.
 
    Sản lượng ước tính của từng thửa được tính từ diện tích bản đồ.
    daDongHanh: tổng kg từ các đơn ĐÃ XÁC NHẬN
    ================================================================== */
-/* Đối chiếu HT26 ngày 25/09/2026: các thửa mẫu đều hữu cơ, không vi phạm
-   và có nhật ký. Phúc, Toàn, Hội 1 được thay bằng Cậy, Tư 7, Ngọc. */
 const DONG_HANH_MAU = {
-  'CKOD:HT26:CUOC': {daDongHanh:100, nguoi:[
-    {ten:'Anh Quân', diaPhuong:'Hội An', kg:100}
-  ]},
-  'CKOD:HT26:HUNG': {daDongHanh:300, nguoi:[
-    {ten:'Anh Minh', diaPhuong:'Đà Nẵng', kg:100},
-    {ten:'Chị Hương', diaPhuong:'Hội An', kg:100},
-    {ten:'Anh Nam', diaPhuong:'Huế', kg:100}
-  ]},
-  'CKOD:HT26:SAU':  {daDongHanh:120, nguoi:[
-    {ten:'Chị Mai', diaPhuong:'Đà Nẵng', kg:70},
-    {ten:'Anh Bình', diaPhuong:'Hội An', kg:50}
-  ]},
-  'CKOD:HT26:HUONG':{daDongHanh:360, nguoi:[
-    {ten:'Anh Hùng', diaPhuong:'Hội An', kg:160},
-    {ten:'Chị Lan', diaPhuong:'Đà Nẵng', kg:100},
-    {ten:'Anh Sơn', diaPhuong:'Quảng Nam', kg:100}
-  ]},
-
-  // Phân bổ công khai đầu tiên do HTX cung cấp; các thửa mẫu khác vẫn là dữ liệu minh họa.
+  // Phân bổ đồng hành đã được HTX xác nhận cho Hè Thu 2026.
   'CTDC:HT26:YEN': {daDongHanh:80, nguoi:[
     {ten:'Chị Tuyết Nhung', diaPhuong:'', kg:80}
-  ]},
-  'CTDC:HT26:CAY': {daDongHanh:200, nguoi:[
-    {ten:'Anh Quân', diaPhuong:'Hội An', kg:100},
-    {ten:'Chị Mai', diaPhuong:'Đà Nẵng', kg:100}
-  ]},
-  'CTDC:HT26:LE1':  {daDongHanh:250, nguoi:[
-    {ten:'Anh Dũng', diaPhuong:'Hà Nội', kg:100},
-    {ten:'Chị An', diaPhuong:'Đà Nẵng', kg:50},
-    {ten:'Anh Long', diaPhuong:'Hội An', kg:100}
-  ]},
-  'CTDC:HT26:PHO':  {daDongHanh:100, nguoi:[
-    {ten:'Chị Hạnh', diaPhuong:'Hội An', kg:100}
-  ]},
-  'CTDC:HT26:BE1':  {daDongHanh:280, nguoi:[
-    {ten:'Anh Khoa', diaPhuong:'Đà Nẵng', kg:80},
-    {ten:'Chị Nga', diaPhuong:'Hội An', kg:100},
-    {ten:'Anh Hải', diaPhuong:'TP.HCM', kg:100}
-  ]},
-
-  'CTDM:HT26:TU7': {daDongHanh:100, nguoi:[
-    {ten:'Anh Phúc', diaPhuong:'Hội An', kg:100}
-  ]},
-  'CTDM:HT26:CU':   {daDongHanh:220, nguoi:[
-    {ten:'Chị Thảo', diaPhuong:'Đà Nẵng', kg:120},
-    {ten:'Anh Lâm', diaPhuong:'Hội An', kg:100}
-  ]},
-  'CTDM:HT26:BE':   {daDongHanh:160, nguoi:[
-    {ten:'Anh Tân', diaPhuong:'Hội An', kg:60},
-    {ten:'Chị Vy', diaPhuong:'Đà Nẵng', kg:100}
-  ]},
-  'CTDM:HT26:NGOC': {daDongHanh:300, nguoi:[
-    {ten:'Anh Đức', diaPhuong:'Hội An', kg:100},
-    {ten:'Chị Thu', diaPhuong:'Đà Nẵng', kg:100},
-    {ten:'Anh Trí', diaPhuong:'Quảng Nam', kg:100}
   ]},
 };
 
@@ -601,7 +547,7 @@ function apDungKetQua(r){
   if(laCheDoDongHanh()){
     const dem = {chua:0, con:0, du:0};
     MAP_DATA.plots.forEach(p=>dem[trangThaiDongHanhMau(p)]++);
-    tt.textContent = 'Dữ liệu mẫu Đồng hành · ' + dem.chua + ' thửa chưa có · '
+    tt.textContent = 'Đồng hành · ' + dem.chua + ' thửa chưa có · '
       + dem.con + ' thửa còn sản lượng · ' + dem.du + ' thửa đã đủ.';
   }else{
     tt.textContent = laKhach()
@@ -822,7 +768,7 @@ function moDongHanh(i){
 }
 
 function thongBaoDongHanhMau(){
-  alert('Đây đang là bản preview bằng dữ liệu mẫu. Nút này sẽ được nối với đơn hàng/Supabase ở giai đoạn triển khai dữ liệu khách thật.');
+  alert('Tính năng đăng ký đồng hành trực tuyến chưa mở. Vui lòng liên hệ HTX để đăng ký.');
 }
 
 function moNhatKyDongHanh(){

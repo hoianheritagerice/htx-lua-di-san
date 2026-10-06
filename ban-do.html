@@ -66,6 +66,7 @@ body.nhung #trangthai{padding-top:10px}
 .bd-chedo button{border:0;background:transparent;color:#66705f;font:inherit;font-size:13px;font-weight:600;
   padding:8px 16px;border-radius:999px;cursor:pointer;white-space:nowrap}
 .bd-chedo button.active{background:#fff;color:var(--xanh-dam,#1e4d2b);box-shadow:0 1px 5px rgba(33,45,25,.12)}
+.bd-chedo button[hidden]{display:none}
 .bd-chedo button:focus-visible{outline:2px solid var(--xanh-dam,#1e4d2b);outline-offset:2px}
 /* Ba trạng thái Đồng hành — tách hoàn toàn khỏi bộ màu Canh tác. */
 .thua.dong-hanh-chua{fill:#ece8de;stroke:#aaa394}
@@ -174,7 +175,7 @@ body.nhung #trangthai{padding-top:10px}
 <div class="bd-chedo" id="bdCheDo" role="tablist" aria-label="Chế độ xem bản đồ">
   <button type="button" id="tabDongHanh" class="active" role="tab" aria-selected="true"
           onclick="chonCheDoBanDo('dong-hanh')">Đồng hành</button>
-  <button type="button" id="tabCanhTac" role="tab" aria-selected="false"
+  <button type="button" id="tabCanhTac" role="tab" aria-selected="false" hidden
           onclick="chonCheDoBanDo('canh-tac')">Canh tác</button>
 </div>
 
@@ -255,7 +256,7 @@ body.nhung #trangthai{padding-top:10px}
 
     <div class="dh-hanhdong-row">
       <button type="button" class="dh-hanhdong" id="dhHanhDong" onclick="thongBaoDongHanhMau()">Đồng hành cùng thửa này</button>
-      <button type="button" class="dh-hanhdong phu" id="dhXemNhatKy" onclick="moNhatKyDongHanh()">Xem nhật ký thửa ruộng</button>
+      <button type="button" class="dh-hanhdong phu" id="dhXemNhatKy" style="display:none" onclick="moNhatKyDongHanh()">Xem nhật ký thửa ruộng</button>
     </div>
     <button class="dong" onclick="dongModal('mpDongHanh')">Đóng</button>
   </div>
@@ -785,19 +786,19 @@ body.nhung #trangthai{padding-top:10px}
   function moNhatKy() {
     var nd = maThuaDangChon();
     if (!nd) { alert('Thửa này chưa có dữ liệu nên chưa xem được nhật ký.'); return; }
+    if (!coQuyenNhatKyThua(MAP_DATA.plots[thuaDangChon])) {
+      alert('Link này không có quyền xem nhật ký của thửa ruộng này.'); return;
+    }
     dongModal('mpThua'); moModal('mpNK');
     $('nkMa').textContent = nd.productCode;
     $('nkDS').innerHTML = '<div class="trong">Đang tải…</div>';
     var phNK = phienHienTai();
-    goiAPI({ action: 'getHistory', productCode: nd.productCode, token: phNK ? phNK.token : '' })
+    goiAPI({ action: 'getHistory', productCode: nd.productCode,
+      token: phNK ? phNK.token : '', linkKey: LINK_KEY_NHAT_KY })
       .then(function (r) {
         if (!r.ok) throw r.error;
         if (!r.entries.length) { $('nkDS').innerHTML = '<div class="trong">Chưa có bản ghi nào cho thửa này trong vụ này.</div>'; return; }
-        var dongKhoa = !phNK
-          ? '<div class="nk-khoa">🔒 Mô tả chi tiết và ảnh/video chỉ dành cho tài khoản xã viên hoặc khách hàng của HTX. '
-            + '<button onclick="dongModal(\'mpNK\');moModal(\'mpDN\')">Đăng nhập</button></div>'
-          : '';
-        $('nkDS').innerHTML = dongKhoa + r.entries.map(function (e, idx) {
+        $('nkDS').innerHTML = r.entries.map(function (e, idx) {
           var dongNgay = (e.date || '')
             + ((e.nss !== null && e.nss !== undefined) ? ' · NSS ' + e.nss : '')
             + (e.giaiDoan ? ' · ' + escHtml(e.giaiDoan) : '');

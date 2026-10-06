@@ -162,13 +162,17 @@ let DANG_AP_DEEP_LINK = false;
 const LINK_KEY_NHAT_KY = new URLSearchParams(location.hash.slice(1)).get('ma-xem') || '';
 let QUYEN_NHAT_KY_LINK = null;
 
+function nguoiLinkChoThua(p){
+  const q = QUYEN_NHAT_KY_LINK;
+  return q && p && q.field === String(MAP_DATA.field).toUpperCase()
+    && q.season === String($('selVu').value).toUpperCase()
+    && q.plot === String(p.code).toUpperCase() ? q : null;
+}
+
 function coQuyenNhatKyThua(p){
   const ph = phienHienTai();
-  if(ph && ph.role === 'admin') return true;
-  const q = QUYEN_NHAT_KY_LINK;
-  return !!(q && p && q.field === String(MAP_DATA.field).toUpperCase()
-    && q.season === String($('selVu').value).toUpperCase()
-    && q.plot === String(p.code).toUpperCase());
+  if(ph) return true;
+  return !!nguoiLinkChoThua(p);
 }
 
 if(LINK_KEY_NHAT_KY){
@@ -249,7 +253,7 @@ function datConTroThuaCuaToi(i){
     const top = er.top - kr.top + khung.scrollTop;
     callout.style.left = cx + 'px';
     callout.style.top = Math.max(46, top - 13) + 'px';
-    callout.textContent = coQuyenNhatKyThua(MAP_DATA.plots[i])
+    callout.textContent = nguoiLinkChoThua(MAP_DATA.plots[i])
       ? 'Đây là thửa ruộng bạn đang đồng hành' : 'Thửa ruộng đang xem';
     callout.classList.add('hien');
   });
@@ -291,12 +295,12 @@ function capNhatHienThiThuaCuaToi(coZoom){
     if(goc){ xoayLv = goc; capNhatXoay(); }
   }
   const d = duLieuDongHanhMau(p);
-  const ds = Array.isArray(d.nguoi) ? d.nguoi : [];
-  const phanCuaKhach = ds.length ? Number(ds[0].kg)||0 : 0;
+  const q = nguoiLinkChoThua(p);
+  const phanCuaKhach = q ? Number(q.kg)||0 : 0;
   const pctCaNhan = d.sanLuong > 0 ? (phanCuaKhach / d.sanLuong * 100) : 0;
-  hienBannerThuaCuaToi(false, coQuyenNhatKyThua(p)
+  hienBannerThuaCuaToi(false, q
     ? '<strong>Đây là thửa ruộng bạn đang đồng hành.</strong> '
-      + (phanCuaKhach > 0 ? escHtml(ds[0].ten) + ' · ' + fmtKg(phanCuaKhach)
+      + (phanCuaKhach > 0 ? escHtml(q.name) + ' · ' + fmtKg(phanCuaKhach)
          + ' (' + pctCaNhan.toLocaleString('vi-VN',{maximumFractionDigits:1}) + '% sản lượng dự kiến của thửa).' : '')
     : '<strong>Thửa ruộng đang xem.</strong> Nhật ký chỉ mở bằng link được cấp cho đúng thửa.');
   canGiuaThuaCuaToi(i, !!coZoom);
@@ -345,6 +349,7 @@ function moThuaCuaToiTuURL(coZoom=true){
 
 function chonCheDoBanDo(cheDo){
   if(cheDo !== 'dong-hanh' && cheDo !== 'canh-tac') return;
+  if(cheDo === 'canh-tac' && laKhach()) return;
   CHE_DO_BAN_DO = cheDo;
 
   const bDH = $('tabDongHanh'), bCT = $('tabCanhTac');
@@ -741,8 +746,14 @@ function moDongHanh(i){
 
   const p = MAP_DATA.plots[i];
   const d = duLieuDongHanhMau(p);
+  const ds = Array.isArray(d.nguoi) ? d.nguoi.slice() : [];
+  const q = nguoiLinkChoThua(p);
+  if(q && !ds.some(n=>n.ten === q.name && Number(n.kg) === Number(q.kg))){
+    ds.push({ten:q.name, diaPhuong:'', kg:q.kg});
+  }
   const sanLuong = Math.max(0, Number(d.sanLuong)||0);
-  const da = Math.max(0, Math.min(sanLuong, Number(d.daDongHanh)||0));
+  const tongTrongDanhSach = ds.reduce((sum, n)=>sum + Math.max(0, Number(n.kg)||0), 0);
+  const da = Math.max(0, Math.min(sanLuong, Math.max(Number(d.daDongHanh)||0, tongTrongDanhSach)));
   const con = Math.max(0, sanLuong - da);
   const pct = sanLuong > 0 ? Math.round(da / sanLuong * 100) : 0;
   const tt = da <= 0 ? 'chua' : (da >= sanLuong ? 'du' : 'con');
@@ -768,7 +779,6 @@ function moDongHanh(i){
   badge.className = 'dh-trangthai ' + tt;
   badge.textContent = ttChu;
 
-  const ds = Array.isArray(d.nguoi) ? d.nguoi : [];
   $('dhDanhSach').innerHTML = ds.length
     ? ds.map(n=>'<div class="dh-nguoi"><span>' + escHtml(n.ten)
         + (n.diaPhuong ? ' · ' + escHtml(n.diaPhuong) : '') + '</span><b>' + fmtKg(n.kg) + '</b></div>').join('')
@@ -788,16 +798,16 @@ function moDongHanh(i){
   const cuaToi = $('dhCuaToi');
   const nutNhatKy = $('dhXemNhatKy');
   if(nutNhatKy) nutNhatKy.style.display = coQuyenNhatKyThua(p) && nd ? '' : 'none';
-  const laThuaCuaToi = !!(coQuyenNhatKyThua(p) && THUA_CUA_TOI
+  const laThuaCuaToi = !!(q && THUA_CUA_TOI
     && THUA_CUA_TOI.field === String(MAP_DATA.field).toUpperCase()
     && THUA_CUA_TOI.season === String($('selVu').value).toUpperCase()
     && THUA_CUA_TOI.code === String(p.code||'').toUpperCase());
   if(cuaToi){
     if(laThuaCuaToi){
-      const kgCuaToi = ds.length ? Number(ds[0].kg)||0 : 0;
+      const kgCuaToi = Number(q.kg)||0;
       const pctCuaToi = sanLuong > 0 ? (kgCuaToi/sanLuong*100) : 0;
       cuaToi.innerHTML = '<strong>Đây là thửa ruộng bạn đang đồng hành.</strong>'
-        + (kgCuaToi > 0 ? '<br>' + escHtml(ds[0].ten) + ' · ' + fmtKg(kgCuaToi)
+        + (kgCuaToi > 0 ? '<br>' + escHtml(q.name) + ' · ' + fmtKg(kgCuaToi)
           + ' (' + pctCuaToi.toLocaleString('vi-VN',{maximumFractionDigits:1})
           + '% sản lượng dự kiến của thửa).' : '');
       cuaToi.classList.add('hien');
@@ -1334,6 +1344,8 @@ kbando.addEventListener('touchend', function(){ veo2ngon = 0; veoGoc = null; });
    Được gọi lại sau khi đăng nhập hoặc đăng xuất (xem js/chung.js). */
 function capNhatGiaoDienKhach(){
   const khach = laKhach();
+  const bCT = $('tabCanhTac');
+  if(bCT) bCT.hidden = khach;
   const ctDH = $('chuthichDongHanh');
   if(ctDH) ctDH.style.display = laCheDoDongHanh() ? 'flex' : 'none';
   const ct = document.querySelector('.chuthich');
@@ -1345,6 +1357,10 @@ function capNhatGiaoDienKhach(){
 
 /* Vẽ lại toàn bộ khi quyền xem thay đổi (đăng nhập / đăng xuất) */
 function capNhatQuyenXem(){
+  if(laKhach() && !laCheDoDongHanh()){
+    chonCheDoBanDo('dong-hanh');
+    return;
+  }
   veBanDo();
   capNhatGiaoDienKhach();
   if(ketQuaCuoi) apDungKetQua(ketQuaCuoi);

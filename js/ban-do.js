@@ -268,12 +268,12 @@ function capNhatHienThiThuaCuaToi(coZoom){
   }
   const d = duLieuDongHanhMau(p);
   const ds = Array.isArray(d.nguoi) ? d.nguoi : [];
-  const phanCuaKhach = ds.length ? Number(ds[0].kg)||0 : 0; // dữ liệu mẫu
+  const phanCuaKhach = ds.length ? Number(ds[0].kg)||0 : 0;
   const pctCaNhan = d.sanLuong > 0 ? (phanCuaKhach / d.sanLuong * 100) : 0;
   hienBannerThuaCuaToi(false,
     '<strong>Đây là thửa ruộng bạn đang đồng hành.</strong> '
-    + (phanCuaKhach > 0 ? 'Bạn đang đồng hành với ' + pctCaNhan.toLocaleString('vi-VN',{maximumFractionDigits:1})
-       + '% sản lượng được phân bổ của thửa này.' : ''));
+    + (phanCuaKhach > 0 ? escHtml(ds[0].ten) + ' · ' + fmtKg(phanCuaKhach)
+       + ' (' + pctCaNhan.toLocaleString('vi-VN',{maximumFractionDigits:1}) + '% sản lượng dự kiến của thửa).' : ''));
   canGiuaThuaCuaToi(i, !!coZoom);
 }
 
@@ -370,6 +370,10 @@ const DONG_HANH_MAU = {
     {ten:'Anh Sơn', diaPhuong:'Quảng Nam', kg:100}
   ]},
 
+  // Phân bổ công khai đầu tiên do HTX cung cấp; các thửa mẫu khác vẫn là dữ liệu minh họa.
+  'CTDC:HT26:YEN': {daDongHanh:80, nguoi:[
+    {ten:'Chị Tuyết Nhung', diaPhuong:'', kg:80}
+  ]},
   'CTDC:HT26:CAY': {daDongHanh:200, nguoi:[
     {ten:'Anh Quân', diaPhuong:'Hội An', kg:100},
     {ten:'Chị Mai', diaPhuong:'Đà Nẵng', kg:100}
@@ -741,7 +745,8 @@ function moDongHanh(i){
 
   const ds = Array.isArray(d.nguoi) ? d.nguoi : [];
   $('dhDanhSach').innerHTML = ds.length
-    ? ds.map(n=>'<div class="dh-nguoi"><span>' + escHtml(n.ten) + ' · ' + escHtml(n.diaPhuong) + '</span><b>' + fmtKg(n.kg) + '</b></div>').join('')
+    ? ds.map(n=>'<div class="dh-nguoi"><span>' + escHtml(n.ten)
+        + (n.diaPhuong ? ' · ' + escHtml(n.diaPhuong) : '') + '</span><b>' + fmtKg(n.kg) + '</b></div>').join('')
     : '<div class="dh-trong">Chưa có người đồng hành với thửa này. <b>Hãy trở thành người đầu tiên.</b></div>';
 
   const nut = $('dhHanhDong');
@@ -762,12 +767,12 @@ function moDongHanh(i){
     && THUA_CUA_TOI.code === String(p.code||'').toUpperCase());
   if(cuaToi){
     if(laThuaCuaToi){
-      const kgCuaToi = ds.length ? Number(ds[0].kg)||0 : 0; // dữ liệu mẫu; phân bổ riêng sẽ lấy từ API
+      const kgCuaToi = ds.length ? Number(ds[0].kg)||0 : 0;
       const pctCuaToi = sanLuong > 0 ? (kgCuaToi/sanLuong*100) : 0;
       cuaToi.innerHTML = '<strong>Đây là thửa ruộng bạn đang đồng hành.</strong>'
-        + (kgCuaToi > 0 ? '<br>Bạn đang đồng hành với '
-          + pctCuaToi.toLocaleString('vi-VN',{maximumFractionDigits:1})
-          + '% sản lượng được phân bổ của thửa này.' : '');
+        + (kgCuaToi > 0 ? '<br>' + escHtml(ds[0].ten) + ' · ' + fmtKg(kgCuaToi)
+          + ' (' + pctCuaToi.toLocaleString('vi-VN',{maximumFractionDigits:1})
+          + '% sản lượng dự kiến của thửa).' : '');
       cuaToi.classList.add('hien');
     }else{
       cuaToi.classList.remove('hien');

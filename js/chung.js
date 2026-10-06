@@ -64,7 +64,10 @@ async function dangNhap(){
        hộp đóng mượt trước, bản đồ cập nhật ngay sau đó. */
     setTimeout(function(){
       if(typeof capNhatQuyenXem === 'function') capNhatQuyenXem();
-      if(typeof thuaDangChon !== 'undefined' && thuaDangChon !== null && typeof moNhapLieu === 'function') moNhapLieu();
+      if(typeof thuaDangChon !== 'undefined' && thuaDangChon !== null
+         && typeof moNhapLieu === 'function'
+         && typeof laCheDoDongHanh === 'function' && !laCheDoDongHanh()
+         && r.role === 'admin') moNhapLieu();
     }, 0);
   }catch(e){ if(oLoi) oLoi.textContent = e; else alert(e); }
   if(nut){ nut.disabled = false; nut.textContent = chuCu || 'Đăng nhập'; }

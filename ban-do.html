@@ -50,6 +50,9 @@
 .nl-congtac input{width:20px;height:20px;accent-color:#c0392b}
 .nl-congtac label{font-size:13.5px;color:#7a5a2e;margin:0;font-weight:500}
 .nl-goiy{font-size:12px;color:#98a08c;margin-top:5px;line-height:1.45}
+.nk-phan-khoi{margin-top:9px;padding:10px 12px;background:#eef4e4;border-left:3px solid #7a9c46;border-radius:7px;font-size:13px;line-height:1.6;color:#3f5a1c}
+.nk-phan-khoi strong{display:block;font-size:12px;margin-bottom:3px}
+.nk-phan-thieu{padding:12px;border:1px solid #e6c9a8;background:#fdf6ec;border-radius:10px;color:#7a5a2e;margin-bottom:14px;font-size:13px}
 
 /* Chế độ nhúng trong tab Cánh Đồng: ban-do.html?nhung=1&dong=CKOD */
 body.nhung header{display:none}
@@ -310,7 +313,7 @@ body.nhung #trangthai{padding-top:10px}
       <div class="nl-buoc">3 · Việc này đã làm chưa</div>
       <div class="chip-hop" id="hopTrangThai"></div>
       <div id="khoiPhan" class="nl-an">
-        <div class="nl-buoc">Lượng phân bón <span style="font-weight:400;text-transform:none;color:#98a08c">(ghi cho toàn cánh đồng)</span></div>
+        <div class="nl-buoc">Định mức phân bón <span style="font-weight:400;text-transform:none;color:#98a08c">(kg/sào cho các thửa được chọn)</span></div>
         <!-- Hai loại phân cố định, mỗi loại một ô. Đợt nào không bón loại
              nào thì để trống — KHÔNG gõ số 0, vì trống nghĩa là "không
              bón", còn 0 nghĩa là "có bón mà bón không kilogram nào". -->
@@ -324,7 +327,7 @@ body.nhung #trangthai{padding-top:10px}
           <input id="nlCompost" type="number" inputmode="decimal" placeholder="0" min="0" step="0.1">
           <span>kg/sào</span>
         </div>
-        <div class="nl-goiy">Đợt này chỉ bón một loại thì để trống ô kia.</div>
+        <div class="nl-goiy">Chỉ bón một loại thì để trống ô kia. Số kg thực tế của từng thửa được cập nhật tại DB Mã sản phẩm trong Notion.</div>
       </div>
       <div id="khoiNuoc" class="nl-an">
         <div class="nl-buoc">Mực nước sau khi điều tiết</div>
@@ -476,6 +479,7 @@ body.nhung #trangthai{padding-top:10px}
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
 <script src="js/ban-do.js?v=20261006e"></script>
+<script src="js/phan-bon.js?v=20261007a"></script>
 <script>
 /* ======================================================================
    FORM NHẬT KÝ CÓ CẤU TRÚC — nằm THẲNG trong ban-do.html
@@ -634,14 +638,7 @@ body.nhung #trangthai{padding-top:10px}
     (e.daXuLy || []).forEach(function (v) { ds.push('<span class="nk-tt">✔ ' + escHtml(v) + '</span>'); });
     if (!ds.length && e.status) ds.push('<span class="nk-tt">' + escHtml(e.status) + '</span>');
 
-    /* Lượng phân THẬT của riêng thửa đang mở — không phải tổng cánh đồng,
-       không phải định mức chung. Máy chủ ghép sẵn theo ngày bón phân của
-       lô nên ở đây chỉ việc vẽ. Chip màu khác để phân biệt với nhãn cấu
-       trúc: đây là con số đo được, không phải phân loại. */
-    if (e.phanKg != null) {
-      ds.push('<span class="nk-tt nk-phan">🌱 ' + e.phanKg + ' kg'
-              + (e.phanLoai ? ' ' + escHtml(e.phanLoai) : '') + '</span>');
-    }
+    ds.push(HTXPhanBon.nhan(e, escHtml));
     return ds.join(' ');
   }
 
@@ -797,8 +794,9 @@ body.nhung #trangthai{padding-top:10px}
       token: phNK ? phNK.token : '', linkKey: LINK_KEY_NHAT_KY })
       .then(function (r) {
         if (!r.ok) throw r.error;
-        if (!r.entries.length) { $('nkDS').innerHTML = '<div class="trong">Chưa có bản ghi nào cho thửa này trong vụ này.</div>'; return; }
-        $('nkDS').innerHTML = r.entries.map(function (e, idx) {
+        var thieuNgay = HTXPhanBon.chuaCoNgay(r.phanBonChuaCoNgay, escHtml);
+        if (!r.entries.length) { $('nkDS').innerHTML = thieuNgay || '<div class="trong">Chưa có bản ghi nào cho thửa này trong vụ này.</div>'; return; }
+        $('nkDS').innerHTML = thieuNgay + r.entries.map(function (e, idx) {
           var dongNgay = (e.date || '')
             + ((e.nss !== null && e.nss !== undefined) ? ' · NSS ' + e.nss : '')
             + (e.giaiDoan ? ' · ' + escHtml(e.giaiDoan) : '');
@@ -809,7 +807,7 @@ body.nhung #trangthai{padding-top:10px}
             : '';
           var lnk = e.url ? '<div><a href="' + linkNotion(e.url) + '" target="_blank" rel="noopener">Xem chi tiết trên Notion <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>' : '';
           return '<div class="nkmuc"><div class="nk-ngay">' + dongNgay + '</div>'
-               + '<div class="nk-tieude">' + e.title + '</div>'
+               + '<div class="nk-tieude">' + escHtml(e.title) + '</div>'
                + '<div>' + nhanNhatKy(e) + '</div>' + them + lnk + '</div>';
         }).join('');
       })

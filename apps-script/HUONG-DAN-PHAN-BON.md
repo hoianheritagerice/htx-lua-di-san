@@ -1,52 +1,45 @@
-# Đồng bộ phân bón Notion → Nhật ký web
+# Phân bón linh hoạt: Notion → Nhật ký web
 
-Notion và phần hiển thị web đã được cập nhật ngày 07/10/2026. Cần deploy phần Apps Script dưới đây để dữ liệu mới xuất hiện trên Nhật ký.
+Cập nhật 07/10/2026: tối đa **3 lần bón/vụ/thửa**, mỗi lần dùng **compost, bánh dầu hoặc cả hai**. Loại và lượng lấy trực tiếp từ từng lần; không còn chọn mẫu Tách 3 lần/Phối trộn 2 lần ở Vụ mùa.
 
-## Cách deploy trong dự án HTX hiện tại
+## Nhập liệu tại Notion
 
-1. Mở đúng dự án đang phục vụ URL API được khai báo trong `js/chung.js`. Trong Code.gs, tìm duy nhất **định nghĩa hàm**:
+Trong DB Mã sản phẩm, mở **Nhập phân bón**, chọn đúng mã thửa và Vụ mùa:
 
-   ```js
-   function handleGetHistory_(req) {
-   ```
+| Lần | Ngày thực tế | Compost (kg/thửa) | Bánh dầu (kg/thửa) |
+| --- | --- | --- | --- |
+| 1 | Ngày bón phân lần 1 | Compost lần 1 (kg) | Bánh dầu lần 1 (kg) |
+| 2 | Ngày bón phân lần 2 | Compost lần 2 (kg) | Bánh dầu lần 2 (kg) |
+| 3 | Ngày bón phân lần 3 | Compost lần 3 (kg) | Bánh dầu lần 3 (kg) |
 
-   Đổi tên thành:
+- Số dương: lượng thực tế đã bón. **0: xác nhận không dùng loại đó. Trống: chưa biết/chưa ghi.**
+- Lần chưa dùng để trống toàn bộ ngày và hai lượng. Lần đã bón phải có ít nhất một lượng dương.
+- Nhập kg riêng của thửa, không nhập kg/sào, số bao hoặc tổng cánh đồng. Không sao chép kg vào task.
+- **Bón phân** hiển thị công thức Bón lần 1–3 và cảnh báo Kiểm tra bón phân. Tổng compost/bánh dầu tự cộng ba lần; còn thiếu dữ liệu thì chưa chốt tổng.
+- Mùa mới tạo hồ sơ mới, giữ mùa cũ. Đổi một/hai loại trong ba lần không cần sửa code.
+- Hướng dẫn đầy đủ: https://app.notion.com/p/3f21c9d219fa819b9395edb11cd3e41b
 
-   ```js
-   function handleGetHistoryBase_(req) {
-   ```
+## Hợp đồng dữ liệu với API/web
 
-   Giữ nguyên toàn bộ nội dung hàm và những nơi đang gọi `handleGetHistory_(req)`. Chỉ đổi tên ở dòng định nghĩa; không dùng Replace All.
+Apps Script đọc đúng ba cột **Bón lần 1–3** (formula string) và ba cột **Ngày bón phân lần 1–3**. Dòng đầu công thức là ngày/thông báo thiếu ngày; những dòng sau chứa loại + kg hoặc cảnh báo thiếu lượng.
 
-2. Thêm một file Script tên **PhanBonNhatKy**. Dán toàn bộ nội dung `PhanBonNhatKy.gs` vào file này rồi lưu. File này định nghĩa lại `handleGetHistory_`, gọi hàm gốc để kiểm tra quyền trước, rồi bổ sung phân bón.
+Web hiển thị nội dung API trả về; không tự quyết định loại phân theo cánh đồng/vụ và không tính kg từ định mức. Một lần có hai loại sẽ hiện cả hai trong cùng lần. Ngày của thửa không bị thay bằng ngày task chung. Lượng chỉ gắn một lần cho task bón phù hợp, không lặp vào task nhận/vận chuyển. Nếu thiếu task phù hợp, API thêm dòng hiển thị Bón phân theo hồ sơ thửa; không tạo task mới trong Notion. Thiếu ngày được tách riêng.
 
-3. Chọn **Triển khai → Quản lý các bản triển khai → Chỉnh sửa** bản Web app đang dùng → chọn **Phiên bản mới** → **Triển khai**. Giữ URL `/exec`, quyền truy cập và tài khoản thực thi hiện tại. Không tạo deployment mới vì web đang gọi URL cũ.
+## Apps Script cần deploy
 
-4. Mở lại bản đồ, dùng tài khoản hoặc link Nhật ký hợp lệ, kiểm tra:
+Dùng file hoàn chỉnh **Code-phan-bon-20261007.gs** đã giao trong cuộc trao đổi, được ghép trên phiên bản Code.gs mới nhất chủ dự án cung cấp (3506 dòng nguồn, có cấp/thu hồi link và kiểm tra quyền).
 
-   | Thửa | Lần bón | Nội dung từ Notion phải có |
-   | --- | --- | --- |
-   | CKOD-BAY-HT26-DT100 | 29/05/2026 | Phân bò compost: 380 kg |
-   | CKOD-BAY-HT26-DT100 | 19/06/2026 | Bánh dầu ủ (đợt 1): 28 kg |
-   | CKOD-BAY-HT26-DT100 | 28/07/2026 | Bánh dầu ủ (đợt 2): 37 kg |
-   | CTDC-BE1-HT26-VNR20 | 21/06/2026 | Phân bò compost: 160 kg; Bánh dầu ủ (đợt 1): 15 kg |
-   | CTDC-BE1-HT26-VNR20 | 29/07/2026 | Bánh dầu ủ (đợt 2): 20 kg |
-   | CTDC-LONG-HT26-VNR20 | Chưa có ngày | Hiện mục thiếu ngày; không tự gán ngày bón |
+1. Thay nội dung Code.gs bằng file hoàn chỉnh đã giao. **Không đổi tên handleGetHistory_**.
+2. Nếu từng thêm file PhanBonNhatKy.gs theo hướng dẫn mô-đun trước, gỡ file đó để tránh trùng hàm. File mô-đun trong repo không cần dùng cùng bản Code.gs hoàn chỉnh.
+3. Triển khai phiên bản mới trên Web app hiện có; giữ URL /exec, quyền truy cập và tài khoản thực thi.
+4. Mở Nhật ký bằng tài khoản/link hợp lệ, đối chiếu cùng mã sản phẩm với Notion. Kiểm tra cả một loại, hai loại, thiếu lượng/ngày và quyền chỉ xem đúng thửa.
 
-   Task vận chuyển/nhận phân cùng ngày không được mang thêm một bản sao lượng phân. Link/tài khoản không có quyền vẫn bị từ chối bởi hàm gốc.
+File Apps Script đã giao đọc công thức tổng hợp nên **không cần sửa lại chỉ vì đổi sang lượng theo từng lần**. Không đăng thông tin bí mật của Code.gs vào repo công khai. Thêm loại phân khác cần cập nhật công thức/tổng lượng/chi phí; thêm lần thứ 4 cần cập nhật cả API và kiểm tra web.
 
-## Nguồn dữ liệu và cách nhập sau này
+## Chi phí và dữ liệu đã chuyển
 
-- DB Mã sản phẩm giữ ba ngày bón và ba số kg gốc của từng thửa. Nhập/sửa các ô này trong view **Bảng dữ liệu** hoặc trang của thửa.
-- DB Vụ mùa có **Cách bón phân**. Vụ HT26 Ông Đảng là **Tách 3 lần**; Đồng Cao và Đồng Mẫu là **Phối trộn 2 lần**.
-- Các cột **Bón lần 1–3** tự tổng hợp ngày, loại phân và số kg theo quy tắc vụ. View **Bón phân** và ba view cánh đồng đọc các cột này, ẩn các ô nhập gốc để bảng dễ đọc. Đây là công thức tự tính, không tạo bản sao số kg cần nhập lại.
-- Nhật ký web đọc trực tiếp nội dung công thức từ Notion; không chứa quy tắc gán loại phân riêng. Nếu không có task phù hợp, nó hiển thị ngày bón đã ghi dưới tên **Bón phân theo hồ sơ thửa**. Đây là dòng hiển thị, không tạo thêm task trong Notion.
-- Số kg chưa có ngày được đặt trong mục **Số kg đã ghi, chưa có ngày bón**, chưa gán vào một ngày hay task nào.
-- Ô **Định mức phân bón** khi nhập Nhật ký web là kg/sào, phục vụ định mức task. Số kg thực tế từng thửa vẫn nhập ở Mã sản phẩm. Không tự nhân diện tích để suy ra số kg thực tế.
-- Với vụ khác, cần chọn Cách bón phân đúng trước khi dùng công thức. Vụ chưa cấu hình sẽ ghi rõ chưa xác định loại phân và khối lượng, không suy đoán theo HT26.
+Chi phí vật tư phân bón chọn **Loại phân + Lần bón + Mã thửa**; Số lượng tự lấy kg đúng loại/lần từ các thửa liên kết, chia 20 nếu đơn vị bao 20kg. Giá và thanh toán giữ theo khoản chi, không nhập kg lần nữa.
 
-## Kiểm tra đã chạy trước khi giao
+Đã đối chiếu 167 hồ sơ: giữ nguyên ngày của hồ sơ thực và tổng lượng đã ghi (compost 14.360 kg; bánh dầu 2.812,5 kg). Các số bánh dầu cũ chuyển vào lần 2/3 ở HT26 Ông Đảng, lần 1/2 ở HT26 Đồng Cao/Đồng Mẫu theo cách bón đã đối chiếu. Không tự bổ sung compost hay ghi 0 thay ô chưa có hồ sơ xác nhận. Nguồn lượng của 6 khoản chi hiện có giữ nguyên, không đổi đơn giá hoặc thanh toán.
 
-Kiểm tra logic ghép đúng ngày, nhiều loại trong một lần, loại trừ task chuẩn bị/vận chuyển, không lặp số kg, không suy diễn ngày còn thiếu, bảo toàn lỗi/xác thực từ hàm gốc và escape dữ liệu khi hiển thị. Các kiểm tra này dùng dữ liệu và mô phỏng API; kiểm tra trực tiếp API đang chạy chỉ hoàn tất sau khi chủ dự án deploy.
-
-Nếu cần quay lại bản trước: triển khai lại phiên bản Apps Script cũ. Bản web vẫn hỗ trợ trường lượng phân cũ trong giai đoạn chuyển tiếp.
+Kiểm tra mô phỏng API/giao diện bao gồm 39 tổ hợp một/hai loại trong 1–3 lần, chống lặp và kiểm tra quyền. **Đối chiếu API đang chạy chỉ hoàn tất sau khi chủ dự án deploy**.

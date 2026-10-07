@@ -101,3 +101,53 @@ test('hiển thị escape nội dung Notion và tương thích API cũ không ch
   assert.match(renderer.nhan({phanKg: 15, phanLoai: 'bánh dầu'}, esc), /15 kg/);
   assert.equal(renderer.nhan({phanKg: 15, phanBon: []}, esc), '');
 });
+
+test('chỉ hiện loại có lượng dương trong lần bón', () => {
+  for (const [body,shown,hidden] of [
+    ['Phân bò compost: 0 kg\nBánh dầu: 15 kg', 'Bánh dầu: 15 kg', 'Phân bò compost'],
+    ['Phân bò compost: 160 kg\nBánh dầu: 0 kg', 'Phân bò compost: 160 kg', 'Bánh dầu'],
+    ['Phân bò compost: Chưa có số kg\nBánh dầu: 15 kg', 'Bánh dầu: 15 kg', 'Phân bò compost']
+  ]) {
+    const html = renderer.nhan({phanBon: [{lan: 1, noiDung: body}]}, esc);
+    assert.ok(html.includes(shown));
+    assert.ok(!html.includes(hidden));
+    assert.ok(!html.includes('Chưa có số kg'));
+  }
+});
+test('bón hai loại giữ đủ tên và lượng của cả hai', () => {
+  const html = renderer.nhan({phanBon: [{lan: 3, noiDung: 'Phân bò compost: 80 kg\r\nBánh dầu: 20 kg'}]}, esc);
+  assert.match(html, /Bón lần 3/);
+  assert.ok(html.includes('Phân bò compost: 80 kg<br>Bánh dầu: 20 kg'));
+});
+test('không tạo khối phân bón rỗng cho lượng 0, thiếu hoặc âm', () => {
+  for (const noiDung of ['', 'Phân bò compost: 0 kg\nBánh dầu: 0,00 kg', 'Phân bò compost: Chưa có số kg', 'Hai loại đều 0 kg — kiểm tra lại lần bón', 'Bánh dầu: -5 kg']) {
+    const rounds = [{lan: 1, noiDung}];
+    assert.equal(renderer.nhan({phanBon: rounds}, esc), '');
+    assert.equal(renderer.chuaCoNgay(rounds, esc), '');
+  }
+});
+test('giữ số thập phân và cách viết số, ẩn mọi dạng số 0', () => {
+  for (const qty of ['0.5', '0,5', '1.200,5', '1,200.5', '1 200,5']) {
+    assert.ok(renderer.nhan({phanBon: [{lan: 1, noiDung: 'Bánh dầu: ' + qty + ' kg'}]}, esc).includes(qty + ' kg'));
+  }
+  for (const qty of ['0', '00', '0.0', '0,00', '0.000,00']) {
+    assert.equal(renderer.nhan({phanBon: [{lan: 1, noiDung: 'Bánh dầu: ' + qty + ' kg'}]}, esc), '');
+  }
+});
+test('mục thiếu ngày chỉ hiện lượng dương, không hiện loại chưa có lượng', () => {
+  const html = renderer.chuaCoNgay([{lan: 2, noiDung: 'Phân bò compost: Chưa có số kg\nBánh dầu: 20 kg'}], esc);
+  assert.match(html, /chưa có ngày bón/);
+  assert.ok(html.includes('Bánh dầu: 20 kg'));
+  assert.ok(!html.includes('Phân bò compost'));
+});
+test('API cũ cũng ẩn lượng bằng 0, âm hoặc không hợp lệ', () => {
+  for (const phanKg of [0, -1, null, undefined, '', '0', 'không có']) {
+    assert.equal(renderer.nhan({phanKg, phanLoai: 'Bánh dầu'}, esc), '');
+  }
+  assert.match(renderer.nhan({phanKg: 7.5, phanLoai: 'Bánh dầu'}, esc), /7.5 kg/);
+});
+test('escape tên loại của dòng lượng dương trước khi đưa vào HTML', () => {
+  const html = renderer.nhan({phanBon: [{lan: 1, noiDung: '<img src=x onerror=alert(1)>: 15 kg'}]}, esc);
+  assert.ok(!html.includes('<img'));
+  assert.ok(html.includes('&lt;img'));
+});

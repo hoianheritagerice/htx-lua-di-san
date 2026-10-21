@@ -152,13 +152,75 @@ main{max-width:1450px;margin:auto;padding:28px 34px 55px}.eyebrow{color:#598565;
 .festival-title{margin-top:7px}
 .order-hint.warn{color:#9c5c19;background:#fff6e9;border-left:3px solid #d9a763;padding:7px 9px;border-radius:5px;margin-top:8px}
 @media(max-width:940px){.ticket-benefit{display:none}}
+
+/* 2026-10-21 · Layout rebalancing: plot search above, consumption and benefits balanced below. */
+.workspace{display:block}
+.search-toolbar{background:#fff;border:1px solid var(--edge);border-radius:15px;box-shadow:var(--shadow);padding:13px 18px;margin-bottom:16px;display:grid;grid-template-columns:minmax(158px,.58fr) minmax(260px,1.6fr) minmax(220px,.95fr);gap:16px;align-items:end}
+.search-toolbar-title{align-self:center;display:flex;flex-direction:column;gap:4px;min-width:0}
+.search-toolbar-title strong{font-family:"Playfair Display",Georgia,serif;font-size:19px;font-weight:600;color:#304d37}
+.search-toolbar-title span{font-size:10.5px;color:#738274;line-height:1.4}
+.search-toolbar .field{margin:0}.search-toolbar .sub{font-size:11px;margin-bottom:6px}
+.search-toolbar .sel,.search-toolbar .text-input{min-height:42px;padding:10px 12px;font-size:12.5px}
+.plan-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:stretch;margin-bottom:17px}
+.plan-row>.panel,.plan-row>.benefits{height:100%;box-sizing:border-box}
+.plan-row>.panel{display:flex;flex-direction:column;padding:20px 22px}
+.panel-kicker{color:#63866b;font-size:10px;letter-spacing:.12em;font-weight:700;text-transform:uppercase;margin-bottom:7px}
+.plan-row>.panel h2{font-size:22px}
+.plan-row>.panel .desc{font-size:11px;margin-bottom:15px}
+.plan-row>.panel .fieldset .field{margin-bottom:12px}
+.plan-row>.panel .fieldset .sub{font-size:11.5px}
+.plan-row>.panel .summary{margin:6px 0 11px}
+.plan-row>.panel .summary .big{font-size:34px}
+.plan-row>.panel .source{font-size:10px;line-height:1.55;margin:11px 0 0}
+.plan-row>.panel .order-panel{margin-bottom:13px;padding:11px}
+.plan-row>.panel .primary{margin-top:0}
+.plan-row>.benefits{display:flex;flex-direction:column;padding:19px 21px}
+.plan-row>.benefits #upgradeOptions{margin-top:10px}
+.plan-row>.benefits .benefit-disclaimer{margin-top:auto;padding-top:10px}
+.plan-row>.benefits .upgrades{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.plan-row>.benefits .upgrade-card{min-width:0;display:flex;flex-direction:column;padding:10px 8px;border-radius:9px}
+.plan-row>.benefits .upgrade-card b{font-size:11px;line-height:1.4}
+.plan-row>.benefits .upgrade-card small{font-size:9.5px;line-height:1.45;margin:6px 0 8px}
+.plan-row>.benefits .upgrade-card button{margin-top:auto;font-size:11px;line-height:1.35;min-height:35px;padding:8px 6px}
+.plan-row>.benefits .upgrades>h3{font-size:11.5px;grid-column:1/-1;margin-bottom:0}
+@media(max-width:1080px){
+ .search-toolbar{grid-template-columns:minmax(140px,.45fr) minmax(240px,1.45fr) minmax(190px,.9fr);gap:11px}
+ .plan-row>.benefits .upgrades{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .plan-row>.benefits .upgrade-card:last-child:nth-child(4){grid-column:1/-1}
+}
+@media(max-width:940px){
+ .search-toolbar{grid-template-columns:minmax(0,1fr) minmax(170px,.7fr);padding:12px 16px;gap:9px 12px}
+ .search-toolbar-title{grid-column:1/-1}
+ .search-toolbar .field{width:100%}
+ .plan-row{grid-template-columns:1fr;gap:12px;align-items:start}
+ .plan-row>.panel,.plan-row>.benefits{height:auto}
+ .plan-row>.benefits .upgrades{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .plan-row>.benefits .upgrade-card:last-child:nth-child(4){grid-column:auto}
+}
+@media(max-width:650px){
+ .search-toolbar{grid-template-columns:1fr;padding:13px;gap:10px}
+ .search-toolbar-title{grid-column:1}
+ .search-toolbar-title strong{font-size:18px}
+ .plan-row>.panel{padding:17px}
+ .plan-row>.benefits{padding:15px}
+ .plan-row>.benefits .upgrades{grid-template-columns:1fr 1fr}
+ .plan-row>.benefits .upgrade-card:last-child:nth-child(4){grid-column:1/-1}
+ .plan-row>.panel .summary .big{font-size:34px}
+}
+@media(max-width:380px){
+ .plan-row>.benefits .upgrades{grid-template-columns:1fr}
+ .plan-row>.benefits .upgrade-card:last-child:nth-child(4){grid-column:auto}
+}
 </style></head><body>
 <header class="top"><div class="top-inner"><div class="brand"><img class="logo" src="img/logo.png" width="41" height="41" alt="Logo HTX Lúa Di Sản Hội An"><span>HTX LÚA DI SẢN<small>Hội An · Bản đồ canh tác</small></span></div><div class="toplinks"><a href="https://hoianheritagerice.github.io/htx-lua-di-san/index.html">Website chính ↗</a><span>● Bản thử nghiệm · Chưa sử dụng dữ liệu tồn thật</span></div></div></header>
 <main><div class="intro"><div><div class="eyebrow">Từ thửa ruộng đến bữa cơm</div><h1>Tìm thửa ruộng dành cho gia đình bạn</h1><p>Tìm theo tên nông dân hoặc mã thửa; nhập thói quen ăn cơm để ước tính lượng gạo cần trong năm và xem các thửa có quy mô phù hợp.</p></div><div class="demo"><strong>CHẾ ĐỘ MINH HỌA</strong><div>Hình dạng và tên thửa từ bản đồ HTX. Sản lượng gạo là <strong>ước tính mô phỏng</strong>; chưa có số đăng ký thật. Preview <strong>tạm giả định chưa ai đặt</strong> để minh họa cách ưu tiên phân bổ, không phải số lượng còn trống thực tế.</div></div></div>
-<div class="workspace"><div class="plan-row"><aside class="panel"><h2>Tìm kiếm &amp; nhu cầu</h2><p class="desc">Bắt đầu bằng thửa bạn quan tâm, hoặc để hệ thống tự chọn theo nhu cầu gạo.</p>
-<div class="field"><label class="sub" for="query">Tìm theo mã thửa hoặc tên nông dân</label><div class="searchwrap"><input class="text-input" type="search" id="query" placeholder="Ví dụ: CKOD-NGA1, Nguyễn Hộ…" autocomplete="off"><button id="clear" class="clear" aria-label="Xóa tìm kiếm">×</button></div></div>
-<div class="field"><label class="sub" for="fieldFilter">Cánh đồng ưu tiên</label><select class="sel" id="fieldFilter"><option value="all">Tất cả cánh đồng</option><option value="CKOD">Ông Đảng – Cẩm Kim</option><option value="CTDC">Đồng Cao – Cẩm Thanh</option><option value="CTDM">Đồng Mẫu – Cẩm Thanh</option></select></div>
-<div class="hr"></div><h2>Gia đình bạn ăn bao nhiêu gạo?</h2><p class="desc">Các định mức có thể tùy chỉnh theo khẩu phần thật của gia đình.</p>
+<div class="workspace">
+<section class="search-toolbar" aria-label="Tìm kiếm thửa ruộng">
+ <div class="search-toolbar-title"><strong>Tìm thửa ruộng</strong><span>Theo mã hoặc tên nông dân</span></div>
+ <div class="field search-toolbar-query"><label class="sub" for="query">Mã thửa / tên nông dân</label><div class="searchwrap"><input class="text-input" type="search" id="query" placeholder="Nhập mã thửa hoặc tên nông dân…" autocomplete="off"><button id="clear" class="clear" aria-label="Xóa tìm kiếm">×</button></div></div>
+ <div class="field search-toolbar-field"><label class="sub" for="fieldFilter">Cánh đồng</label><select class="sel" id="fieldFilter"><option value="all">Tất cả cánh đồng</option><option value="CKOD">Ông Đảng – Cẩm Kim</option><option value="CTDC">Đồng Cao – Cẩm Thanh</option><option value="CTDM">Đồng Mẫu – Cẩm Thanh</option></select></div>
+</section>
+<div class="plan-row"><aside class="panel"><div class="panel-kicker">01 · Ước tính nhu cầu</div><h2>Gia đình bạn ăn bao nhiêu gạo?</h2><p class="desc">Nhập thói quen ăn cơm để tính lượng gạo cần sử dụng.</p>
 <div class="fieldset"><div class="field"><label class="sub" for="people">Số người ăn</label><input class="num" id="people" type="number" min="1" max="100" step="1" value="2"></div><div class="field"><label class="sub" for="meals">Bữa cơm/ngày</label><select class="sel" id="meals"><option value="1">1 bữa</option><option value="2" selected>2 bữa</option><option value="3">3 bữa</option></select></div></div>
 <div class="fieldset"><div class="field"><label class="sub" for="portion">Gạo khô/người/bữa</label><select class="sel" id="portion"><option value="50">50 g · ít</option><option value="65">65 g · vừa</option><option value="75" selected>75 g · tham khảo</option><option value="100">100 g · nhiều</option></select></div><div class="field"><label class="sub" for="months">Thời gian dự kiến</label><select class="sel" id="months"><option value="1">1 tháng</option><option value="3">3 tháng</option><option value="6">6 tháng</option><option value="12" selected>12 tháng</option></select></div></div>
 <div class="field"><label class="check"><input id="reserve" type="checkbox" checked> Cộng 10% dự phòng cho nhu cầu đặt gạo</label></div>
@@ -177,7 +239,7 @@ main{max-width:1450px;margin:auto;padding:28px 34px 55px}.eyebrow{color:#598565;
 <p class="source">* Khẩu phần tham khảo: <a target="_blank" rel="noopener" href="https://www.worcsacute.nhs.uk/leaflets/paediatric-diabetes-carbohydrate-counting-reference-tables/">NHS (75 g gạo chưa nấu)</a>. Tỷ lệ xay xát dùng để mô phỏng: <a target="_blank" rel="noopener" href="https://www.fao.org/4/x5427e/x5427e0h.htm">FAO (~67%)</a>. Không phải lời khuyên dinh dưỡng.</p>
 </aside>
 <section class="benefits" aria-label="Quyền lợi theo sản lượng gạo">
- <div class="benefits-heading"><span class="eyebrow">Đồng hành cùng di sản</span><h2>Quyền lợi dành cho bạn</h2><p id="benefitNote" class="desc"></p></div>
+ <div class="benefits-heading"><span class="eyebrow">02 · Đồng hành cùng di sản</span><h2>Quyền lợi dành cho bạn</h2><p id="benefitNote" class="desc"></p></div>
  <div class="benefit-highlight"><div><span class="benefit-label" id="benefitTier">Người Gieo Mầm Di Sản</span><strong id="benefitTickets">8 vé/năm</strong></div><div class="benefit-price" id="benefitPrice"></div></div>
  <div class="ticket-benefit" aria-label="Minh họa số vé sự kiện tối đa trong năm">
    <div class="ticket-intro"><b><span class="ticket-intro-icon" aria-hidden="true">✦</span> Vé mùa vụ</b></div>

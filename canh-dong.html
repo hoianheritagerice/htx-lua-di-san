@@ -887,6 +887,38 @@ async function napThoiTiet(ma){
   }, {passive:true});
 })();
 </script>
+
+<script>
+/* Preview-only: điều hướng huy hiệu sự kiện đến đúng mốc thời gian đã chọn.
+ * Không đổi logic nạp mùa vụ và không tác động nhánh main.
+ */
+(function moMocTimelineTheoLienKet(){
+ const id=new URLSearchParams(location.search).get('su-kien');
+ if(!['le-xuong-dong','com-moi'].includes(id))return;
+ let lastTime=0,finished=false;
+ const go=()=>{
+   if(finished)return;
+   const node=document.getElementById('su-kien-'+id);
+   if(!node || typeof cuonDenSuKienCD!=='function')return;
+   cuonDenSuKienCD(id);
+   node.classList.add('cd-deep-target');
+   lastTime=Date.now();
+ };
+ document.addEventListener('DOMContentLoaded',()=>{
+   const style=document.createElement('style');
+   style.textContent='.river-node.cd-deep-target .river-dot{filter:drop-shadow(0 0 10px rgba(224,175,73,.65));outline:4px solid #e0b756;outline-offset:5px}';
+   document.head.append(style);
+   go();
+   const observer=new MutationObserver(()=>{
+     if(Date.now()-lastTime>900){go();}
+   });
+   const river=document.getElementById('river');
+   if(river)observer.observe(river,{childList:true,subtree:false});
+   setTimeout(()=>{go();},700);
+   setTimeout(()=>{go();finished=true;observer.disconnect();},2600);
+ });
+})();
+</script>
 <script src="js/chung.js?v=20260829f"></script>
 <script src="js/form-quan-tam.js"></script>
 <script src="js/hieu-ung.js"></script>

@@ -88,6 +88,57 @@ main{max-width:1450px;margin:auto;padding:28px 34px 55px}.eyebrow{color:#598565;
 .benefit-disclaimer{font-size:10px;line-height:1.65;color:#8d8170;margin:11px 0 0}
 .results-panel{margin-top:17px;padding:21px 22px}.result-head{display:flex;justify-content:space-between;align-items:start;gap:12px;flex-wrap:wrap}.result-head h2{font-family:"Playfair Display",Georgia,serif;font-weight:500;font-size:23px;margin:0}.result-head p{color:var(--muted);font-size:12px;line-height:1.5;margin:5px 0 15px}.stat{font-size:12px;color:#49664f;background:#eef5e9;padding:8px 10px;border-radius:8px}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{border:1px solid var(--edge);border-radius:11px;padding:13px 15px;background:#fff;transition:border-color .15s}.card:hover{border-color:#85ae8c}.card h3{font-size:14px;margin:0 0 4px;color:#304c36}.card .farmer{font-size:12px;color:#6a786b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card .numbers{display:flex;justify-content:space-between;gap:5px;margin:12px 0 8px}.card .numbers b{font-size:19px;color:#2e6343}.card .numbers span{font-size:11px;color:#758175}.card footer{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:9px}.status{font-size:10px;background:#eaf3e8;color:#35704a;border-radius:100px;padding:5px 7px}.status.partial{background:#fbf2e4;color:#94622d}.show{font-size:11px;border:0;background:none;color:#2e6343;text-decoration:underline;font-weight:750;padding:5px 0}.foot-note{font-size:11px;line-height:1.6;color:#7b857d;padding:10px 2px}.empty{padding:23px;border:1px dashed #d5ded2;color:#697968;text-align:center;border-radius:11px;grid-column:1/-1;font-size:12px;line-height:1.6}#combine{font-size:12px;color:#697c68;padding:12px 0 0;line-height:1.65}#combine strong{color:#375a3b}
 @media(max-width:940px){.benefit-peek{display:block}.benefit-peek .festival-seal{width:46px;height:46px}.benefit-peek .festival strong{font-size:10px}.benefit-peek .festival small,.benefit-peek .festival-visit{display:none}.plan-row{grid-template-columns:1fr;gap:12px}.panel{display:block}.canvas{height:530px}.benefits{padding:18px}}@media(max-width:600px){.top-inner{padding:13px 17px}.toplinks{gap:8px}.toplinks a{display:none}.toplinks span{font-size:10px}.brand{font-size:13px}.brand .logo{width:34px;height:34px;font-size:18px}main{padding:21px 12px 35px}.intro{display:block}.intro h1{font-size:31px}.demo{margin-top:17px;max-width:unset}.panel{display:block;padding:17px}.fieldset{gap:10px}.map-header,.results-panel{padding:17px}.map-header h2,.results-panel h2{font-size:20px}.canvas{height:390px;min-height:320px}.benefits{padding:16px}.festival-grid{gap:7px}.festival-seal{width:54px;height:54px}.upgrades{grid-template-columns:1fr}.selection{margin:0 13px 15px}.legend{padding:12px 14px}.cards{grid-template-columns:1fr}.summary .big{font-size:36px}}
+
+/* 2026-10-21 — compact support illustration: small 4-column tickets, authentic field icons */
+.benefits{padding:15px 17px}
+.benefits-heading h2{font-size:21px;margin-bottom:3px}
+.benefits-heading .desc{font-size:11px;margin-bottom:8px;line-height:1.4}
+.benefit-highlight{padding:9px 11px}
+.benefit-highlight strong{font-size:22px;margin:1px 0}
+.benefit-meter{margin:7px 1px;height:4px}
+.benefit-checks{font-size:10.5px;margin:7px 0;line-height:1.45}
+.ticket-benefit{display:grid;grid-template-columns:minmax(0,1fr) 136px;align-items:center;gap:3px 10px;background:#fcfaf5;border:1px solid #eee3d1;padding:7px 10px;border-radius:9px;margin:8px 0 9px}
+.ticket-intro{display:flex;align-items:flex-start;flex-direction:column;gap:2px;margin:0;min-width:0}
+.ticket-intro b{font-size:11px;line-height:1.45}
+.ticket-intro span:not(.ticket-intro-icon){font-size:9px;color:#7e776a}
+.ticket-intro-icon{font-size:12px}
+.ticket-grid{grid-row:1 / span 2;grid-column:2;grid-template-columns:repeat(4,30px);width:max-content;max-width:100%;gap:2px 4px;margin:0;align-self:center;justify-self:end}
+.ticket-item{animation:none}
+.ticket-item svg{width:30px;height:13px;max-height:13px;filter:none}
+.ticket-progress{grid-column:1;grid-row:2;font-size:9.5px;line-height:1.4;margin:0;text-align:left;color:#817868}
+.festival-title{font-size:11.5px;margin:9px 0 7px}
+.festival-title small{font-size:9.5px}
+.festival-grid{gap:5px}
+.festival{gap:3px}
+.festival-seal{width:48px;height:48px;min-width:48px;border-width:1.5px}
+.festival-seal svg{width:31px;height:31px;display:block;overflow:visible;color:#82432e}
+.festival.event-active .festival-seal{background:#fae9dc;border-color:#c79760;--icon-accent:#e8b47e;box-shadow:0 0 0 3px rgba(214,171,107,.12),0 1px 10px rgba(195,144,84,.22)}
+.festival.event-locked .festival-seal{background:#e9e9e7;border-color:#b5b5b3;--icon-accent:#bdbdbd;color:#777;opacity:.68;filter:grayscale(1);box-shadow:none}
+.festival.event-locked .festival-seal svg{color:#777}
+.festival.event-locked:hover .festival-seal,.festival.event-locked:focus-visible .festival-seal{background:#e9e9e7;filter:grayscale(1);box-shadow:none}
+.festival strong{font-size:10.5px}
+.festival small{font-size:9.5px}
+.festival-visit{font-size:9.5px}
+.upgrades{gap:7px;margin-top:9px}
+.upgrade-card{padding:8px 9px}
+.upgrade-card b{font-size:12px}
+.upgrade-card small{font-size:10px;margin:3px 0}
+.upgrade-card button{padding:8px;margin-top:4px}
+.benefit-disclaimer{font-size:9px;line-height:1.5;margin-top:7px}
+.benefit-peek .ticket-grid-mini{grid-template-columns:repeat(4,24px);gap:2px 3px;width:max-content;margin:5px auto}
+.benefit-peek .ticket-grid-mini .ticket-item svg{width:24px;height:10px;max-height:10px}
+@media(max-width:940px){
+ .benefit-peek{display:block;margin-top:6px;border-top:1px solid #dfebdc;padding-top:7px}
+ .benefit-peek .festival-seal{width:42px;height:42px;min-width:42px}
+ .benefit-peek .festival-seal svg{width:27px;height:27px}
+ .benefit-peek-header{margin:4px 0 5px}
+ .benefits .ticket-benefit,.benefits .festival-title,.benefits #festivalGrid{display:none}
+}
+@media(max-width:600px){
+ .benefits{padding:13px}
+ .benefit-peek .festival{gap:3px}
+ .benefit-peek .festival-grid{gap:4px}
+}
 </style></head><body>
 <header class="top"><div class="top-inner"><div class="brand"><img class="logo" src="img/logo.png" width="41" height="41" alt="Logo HTX Lúa Di Sản Hội An"><span>HTX LÚA DI SẢN<small>Hội An · Bản đồ canh tác</small></span></div><div class="toplinks"><a href="https://hoianheritagerice.github.io/htx-lua-di-san/index.html">Website chính ↗</a><span>● Bản thử nghiệm · Chưa sử dụng dữ liệu tồn thật</span></div></div></header>
 <main><div class="intro"><div><div class="eyebrow">Từ thửa ruộng đến bữa cơm</div><h1>Tìm thửa ruộng dành cho gia đình bạn</h1><p>Tìm theo tên nông dân hoặc mã thửa; nhập thói quen ăn cơm để ước tính lượng gạo cần trong năm và xem các thửa có quy mô phù hợp.</p></div><div class="demo"><strong>CHẾ ĐỘ MINH HỌA</strong><div>Hình dạng và tên thửa từ bản đồ HTX. Sản lượng gạo là <strong>ước tính mô phỏng</strong>; chưa có số đăng ký thật. Preview <strong>tạm giả định chưa ai đặt</strong> để minh họa cách ưu tiên phân bổ, không phải số lượng còn trống thực tế.</div></div></div>
@@ -116,7 +167,7 @@ main{max-width:1450px;margin:auto;padding:28px 34px 55px}.eyebrow{color:#598565;
  <div class="benefits-heading"><span class="eyebrow">Đồng hành cùng di sản</span><h2>Quyền lợi dành cho bạn</h2><p id="benefitNote" class="desc"></p></div>
  <div class="benefit-highlight"><div><span class="benefit-label" id="benefitTier">Người Gieo Mầm Di Sản</span><strong id="benefitTickets">8 vé/năm</strong></div><div class="benefit-price" id="benefitPrice"></div></div>
  <div class="ticket-benefit" aria-label="Minh họa số vé sự kiện tối đa trong năm">
-   <div class="ticket-intro"><b><span class="ticket-intro-icon" aria-hidden="true">✦</span> Vé trải nghiệm mùa vụ</b><span id="ticketRowsNote">4 vé mỗi hàng · 2 hàng = 8 vé</span></div>
+   <div class="ticket-intro"><b><span class="ticket-intro-icon" aria-hidden="true">✦</span> Vé mùa vụ</b><span id="ticketRowsNote">4 vé/hàng</span></div>
    <div class="ticket-grid" id="ticketGrid" role="img" aria-label="Minh họa 8 vé sự kiện trên 2 hàng"></div>
    <div class="ticket-progress" id="ticketProgress" aria-live="polite"></div>
  </div>
@@ -182,7 +233,7 @@ function updateOrder(){
    (belowNeed?'Mức này thấp hơn nhu cầu dự kiến '+fmt(needed)+' kg; hãy cân nhắc tăng lượng đăng ký.':
      'Tối thiểu '+MIN_ORDER+' kg/đăng ký.'+helper);
 }
-const FESTIVAL_ICONS={'le-xuong-dong':'01-le-cung-xuong-dong','com-moi':'13-cung-com-moi'};
+const FESTIVAL_ICONS={'le-xuong-dong':'<path d="M7 20h18l-3 7H10Z" fill="var(--icon-accent)"/><path d="M11 19V9m5 10V6m5 13V9M9 29h14M11 6c2-2-1-2 0-4m5 1c2-2-1-2 0-3m5 6c2-2-1-2 0-4"/>','com-moi':'<path d="M4 18h24c-1 7-5 10-12 10S5 25 4 18Z" fill="var(--icon-accent)"/><path d="M7 17c1-5 5-7 9-7s8 2 9 7M11 7c3-3-2-3 0-6m6 6c3-3-2-3 0-6m6 6c3-3-2-3 0-6M10 30h12"/>'};
 function festivalIcon(id){return '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+FESTIVAL_ICONS[id]+'</svg>';}
 const FESTIVALS=[
  {id:'le-xuong-dong',name:'Lễ Tịch Điền',short:'Xuống đồng',vu:'DX26',season:'Đông Xuân 2026'},
@@ -197,7 +248,7 @@ function festivalLinks(active){
    '<span class="festival-seal">'+festivalIcon(f.id)+'</span><strong>'+f.name+'</strong><small>'+f.short+' · '+f.season+'</small><span class="festival-visit">Xem timeline ↗</span></a>';
  }).join('');
 }
-const TICKET_SVG='<svg viewBox="0 0 100 43" aria-hidden="true" focusable="false"><path d="M9 3H91V14c-6 1-9 4.8-9 7.5s3 6.5 9 7.5V40H9V29c6-1 9-4.8 9-7.5S15 15 9 14Z" fill="var(--ticket-fill)" stroke="var(--ticket-stroke)" stroke-width="2.4" stroke-linejoin="round"/><path d="M69 7V36" stroke="var(--ticket-stroke)" stroke-width="1.6" stroke-dasharray="3 4" opacity=".6"/><path d="M29 23q7-9 15 0 8 9 16-1m-22-7-3 7m12-7-3 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="79" cy="21.5" r="2" fill="currentColor" opacity=".75"/></svg>';
+const TICKET_SVG='<svg viewBox="0 0 100 43" aria-hidden="true" focusable="false"><path d="M9 3H91V14c-6 1-9 4.8-9 7.5s3 6.5 9 7.5V40H9V29c6-1 9-4.8 9-7.5S15 15 9 14Z" fill="var(--ticket-fill)" stroke="var(--ticket-stroke)" stroke-width="2.2" stroke-linejoin="round"/><path d="M72 7V36" stroke="var(--ticket-stroke)" stroke-width="1.5" stroke-dasharray="3 4" opacity=".6"/><g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"><path d="M29 33Q36 16 57 10"/><path d="M33 25Q27 22 27 16M39 19Q34 16 35 10M46 15Q41 12 42 6"/></g><g fill="currentColor" opacity=".88"><ellipse cx="57" cy="10" rx="2" ry="4" transform="rotate(47 57 10)"/><ellipse cx="53" cy="15" rx="2" ry="4" transform="rotate(50 53 15)"/><ellipse cx="47" cy="16" rx="2" ry="4" transform="rotate(65 47 16)"/><ellipse cx="41" cy="21" rx="2" ry="3.5" transform="rotate(60 41 21)"/><ellipse cx="50" cy="8" rx="2" ry="3.5" transform="rotate(20 50 8)"/></g></svg>';
 function renderTicketGrid(count, targetId){
  const root=get(targetId);
  root.replaceChildren();
@@ -218,10 +269,8 @@ function renderTicketBenefits(active, next){
  const tickets=active?active.tickets:0,rows=tickets/4;
  renderTicketGrid(tickets,'ticketGrid');
  renderTicketGrid(tickets,'ticketQuickGrid');
- get('ticketRowsNote').textContent=tickets?('4 vé mỗi hàng · '+rows+' hàng = '+tickets+' vé'):'Chưa đủ điều kiện vé năm';
- get('ticketProgress').textContent=tickets?
-   (next?'Đang mở '+tickets+' vé/năm · nâng lên '+next.kg+' kg để tăng thêm 4 vé':'Đã đạt mức tối đa 16 vé/năm') :
-   'Các biểu tượng đang màu xám vì chưa đủ điều kiện gói năm';
+ get('ticketRowsNote').textContent=tickets?(rows+' hàng × 4 vé = '+tickets):'Chưa mở';
+ get('ticketProgress').textContent=tickets?('Tối đa '+tickets+' vé/năm'):'Chưa có quyền vé năm';
 }
 function updateBenefits(){
  const months=Number(get('months').value);

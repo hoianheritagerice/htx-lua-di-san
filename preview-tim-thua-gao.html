@@ -46,6 +46,18 @@ main{max-width:1450px;margin:auto;padding:28px 34px 55px}.eyebrow{color:#598565;
 .card .status.scrap{background:#fbf1e0;color:#865c29}
 .card .status.complete{background:#e6f1e2;color:#27613a}
 .card .status.ineligible{background:#f3ece4;color:#795e46}
+.benefits{border:1px solid #e3d4b1;background:#fffdf7;padding:16px 13px;margin:15px 0 16px;border-radius:14px}
+.benefits-heading h2{font-size:23px;margin:3px 0 5px}.benefits-heading .desc{margin:0 0 12px}
+.benefit-highlight{display:flex;justify-content:space-between;align-items:center;gap:9px;border:1px solid #e9d8b6;background:#fff3d9;border-radius:11px;padding:13px 12px}
+.benefit-label{font-size:11px;display:block;color:#73572d}.benefit-highlight strong{font-size:26px;color:#583918;display:block;margin:4px 0}.benefit-price{font-size:12px;text-align:right;color:#755632;line-height:1.6}
+.benefit-meter{height:6px;background:#e8e9e0;border-radius:10px;overflow:hidden;margin:11px 1px}.benefit-meter span{display:block;height:100%;background:#9f854a;transition:width .25s}
+.benefit-checks{font-size:11px;color:#47654d;line-height:1.65;margin:11px 0}.festival-title{font-size:12px;font-weight:700;margin:13px 0 9px;color:#58472d}
+.festival-title small{display:block;font-weight:400;color:#8c8170;font-size:10px;line-height:1.5}
+.festival-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.festival{border:1px solid #e6dcc7;border-radius:10px;background:#fff;padding:10px 7px;text-align:center;font-size:10.5px;line-height:1.4;color:#5d5c48}.festival .festival-icon{font-size:23px;display:block;margin-bottom:5px}.festival small{display:block;color:#897966}.festival.locked{filter:grayscale(1);opacity:.48}
+.upgrades{margin-top:14px}.upgrades h3{font-size:12px;margin:0 0 8px;color:#475d4b}.upgrade-card{border:1px solid #d8e4d6;border-radius:10px;background:#f7fbf5;padding:11px;margin-bottom:8px}
+.upgrade-card b{display:block;font-size:13px;color:#36523e}.upgrade-card small{font-size:11px;color:#708170;line-height:1.5;display:block;margin:5px 0}
+.upgrade-card button{background:#2b5638;color:white;border:0;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:700;width:100%;margin-top:5px}
+.benefit-disclaimer{font-size:10px;line-height:1.65;color:#8d8170;margin:11px 0 0}
 .results-panel{margin-top:17px;padding:21px 22px}.result-head{display:flex;justify-content:space-between;align-items:start;gap:12px;flex-wrap:wrap}.result-head h2{font-family:Georgia,serif;font-weight:500;font-size:23px;margin:0}.result-head p{color:var(--muted);font-size:12px;line-height:1.5;margin:5px 0 15px}.stat{font-size:12px;color:#49664f;background:#eef5e9;padding:8px 10px;border-radius:8px}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{border:1px solid var(--edge);border-radius:11px;padding:13px 15px;background:#fff;transition:border-color .15s}.card:hover{border-color:#85ae8c}.card h3{font-size:14px;margin:0 0 4px;color:#304c36}.card .farmer{font-size:12px;color:#6a786b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card .numbers{display:flex;justify-content:space-between;gap:5px;margin:12px 0 8px}.card .numbers b{font-size:19px;color:#2e6343}.card .numbers span{font-size:11px;color:#758175}.card footer{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:9px}.status{font-size:10px;background:#eaf3e8;color:#35704a;border-radius:100px;padding:5px 7px}.status.partial{background:#fbf2e4;color:#94622d}.show{font-size:11px;border:0;background:none;color:#2e6343;text-decoration:underline;font-weight:750;padding:5px 0}.foot-note{font-size:11px;line-height:1.6;color:#7b857d;padding:10px 2px}.empty{padding:23px;border:1px dashed #d5ded2;color:#697968;text-align:center;border-radius:11px;grid-column:1/-1;font-size:12px;line-height:1.6}#combine{font-size:12px;color:#697c68;padding:12px 0 0;line-height:1.65}#combine strong{color:#375a3b}
 @media(max-width:920px){.workspace{grid-template-columns:1fr}.panel{display:grid;grid-template-columns:1fr 1fr;gap:0 23px}.panel>h2,.panel>.desc,.panel>.hr,.panel>.summary,.panel>.primary,.panel>.source{grid-column:1/-1}.canvas{height:530px}}@media(max-width:600px){.top-inner{padding:13px 17px}.toplinks{gap:8px}.toplinks a{display:none}.toplinks span{font-size:10px}.brand{font-size:13px}.brand .logo{width:34px;height:34px;font-size:18px}main{padding:21px 12px 35px}.intro{display:block}.intro h1{font-size:31px}.demo{margin-top:17px;max-width:unset}.panel{display:block;padding:17px}.fieldset{gap:10px}.map-header,.results-panel{padding:17px}.map-header h2,.results-panel h2{font-size:20px}.canvas{height:390px;min-height:320px}.selection{margin:0 13px 15px}.legend{padding:12px 14px}.cards{grid-template-columns:1fr}.summary .big{font-size:36px}}
 </style></head><body>
@@ -64,6 +76,16 @@ main{max-width:1450px;margin:auto;padding:28px 34px 55px}.eyebrow{color:#598565;
 <div id="customBox" hidden><label class="sub" for="customKg">Số kg muốn đăng ký (tối thiểu 80 kg)</label><input class="num" type="number" min="80" max="100000" step="1" value="150" id="customKg"></div>
 <div id="orderHint" class="order-hint" aria-live="polite"></div>
 </div>
+<section class="benefits" aria-label="Quyền lợi theo sản lượng gạo">
+ <div class="benefits-heading"><span class="eyebrow">Đồng hành cùng di sản</span><h2>Quyền lợi dành cho bạn</h2><p id="benefitNote" class="desc"></p></div>
+ <div class="benefit-highlight"><div><span class="benefit-label" id="benefitTier">Người Gieo Mầm Di Sản</span><strong id="benefitTickets">8 vé/năm</strong></div><div class="benefit-price" id="benefitPrice"></div></div>
+ <div class="benefit-meter" aria-hidden="true"><span id="benefitMeter"></span></div>
+ <div class="benefit-checks" id="benefitPerks"></div>
+ <div class="festival-title">4 lễ hội mùa vụ thường niên <small>Minh họa bằng biểu tượng, không phải logo chính thức</small></div>
+ <div class="festival-grid" id="festivalGrid"></div>
+ <div id="upgradeOptions" class="upgrades"></div>
+ <p class="benefit-disclaimer">Số vé tối đa mỗi năm theo gói 80/150/300 kg; chưa phân bổ vé cho từng sự kiện. Quyền tham gia phải được HTX xác nhận sau khi đăng ký. Giá tham khảo chưa gồm VAT.</p>
+</section>
 <button class="primary" id="calculate">Tìm thửa ruộng phù hợp →</button>
 <p class="source">* Khẩu phần tham khảo: <a target="_blank" rel="noopener" href="https://www.worcsacute.nhs.uk/leaflets/paediatric-diabetes-carbohydrate-counting-reference-tables/">NHS (75 g gạo chưa nấu)</a>. Tỷ lệ xay xát dùng để mô phỏng: <a target="_blank" rel="noopener" href="https://www.fao.org/4/x5427e/x5427e0h.htm">FAO (~67%)</a>. Không phải lời khuyên dinh dưỡng.</p>
 </aside>
@@ -120,6 +142,54 @@ function updateOrder(){
  get('orderHint').textContent='Đang dùng '+fmt(orderKg,0)+' kg để tìm và tính phần dư của thửa. '+
    (belowNeed?'Mức này thấp hơn nhu cầu dự kiến '+fmt(needed)+' kg; hãy cân nhắc tăng lượng đăng ký.':
      'Tối thiểu '+MIN_ORDER+' kg/đăng ký.'+helper);
+}
+function updateBenefits(){
+ const months=Number(get('months').value);
+ const annual=months===12;
+ const tiers=[{kg:80,tickets:8},{kg:150,tickets:12},{kg:300,tickets:16}];
+ const eligible=annual?tiers.filter(t=>orderKg>=t.kg):[];
+ const active=eligible.length?eligible[eligible.length-1]:null;
+ const next=tiers.find(t=>t.kg>orderKg);
+ const dong=n=>Math.round(n).toLocaleString('vi-VN')+'đ';
+ const price=orderKg*65000;
+ get('benefitTier').textContent=active?'Gói từ '+active.kg+' kg/năm':'Chưa đạt điều kiện vé năm';
+ get('benefitTickets').textContent=active?active.tickets+' vé/năm':'Chưa xác định vé';
+ get('benefitPrice').innerHTML='<strong>'+dong(price)+'</strong><small style="display:block">65.000đ/kg · chưa VAT</small>';
+ get('benefitMeter').style.width=Math.min(100,orderKg/300*100)+'%';
+ get('benefitNote').textContent=annual?
+   'Khách có thể đăng ký thêm gạo để nâng hạng và tăng số vé sự kiện tối đa mỗi năm.':
+   'Quyền lợi vé áp dụng cho đăng ký theo năm. Bạn đang chọn '+months+' tháng; hãy chọn 12 tháng để xem quyền lợi gói năm.';
+ get('benefitPerks').textContent=active?'✓ QR truy xuất · ✓ Chọn giống lúa bản địa · ✓ Đến thăm thửa ruộng · ✓ Tham gia lễ hội theo số vé tối đa của gói':'Quyền lợi vé năm chưa được xác định cho thời hạn này.';
+ const events=[
+  ['🌱','Lễ Tịch Điền','Xuống đồng · vụ 1'],
+  ['🌾','Mừng Lúa Mới','Thu hoạch · vụ 1'],
+  ['🌱','Lễ Tịch Điền','Xuống đồng · vụ 2'],
+  ['🌾','Mừng Lúa Mới','Thu hoạch · vụ 2']
+ ];
+ get('festivalGrid').innerHTML=events.map(([icon,name,subtitle])=>
+  '<div class="festival'+(active?'':' locked')+'"><span class="festival-icon">'+icon+'</span><strong>'+name+'</strong><small>'+subtitle+'</small></div>').join('');
+ const options=get('upgradeOptions');
+ options.replaceChildren();
+ if(!annual){
+  options.innerHTML='<div class="upgrade-card"><b>Khám phá gói đồng hành 12 tháng</b><small>Đăng ký theo năm để xác định mốc 80 / 150 / 300 kg và quyền lợi vé.</small><button type="button" id="yearUpgrade">Chuyển sang 12 tháng →</button></div>';
+  get('yearUpgrade').addEventListener('click',()=>{get('months').value='12';render();});
+  return;
+ }
+ if(!next){options.innerHTML='<div class="upgrade-card"><b>Đã đạt mốc 300 kg/năm</b><small>Tối đa 16 vé tham gia sự kiện mùa vụ/năm.</small></div>';return;}
+ options.innerHTML='<h3>Tăng lượng gạo để mở thêm quyền lợi</h3>';
+ tiers.filter(t=>t.kg>orderKg&&t.kg>=needed).forEach(t=>{
+  const extra=t.kg-orderKg,cost=extra*65000,el=document.createElement('div');
+  el.className='upgrade-card';
+  el.innerHTML='<b>Nâng lên '+t.kg+' kg/năm · '+t.tickets+' vé/năm</b>'+
+   '<small>Thêm '+fmt(extra,0)+' kg gạo · Chi phí tăng khoảng '+dong(cost)+' (chưa VAT)'+
+   (active?' · thêm tối đa '+(t.tickets-active.tickets)+' vé/năm':'')+'</small>'+
+   '<button type="button">+ '+fmt(extra,0)+' kg · Chọn gói '+t.kg+' kg →</button>';
+  el.querySelector('button').addEventListener('click',()=>{
+   get('orderChoice').value=String(t.kg);render();
+   get('calculate').scrollIntoView({block:'nearest',behavior:'smooth'});
+  });
+  options.appendChild(el);
+ });
 }
 function evaluate(p){
  const remain=p.free-orderKg;
@@ -230,7 +300,7 @@ function drawCards(){
  if(partial.length)comp.innerHTML='<strong>'+partial.length+' thửa khác chưa đủ '+fmt(orderKg,0)+' kg riêng lẻ</strong> (không đưa vào gợi ý chính).';
  if(!viable.length&&partial.length)comp.innerHTML+=' Việc ghép nhiều thửa là phương án cuối, cần HTX xác nhận giống lúa, vụ mùa và lượng còn nhận đăng ký.';
 }
-function render(){demand();updateOrder();drawMap();drawCards();if(selectedId)showPlotDetails(ALL.find(p=>p.id===selectedId));}
+function render(){demand();updateOrder();updateBenefits();drawMap();drawCards();if(selectedId)showPlotDetails(ALL.find(p=>p.id===selectedId));}
 ['people','meals','portion','months','reserve','orderChoice'].forEach(id=>get(id).addEventListener('change',render));
 get('customKg').addEventListener('input',render);
 get('people').addEventListener('input',render);

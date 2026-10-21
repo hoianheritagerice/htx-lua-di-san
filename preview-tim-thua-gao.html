@@ -139,6 +139,19 @@ main{max-width:1450px;margin:auto;padding:28px 34px 55px}.eyebrow{color:#598565;
  .benefit-peek .festival{gap:3px}
  .benefit-peek .festival-grid{gap:4px}
 }
+
+/* 2026-10-21 · Final tidy: ticket icons grouped beside label, not against right edge */
+.ticket-benefit{display:inline-flex;align-items:center;justify-content:flex-start;gap:13px;width:auto;max-width:100%;padding:8px 11px;margin:9px 0;border:1px solid #ece1ce;background:#fcfaf6;border-radius:9px;vertical-align:middle}
+.ticket-benefit .ticket-intro{display:flex;align-items:center;white-space:nowrap;min-width:0}
+.ticket-benefit .ticket-intro b{font-size:11px;font-weight:600}
+.ticket-benefit .ticket-grid{display:grid;grid-template-columns:repeat(4,26px);gap:2px 4px;width:max-content;min-width:0;max-width:100%;margin:0;align-self:center;justify-self:auto;flex:none}
+.ticket-benefit .ticket-item svg{width:26px;height:12px;max-height:12px}
+.ticket-benefit .ticket-progress{display:none}
+.ticket-benefit #ticketRowsNote{display:none}
+.benefits .benefit-highlight{margin-bottom:7px}
+.festival-title{margin-top:7px}
+.order-hint.warn{color:#9c5c19;background:#fff6e9;border-left:3px solid #d9a763;padding:7px 9px;border-radius:5px;margin-top:8px}
+@media(max-width:940px){.ticket-benefit{display:none}}
 </style></head><body>
 <header class="top"><div class="top-inner"><div class="brand"><img class="logo" src="img/logo.png" width="41" height="41" alt="Logo HTX Lúa Di Sản Hội An"><span>HTX LÚA DI SẢN<small>Hội An · Bản đồ canh tác</small></span></div><div class="toplinks"><a href="https://hoianheritagerice.github.io/htx-lua-di-san/index.html">Website chính ↗</a><span>● Bản thử nghiệm · Chưa sử dụng dữ liệu tồn thật</span></div></div></header>
 <main><div class="intro"><div><div class="eyebrow">Từ thửa ruộng đến bữa cơm</div><h1>Tìm thửa ruộng dành cho gia đình bạn</h1><p>Tìm theo tên nông dân hoặc mã thửa; nhập thói quen ăn cơm để ước tính lượng gạo cần trong năm và xem các thửa có quy mô phù hợp.</p></div><div class="demo"><strong>CHẾ ĐỘ MINH HỌA</strong><div>Hình dạng và tên thửa từ bản đồ HTX. Sản lượng gạo là <strong>ước tính mô phỏng</strong>; chưa có số đăng ký thật. Preview <strong>tạm giả định chưa ai đặt</strong> để minh họa cách ưu tiên phân bổ, không phải số lượng còn trống thực tế.</div></div></div>
@@ -152,11 +165,11 @@ main{max-width:1450px;margin:auto;padding:28px 34px 55px}.eyebrow{color:#598565;
 <div class="summary" aria-live="polite"><div class="label" id="summaryLabel">Nhu cầu gạo cho 12 tháng (có dự phòng)</div><div class="big" id="total">120,5 <small>kg</small></div><div class="mini" id="breakdown">~9,1 kg/tháng · 109,5 kg/năm trước dự phòng</div></div>
 <div class="order-panel"><label class="sub" for="orderChoice">Lượng khách muốn đăng ký</label>
 <select class="sel" id="orderChoice"><option value="needs">Theo nhu cầu thực tế (làm tròn lên)</option><option value="80">Gói 80 kg</option><option value="150">Gói 150 kg</option><option value="300">Gói 300 kg</option><option value="custom">Tự nhập số kg</option></select>
-<div id="customBox" hidden><label class="sub" for="customKg">Số kg muốn đăng ký (tối thiểu 80 kg)</label><input class="num" type="number" min="80" max="100000" step="1" value="150" id="customKg"></div>
+<div id="customBox" hidden><label class="sub" for="customKg">Số kg muốn đăng ký</label><input class="num" type="number" min="1" max="100000" step="1" value="150" id="customKg"></div>
 <div id="orderHint" class="order-hint" aria-live="polite"></div><div class="benefit-peek"><div class="benefit-peek-header"><strong id="benefitQuickTickets"></strong><span>Quyền lợi theo gói đã chọn</span></div>
  <div class="ticket-grid ticket-grid-mini" id="ticketQuickGrid" role="img" aria-label="Số vé sự kiện minh họa"></div>
  <div class="festival-grid" id="festivalQuick"></div>
- <small class="peek-hint">Nhấn biểu tượng tròn để xem lễ hội trên timeline ↗</small>
+ <small class="peek-hint">Xem các sự kiện ↗</small>
  </div>
 </div>
 
@@ -167,13 +180,12 @@ main{max-width:1450px;margin:auto;padding:28px 34px 55px}.eyebrow{color:#598565;
  <div class="benefits-heading"><span class="eyebrow">Đồng hành cùng di sản</span><h2>Quyền lợi dành cho bạn</h2><p id="benefitNote" class="desc"></p></div>
  <div class="benefit-highlight"><div><span class="benefit-label" id="benefitTier">Người Gieo Mầm Di Sản</span><strong id="benefitTickets">8 vé/năm</strong></div><div class="benefit-price" id="benefitPrice"></div></div>
  <div class="ticket-benefit" aria-label="Minh họa số vé sự kiện tối đa trong năm">
-   <div class="ticket-intro"><b><span class="ticket-intro-icon" aria-hidden="true">✦</span> Vé mùa vụ</b><span id="ticketRowsNote">4 vé/hàng</span></div>
+   <div class="ticket-intro"><b><span class="ticket-intro-icon" aria-hidden="true">✦</span> Vé mùa vụ</b></div>
    <div class="ticket-grid" id="ticketGrid" role="img" aria-label="Minh họa 8 vé sự kiện trên 2 hàng"></div>
-   <div class="ticket-progress" id="ticketProgress" aria-live="polite"></div>
  </div>
  <div class="benefit-meter" aria-hidden="true"><span id="benefitMeter"></span></div>
  <div class="benefit-checks" id="benefitPerks"></div>
- <div class="festival-title">Bốn lễ hội di sản <small>Đúng biểu tượng đang dùng trên timeline Cánh đồng · huy hiệu có màu khi gói đủ quyền tham gia, trắng đen khi chưa đủ</small></div>
+ <div class="festival-title">Bốn lễ hội di sản <small>Chạm huy hiệu để xem timeline</small></div>
  <div class="festival-grid" id="festivalGrid"></div>
  <div id="upgradeOptions" class="upgrades"></div>
  <p class="benefit-disclaimer">Hình chiếc vé mô tả <strong>quyền lợi tối đa</strong> theo gói 80/150/300 kg/năm, không phải vé đã phát hành. Số vé được sử dụng trong cả năm, chưa chia cho từng lễ hội. Lịch và điều kiện tham gia thực tế do HTX xác nhận. Giá chưa gồm VAT.</p>
@@ -210,28 +222,30 @@ function demand(){
 }
 function filtered(){let q=norm(get('query').value),field=get('fieldFilter').value;return ALL.filter(p=>(field==='all'||p.field===field)&&(!q||norm(p.id+' '+p.code+' '+p.farmer+' '+p.symbol).includes(q)))}
 function updateOrder(){
- const choice=get('orderChoice'),mode=choice.value;
- const rounded=Math.max(MIN_ORDER,Math.ceil(needed-1e-9));
- const needOption=choice.querySelector('option[value="needs"]');
- needOption.textContent='Theo nhu cầu: '+fmt(rounded,0)+' kg'+(needed<MIN_ORDER?' (đăng ký tối thiểu)':'');
+ const choice=get('orderChoice');
+ // "Theo nhu cầu" phản ánh đúng lượng khách đã nhập, KHÔNG tự nâng lên gói 80 kg.
+ const rounded=Math.max(1,Math.ceil(needed-1e-9));
+ choice.querySelector('option[value="needs"]').textContent=
+   'Theo nhu cầu: '+fmt(rounded,0)+' kg'+(rounded<MIN_ORDER?' · chưa đạt gói 80 kg':'');
  TIERS.forEach(t=>{
    const option=choice.querySelector('option[value="'+t+'"]');
-   option.disabled=t<needed-1e-9;
-   option.textContent='Gói '+fmt(t,0)+' kg'+(option.disabled?' · thấp hơn nhu cầu':'');
+   option.disabled=false;
+   option.textContent='Gói '+fmt(t,0)+' kg'+(t<needed-1e-9?' · dưới nhu cầu dự tính':'');
  });
- if(TIERS.some(t=>String(t)===mode && t<needed-1e-9)){choice.value='needs'}
- const current=choice.value;
- get('customBox').hidden=current!=='custom';
- const raw=current==='custom'?Number(get('customKg').value):current==='needs'?rounded:Number(current);
- orderKg=Math.max(MIN_ORDER,Math.round(raw)||MIN_ORDER);
+ const mode=choice.value;
+ get('customBox').hidden=mode!=='custom';
+ const raw=mode==='custom'?Number(get('customKg').value):mode==='needs'?rounded:Number(mode);
+ orderKg=Math.max(1,Math.ceil(raw)||1);
  const belowNeed=orderKg+1e-9<needed;
- const nextTier=TIERS.find(t=>t>=needed);
- const helper= current==='needs'&&nextTier&&nextTier!==orderKg?
-   ' Nếu muốn theo gói cố định, có thể chọn '+fmt(nextTier,0)+' kg.':'';
- get('orderHint').classList.toggle('warn',belowNeed);
- get('orderHint').textContent='Đang dùng '+fmt(orderKg,0)+' kg để tìm và tính phần dư của thửa. '+
-   (belowNeed?'Mức này thấp hơn nhu cầu dự kiến '+fmt(needed)+' kg; hãy cân nhắc tăng lượng đăng ký.':
-     'Tối thiểu '+MIN_ORDER+' kg/đăng ký.'+helper);
+ const belowMinimum=orderKg<MIN_ORDER;
+ get('orderHint').classList.toggle('warn',belowNeed||belowMinimum);
+ if(belowMinimum){
+   get('orderHint').textContent='Đang xem '+fmt(orderKg,0)+' kg theo nhu cầu. Chưa đạt mức đăng ký tối thiểu 80 kg/năm; hãy chủ động chọn gói 80 kg để mở quyền lợi.';
+ }else if(belowNeed){
+   get('orderHint').textContent='Đã chọn '+fmt(orderKg,0)+' kg nhưng nhu cầu dự tính là '+fmt(needed)+' kg. Bạn có thể tăng lượng gạo để đủ sử dụng.';
+ }else{
+   get('orderHint').textContent='Đang chọn '+fmt(orderKg,0)+' kg. Các đề xuất thửa và quyền lợi bên cạnh cập nhật theo lượng đã chọn.';
+ }
 }
 const FESTIVAL_ICONS={'le-xuong-dong':'<path d="M7 20h18l-3 7H10Z" fill="var(--icon-accent)"/><path d="M11 19V9m5 10V6m5 13V9M9 29h14M11 6c2-2-1-2 0-4m5 1c2-2-1-2 0-3m5 6c2-2-1-2 0-4"/>','com-moi':'<path d="M4 18h24c-1 7-5 10-12 10S5 25 4 18Z" fill="var(--icon-accent)"/><path d="M7 17c1-5 5-7 9-7s8 2 9 7M11 7c3-3-2-3 0-6m6 6c3-3-2-3 0-6m6 6c3-3-2-3 0-6M10 30h12"/>'};
 function festivalIcon(id){return '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+FESTIVAL_ICONS[id]+'</svg>';}
@@ -262,15 +276,13 @@ function renderTicketGrid(count, targetId){
    root.appendChild(span);
  }
  root.setAttribute('aria-label',num?
-   num+' vé tối đa trong năm, '+Math.ceil(num/4)+' hàng, mỗi hàng 4 vé':
-   'Chưa đủ điều kiện mở quyền lợi vé, các biểu tượng hiện màu xám');
+   'Minh họa '+num+' vé tham gia sự kiện tối đa trong năm':
+   'Chưa đạt điều kiện vé sự kiện; biểu tượng vé đang khóa');
 }
-function renderTicketBenefits(active, next){
- const tickets=active?active.tickets:0,rows=tickets/4;
+function renderTicketBenefits(active){
+ const tickets=active?active.tickets:0;
  renderTicketGrid(tickets,'ticketGrid');
  renderTicketGrid(tickets,'ticketQuickGrid');
- get('ticketRowsNote').textContent=tickets?(rows+' hàng × 4 vé = '+tickets):'Chưa mở';
- get('ticketProgress').textContent=tickets?('Tối đa '+tickets+' vé/năm'):'Chưa có quyền vé năm';
 }
 function updateBenefits(){
  const months=Number(get('months').value);
@@ -281,18 +293,19 @@ function updateBenefits(){
  const next=tiers.find(t=>t.kg>orderKg);
  const dong=n=>Math.round(n).toLocaleString('vi-VN')+'đ';
  const price=orderKg*65000;
- get('benefitTier').textContent=active?'Gói từ '+active.kg+' kg/năm':'Chưa đạt điều kiện vé năm';
- get('benefitTickets').textContent=active?'Tối đa '+active.tickets+' vé/năm':'Chưa mở vé/năm';
- get('benefitPrice').innerHTML='<strong>'+dong(price)+'</strong><small style="display:block">65.000đ/kg · chưa VAT</small>';
+ get('benefitTier').textContent=active?'Gói từ '+active.kg+' kg/năm':(annual?'Chưa đạt 80 kg/năm':'Chưa chọn gói năm');
+ get('benefitTickets').textContent=active?'Tối đa '+active.tickets+' vé/năm':'Chưa có vé sự kiện';
+ get('benefitPrice').innerHTML=active?'<strong>'+dong(price)+'</strong><small style="display:block">65.000đ/kg · chưa VAT</small>':'<strong>—</strong><small style="display:block">Gói từ 80 kg/năm</small>';
  get('benefitMeter').style.width=Math.min(100,orderKg/300*100)+'%';
- get('benefitNote').textContent=annual?
-   'Khách có thể đăng ký thêm gạo để nâng hạng và tăng số vé sự kiện tối đa mỗi năm.':
-   'Quyền lợi vé áp dụng cho đăng ký theo năm. Bạn đang chọn '+months+' tháng; hãy chọn 12 tháng để xem quyền lợi gói năm.';
- get('benefitPerks').textContent=active?'✓ QR truy xuất · ✓ Chọn giống lúa bản địa · ✓ Đến thăm thửa ruộng · ✓ Tham gia lễ hội theo số vé tối đa của gói':'Quyền lợi vé năm chưa được xác định cho thời hạn này.';
+ get('benefitNote').textContent= !annual?
+   'Các quyền lợi vé áp dụng cho gói đăng ký 12 tháng.':
+   active?'Có thể nâng lượng gạo để nhận thêm vé sự kiện.':
+   'Chỉ khi chủ động chọn từ 80 kg/năm, vé và lễ hội mới được mở.';
+ get('benefitPerks').textContent=active?'✓ QR truy xuất · ✓ Chọn giống lúa · ✓ Thăm thửa ruộng · ✓ Tham gia lễ hội':'Chưa mở quyền lợi vé và lễ hội theo gói năm.';
  get('festivalGrid').innerHTML=festivalLinks(Boolean(active));
  get('festivalQuick').innerHTML=festivalLinks(Boolean(active));
- get('benefitQuickTickets').textContent=active?('Quyền lợi: tối đa '+active.tickets+' vé/năm'):'Chưa mở quyền lợi vé năm';
- renderTicketBenefits(active,next);
+ get('benefitQuickTickets').textContent=active?(active.tickets+' vé/năm'):'Chưa đạt 80 kg/năm · huy hiệu chưa mở';
+ renderTicketBenefits(active);
  const options=get('upgradeOptions');
  options.replaceChildren();
  if(!annual){

@@ -222,7 +222,7 @@ main{max-width:1450px;margin:auto;padding:28px 34px 55px}.eyebrow{color:#598565;
 </section>
 <div class="plan-row"><aside class="panel"><div class="panel-kicker">01 · Ước tính nhu cầu</div><h2>Gia đình bạn ăn bao nhiêu gạo?</h2><p class="desc">Nhập thói quen ăn cơm để tính lượng gạo cần sử dụng.</p>
 <div class="fieldset"><div class="field"><label class="sub" for="people">Số người ăn</label><input class="num" id="people" type="number" min="1" max="100" step="1" value="2"></div><div class="field"><label class="sub" for="meals">Bữa cơm/ngày</label><select class="sel" id="meals"><option value="1">1 bữa</option><option value="2" selected>2 bữa</option><option value="3">3 bữa</option></select></div></div>
-<div class="fieldset"><div class="field"><label class="sub" for="portion">Gạo khô/người/bữa</label><select class="sel" id="portion"><option value="50">50 g · ít</option><option value="65">65 g · vừa</option><option value="75" selected>75 g · tham khảo</option><option value="100">100 g · nhiều</option></select></div><div class="field"><label class="sub" for="months">Thời gian dự kiến</label><select class="sel" id="months"><option value="1">1 tháng</option><option value="3">3 tháng</option><option value="6">6 tháng</option><option value="12" selected>12 tháng</option></select></div></div>
+<div class="fieldset"><div class="field"><label class="sub" for="portion">Chén cơm/người/bữa</label><select class="sel" id="portion"><option value="0.5">½ chén · ăn ít</option><option value="1" selected>1 chén · vừa</option><option value="1.5">1½ chén · ăn nhiều</option><option value="2">2 chén · rất nhiều</option></select><div class="period-note" id="portionHint">≈ 150 g cơm chín → 56 g gạo khô</div></div><div class="field"><label class="sub" for="months">Thời gian dự kiến</label><select class="sel" id="months"><option value="1">1 tháng</option><option value="3">3 tháng</option><option value="6">6 tháng</option><option value="12" selected>12 tháng</option></select></div></div>
 <div class="field"><label class="check"><input id="reserve" type="checkbox" checked> Cộng 10% dự phòng cho nhu cầu đặt gạo</label></div>
 <div class="summary" aria-live="polite"><div class="label" id="summaryLabel">Nhu cầu gạo cho 12 tháng (có dự phòng)</div><div class="big" id="total">120,5 <small>kg</small></div><div class="mini" id="breakdown">~9,1 kg/tháng · 109,5 kg/năm trước dự phòng</div></div>
 <div class="order-panel"><label class="sub" for="orderChoice">Lượng khách muốn đăng ký</label>
@@ -236,7 +236,7 @@ main{max-width:1450px;margin:auto;padding:28px 34px 55px}.eyebrow{color:#598565;
 </div>
 
 <button class="primary" id="calculate">Tìm thửa ruộng phù hợp →</button>
-<p class="source">* Khẩu phần tham khảo: <a target="_blank" rel="noopener" href="https://www.worcsacute.nhs.uk/leaflets/paediatric-diabetes-carbohydrate-counting-reference-tables/">NHS (75 g gạo chưa nấu)</a>. Tỷ lệ xay xát dùng để mô phỏng: <a target="_blank" rel="noopener" href="https://www.fao.org/4/x5427e/x5427e0h.htm">FAO (~67%)</a>. Không phải lời khuyên dinh dưỡng.</p>
+<p class="source">* Ước lượng khẩu phần: 1 chén = 150 g cơm chín; 1 g gạo khô ≈ 2,7 g cơm chín. Chưa có hệ số nở khối lượng đo riêng cho VNR20; có thể hiệu chỉnh khi HTX cân thử. Tham khảo: <a target="_blank" rel="noopener" href="https://www.usarice.com/thinkrice/how-to/how-to-cook-rice">USA Rice (độ nở khi nấu)</a> và <a target="_blank" rel="noopener" href="https://www.vinaseed.com.vn/vi/news/m124/giong-lua-thuan-vnr20-chinh-thuc-duoc-luu-hanh-4927.htm">Vinaseed (VNR20)</a>. Tỷ lệ xay xát mô phỏng: <a target="_blank" rel="noopener" href="https://www.fao.org/4/x5427e/x5427e0h.htm">FAO (~67%)</a>. Không phải lời khuyên dinh dưỡng.</p>
 </aside>
 <section class="benefits" aria-label="Quyền lợi theo sản lượng gạo">
  <div class="benefits-heading"><span class="eyebrow">02 · Đồng hành cùng di sản</span><h2>Quyền lợi dành cho bạn</h2><p id="benefitNote" class="desc"></p></div>
@@ -270,14 +270,20 @@ Object.entries(FIELDS).forEach(([field,data])=>data.plots.forEach((p,i)=>{
  // Chỉ để minh họa xếp hạng: giả định 100% chưa được đăng ký, không phát sinh số đã đặt ngẫu nhiên.
  p.field=field;p.id=field+'-'+(p.code||'THUA'+(i+1));p.estimated=rice;p.free=rice;p.committed=0;p.index=i;ALL.push(p);
 }));
+// Quy ước trải nghiệm, chưa phải số đo riêng của giống VNR20.
+// Có thể hiệu chỉnh khi cân mẻ VNR20 thực tế: 100 g gạo khô => cân cơm chín.
+const COOKED_RICE_GRAMS_PER_BOWL=150;
+const COOKED_TO_DRY_WEIGHT_RATIO=2.7;
 function demand(){
  const people=Math.max(1,Math.min(100,Number(get('people').value)||1));
  const meals=Number(get('meals').value);
- const grams=Number(get('portion').value);
+ const bowls=Number(get('portion').value);
+ const grams=bowls*COOKED_RICE_GRAMS_PER_BOWL/COOKED_TO_DRY_WEIGHT_RATIO;
  const months=Number(get('months').value);
  const raw=people*meals*grams/1000*365;
  needed=raw*months/12*(get('reserve').checked?1.1:1);
- get('summaryLabel').textContent='Nhu cầu '+months+' tháng'+(get('reserve').checked?' (gồm dự phòng 10%)':'');
+ get('portionHint').textContent='≈ '+fmt(bowls*COOKED_RICE_GRAMS_PER_BOWL,0)+' g cơm chín → '+fmt(grams,0)+' g gạo khô/người/bữa';
+ get('summaryLabel').textContent='Nhu cầu gạo '+months+' tháng'+(get('reserve').checked?' (gồm dự phòng 10%)':'');
  get('total').innerHTML=fmt(needed)+' <small>kg</small>';
  get('breakdown').textContent='≈ '+fmt(raw/12)+' kg/tháng · '+fmt(raw)+' kg/năm, chưa gồm dự phòng';
  return needed;

@@ -392,11 +392,18 @@ function sanLuongUocTinh(p){
     ? Math.round(dienTich * 300 / 500 / 20) * 20 : 0;
 }
 
+/* Chỉ tổng số kg đã cấp trên Google Sheets; không đưa tên/khóa khách ra công khai. */
+let DONG_HANH_THEO_SHEET = null;
+
 function duLieuDongHanhMau(p){
   const vu = $('selVu') ? $('selVu').value : 'HT26';
   const mau = DONG_HANH_MAU[MAP_DATA.field + ':' + vu + ':' + p.code];
-  return {sanLuong:sanLuongUocTinh(p), daDongHanh:mau ? mau.daDongHanh : 0,
-          nguoi:mau ? mau.nguoi : []};
+  const online = DONG_HANH_THEO_SHEET === null ? null : DONG_HANH_THEO_SHEET[p.code];
+  const da = DONG_HANH_THEO_SHEET === null
+    ? (mau ? Number(mau.daDongHanh) || 0 : 0)
+    : (online ? Number(online.kg) || 0 : 0);
+  return {sanLuong:sanLuongUocTinh(p), daDongHanh:da,
+          nguoi:(mau && da >= Number(mau.daDongHanh)) ? mau.nguoi : []};
 }
 
 function trangThaiDongHanhMau(p){
@@ -416,6 +423,35 @@ function apDungTrangThaiDongHanhMau(i,p,el){
 function apDungMauDongHanhMau(){
   if(!laCheDoDongHanh()) return;
   MAP_DATA.plots.forEach((p,i)=>apDungTrangThaiDongHanhMau(i,p));
+}
+
+/* Cập nhật duy nhất lớp màu và thống kê đồng hành sau khi Sheet trả kết quả. */
+function capNhatThongKeDongHanhTuSheet_(){
+  if(!laCheDoDongHanh()) return;
+  const dem = {chua:0, con:0, du:0};
+  MAP_DATA.plots.forEach(p=>dem[trangThaiDongHanhMau(p)]++);
+  const tt = $('trangthai');
+  if(tt) tt.textContent = 'Đồng hành · ' + dem.chua + ' thửa chưa có · '
+    + dem.con + ' thửa còn sản lượng · ' + dem.du + ' thửa đã đủ.';
+}
+
+async function napDongHanhTuBangCapLink_(){
+  const field = MAP_DATA.field, season = $('selVu').value;
+  DONG_HANH_THEO_SHEET = null;
+  try {
+    const r = await goiAPI({action:'getDongHanh', field:field, season:season});
+    if(!r || !r.ok || !r.plots || typeof r.plots !== 'object') return;
+    if(MAP_DATA.field !== field || $('selVu').value !== season) return;
+    DONG_HANH_THEO_SHEET = r.plots;
+    apDungMauDongHanhMau();
+    capNhatThongKeDongHanhTuSheet_();
+    const modal = $('mpDongHanh');
+    if(thuaDangChon !== null && modal && modal.classList.contains('mo')){
+      moDongHanh(thuaDangChon);
+    }
+  }catch(e){
+    console.warn('Chưa tải được thống kê đồng hành từ Google Sheets',e);
+  }
 }
 
 /* ---------- vẽ bản đồ ---------- */
@@ -562,6 +598,7 @@ function apDungKetQua(r){
 
 async function napNotion(){
   const tt = $('trangthai');
+  napDongHanhTuBangCapLink_();
   tt.className='';
   const khoaDem = 'htxmap_v2_' + MAP_DATA.field + '_' + $('selVu').value;
   // Hiện ngay bằng dữ liệu lần trước (nếu có) rồi âm thầm tải bản mới
@@ -728,7 +765,9 @@ function moDongHanh(i){
   $('dhDanhSach').innerHTML = ds.length
     ? ds.map(n=>'<div class="dh-nguoi"><span>' + escHtml(n.ten)
         + (n.diaPhuong ? ' · ' + escHtml(n.diaPhuong) : '') + '</span><b>' + fmtKg(n.kg) + '</b></div>').join('')
-    : '<div class="dh-trong">Chưa có người đồng hành với thửa này. <b>Hãy trở thành người đầu tiên.</b></div>';
+    : (da > 0
+        ? '<div class="dh-trong">Đã có ' + fmtKg(da) + ' được đồng hành. Thông tin khách được giữ riêng tư.</div>'
+        : '<div class="dh-trong">Chưa có người đồng hành với thửa này. <b>Hãy trở thành người đầu tiên.</b></div>');
 
   const nut = $('dhHanhDong');
   nut.disabled = false;

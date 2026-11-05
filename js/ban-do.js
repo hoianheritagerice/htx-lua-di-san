@@ -381,9 +381,7 @@ function nhanThua(p){ return (p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim(
    ================================================================== */
 const DONG_HANH_MAU = {
   // Phân bổ đồng hành đã được HTX xác nhận cho Hè Thu 2026.
-  'CTDC:HT26:YEN': {daDongHanh:80, nguoi:[
-    {ten:'Chị Tuyết Nhung', diaPhuong:'', kg:80}
-  ]},
+  'CTDC:HT26:YEN': {daDongHanh:80, nguoi:[]},
 };
 
 function sanLuongUocTinh(p){
@@ -729,14 +727,9 @@ function moDongHanh(i){
 
   const p = MAP_DATA.plots[i];
   const d = duLieuDongHanhMau(p);
-  const ds = Array.isArray(d.nguoi) ? d.nguoi.slice() : [];
   const q = nguoiLinkChoThua(p);
-  if(q && !ds.some(n=>n.ten === q.name && Number(n.kg) === Number(q.kg))){
-    ds.push({ten:q.name, diaPhuong:'', kg:q.kg});
-  }
   const sanLuong = Math.max(0, Number(d.sanLuong)||0);
-  const tongTrongDanhSach = ds.reduce((sum, n)=>sum + Math.max(0, Number(n.kg)||0), 0);
-  const da = Math.max(0, Math.min(sanLuong, Math.max(Number(d.daDongHanh)||0, tongTrongDanhSach)));
+  const da = Math.max(0, Math.min(sanLuong, Number(d.daDongHanh)||0));
   const con = Math.max(0, sanLuong - da);
   const pct = sanLuong > 0 ? Math.round(da / sanLuong * 100) : 0;
   const tt = da <= 0 ? 'chua' : (da >= sanLuong ? 'du' : 'con');
@@ -762,12 +755,36 @@ function moDongHanh(i){
   badge.className = 'dh-trangthai ' + tt;
   badge.textContent = ttChu;
 
-  $('dhDanhSach').innerHTML = ds.length
-    ? ds.map(n=>'<div class="dh-nguoi"><span>' + escHtml(n.ten)
-        + (n.diaPhuong ? ' · ' + escHtml(n.diaPhuong) : '') + '</span><b>' + fmtKg(n.kg) + '</b></div>').join('')
-    : (da > 0
-        ? '<div class="dh-trong">Đã có ' + fmtKg(da) + ' được đồng hành. Thông tin khách được giữ riêng tư.</div>'
-        : '<div class="dh-trong">Chưa có người đồng hành với thửa này. <b>Hãy trở thành người đầu tiên.</b></div>');
+  // Public: không trả tên khách. Chỉ người giữ link đúng thửa/vụ mới đọc danh sách.
+  $('dhDanhSach').innerHTML = da > 0
+    ? '<div class="dh-trong">Thông tin khách được giữ riêng tư.</div>'
+    : '<div class="dh-trong">Chưa có người đồng hành với thửa này. <b>Hãy trở thành người đầu tiên.</b></div>';
+  if(q){
+    const field = String(MAP_DATA.field).toUpperCase();
+    const season = String($('selVu').value).toUpperCase();
+    const plot = String(p.code).toUpperCase();
+    $('dhDanhSach').innerHTML = '<div class="dh-trong">Đang tải danh sách người cùng đồng hành…</div>';
+    const listRequest = (window._danhSachDongHanhRequest || 0) + 1;
+    window._danhSachDongHanhRequest = listRequest;
+    goiAPI({action:'getDanhSachDongHanh',linkKey:LINK_KEY_NHAT_KY}).then(r=>{
+      if(listRequest !== window._danhSachDongHanhRequest ||
+         thuaDangChon !== i || MAP_DATA.field !== field ||
+         $('selVu').value !== season ||
+         String((MAP_DATA.plots[i]||{}).code).toUpperCase() !== plot) return;
+      if(!r || !r.ok || r.field !== field || r.season !== season || r.plot !== plot){
+        $('dhDanhSach').innerHTML = '<div class="dh-trong">Không tải được danh sách. Vui lòng kiểm tra quyền link.</div>';
+        return;
+      }
+      const ds = Array.isArray(r.nguoi) ? r.nguoi : [];
+      $('dhDanhSach').innerHTML = ds.length
+        ? ds.map(n=>'<div class="dh-nguoi"><span>'+escHtml(n.ten||'')+
+            '</span><b>'+fmtKg(n.kg)+'</b></div>').join('')
+        : '<div class="dh-trong">Chưa có khách đồng hành còn hiệu lực.</div>';
+    }).catch(()=>{
+      if(listRequest === window._danhSachDongHanhRequest && thuaDangChon === i)
+        $('dhDanhSach').innerHTML = '<div class="dh-trong">Chưa tải được danh sách người cùng đồng hành.</div>';
+    });
+  }
 
   const nut = $('dhHanhDong');
   nut.disabled = false;

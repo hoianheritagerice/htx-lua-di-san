@@ -637,7 +637,7 @@ document.addEventListener('DOMContentLoaded', async function napDanhSachVu(){
       const khung=document.getElementById('khungBanDo');
       if(khung)khung.src=srcBanDo(DONG_HIEN_TAI);
       napMocThat(DONG_HIEN_TAI);napThoiTiet(DONG_HIEN_TAI);
-    }else sel.value=dangChon;
+    }else{sel.value=dangChon;capNhatNhanVuCD();}
   }catch(e){}
 });
 
@@ -771,6 +771,7 @@ async function napMocThat(ma){
       return;
     }
     const trangThai=r.season.trangThaiVu||window.__htxSeasonStates?.[ma]?.[vu]||'';
+    window.__htxTimelineStage=trangThai;
     const ngayGieo=r.season.gieoSa||'';
     const nay=new Date();nay.setHours(0,0,0,0);
     const mocGieo=ngayGieo?new Date(ngayGieo+'T00:00:00'):null;

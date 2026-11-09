@@ -613,6 +613,7 @@ function apDungKetQua(r){
 
 async function napNotion(){
   const tt = $('trangthai');
+  const fieldVao=MAP_DATA.field, vuVao=$('selVu').value;
   napDongHanhTuBangCapLink_();
   tt.className='';
   const khoaDem = 'htxmap_v2_' + MAP_DATA.field + '_' + $('selVu').value;
@@ -626,11 +627,13 @@ async function napNotion(){
   }
   if(!coDem) tt.textContent = 'Đang tải dữ liệu…';
   try{
-    const r = await goiAPI({action:'getMapData', field: MAP_DATA.field, season: $('selVu').value, fresh: EP_MOI ? 1 : 0});
+    const r = await goiAPI({action:'getMapData', field: fieldVao, season: vuVao, fresh: EP_MOI ? 1 : 0});
+    if(fieldVao!==MAP_DATA.field || vuVao!==$('selVu').value)return; // bỏ kết quả cũ về muộn
     if(!r.ok) throw r.error;
     apDungKetQua(r);
     try{ localStorage.setItem(khoaDem, JSON.stringify(r)); }catch(e){}
   }catch(e){
+    if(fieldVao!==MAP_DATA.field || vuVao!==$('selVu').value)return;
     if(!coDem){
       tt.className='loi';
       tt.textContent = 'Không tải được dữ liệu: ' + e + ' — bản đồ vẫn xem được, màu sắc chưa cập nhật.';

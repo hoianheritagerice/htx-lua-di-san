@@ -122,6 +122,10 @@ function veHomNayCD(layout){
   path.style.strokeDasharray='0 10000';
   const txt=document.getElementById('phaseTxt'),phase=document.getElementById('phaseNow');
   phase.querySelector('.pn-dot').style.display='none';
+  if(window.__htxTimelineStage==='Chuẩn bị'){
+    txt.textContent='Đang chuẩn bị vụ mùa';
+    return; // không tô đường như thể đã sinh trưởng
+  }
   const ds=SU_KIEN.map((s,i)=>({s,i})).filter(x=>x.s.ngay&&!['Hủy','Hoãn'].includes(x.s.trangThai));
   if(!ds.length){txt.textContent='Chưa có lịch cho mùa vụ này';return;}
   const date=s=>new Date(s.ngay+'T00:00:00').getTime(),today=HOM_NAY.getTime();

@@ -70,3 +70,14 @@ Với MỖI cánh đồng, đọc tất cả các mùa của riêng cánh đồn
 Một cột trạng thái đủ để HTX quyết định **thời điểm công bố**; ngày gieo sạ đủ để quản lý cả lịch chuẩn bị và NSS. Không thêm `Ngày công bố` hoặc `Ngày gieo sạ dự kiến` nhằm tránh nhập trùng và lệch số liệu. Việc chọn vụ riêng theo cánh đồng phản ánh đúng lịch canh tác khác nhau. Tách **ngày trên lịch** khỏi **xác nhận công việc đã thực hiện** giúp không phát thông tin sai lên website.
 
 > Quan trọng: việc cập nhật code trên **nhánh thử nghiệm** chưa tác động tới GitHub Pages nhánh `main`. Apps Script còn phải cập nhật deployment đúng dự án rồi kiểm thử đầy đủ mới chuyển web chính.
+
+## 7. Bản Code.gs chuẩn để đối chiếu (09/11/2026)
+
+- Nguồn gốc: file người dùng gửi `Văn bản đã dán (1)(2).txt`, dài 3.897 dòng. Đây là bản nền duy nhất khi triển khai backend.
+- File xuất hoàn chỉnh trong cuộc trò chuyện: `HTX_Code_gs_CHUYEN_VU_TU_FILE_MOI_20261109.gs`; đối chiếu: `HTX_CHI_NHUNG_DONG_SUA_GS_20261109.diff`. Không dùng các file Code.gs thử trước đó thay thế.
+- Chỉ thay backend: `getCauHinh`, hàm thêm `layCauHinhVuTheoDong_`, thêm `trangThaiVu` vào dữ liệu mùa vụ, dự phòng đọc VỤ MÙA khi chưa có Mã sản phẩm liên kết, giảm đệm map/timeline từ 30 xuống 5 phút.
+- Quan trọng: **giữ nguyên** `getDanhSachDongHanh_()` và action `getDanhSachDongHanh` mới có trong bản 3.897 dòng. Bản nền cũ hơn không có nên không được ghi đè bằng bản cũ.
+- Không chỉnh `getLinkAccess`, `getDongHanh`, `getHistory`, phân bón, quyền, ảnh Drive, công nhật, Notion schema, trigger và dữ liệu thời tiết.
+- Đối chiếu với bản gốc: 9 vùng thay đổi, 3.890 dòng cũ giữ nguyên, kiểm thử mô phỏng 15/15 đạt. **Chưa triển khai Apps Script production**, chưa merge vào GitHub main.
+- `CONFIG.VU.HIEN_TAI` vẫn là HT26 để tương thích các hàm cũ. Cảnh báo: một số hàm quản trị thủ công như `noiTaskVuVaoLo` vẫn dựa vào biến này. Không chạy nối hàng loạt cho vụ đang canh tác DX27.
+- Cache API sau cập nhật tối đa khoảng 5 phút; các mục cache của deployment cũ có thể còn hạn 30 phút. Client mới dùng `THEO_DONG`; client cũ dùng `HIEN_TAI` tĩnh.

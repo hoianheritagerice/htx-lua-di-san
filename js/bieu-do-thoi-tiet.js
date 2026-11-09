@@ -218,6 +218,16 @@ function veThoiTiet(r) {
   const oChu  = document.getElementById('ttChu');
   const tt = r.thoiTiet || [], nkTho = r.nhatKy || [], gieo = r.season && r.season.gieoSa;
 
+  // Giai đoạn chuẩn bị chưa có thời tiết thu thập tự động: đừng hướng dẫn
+  // khách chạy backfill hoặc dựng tiến độ sinh trưởng như đã gieo.
+  if (r.season && r.season.trangThaiVu === 'Chuẩn bị') {
+    if(oSo)oSo.innerHTML='';
+    if(oBang)oBang.innerHTML='';
+    if(oChu)oChu.textContent='';
+    oBd.innerHTML='<div class="tt-trong">🌱 Cánh đồng đang chuẩn bị mùa vụ. '
+      + 'Biểu đồ thời tiết canh tác sẽ được cập nhật khi vụ bắt đầu.</div>';
+    return;
+  }
   if (!gieo) {
     oBd.innerHTML = '<div class="tt-trong">Trang Vụ Mùa chưa có <b>Ngày gieo sạ</b> nên chưa dựng được trục thời gian.</div>';
     return;

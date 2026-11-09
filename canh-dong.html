@@ -550,6 +550,21 @@ let DONG_HIEN_TAI = 'CKOD';
    thời tiết đều bám theo biến này. */
 let VU_HIEN_TAI = 'HT26';
 let CHON_VU_THU_CONG = false;
+window.__htxSeasonStates = window.__htxSeasonStates || {};
+let VU_MAC_DINH_THEO_DONG_CD = {};
+function vuHienHanhTheoDongCD(ma){ return VU_MAC_DINH_THEO_DONG_CD[ma] || null; }
+function dongBoVuMacDinhCD(ma){
+  if(CHON_VU_THU_CONG) return;
+  const mac=vuHienHanhTheoDongCD(ma);
+  if(!mac || !/^(HT|DX)\d{2}$/.test(mac)) return;
+  const sel=document.getElementById('selVuTrang');
+  if(sel && !Array.from(sel.options).some(o=>o.value===mac)) sel.add(new Option(tenVuCD(mac),mac));
+  if(VU_HIEN_TAI!==mac){
+    VU_HIEN_TAI=mac;
+    if(sel)sel.value=mac;
+  }
+}
+
 let LAN_TAI_MOC = 0, LAN_TAI_TT = 0;
 
 /* Khi mở trực tiếp #dongThoiGian, các khối bản đồ/thời tiết phía trên còn
@@ -610,14 +625,19 @@ document.addEventListener('DOMContentLoaded', async function napDanhSachVu(){
     const r = await layDuLieuCD({action:'getCauHinh'});
     if(!r.ok || !r.vu || !r.vu.DS) return;
     const sel = document.getElementById('selVuTrang'); if(!sel) return;
-    const dangChon = VU_HIEN_TAI;
-    sel.replaceChildren(...r.vu.DS.map(v => new Option('Vụ '+v.ten, v.ma)));
-    const mac = r.vu.HIEN_TAI || r.vu.DS[0].ma;
-    if(!Array.from(sel.options).some(v => v.value === dangChon)) sel.add(new Option(tenVuCD(dangChon), dangChon));
-    sel.value = dangChon;
-    if(!CHON_VU_THU_CONG && mac !== VU_HIEN_TAI){
-      chonVu(mac); CHON_VU_THU_CONG = false; sel.value = mac;
-    }
+    const dangChon=VU_HIEN_TAI;
+    VU_MAC_DINH_THEO_DONG_CD=r.vu.THEO_DONG||{};
+    window.__htxSeasonStates=r.vu.TRANG_THAI_THEO_DONG||{};
+    sel.replaceChildren(...r.vu.DS.map(v => new Option('Vụ '+v.ten,v.ma)));
+    if(!Array.from(sel.options).some(v=>v.value===dangChon))sel.add(new Option(tenVuCD(dangChon),dangChon));
+    const mac=vuHienHanhTheoDongCD(DONG_HIEN_TAI);
+    if(!CHON_VU_THU_CONG && mac && /^(HT|DX)\d{2}$/.test(mac)){
+      dongBoVuMacDinhCD(DONG_HIEN_TAI);
+      capNhatDiaChiCD();capNhatNhanVuCD();
+      const khung=document.getElementById('khungBanDo');
+      if(khung)khung.src=srcBanDo(DONG_HIEN_TAI);
+      napMocThat(DONG_HIEN_TAI);napThoiTiet(DONG_HIEN_TAI);
+    }else{sel.value=dangChon;capNhatNhanVuCD();}
   }catch(e){}
 });
 
@@ -628,6 +648,7 @@ function chonDong(btn, ten, ma){
   document.getElementById('tenDong').textContent = ten;
   if(ma){
     DONG_HIEN_TAI = ma;
+    dongBoVuMacDinhCD(ma); // Nếu chưa chọn vụ thủ công, mỗi cánh đồng có vụ riêng
     veGioiThieuCD(ma);
     capNhatDiaChiCD();
     capNhatNhanVuCD();
@@ -749,14 +770,30 @@ async function napMocThat(ma){
       document.getElementById('phaseTxt').textContent='Chưa có dữ liệu mùa vụ';
       return;
     }
+    const trangThai=r.season.trangThaiVu||window.__htxSeasonStates?.[ma]?.[vu]||'';
+    window.__htxTimelineStage=trangThai;
+    const ngayGieo=r.season.gieoSa||'';
+    const nay=new Date();nay.setHours(0,0,0,0);
+    const mocGieo=ngayGieo?new Date(ngayGieo+'T00:00:00'):null;
+    if(trangThai==='Chuẩn bị'){
+      if(!mocGieo) document.getElementById('phaseTxt').textContent='Đang chuẩn bị · chưa có ngày gieo sạ';
+      else {
+        const n=Math.round((mocGieo-nay)/86400000);
+        document.getElementById('phaseTxt').textContent=n>0?'Còn '+n+' ngày đến ngày gieo sạ'
+          :n===0?'Lịch gieo sạ hôm nay · chờ HTX xác nhận'
+          :'Đã qua ngày gieo sạ theo lịch · chờ HTX cập nhật';
+      }
+    }
     const xacNhan=CAU_HINH_CANH_DONG.suKienTheoVu[ma+':'+vu]||{};
     SU_KIEN=MAU_SU_KIEN.map(mau=>{
       const sk={...mau}, khoa=MOC_NOTION[sk.id];
       if(khoa&&r.season[khoa]){
         sk.ngay=r.season[khoa];
-        // API daXong đọc Trạng thái vụ. Vụ đã thu hoạch không còn gắn dự kiến.
-        sk.duKien=khoa==='thuHoach'&&r.season.daXong!==true;
-        if(khoa==='thuHoach'&&r.season.daXong===true)sk.trangThai='Đã thu hoạch';
+        // Ngày theo lịch không đồng nghĩa hoạt động đã hoàn thành.
+        const laNgayTuongLai=new Date(sk.ngay+'T00:00:00')>nay;
+        sk.duKien=trangThai==='Chuẩn bị' || trangThai==='Kế hoạch' || laNgayTuongLai;
+        if(sk.duKien)sk.trangThai='Theo lịch · chờ xác nhận';
+        if(khoa==='thuHoach'&&r.season.daXong===true){sk.duKien=false;sk.trangThai='Đã thu hoạch';}
       }
       const that=xacNhan[sk.id];
       // Cấu hình GitHub chỉ bổ sung ảnh; ngày và trạng thái cũ không ghi đè Notion.
@@ -766,8 +803,18 @@ async function napMocThat(ma){
     // Sắp xếp các mốc có ngày; giữ chỗ mốc thiếu ngày trong trình tự canh tác.
     const daCo=SU_KIEN.filter(s=>s.ngay).sort((a,b)=>a.ngay.localeCompare(b.ngay));
     let j=0;SU_KIEN=SU_KIEN.map(s=>s.ngay?daCo[j++]:s);
-    note.textContent=tenVuCD(vu)+' · '+CAU_HINH_CANH_DONG.dong[ma].ten+'. Mốc chưa có ngày sẽ được cập nhật.';
+    note.textContent=tenVuCD(vu)+' · '+CAU_HINH_CANH_DONG.dong[ma].ten+
+      (trangThai?' · '+trangThai:'')+'. Mốc chưa có ngày sẽ được cập nhật.';
     veTimeline();
+    // veTimeline cũng vẽ nhãn ngày hiện tại; trạng thái Chuẩn bị cần ưu tiên đếm ngược.
+    if(trangThai==='Chuẩn bị'){
+      const txt=document.getElementById('phaseTxt');
+      if(!mocGieo)txt.textContent='Đang chuẩn bị · chưa có ngày gieo sạ';
+      else{const n=Math.round((mocGieo-nay)/86400000);
+        txt.textContent=n>0?'Còn '+n+' ngày đến ngày gieo sạ'
+          :n===0?'Lịch gieo sạ hôm nay · chờ HTX xác nhận'
+          :'Đã qua ngày gieo sạ theo lịch · chờ HTX cập nhật';}
+    }
   }catch(e){
     if(!conDung())return;
     note.textContent='Chưa tải được lịch mùa vụ. Vui lòng thử lại; các mốc dưới đây chưa có ngày xác nhận.';

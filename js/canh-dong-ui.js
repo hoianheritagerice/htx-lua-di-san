@@ -18,12 +18,19 @@ function tenVuCD(ma){
 }
 function capNhatNhanVuCD(){
   const ten=CAU_HINH_CANH_DONG.dong[DONG_HIEN_TAI].ten;
-  document.getElementById('cdVuNhan').textContent=ten+' · '+tenVuCD(VU_HIEN_TAI)+' · Số liệu phần canh tác hữu cơ';
+  const st=window.__htxSeasonStates?.[DONG_HIEN_TAI]?.[VU_HIEN_TAI] || '';
+  const nhan=st==='Chuẩn bị' ? 'Đang chuẩn bị · thông tin canh tác sẽ được xác nhận'
+    : st==='Đang canh tác' ? 'Đang canh tác · số liệu cập nhật theo từng thửa'
+    : st==='Đã thu hoạch' ? 'Đã thu hoạch · kết quả mùa vụ'
+    : 'Số liệu phần canh tác hữu cơ';
+  document.getElementById('cdVuNhan').textContent=ten+' · '+tenVuCD(VU_HIEN_TAI)+' · '+nhan;
   document.getElementById('selVuTrang').value=VU_HIEN_TAI;
   veChonGoiCD();
 }
 function capNhatDiaChiCD(){
-  const u=new URL(location.href);u.searchParams.set('dong',DONG_HIEN_TAI);u.searchParams.set('vu',VU_HIEN_TAI);
+  const u=new URL(location.href);u.searchParams.set('dong',DONG_HIEN_TAI);
+  if(CHON_VU_THU_CONG) u.searchParams.set('vu',VU_HIEN_TAI);
+  else u.searchParams.delete('vu'); // vụ tự chọn phải cập nhật khi khách mở lại trang
   if(GOI_DANG_XEM==='tat-ca') u.searchParams.delete('goi');else u.searchParams.set('goi',GOI_DANG_XEM);
   history.replaceState(null,'',u);
 }

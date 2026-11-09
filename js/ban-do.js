@@ -538,7 +538,20 @@ function zoom(f){
 }
 
 /* ---------- nạp dữ liệu Notion & tô màu ---------- */
-/* ---------- nạp dữ liệu Notion & tô màu ---------- */
+/* Auto mode chỉ hoạt động khi KHÔNG có ?vu= và người xem chưa tự chọn vụ.
+   Các link khách hàng theo vụ cũ phải luôn giữ chính xác mùa của họ. */
+let VU_THU_CONG_MAP = new URLSearchParams(location.search).has('vu');
+let VU_THEO_DONG_MAP = {}, TT_THEO_DONG_MAP = {};
+function apDungVuTheoDongMap(){
+  if(VU_THU_CONG_MAP) return false;
+  const sel=$('selVu'); if(!sel||!MAP_DATA) return false;
+  const ma=VU_THEO_DONG_MAP[MAP_DATA.field];
+  if(!ma||!(/^(HT|DX)\d{2}$/.test(ma))) return false;
+  if(!Array.from(sel.options).some(o=>o.value===ma)) sel.add(new Option(ma,ma));
+  if(sel.value===ma) return false;
+  sel.value=ma; return true;
+}
+
 const EP_MOI = new URLSearchParams(location.search).get('moi') === '1'; // ?moi=1 = bỏ qua đệm
 
 function apDungKetQua(r){
@@ -574,6 +587,10 @@ function apDungKetQua(r){
        hữu cơ vụ ấy, tô be. Vụ ĐANG canh tác thì để xám "chưa có dữ liệu",
        vì lúc đó nhiều khả năng chỉ là chưa kịp nhập liệu. */
     if(!nd && r.season && r.season.daXong){ el.classList.add('khong-huu-co'); return; }
+    // Khi đang Chuẩn bị, thiếu nhãn hữu cơ = chưa xác nhận, không phải không hữu cơ.
+    if(nd && !nd.organicLabel && r.season && r.season.trangThaiVu==='Chuẩn bị'){
+      el.classList.add('chua-ro');return;
+    }
     /* BA trạng thái: hữu cơ · hữu cơ nhưng vi phạm quy trình · không hữu cơ.
        Phải hỏi viPham TRƯỚC, vì máy chủ đặt organic=false cho lô vi phạm. */
     el.classList.add(!nd ? 'chua-ro' : (nd.viPham ? 'vi-pham' : (nd.organic ? 'huu-co' : 'khong-huu-co')));
@@ -596,6 +613,7 @@ function apDungKetQua(r){
 
 async function napNotion(){
   const tt = $('trangthai');
+  const fieldVao=MAP_DATA.field, vuVao=$('selVu').value;
   napDongHanhTuBangCapLink_();
   tt.className='';
   const khoaDem = 'htxmap_v2_' + MAP_DATA.field + '_' + $('selVu').value;
@@ -609,11 +627,13 @@ async function napNotion(){
   }
   if(!coDem) tt.textContent = 'Đang tải dữ liệu…';
   try{
-    const r = await goiAPI({action:'getMapData', field: MAP_DATA.field, season: $('selVu').value, fresh: EP_MOI ? 1 : 0});
+    const r = await goiAPI({action:'getMapData', field: fieldVao, season: vuVao, fresh: EP_MOI ? 1 : 0});
+    if(fieldVao!==MAP_DATA.field || vuVao!==$('selVu').value)return; // bỏ kết quả cũ về muộn
     if(!r.ok) throw r.error;
     apDungKetQua(r);
     try{ localStorage.setItem(khoaDem, JSON.stringify(r)); }catch(e){}
   }catch(e){
+    if(fieldVao!==MAP_DATA.field || vuVao!==$('selVu').value)return;
     if(!coDem){
       tt.className='loi';
       tt.textContent = 'Không tải được dữ liệu: ' + e + ' — bản đồ vẫn xem được, màu sắc chưa cập nhật.';
@@ -673,7 +693,22 @@ window.addEventListener('resize', function(){
 
 function veVuPanel(s){
   const panel = $('vuPanel');
-  if(!s || !s.gieoSa || !s.thuHoach){ panel.style.display='none'; return; }
+  if(!s){panel.style.display='none';return;}
+  const tt=s.trangThaiVu||TT_THEO_DONG_MAP?.[MAP_DATA.field]?.[$('selVu').value]||'';
+  if(tt==='Chuẩn bị'){
+    panel.style.display='block';
+    $('vuTen').textContent='Chuẩn bị mùa vụ — '+(s.name||$('selVu').value);
+    const date=s.gieoSa?new Date(s.gieoSa+'T00:00:00'):null;
+    const today=new Date();today.setHours(0,0,0,0);
+    const days=date?Math.round((date-today)/86400000):null;
+    $('tienDoKhung').innerHTML=''; $('tienDoKhung').style.marginBottom='0px';
+    $('vuGiaiDoan').textContent=days===null?'Đang chuẩn bị · chưa cập nhật ngày gieo sạ'
+      :days>0?'Còn '+days+' ngày đến ngày gieo sạ'
+      :days===0?'Lịch gieo sạ hôm nay · chờ HTX xác nhận'
+      :'Đã qua ngày theo lịch · chờ HTX cập nhật';
+    return;
+  }
+  if(!s.gieoSa || !s.thuHoach){panel.style.display='none';return;}
   panel.style.display='block';
   $('vuTen').textContent = 'Tiến độ mùa vụ — ' + (s.name || $('selVu').options[$('selVu').selectedIndex].text);
 
@@ -713,7 +748,9 @@ function veVuPanel(s){
 
   $('vuGiaiDoan').innerHTML = (quaNgay >= 0 && nay <= end)
     ? `🌾 Đang giai đoạn: <b>${giaiDoanHT}</b> — ngày thứ <b>${quaNgay}</b> sau gieo sạ (${Math.round(pct)}%)`
-    : (nay > end ? `✅ Vụ đã kết thúc — tổng ${tongNgay} ngày canh tác` : `🌱 Vụ chưa bắt đầu — gieo sạ ngày ${s.gieoSa}`);
+    : (s.daXong===true ? `✅ Vụ đã thu hoạch — tổng ${tongNgay} ngày theo lịch`
+      :nay > end ? 'Đã qua ngày thu hoạch dự kiến · chờ HTX cập nhật'
+      : `🌱 Vụ chưa bắt đầu — gieo sạ ngày ${s.gieoSa}`);
 
 }
 
@@ -1380,16 +1417,17 @@ function capNhatQuyenXem(){
    mới chỉ cần sửa Code.gs, không phải sửa file này hay ban-do.html. */
 goiAPI({ action: 'getCauHinh' }).then(function (r) {
   if (!r || !r.ok || !r.vu || !r.vu.DS) return;
+  VU_THEO_DONG_MAP=r.vu.THEO_DONG||{};
+  TT_THEO_DONG_MAP=r.vu.TRANG_THAI_THEO_DONG||{};
   const sel = $('selVu'); if (!sel) return;
-  const dangChon = sel.value;
-  sel.innerHTML = r.vu.DS.map(function (v) {
-    return '<option value="' + v.ma + '">' + v.ten + '</option>';
-  }).join('');
-  sel.value = r.vu.DS.some(function (v) { return v.ma === dangChon; })
-            ? dangChon : (r.vu.HIEN_TAI || r.vu.DS[0].ma);
-  if(DEEP_LINK_THUA_CUA_TOI && typeof moThuaCuaToiTuURL === 'function'){
+  const dangChon=sel.value;
+  sel.replaceChildren(...r.vu.DS.map(v=>new Option(v.ten,v.ma)));
+  if(!Array.from(sel.options).some(v=>v.value===dangChon))sel.add(new Option(dangChon,dangChon));
+  sel.value=dangChon;
+  const daChuyen=apDungVuTheoDongMap();
+  if(DEEP_LINK_THUA_CUA_TOI && typeof moThuaCuaToiTuURL === 'function')
     moThuaCuaToiTuURL(false);
-  }
+  if(daChuyen && API_URL.startsWith('http'))napNotion();
 }).catch(function () {});
 
 capNhatGiaoDienKhach();
@@ -1401,6 +1439,7 @@ window.addEventListener('resize', function(){
 });
 
 $('selVu').addEventListener('change', function(){
+  VU_THU_CONG_MAP=true; // người dùng chủ động chọn, không đổi khi chuyển cánh đồng
   if(!DANG_AP_DEEP_LINK){
     THUA_CUA_TOI = null; xoaHienThiThuaCuaToi(); anBannerThuaCuaToi();
   }
@@ -1412,6 +1451,7 @@ $('selDong').addEventListener('change', function(){
   }
   if(cheDoChonNhieu) huyChonNhieu();   // đổi đồng thì bỏ chọn nhiều (chỉ số thửa khác nhau)
   MAP_DATA = ALL_FIELDS[this.value];
+  apDungVuTheoDongMap();
   zoomLv = 1; $('svgwrap').style.width = '100%';
   veBanDo();
   if(API_URL.startsWith('http')) napNotion();

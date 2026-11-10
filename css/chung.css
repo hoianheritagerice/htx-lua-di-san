@@ -27,8 +27,11 @@ header .spacer{flex:1}
 .khung-bando{position:relative;margin:0 10px 14px;background:#fbf9f1;border:1.5px solid #ddd3ba;border-radius:12px;overflow:auto;max-height:78vh}
 #svgwrap{transform-origin:0 0}
 svg{display:block;width:100%;height:auto;max-height:72vh}
-.thua{cursor:pointer;transition:filter .12s}
-.thua:hover{filter:brightness(1.08)}
+/* Chỉ đổi màu viền thửa dưới chuột để lớp chữ SVG đứng yên. */
+.thua{cursor:pointer}
+@media (hover:hover){
+  #svgBanDo .thua:hover{stroke:#657856}
+}
 .thua.chon-active{stroke:var(--vang) !important}
 .thua.dachon-nhieu{fill:#ffd54f !important;stroke:#f57f17 !important}
 #thanhChonNhieu{position:absolute;left:10px;right:10px;bottom:10px;z-index:6;background:rgba(30,77,43,.96);color:#fff;border-radius:11px;padding:10px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 2px 10px rgba(0,0,0,.25)}
@@ -40,7 +43,6 @@ svg{display:block;width:100%;height:auto;max-height:72vh}
    phân biệt trạng thái canh tác. Con trỏ vẫn là bàn tay vì chạm vào
    sẽ mời đăng nhập. */
 .thua.khach{fill:#cfe3b6;stroke:#8fae74}
-.thua.khach:hover{filter:brightness(1.03)}
 .thua.huu-co{fill:#9ccc65;stroke:var(--xanh-vien)}
 /* Lô đầu vụ có làm hữu cơ nhưng giữa chừng không tuân thủ quy trình.
    Màu cam đất — nằm giữa xanh (đạt) và be (không hữu cơ), người xem hiểu

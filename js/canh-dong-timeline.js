@@ -122,6 +122,10 @@ function veHomNayCD(layout){
   path.style.strokeDasharray='0 10000';
   const txt=document.getElementById('phaseTxt'),phase=document.getElementById('phaseNow');
   phase.querySelector('.pn-dot').style.display='none';
+  if(window.__htxTimelineStage==='Kế hoạch'){
+    txt.textContent='Đang lập kế hoạch mùa vụ';
+    return; // chưa bắt đầu canh tác, không tô đường tiến độ
+  }
   if(window.__htxTimelineStage==='Chuẩn bị'){
     txt.textContent='Đang chuẩn bị vụ mùa';
     return; // không tô đường như thể đã sinh trưởng

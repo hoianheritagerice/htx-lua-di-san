@@ -57,7 +57,7 @@ trangChu: {
 
   /* --- Phần đầu trang, chữ to trên ảnh nền --- */
   hero: {
-    nhan:    `Hợp tác xã lúa hữu cơ · Từ 3 cánh đồng di sản`,
+    nhan:    `Hợp tác xã lúa hữu cơ · Từ 4 cánh đồng di sản`,
     tieuDe:  `Hạt gạo mang <em>câu chuyện</em> của đất và người Hội&nbsp;An`,
     dan:     `Từ những thửa ruộng ven sông Thu&nbsp;Bồn ở Cẩm&nbsp;Kim và Cẩm&nbsp;Thanh, chúng tôi canh tác lúa hữu cơ — không dùng bất cứ phân bón hay thuốc hóa học nào — và minh bạch từng khâu. Anh/chị có thể xem nhật ký của chính thửa ruộng làm ra hạt gạo mình ăn.`,
     nut1:    `Xem sản phẩm <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
@@ -79,17 +79,17 @@ trangChu: {
     tieuDe:  `Ba chương trình đồng hành cùng sào ruộng`,
   },
 
-  /* --- Tiêu đề mục 3 cánh đồng (chữ trong thẻ nằm ở khối `canhDong`) --- */
+  /* --- Tiêu đề mục 4 cánh đồng (chữ trong thẻ nằm ở khối `canhDong`) --- */
   congDong: {
     nhan:    `Cộng đồng canh tác`,
-    tieuDe:  `Ba cánh đồng, một di sản`,
+    tieuDe:  `Bốn cánh đồng, một di sản`,
   },
 
   /* --- Mục 4 con số. Số cố định cộng từ js/canh-dong-so-chot.js. --- */
   tacDong: {
     nhan:    `Tác động của chúng tôi`,
     tieuDe:  `Những con số từ cánh đồng thật`,
-    nhan1:   `tổng diện tích<br>ba cánh đồng`,
+    nhan1:   `tổng diện tích<br>bốn cánh đồng`,
     nhan2:   `hộ nông dân<br>xã viên tham gia`,
     nhan3:   `thửa ruộng<br>được ghi mã riêng`,
     nhan4:   `cánh đồng<br>di sản`,
@@ -136,7 +136,7 @@ veChungToi: {
   },
   canhDongHead: {
     nhan:    `Cộng đồng canh tác`,
-    tieuDe:  `Ba cánh đồng di sản`,
+    tieuDe:  `Bốn cánh đồng di sản`,
     nut:     `Khám phá Cánh Đồng <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   },
 },
@@ -181,13 +181,13 @@ trangCanhDong: {
 },
 
 /* ====================================================================
-   6. BA CÁNH ĐỒNG
+   6. BỐN CÁNH ĐỒNG
    Dùng ở: thẻ trên Trang chủ · ô trên Về chúng tôi · trang chi tiết
    ==================================================================== */
 canhDong: {
   nhan: `Cánh đồng di sản`, ve: `canh-dong.html`,
   veChu: `Quay lại Cánh Đồng`, navId: `navCD`,
-  khacTit: `Hai cánh đồng còn lại`,
+  khacTit: `Những cánh đồng khác`,
   muc: {
 
     'ong-dang': {
@@ -256,6 +256,23 @@ canhDong: {
       nut: [[`canh-dong.html`, `Xem bản đồ &amp; dòng thời gian`], [`san-pham.html`, `Xem các gói sản phẩm`, `phu`]],
     },
 
+    'truong-le-1': {
+      ten: `Cánh đồng Trường Lệ&nbsp;1`,
+      tenNgan: `Trường Lệ&nbsp;1`,
+      viTri: `Cẩm&nbsp;Châu`,
+      phu: `Cẩm&nbsp;Châu, Hội&nbsp;An`,
+      anh: `img/truong-le-1-ban-do.svg`,
+      tomTat: `13 khu ruộng trồng lúa do một mình Anh Trung canh tác, với tổng diện tích 28.430&nbsp;m².`,
+      dan: `Cánh đồng Trường Lệ&nbsp;1 gồm 13 khu ruộng trồng lúa A1–D3 do Anh Trung trực tiếp canh tác. Bản đồ giữ riêng các ao sen và khu nuôi vịt, không tính vào diện tích lúa.`,
+      so: [[`13`,`khu ruộng`],[`28.430`,`m² trồng lúa`],[`ĐX 2027`,`vụ đang lập kế hoạch`]],
+      than: [
+        {h:`Một người canh tác, nhiều khu ruộng`,p:[`Anh Trung trực tiếp quản lý 13 khu ruộng có mã riêng từ A1 đến D3. Mỗi khu có diện tích và hồ sơ sản xuất riêng trên Notion.`]},
+        {h:`Phân biệt ruộng lúa và các khu khác`,p:[`Ao sen, khu nuôi vịt, kênh và đường được thể hiện như thông tin địa hình, không được cộng vào diện tích trồng lúa hoặc cấp mã sản phẩm.`]},
+        {h:`Thông tin mùa vụ`,p:[`Đông Xuân 2027 đang ở giai đoạn Kế hoạch. Ngày gieo sạ, giống lúa và trạng thái canh tác sẽ được bổ sung khi có số liệu xác nhận.`]}
+      ],
+      nut: [[`canh-dong.html?dong=TL1`,`Xem bản đồ &amp; dòng thời gian`],[`san-pham.html`,`Xem các gói sản phẩm`,`phu`]],
+    },
+
   },
 },
 
@@ -295,7 +312,7 @@ giaTri: {
         { h: `Truy xuất tới từng thửa ruộng`,
           p: [`Khác với gạo đóng bao thông thường, gạo của HTX gắn với một mã lô cụ thể. Từ mã đó, anh/chị biết được thửa ruộng nào, ai canh tác, gieo ngày nào, gặt ngày nào.`] },
         { h: `Hệ thống ghi chép`,
-          ds: [`Bản đồ số hóa toàn bộ ba cánh đồng`,
+          ds: [`Bản đồ số hóa các cánh đồng trong hệ thống`,
                `Nhật ký thăm đồng có hình ảnh kèm theo`,
                `Mã sản phẩm riêng cho từng lô mỗi vụ`,
                `Anh/chị được cấp tài khoản riêng để xem nhật ký thửa của mình`] },

@@ -22,6 +22,7 @@ function capNhatNhanVuCD(){
   const nhan=st==='Chuẩn bị' ? 'Đang chuẩn bị · thông tin canh tác sẽ được xác nhận'
     : st==='Đang canh tác' ? 'Đang canh tác · số liệu cập nhật theo từng thửa'
     : st==='Đã thu hoạch' ? 'Đã thu hoạch · kết quả mùa vụ'
+    : st==='Kế hoạch' ? 'Đang lập kế hoạch · chưa xác nhận thông tin canh tác'
     : 'Số liệu phần canh tác hữu cơ';
   document.getElementById('cdVuNhan').textContent=ten+' · '+tenVuCD(VU_HIEN_TAI)+' · '+nhan;
   document.getElementById('selVuTrang').value=VU_HIEN_TAI;

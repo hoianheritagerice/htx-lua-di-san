@@ -8,16 +8,17 @@
  * Muốn chốt lại: đối chiếu Notion rồi sửa có chủ đích file này.
  */
 const SO_CHOT_CANH_DONG = Object.freeze({
-  ngayChot:'2026-09-14',
+  ngayChot:'2026-11-10',
   CKOD:Object.freeze({soThua:21,soHo:18,dienTich:17056.1}),
   CTDC:Object.freeze({soThua:41,soHo:32,dienTich:15479}),
-  CTDM:Object.freeze({soThua:20,soHo:19,dienTich:14538})
+  CTDM:Object.freeze({soThua:20,soHo:19,dienTich:14538}),
+  TL1:Object.freeze({soThua:13,soHo:1,dienTich:28430})
 });
 
 /* Tổng mục Tác động lấy từ đúng các số cố định ở trên.
  * Chỉ cần sửa CKOD/CTDC/CTDM khi muốn cập nhật, không sửa tổng ở nơi khác. */
 function tongSoChotCanhDong(){
-  const ds=['CKOD','CTDC','CTDM'].map(ma=>SO_CHOT_CANH_DONG[ma]);
+  const ds=['CKOD','CTDC','CTDM','TL1'].map(ma=>SO_CHOT_CANH_DONG[ma]);
   return Object.freeze({
     soDong:ds.length,
     soThua:ds.reduce((sum,s)=>sum+s.soThua,0),

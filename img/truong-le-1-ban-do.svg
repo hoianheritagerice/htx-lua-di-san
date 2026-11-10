@@ -133,40 +133,42 @@
     <text data-dxf="D8C" transform="translate(4426.02371 3535.83216) rotate(-0.95604)" font-size="62" y="148">1900</text>
     </g>
   </g>
-  <g fill="#a8b0a0" font-weight="600" opacity=".8" letter-spacing="6">
-    <g id="tl1-nhan-dia-hinh">
-      <g text-anchor="middle">
-    <text data-dxf="C04" transform="translate(3637.83559 4392.6717) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">KHU NUÔI VỊT</tspan></text>
-    <text data-dxf="C22" transform="translate(4740.39532 4365.40032) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">AO SEN</tspan><tspan x="0" y="186.69">1300</tspan></text>
-    <text data-dxf="C40" transform="translate(832.73137 3500.88966) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">AO SEN</tspan><tspan x="0" y="186.69">3700</tspan></text>
-    <text data-dxf="C5E" transform="translate(3203.40358 4596.62255) rotate(89.04396)" font-size="63.67254"><tspan x="0" y="43.80596">ĐƯỜNG BÊ TÔNG</tspan></text>
-    <text data-dxf="C7C" transform="translate(3229.45166 3646.80376) rotate(89.04396)" font-size="28.94301"><tspan x="0" y="19.91245">KÊNH THỦY LỢI</tspan></text>
-    <text data-dxf="C8B" transform="translate(2966.74734 1971.99225) rotate(59.4647)" font-size="28.94301"><tspan x="0" y="19.91245">KÊNH THỦY LỢI</tspan></text>
-    <text data-dxf="D6E" transform="translate(3244.17991 501.16842) rotate(16.90605)" font-size="28.55261"><tspan x="0" y="19.64386">MƯƠNG TIÊU SINH THÁI</tspan></text>
-    <text data-dxf="D7D" transform="translate(5750.11729 2614.44789) rotate(79.44983)" font-size="28.55261"><tspan x="0" y="19.64386">MƯƠNG TIÊU SINH THÁI</tspan></text>
+  <g id="tl1-nhan-dia-hinh" fill="#1b2a14" font-weight="600">
+    <g text-anchor="middle">
+      <text data-dxf="C04" transform="translate(3637.83559 4392.6717) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">KHU NUÔI VỊT</tspan></text>
+      <text data-dxf="C22" transform="translate(4740.39532 4365.40032) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">AO SEN</tspan><tspan x="0" y="186.69">1300</tspan></text>
+      <text data-dxf="C40" transform="translate(832.73137 3500.88966) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">AO SEN</tspan><tspan x="0" y="186.69">3700</tspan></text>
+      <g font-size="77" stroke="#fbf9f1" stroke-width="11" stroke-linejoin="round" paint-order="stroke">
+        <text data-dxf="C5E" transform="translate(3203.40358 4596.62255) rotate(89.04396)"><tspan x="0" y="40">ĐƯỜNG BÊ TÔNG</tspan></text>
+        <text data-dxf="C7C" transform="translate(3229.45166 3646.80376) rotate(89.04396)"><tspan x="0" y="40">KÊNH THỦY LỢI</tspan></text>
+        <text data-dxf="C8B" transform="translate(2966.74734 1971.99225) rotate(59.4647)"><tspan x="0" y="40">KÊNH THỦY LỢI</tspan></text>
+        <text data-dxf="D6E" transform="translate(3244.17991 501.16842) rotate(16.90605)"><tspan x="0" y="40">MƯƠNG TIÊU SINH THÁI</tspan></text>
+        <text data-dxf="D7D" transform="translate(5678 2225) rotate(79.44983)"><tspan x="0" y="40">MƯƠNG TIÊU SINH THÁI</tspan></text>
       </g>
-  <g data-dxf="D3D" aria-label="MƯƠNG NƯỚC">
-    <text transform="translate(558.9656 1747.54093) rotate(-86.68973) scale(1.5 1)" font-size="145.35131">M</text>
-    <text transform="translate(569.74012 1576.85849) rotate(-82.09449) scale(1.5 1)" font-size="145.35131">Ư</text>
-    <text transform="translate(593.74865 1407.41101) rotate(-77.49924) scale(1.5 1)" font-size="145.35131">Ơ</text>
-    <text transform="translate(639.23512 1213.03704) rotate(-72.90399) scale(1.5 1)" font-size="145.35131">N</text>
-    <text transform="translate(689.51924 1054.68719) rotate(-68.30875) scale(1.5 1)" font-size="145.35131">G</text>
-    <text transform="translate(840.89057 724.98921) rotate(-59.11826) scale(1.5 1)" font-size="145.35131">N</text>
-    <text transform="translate(923.03557 589.39073) rotate(-54.52301) scale(1.5 1)" font-size="145.35131">Ư</text>
-    <text transform="translate(1022.74713 450.29917) rotate(-49.92776) scale(1.5 1)" font-size="145.35131">Ớ</text>
-    <text transform="translate(1147.96379 304.18332) rotate(-45.33252) scale(1.5 1)" font-size="145.35131">C</text>
-  </g>
-  <g data-dxf="D52" aria-label="MƯƠNG NƯỚC">
-    <text transform="translate(4460.77781 473.52457) rotate(11.72431) scale(1.5 1)" font-size="145.35131">M</text>
-    <text transform="translate(4628.04652 509.15832) rotate(16.31956) scale(1.5 1)" font-size="145.35131">Ư</text>
-    <text transform="translate(4792.15709 557.70293) rotate(20.9148) scale(1.5 1)" font-size="145.35131">Ơ</text>
-    <text transform="translate(4977.78308 631.14168) rotate(25.51005) scale(1.5 1)" font-size="145.35131">N</text>
-    <text transform="translate(5127.07068 704.05519) rotate(30.1053) scale(1.5 1)" font-size="145.35131">G</text>
-    <text transform="translate(5431.07047 902.04047) rotate(39.29579) scale(1.5 1)" font-size="145.35131">N</text>
-    <text transform="translate(5553.18952 1003.14282) rotate(43.89104) scale(1.5 1)" font-size="145.35131">Ư</text>
-    <text transform="translate(5676.19363 1122.13378) rotate(48.48628) scale(1.5 1)" font-size="145.35131">Ớ</text>
-    <text transform="translate(5802.41436 1267.38315) rotate(53.08153) scale(1.5 1)" font-size="145.35131">C</text>
-  </g>
+    </g>
+    <g fill="#a8b0a0" opacity=".8" letter-spacing="6">
+      <g data-dxf="D3D" aria-label="MƯƠNG NƯỚC">
+        <text transform="translate(558.9656 1747.54093) rotate(-86.68973) scale(1.5 1)" font-size="145.35131">M</text>
+        <text transform="translate(569.74012 1576.85849) rotate(-82.09449) scale(1.5 1)" font-size="145.35131">Ư</text>
+        <text transform="translate(593.74865 1407.41101) rotate(-77.49924) scale(1.5 1)" font-size="145.35131">Ơ</text>
+        <text transform="translate(639.23512 1213.03704) rotate(-72.90399) scale(1.5 1)" font-size="145.35131">N</text>
+        <text transform="translate(689.51924 1054.68719) rotate(-68.30875) scale(1.5 1)" font-size="145.35131">G</text>
+        <text transform="translate(840.89057 724.98921) rotate(-59.11826) scale(1.5 1)" font-size="145.35131">N</text>
+        <text transform="translate(923.03557 589.39073) rotate(-54.52301) scale(1.5 1)" font-size="145.35131">Ư</text>
+        <text transform="translate(1022.74713 450.29917) rotate(-49.92776) scale(1.5 1)" font-size="145.35131">Ớ</text>
+        <text transform="translate(1147.96379 304.18332) rotate(-45.33252) scale(1.5 1)" font-size="145.35131">C</text>
+      </g>
+      <g data-dxf="D52" aria-label="MƯƠNG NƯỚC">
+        <text transform="translate(4460.77781 473.52457) rotate(11.72431) scale(1.5 1)" font-size="145.35131">M</text>
+        <text transform="translate(4628.04652 509.15832) rotate(16.31956) scale(1.5 1)" font-size="145.35131">Ư</text>
+        <text transform="translate(4792.15709 557.70293) rotate(20.9148) scale(1.5 1)" font-size="145.35131">Ơ</text>
+        <text transform="translate(4977.78308 631.14168) rotate(25.51005) scale(1.5 1)" font-size="145.35131">N</text>
+        <text transform="translate(5127.07068 704.05519) rotate(30.1053) scale(1.5 1)" font-size="145.35131">G</text>
+        <text transform="translate(5431.07047 902.04047) rotate(39.29579) scale(1.5 1)" font-size="145.35131">N</text>
+        <text transform="translate(5553.18952 1003.14282) rotate(43.89104) scale(1.5 1)" font-size="145.35131">Ư</text>
+        <text transform="translate(5676.19363 1122.13378) rotate(48.48628) scale(1.5 1)" font-size="145.35131">Ớ</text>
+        <text transform="translate(5802.41436 1267.38315) rotate(53.08153) scale(1.5 1)" font-size="145.35131">C</text>
+      </g>
     </g>
   </g>
 </svg>

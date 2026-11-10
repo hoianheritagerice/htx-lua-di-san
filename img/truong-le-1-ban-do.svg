@@ -1,8 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6010 5440" role="img" aria-labelledby="tl1-title">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6010 5440" role="img" aria-labelledby="tl1-title" font-family="'Be Vietnam Pro', system-ui, sans-serif">
   <title id="tl1-title">Bản vẽ Trường Lệ 1</title>
   <!-- Trường Lệ 1.dxf / Layout1 · SHA-256 1acfc46311b1964e5616f86f9392cd8d2aee66c568ef34a996fa07302ef309ce -->
-  <rect width="6010" height="5440" fill="#fff"/>
-  <path fill="none" stroke="#260000" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="
+  <rect width="6010" height="5440" fill="#fbf9f1"/>
+  <g id="tl1-dia-hinh">
+  <path fill="none" stroke="#c2beb2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="
     M3101.43791 3325.29466 L3101.43791 4136.79528
     M1551.07771 4393.88656 A1201.6512 1201.6512 0 0 0 3101.43791 4136.79528
     M1551.07771 4393.88656 L1166.94851 2729.06034
@@ -74,6 +75,7 @@
     M2311.92292 254.76027 A1538.75028 1538.75028 0 0 0 1449.56961 176.03484
     M486.69576 2129.14701 L101.38467 5247.68705
   "/>
+  <path fill="#efede7" stroke="#c2beb2" stroke-width="7" stroke-linejoin="round" d="M3101.43791 5131.86376 C3115.04601 5120.08488 3128.65411 5108.30601 3141.90904 5109.87057 C3165.31052 5112.63279 3187.61118 5156.98603 3209.38617 5155.2559 C3219.76014 5154.43164 3230.0148 5143.1477 3240.26946 5131.86376 L3240.26946 4769.494 L3240.26946 4085.34219 C3235.28053 4088.56658 3230.2916 4091.79098 3225.84367 4090.5028 C3219.05119 4088.53561 3213.52037 4076.04477 3207.65341 4075.78771 C3203.89354 4075.62297 3199.99562 4080.48258 3196.09771 4085.34219 L3196.09771 3654.47307 L3196.09771 3251.83943 L3101.43791 3281.45268 L3101.43791 3325.29466 L3101.43791 4136.79528 L3101.43791 4960.14538 L3101.43791 5131.86376 Z"/>
   <!-- Màu nước theo .kenh trong css/chung.css. -->
   <g fill="#cfe9f5" stroke="#8fc3da" stroke-width="7" stroke-linejoin="round">
     <path data-zone="kenh-thuy-loi" d="M3196.09771 4085.34219 C3199.99562 4080.48258 3203.89354 4075.62297 3207.65341 4075.78771 C3213.52037 4076.04477 3219.05119 4088.53561 3225.84367 4090.5028 C3230.2916 4091.79098 3235.28053 4088.56658 3240.26946 4085.34219 L3240.26946 3654.47307 L3240.26946 2903.14868 A1837.82544 1837.82544 0 0 0 2690.11415 1607.1128 L2381.42226 1175.15028 L2347.0125 1202.97155 L2654.1759 1632.79523 L2659.1668 1638.63114 A1793.65368 1793.65368 0 0 1 3196.09771 2903.334 L3196.09771 3654.47307 L3196.09771 4085.34219 Z"/>
@@ -81,7 +83,8 @@
     <path data-zone="ao-sen-1300" d="M5408.78812 4216.13083 L3240.26946 3654.47307 L3240.26946 4085.34219 L4094.7012 4085.34219 L4094.7012 4769.494 L5492.96144 4769.494 L5408.78812 4216.13083 Z"/>
     <path data-zone="ao-sen-3700" d="M3101.43791 4136.79528 A1201.6512 1201.6512 0 0 1 1551.07771 4393.88656 L1166.94851 2729.06034 L943.7304 2337.56538 A1817.86704 1817.86704 0 0 1 805.87245 1934.9523 A567.24229 567.24229 0 0 0 486.69576 2129.14701 L101.38467 5247.68705 A84.41234 84.41234 0 1 0 268.90315 5244.40522 L336.15784 4291.64071 A151.35214 151.35214 0 0 1 564.09721 4199.56415 L1649.19122 4727.67609 A1116.41549 1116.41549 0 0 0 2436.88048 4960.14538 L3101.43791 4960.14538 L3101.43791 4136.79528 Z"/>
   </g>
-  <path fill="none" stroke="#260000" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" d="
+  </g>
+  <path fill="#ece8de" stroke="#aaa394" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" d="
     M3101.43791 3325.29466 L3101.43791 3281.45268 L1416.05744 3808.70509 L1551.07771 4393.88656 A1201.6512 1201.6512 0 0 0 3101.43791 4136.79528 L3101.43791 3325.29466 Z
     M1635.41343 1778.31981 L943.7304 2337.56538 L1166.94851 2729.06034 L1416.05744 3808.70509 L2292.20606 3534.61181 L1635.41343 1778.31981 Z
     M2656.43049 1635.95014 L2347.0125 1202.97155 L1635.41343 1778.31981 L2292.20606 3534.61181 L3101.43791 3281.45268 L3196.09771 3251.83943 L3196.09771 2903.334 A1793.65368 1793.65368 0 0 0 2656.43049 1635.95014 Z
@@ -96,30 +99,52 @@
     M5491.48545 3462.13355 L3240.26946 3302.21774 L3240.26946 3654.47307 L5371.53025 4206.48085 A1361.8528 1361.8528 0 0 1 5491.48545 3462.13355 Z
     M5521.16634 1595.91079 L4839.15762 1821.90732 L5207.59865 3441.96756 L5491.48545 3462.13355 A1361.8528 1361.8528 0 0 1 5497.1648 3450.22774 L5758.38056 2819.00501 L5521.16634 1595.91079 Z
   "/>
-  <g fill="#000" font-family="Arial, Liberation Sans, sans-serif" font-weight="700" text-anchor="middle">
-  <text data-dxf="AF4" transform="translate(2308.51148 3894.23486) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">A1</tspan><tspan x="0" y="186.69">2230</tspan></text>
-  <text data-dxf="B05" transform="translate(1617.00176 2850.07196) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">A2</tspan><tspan x="0" y="186.69">2400</tspan></text>
-  <text data-dxf="B14" transform="translate(2458.09119 2375.04395) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">A3</tspan><tspan x="0" y="186.69">3750</tspan></text>
-  <text data-dxf="B23" transform="translate(1219.38369 1424.83655) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">B1</tspan><tspan x="0" y="186.69">2450</tspan></text>
-  <text data-dxf="B32" transform="translate(1772.59146 811.55343) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">B2</tspan><tspan x="0" y="186.69">1300</tspan></text>
-  <text data-dxf="B41" transform="translate(2276.5106 480.58632) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">B3</tspan><tspan x="0" y="186.69">1800</tspan></text>
-  <text data-dxf="B50" transform="translate(3226.18137 1434.84266) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">C1</tspan><tspan x="0" y="186.69">1550</tspan></text>
-  <text data-dxf="B5F" transform="translate(4196.0114 955.7069) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">C2</tspan><tspan x="0" y="186.69">3650</tspan></text>
-  <text data-dxf="B6E" transform="translate(3543.22213 2251.66916) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">C3</tspan><tspan x="0" y="186.69">1600</tspan></text>
-  <text data-dxf="B7D" transform="translate(4483.23867 2042.92356) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">C4</tspan><tspan x="0" y="186.69">1850</tspan></text>
-  <text data-dxf="B8C" transform="translate(5327.51278 2251.66916) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">D3</tspan><tspan x="0" y="186.69">1900</tspan></text>
-  <text data-dxf="B9B" transform="translate(4256.93838 2938.79011) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">D1</tspan><tspan x="0" y="186.69">2050</tspan></text>
-  <text data-dxf="C04" transform="translate(3637.83559 4392.6717) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">KHU NUÔI VỊT</tspan></text>
-  <text data-dxf="C22" transform="translate(4740.39532 4365.40032) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">AO SEN</tspan><tspan x="0" y="186.69">1300</tspan></text>
-  <text data-dxf="C40" transform="translate(832.73137 3500.88966) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">AO SEN</tspan><tspan x="0" y="186.69">3700</tspan></text>
-  <text data-dxf="C5E" transform="translate(3203.40358 4596.62255) rotate(89.04396)" font-size="63.67254"><tspan x="0" y="43.80596">ĐƯỜNG BÊ TÔNG</tspan></text>
-  <text data-dxf="C7C" transform="translate(3229.45166 3646.80376) rotate(89.04396)" font-size="28.94301"><tspan x="0" y="19.91245">KÊNH THỦY LỢI</tspan></text>
-  <text data-dxf="C8B" transform="translate(2966.74734 1971.99225) rotate(59.4647)" font-size="28.94301"><tspan x="0" y="19.91245">KÊNH THỦY LỢI</tspan></text>
-  <text data-dxf="D6E" transform="translate(3244.17991 501.16842) rotate(16.90605)" font-size="28.55261"><tspan x="0" y="19.64386">MƯƠNG TIÊU SINH THÁI</tspan></text>
-  <text data-dxf="D7D" transform="translate(5750.11729 2614.44789) rotate(79.44983)" font-size="28.55261"><tspan x="0" y="19.64386">MƯƠNG TIÊU SINH THÁI</tspan></text>
-  <text data-dxf="D8C" transform="translate(4426.02371 3535.83216) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">D2</tspan><tspan x="0" y="186.69">1900</tspan></text>
+  <g fill="#1b2a14" font-weight="600">
+    <g id="tl1-ma-thua" text-anchor="middle">
+    <text data-dxf="AF4" transform="translate(2308.51148 3894.23486) rotate(-0.95604)" font-size="64" y="70">A1</text>
+    <text data-dxf="B05" transform="translate(1617.00176 2850.07196) rotate(-0.95604)" font-size="64" y="70">A2</text>
+    <text data-dxf="B14" transform="translate(2458.09119 2375.04395) rotate(-0.95604)" font-size="64" y="70">A3</text>
+    <text data-dxf="B23" transform="translate(1219.38369 1424.83655) rotate(-0.95604)" font-size="64" y="70">B1</text>
+    <text data-dxf="B32" transform="translate(1772.59146 811.55343) rotate(-0.95604)" font-size="64" y="70">B2</text>
+    <text data-dxf="B41" transform="translate(2276.5106 480.58632) rotate(-0.95604)" font-size="64" y="70">B3</text>
+    <text data-dxf="B50" transform="translate(3226.18137 1434.84266) rotate(-0.95604)" font-size="64" y="70">C1</text>
+    <text data-dxf="B5F" transform="translate(4196.0114 955.7069) rotate(-0.95604)" font-size="64" y="70">C2</text>
+    <text data-dxf="B6E" transform="translate(3543.22213 2251.66916) rotate(-0.95604)" font-size="64" y="70">C3</text>
+    <text data-dxf="B7D" transform="translate(4483.23867 2042.92356) rotate(-0.95604)" font-size="64" y="70">C4</text>
+    <text data-dxf="B8C" transform="translate(5327.51278 2251.66916) rotate(-0.95604)" font-size="64" y="70">D3</text>
+    <text data-dxf="B9B" transform="translate(4256.93838 2938.79011) rotate(-0.95604)" font-size="64" y="70">D1</text>
+    <text data-dxf="D8C" transform="translate(4426.02371 3535.83216) rotate(-0.95604)" font-size="64" y="70">D2</text>
+    </g>
   </g>
-  <g fill="#260000" font-family="Arial, Liberation Sans, sans-serif">
+  <g fill="#3c4a33">
+    <g id="tl1-dien-tich" text-anchor="middle">
+    <text data-dxf="AF4" transform="translate(2308.51148 3894.23486) rotate(-0.95604)" font-size="62" y="148">2230</text>
+    <text data-dxf="B05" transform="translate(1617.00176 2850.07196) rotate(-0.95604)" font-size="62" y="148">2400</text>
+    <text data-dxf="B14" transform="translate(2458.09119 2375.04395) rotate(-0.95604)" font-size="62" y="148">3750</text>
+    <text data-dxf="B23" transform="translate(1219.38369 1424.83655) rotate(-0.95604)" font-size="62" y="148">2450</text>
+    <text data-dxf="B32" transform="translate(1772.59146 811.55343) rotate(-0.95604)" font-size="62" y="148">1300</text>
+    <text data-dxf="B41" transform="translate(2276.5106 480.58632) rotate(-0.95604)" font-size="62" y="148">1800</text>
+    <text data-dxf="B50" transform="translate(3226.18137 1434.84266) rotate(-0.95604)" font-size="62" y="148">1550</text>
+    <text data-dxf="B5F" transform="translate(4196.0114 955.7069) rotate(-0.95604)" font-size="62" y="148">3650</text>
+    <text data-dxf="B6E" transform="translate(3543.22213 2251.66916) rotate(-0.95604)" font-size="62" y="148">1600</text>
+    <text data-dxf="B7D" transform="translate(4483.23867 2042.92356) rotate(-0.95604)" font-size="62" y="148">1850</text>
+    <text data-dxf="B8C" transform="translate(5327.51278 2251.66916) rotate(-0.95604)" font-size="62" y="148">1900</text>
+    <text data-dxf="B9B" transform="translate(4256.93838 2938.79011) rotate(-0.95604)" font-size="62" y="148">2050</text>
+    <text data-dxf="D8C" transform="translate(4426.02371 3535.83216) rotate(-0.95604)" font-size="62" y="148">1900</text>
+    </g>
+  </g>
+  <g fill="#a8b0a0" font-weight="600" opacity=".8" letter-spacing="6">
+    <g id="tl1-nhan-dia-hinh">
+      <g text-anchor="middle">
+    <text data-dxf="C04" transform="translate(3637.83559 4392.6717) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">KHU NUÔI VỊT</tspan></text>
+    <text data-dxf="C22" transform="translate(4740.39532 4365.40032) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">AO SEN</tspan><tspan x="0" y="186.69">1300</tspan></text>
+    <text data-dxf="C40" transform="translate(832.73137 3500.88966) rotate(-0.95604)" font-size="101.74592"><tspan x="0" y="70">AO SEN</tspan><tspan x="0" y="186.69">3700</tspan></text>
+    <text data-dxf="C5E" transform="translate(3203.40358 4596.62255) rotate(89.04396)" font-size="63.67254"><tspan x="0" y="43.80596">ĐƯỜNG BÊ TÔNG</tspan></text>
+    <text data-dxf="C7C" transform="translate(3229.45166 3646.80376) rotate(89.04396)" font-size="28.94301"><tspan x="0" y="19.91245">KÊNH THỦY LỢI</tspan></text>
+    <text data-dxf="C8B" transform="translate(2966.74734 1971.99225) rotate(59.4647)" font-size="28.94301"><tspan x="0" y="19.91245">KÊNH THỦY LỢI</tspan></text>
+    <text data-dxf="D6E" transform="translate(3244.17991 501.16842) rotate(16.90605)" font-size="28.55261"><tspan x="0" y="19.64386">MƯƠNG TIÊU SINH THÁI</tspan></text>
+    <text data-dxf="D7D" transform="translate(5750.11729 2614.44789) rotate(79.44983)" font-size="28.55261"><tspan x="0" y="19.64386">MƯƠNG TIÊU SINH THÁI</tspan></text>
+      </g>
   <g data-dxf="D3D" aria-label="MƯƠNG NƯỚC">
     <text transform="translate(558.9656 1747.54093) rotate(-86.68973) scale(1.5 1)" font-size="145.35131">M</text>
     <text transform="translate(569.74012 1576.85849) rotate(-82.09449) scale(1.5 1)" font-size="145.35131">Ư</text>
@@ -142,5 +167,6 @@
     <text transform="translate(5676.19363 1122.13378) rotate(48.48628) scale(1.5 1)" font-size="145.35131">Ớ</text>
     <text transform="translate(5802.41436 1267.38315) rotate(53.08153) scale(1.5 1)" font-size="145.35131">C</text>
   </g>
+    </g>
   </g>
 </svg>

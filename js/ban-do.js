@@ -463,9 +463,9 @@ function veBanDo(){
   const x0 = d.viewX0 || 0, y0 = d.viewY0 || 0;
   let s = `<svg id="svgBanDo" viewBox="${x0} ${y0} ${d.viewW} ${d.viewH}" xmlns="http://www.w3.org/2000/svg"><g id="gXoay">`;
   const netVien = Math.max(12, Math.round(Math.max(d.viewW, d.viewH) * 0.0021));
-  // Bản vẽ CAD và lớp bấm chọn dùng cùng viewBox. SVG gốc chứa cả nhãn thửa.
+  // SVG CAD cung cấp địa hình và vị trí nhãn. Các thửa dùng chung màu trạng thái.
   if(d.drawing){
-    s += `<image href="${d.drawing}" x="${x0}" y="${y0}" width="${d.viewW}" height="${d.viewH}" pointer-events="none"/>`;
+    s += `<use href="${d.drawing}#tl1-dia-hinh" pointer-events="none"/>`;
   }
   (d.canals||[]).forEach(c=>{
     s += `<polygon class="kenh" points="${c.map(pt=>pt.join(',')).join(' ')}" stroke-width="${netVien}"/>`;
@@ -476,7 +476,7 @@ function veBanDo(){
   d.plots.forEach((p,i)=>{
     const lopThua = laCheDoDongHanh() ? 'thua dong-hanh-chua' : (laKhach() ? 'thua khach' : 'thua chua-ro');
     if(p.svgPath){
-      s += `<path id="thua${i}" class="${lopThua} thua-cad" d="${p.svgPath}" stroke-width="${netVien}" data-sw="${netVien}" onclick="chonThua(${i})"/>`;
+      s += `<path id="thua${i}" class="${lopThua}" d="${p.svgPath}" stroke-width="${netVien}" data-sw="${netVien}" onclick="chonThua(${i})"/>`;
     }else{ // bản đồ của ba cánh đồng cũ: không thay đổi
       const pts = p.points.map(pt=>pt.join(',')).join(' ');
       s += `<polygon id="thua${i}" class="${lopThua}" points="${pts}" stroke-width="${netVien}" data-sw="${netVien}" onclick="chonThua(${i})"/>`;
@@ -486,6 +486,10 @@ function veBanDo(){
   /* Đồng hành chỉ dùng MÀU để biểu thị trạng thái. Tên hộ và diện tích
      vẫn hiển thị như bản đồ bình thường để tổng quan sạch, dễ đọc. */
   const anTenHo = !laCheDoDongHanh() && laKhach() && !HIEN_TEN_HO_CHO_KHACH;
+  if(d.drawing && !anTenHo){
+    s += `<use href="${d.drawing}#tl1-ma-thua" class="ten-nd"/>
+          <use href="${d.drawing}#tl1-dien-tich" class="dt-nd"/>`;
+  }
   if(!d.drawing && !anTenHo) d.plots.forEach(p=>{
     const nhan = nhanThua(p);
     const lx = p.lx || p.cx, ly = p.ly || p.cy;
@@ -499,6 +503,9 @@ function veBanDo(){
     s += `<text class="dt-nd" x="${lx}" y="${(ly + f1*0.96 + (dongTen.length-1)*f1*1.1).toFixed(1)}" font-size="${f2}" text-anchor="middle">${p.area}</text>`;
     s += `</g>`;
   });
+  if(d.drawing){
+    s += `<use href="${d.drawing}#tl1-nhan-dia-hinh" class="vung"/>`;
+  }
   d.zones.forEach(z=>{
     const zr = z.rot ? ` transform="rotate(${z.rot} ${z.x} ${z.y})"` : '';
     s += `<text class="vung" x="${z.x}" y="${z.y}" font-size="${z.fs||86}" text-anchor="middle"${zr}>${z.text}</text>`;

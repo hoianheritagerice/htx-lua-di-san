@@ -79,7 +79,7 @@ trangChu: {
     tieuDe:  `Ba chương trình đồng hành cùng sào ruộng`,
   },
 
-  /* --- Tiêu đề mục 3 cánh đồng (chữ trong thẻ nằm ở khối `canhDong`) --- */
+  /* --- Tiêu đề mục 4 cánh đồng (chữ trong thẻ nằm ở khối `canhDong`) --- */
   congDong: {
     nhan:    `Cộng đồng canh tác`,
     tieuDe:  `Bốn cánh đồng, một di sản`,
@@ -181,7 +181,7 @@ trangCanhDong: {
 },
 
 /* ====================================================================
-   6. BA CÁNH ĐỒNG
+   6. BỐN CÁNH ĐỒNG
    Dùng ở: thẻ trên Trang chủ · ô trên Về chúng tôi · trang chi tiết
    ==================================================================== */
 canhDong: {

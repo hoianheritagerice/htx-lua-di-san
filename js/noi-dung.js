@@ -57,7 +57,7 @@ trangChu: {
 
   /* --- Phần đầu trang, chữ to trên ảnh nền --- */
   hero: {
-    nhan:    `Hợp tác xã lúa hữu cơ · Từ 3 cánh đồng di sản`,
+    nhan:    `Hợp tác xã lúa hữu cơ · Từ 4 cánh đồng di sản`,
     tieuDe:  `Hạt gạo mang <em>câu chuyện</em> của đất và người Hội&nbsp;An`,
     dan:     `Từ những thửa ruộng ven sông Thu&nbsp;Bồn ở Cẩm&nbsp;Kim và Cẩm&nbsp;Thanh, chúng tôi canh tác lúa hữu cơ — không dùng bất cứ phân bón hay thuốc hóa học nào — và minh bạch từng khâu. Anh/chị có thể xem nhật ký của chính thửa ruộng làm ra hạt gạo mình ăn.`,
     nut1:    `Xem sản phẩm <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
@@ -312,7 +312,7 @@ giaTri: {
         { h: `Truy xuất tới từng thửa ruộng`,
           p: [`Khác với gạo đóng bao thông thường, gạo của HTX gắn với một mã lô cụ thể. Từ mã đó, anh/chị biết được thửa ruộng nào, ai canh tác, gieo ngày nào, gặt ngày nào.`] },
         { h: `Hệ thống ghi chép`,
-          ds: [`Bản đồ số hóa toàn bộ ba cánh đồng`,
+          ds: [`Bản đồ số hóa các cánh đồng trong hệ thống`,
                `Nhật ký thăm đồng có hình ảnh kèm theo`,
                `Mã sản phẩm riêng cho từng lô mỗi vụ`,
                `Anh/chị được cấp tài khoản riêng để xem nhật ký thửa của mình`] },

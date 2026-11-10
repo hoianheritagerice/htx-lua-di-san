@@ -110,7 +110,7 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 
 /* ---- cộng đồng canh tác ---- */
 .congdong{padding:76px 0}
-.cd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:8px}
+.cd-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:8px}
 .cd-card{border-radius:16px;overflow:hidden;position:relative;min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;padding:22px;border:1px solid #d8cdb0}
 /* Ảnh thật của cánh đồng làm nền thẻ. Dùng lại đúng 3 file ảnh của trang
    chi tiết (img/dong-*.jpg) — không cần thêm file mới. Thiếu ảnh thì lộ
@@ -125,6 +125,7 @@ header{position:sticky;top:0;z-index:40;background:var(--trang);border-bottom:1p
 .cd-card:hover .cd-bg{transform:scale(1.07)}
 .cd-card.f1{background:linear-gradient(180deg,rgba(30,77,43,.15),rgba(30,77,43,.82)),linear-gradient(135deg,#7fae57,#3c6b3a)}
 .cd-card.f2{background:linear-gradient(180deg,rgba(30,77,43,.15),rgba(30,77,43,.82)),linear-gradient(135deg,#c9a227,#8a6d1c)}
+.cd-card.f4{background:linear-gradient(135deg,#4d8d87,#28665f)}
 .cd-card.f3{background:linear-gradient(180deg,rgba(30,77,43,.15),rgba(30,77,43,.82)),linear-gradient(135deg,#b5734a,#7d4a2b)}
 .cd-card h3{color:#fff;font-size:23px;margin-bottom:4px}
 .cd-card .cd-vt{font-size:12.5px;letter-spacing:1px;text-transform:uppercase;opacity:.85;margin-bottom:8px}
@@ -201,6 +202,8 @@ footer ul a:hover{opacity:1;color:var(--vang)}
   .hero .wrap{padding:64px 22px 70px}
   .hero .cta.phu{margin-left:0;margin-top:12px}
 }
+@media(max-width:1100px){.cd-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.cd-grid{grid-template-columns:1fr}}
 </style>
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
@@ -322,6 +325,13 @@ footer ul a:hover{opacity:1;color:var(--vang)}
         <h3 data-nd="canhDong.muc.dong-mau.ten"></h3>
         <div class="cd-mo" data-nd="canhDong.muc.dong-mau.tomTat"></div>
         <span class="cd-link">Xem chi tiết <svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="dau-bam"><svg class="nav-arrow" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M5 5h10v10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <a class="cd-card f4 the-noi" href="chi-tiet.html?loai=canh-dong&ma=truong-le-1">
+        <img class="cd-bg anh-that" src="img/truong-le-1-ban-do.svg" alt="Sơ đồ cánh đồng Trường Lệ 1">
+        <div class="cd-vt" data-nd="canhDong.muc.truong-le-1.viTri"></div>
+        <h3 data-nd="canhDong.muc.truong-le-1.ten"></h3>
+        <div class="cd-mo" data-nd="canhDong.muc.truong-le-1.tomTat"></div>
+        <span class="cd-link">Xem chi tiết</span>
       </a>
     </div>
   </div>

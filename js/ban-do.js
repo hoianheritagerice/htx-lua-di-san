@@ -463,6 +463,11 @@ function veBanDo(){
   const x0 = d.viewX0 || 0, y0 = d.viewY0 || 0;
   let s = `<svg id="svgBanDo" viewBox="${x0} ${y0} ${d.viewW} ${d.viewH}" xmlns="http://www.w3.org/2000/svg"><g id="gXoay">`;
   const netVien = Math.max(12, Math.round(Math.max(d.viewW, d.viewH) * 0.0021));
+  // TL1: các lớp nền được trích xuất trực tiếp từ REGION/ARC/SPLINE của Layout1.
+  // Chỉ render khi cánh đồng có backgroundPaths; giữ nguyên ba cánh đồng cũ.
+  (d.backgroundPaths||[]).forEach(bg=>{
+    s += `<path d="${bg.d}" fill="${bg.fill}" stroke="${bg.stroke}" stroke-width="8" pointer-events="none"/>`;
+  });
   (d.canals||[]).forEach(c=>{
     s += `<polygon class="kenh" points="${c.map(pt=>pt.join(',')).join(' ')}" stroke-width="${netVien}"/>`;
   });
@@ -470,9 +475,13 @@ function veBanDo(){
     s += `<polygon class="duong" points="${c.map(pt=>pt.join(',')).join(' ')}" stroke-width="${netVien}"/>`;
   });
   d.plots.forEach((p,i)=>{
-    const pts = p.points.map(pt=>pt.join(',')).join(' ');
     const lopThua = laCheDoDongHanh() ? 'thua dong-hanh-chua' : (laKhach() ? 'thua khach' : 'thua chua-ro');
-    s += `<polygon id="thua${i}" class="${lopThua}" points="${pts}" stroke-width="${netVien}" data-sw="${netVien}" onclick="chonThua(${i})"/>`;
+    if(p.svgPath){ // giữ chính xác cung ARC và SPLINE, không biến thành dây cung
+      s += `<path id="thua${i}" class="${lopThua}" d="${p.svgPath}" stroke-width="${netVien}" data-sw="${netVien}" onclick="chonThua(${i})"/>`;
+    }else{ // bản đồ của ba cánh đồng cũ: không thay đổi
+      const pts = p.points.map(pt=>pt.join(',')).join(' ');
+      s += `<polygon id="thua${i}" class="${lopThua}" points="${pts}" stroke-width="${netVien}" data-sw="${netVien}" onclick="chonThua(${i})"/>`;
+    }
   });
 
   /* Đồng hành chỉ dùng MÀU để biểu thị trạng thái. Tên hộ và diện tích

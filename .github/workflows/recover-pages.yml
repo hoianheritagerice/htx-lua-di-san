@@ -5,22 +5,33 @@ on:
     paths: [.github/workflows/recover-pages.yml]
 permissions: {}
 jobs:
-  cancel-stuck-deployment:
+  cancel-stuck-workflow:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     permissions:
-      pages: write
+      actions: write
     steps:
-      - name: Cancel the deployment that blocks publication
+      - name: Clear the old workflow run that never left the queue
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          endpoint="repos/$GITHUB_REPOSITORY/pages/deployments/207bbeb9a6d0bfb45c2ce715cd277da673a2be27"
-          echo 'Status before cancellation:'
-          gh api "$endpoint" --jq '.status'
-          gh api --method POST "$endpoint/cancel" --silent
-          echo 'GitHub accepted the cancellation request.'
-          echo 'Status after cancellation:'
-          gh api "$endpoint" --jq '.status'
+          endpoint="repos/$GITHUB_REPOSITORY/actions/runs/42798920921"
+          current_status() { gh api "$endpoint" --jq '.status'; }
+          if [[ $(current_status) == completed ]]; then
+            echo 'The old workflow already completed.'
+            exit 0
+          fi
+          if gh api --method POST "$endpoint/cancel" --silent; then
+            for attempt in 1 2 3 4; do
+              sleep 5
+              if [[ $(current_status) == completed ]]; then
+                echo 'The old workflow was cancelled.'
+                exit 0
+              fi
+            done
+          fi
+          gh api --method POST "$endpoint/force-cancel" --silent
+          echo 'GitHub accepted the forced cancellation.'
+          current_status

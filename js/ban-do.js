@@ -698,6 +698,14 @@ function veVuPanel(s){
   const panel = $('vuPanel');
   if(!s){panel.style.display='none';return;}
   const tt=s.trangThaiVu||TT_THEO_DONG_MAP?.[MAP_DATA.field]?.[$('selVu').value]||'';
+  if(tt==='Kế hoạch'){
+    panel.style.display='block';
+    $('vuTen').textContent='Kế hoạch mùa vụ — '+(s.name||$('selVu').value);
+    $('tienDoKhung').innerHTML='';
+    $('tienDoKhung').style.marginBottom='0px';
+    $('vuGiaiDoan').textContent='Đang lập kế hoạch · thông tin canh tác sẽ được cập nhật';
+    return;
+  }
   if(tt==='Chuẩn bị'){
     panel.style.display='block';
     $('vuTen').textContent='Chuẩn bị mùa vụ — '+(s.name||$('selVu').value);

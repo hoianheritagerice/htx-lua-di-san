@@ -68,3 +68,21 @@ Có view riêng cho TL1 ở cả năm database trên. Các lựa chọn cũ CKOD
 - [ ] Kiểm tra bản đồ nhúng, bản đồ toàn màn hình, các link lịch sử và các luồng ghi nhật ký/cấp quyền trước khi merge.
 
 **Triển khai**: Code.gs mới cần được cập nhật tại **đúng Apps Script project** trước khi đưa nhánh TL1 lên website main, tránh vẽ bản đồ nhưng API không nhận mã TL1.
+
+
+## 7. Sửa lỗi đường bao bản đồ từ DXF — ngày 10/11/2026
+
+**Nguyên nhân lỗi cũ:** Các đối tượng REGION tại Layout1 chứa cạnh cong của ACIS. Bản chuyển đổi ban đầu chỉ lấy đỉnh đầu/cuối và nối thẳng bằng polygon, làm sai hình dạng bờ ruộng và ao. Đồng thời website không vẽ lớp khu nuôi vịt, kênh thủy lợi, mương tiêu và đường bê tông, khiến bố cục khác bản CAD.
+
+**Cách khắc phục đã thực hiện:**
+
+- Đọc lại **file DXF nguồn**, không sửa hình dựa trên ảnh chụp hay vẽ thủ công. Trích xuất tất cả REGION thuộc 13 thửa và 6 lớp nền hữu ích.
+- Đối chiếu ACIS edge với các đối tượng ARC gốc theo tâm, bán kính, điểm đầu-cuối; xuất đường tròn bằng **SVG path A**. SPLINE được lấy các điểm nội suy từ đúng spline của DXF, không bỏ thẳng cạnh.
+- Chỉ dịch hệ tọa độ gốc và đảo trục Y sang SVG. **Khi đảo Y, phải đảo chiều SVG arc sweep flag**; nếu không đường cong sẽ bị vẽ ngược về phía còn lại của dây cung.
+- Sử dụng `svgPath` riêng cho thửa TL1; các cánh đồng khác vẫn dùng `points` và `polygon` như cũ. Các đối tượng AO SEN, KHU NUÔI VỊT, KÊNH THỦY LỢI, MƯƠNG TIÊU, ĐƯỜNG BÊ TÔNG dùng lớp SVG **không bấm chọn**, không xuất mã thửa và không tính diện tích lúa.
+- Sửa đồng thời `js/tl1-ban-do.js`, `js/ban-do.js` và `img/truong-le-1-ban-do.svg` để bản đồ tương tác và thumbnail có cùng hình học.
+- Nâng version tài nguyên web để khách không nhìn thấy dữ liệu cũ do cache: `js/tl1-ban-do.js?v=20261110b`, `js/ban-do.js?v=20261110b`, `VER_BANDO=3.3`, và thumbnail thêm `?v=20261110b`.
+- Không sửa dữ liệu **Nông dân, Thửa đất, Mã sản phẩm, Vụ mùa, Thời tiết**, không thay diện tích từ nhãn CAD: 13 thửa, tổng 28.430 m².
+- **Giới hạn:** Hình vẽ có độ chính xác theo hình học DXF, không phải bản đồ tọa độ địa lý WGS84. Tọa độ GPS 15.894578, 108.338016 vẫn chỉ là điểm thời tiết TL1.
+
+**Quy tắc kiểm thử trước merge:** xác nhận 13 thửa vẽ khép kín, click từng thửa riêng, các đường cong ARC không chuyển thành cạnh thẳng; hai ao, kênh, mương, đường và khu vịt không click được; bật cả dạng bản đồ nhúng, toàn màn hình và thumbnail. Ba cánh đồng cũ phải giữ nguyên dữ liệu polygon. Kiểm tra cú pháp, đối chiếu trước/sau với bản DXF và không đổi bất kỳ dữ liệu Notion nào.

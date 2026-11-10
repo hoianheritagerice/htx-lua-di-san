@@ -271,7 +271,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 <link rel="stylesheet" href="css/hieu-ung.css">
 <link rel="icon" type="image/png" href="img/favicon.png">
 <!-- TOÀN BỘ CHỮ CỦA WEBSITE nằm trong file này. Nạp sớm để trang chi tiết dùng được. -->
-<script src="js/noi-dung.js?v=20260926a"></script>
+<script src="js/noi-dung.js?v=20261110a"></script>
 <link rel="stylesheet" href="css/mobile-ui.css?v=20260925a">
 </head>
 <body>
@@ -380,6 +380,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
       <button class="field-tab active" data-dong="CKOD" aria-label="Ông Đảng · Cẩm Kim" aria-pressed="true" onclick="chonDong(this,'Ông Đảng','CKOD')"><span class="field-name">Ông Đảng</span><span class="field-place">Cẩm Kim</span></button>
       <button class="field-tab" data-dong="CTDC" aria-label="Đồng Cao · Cẩm Thanh" aria-pressed="false" onclick="chonDong(this,'Đồng Cao','CTDC')"><span class="field-name">Đồng Cao</span><span class="field-place">Cẩm Thanh</span></button>
       <button class="field-tab" data-dong="CTDM" aria-label="Đồng Mẫu · Cẩm Thanh" aria-pressed="false" onclick="chonDong(this,'Đồng Mẫu','CTDM')"><span class="field-name">Đồng Mẫu</span><span class="field-place">Cẩm Thanh</span></button>
+      <button class="field-tab" data-dong="TL1" aria-label="Trường Lệ 1 · Cẩm Châu" aria-pressed="false" onclick="chonDong(this,'Trường Lệ 1','TL1')"><span class="field-name">Trường Lệ 1</span><span class="field-place">Cẩm Châu</span></button>
     </div>
     <!-- Danh sách vụ nạp từ máy chủ (CONFIG.VU trong Code.gs). Dòng dưới
          chỉ là bản dự phòng khi chưa gọi được API. -->
@@ -533,10 +534,10 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
      bản cũ trong bộ nhớ đệm mà không ai biết. Dùng ngày + chữ cái,
      khớp với quy ước bên ban-do.html. -->
 <script src="js/bieu-do-thoi-tiet.js?v=20260923a"></script>
-<script src="js/canh-dong-config.js?v=20260926a"></script>
-<script src="js/canh-dong-so-chot.js?v=20260914c"></script>
+<script src="js/canh-dong-config.js?v=20261110a"></script>
+<script src="js/canh-dong-so-chot.js?v=20261110a"></script>
 <script src="js/dem-so.js?v=20260914c"></script>
-<script src="js/canh-dong-ui.js?v=20260925c"></script>
+<script src="js/canh-dong-ui.js?v=20261110a"></script>
 <script src="js/canh-dong-sinh-thai-art.js?v=20260923i"></script>
 <script src="js/canh-dong-sinh-thai.js?v=20260925c"></script>
 <script src="js/canh-dong-timeline.js?v=20260925c"></script>
@@ -544,7 +545,7 @@ footer .fl a:hover{opacity:1;color:var(--vang)}
 <script>
 /* MỘT chỗ duy nhất khai báo phiên bản bản đồ. Đổi số này khi sửa
    ban-do.html để trình duyệt buộc phải tải bản mới. */
-const VER_BANDO = '3.1';
+const VER_BANDO = '3.2';
 let DONG_HIEN_TAI = 'CKOD';
 /* Vụ đang xem. Đổi ở ô chọn vụ; bản đồ nhúng, dòng thời gian và biểu đồ
    thời tiết đều bám theo biến này. */
@@ -857,7 +858,7 @@ async function napThoiTiet(ma){
   const oSo=document.getElementById('ttSo'), oBd=document.getElementById('ttBieuDo'), oChu=document.getElementById('ttChu');
   if(!oBd) return;
   document.getElementById('ttTenDong').textContent =
-    ({CKOD:'Ông Đảng',CTDC:'Đồng Cao',CTDM:'Đồng Mẫu'})[ma] || ma;
+    ({CKOD:'Ông Đảng',CTDC:'Đồng Cao',CTDM:'Đồng Mẫu',TL1:'Trường Lệ 1'})[ma] || ma;
   oSo.innerHTML=''; oChu.textContent='';
   const oChip=document.getElementById('ttChip'), oBang=document.getElementById('ttBangGD');
   if(oChip) oChip.innerHTML=''; if(oBang) oBang.innerHTML='';

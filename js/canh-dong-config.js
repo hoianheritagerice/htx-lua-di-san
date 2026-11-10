@@ -9,7 +9,8 @@ const CAU_HINH_CANH_DONG = {
   dong: {
     CKOD: {slug:'ong-dang', ten:'Ông Đảng', anh:[], thuVien:{soAnh:16,duoi:'jpg',coAnhNho:false}},
     CTDC: {slug:'dong-cao', ten:'Đồng Cao', anh:[], thuVien:{soAnh:16,duoi:'jpg',coAnhNho:false}},
-    CTDM: {slug:'dong-mau', ten:'Đồng Mẫu', anh:[], thuVien:{soAnh:13,duoi:'jpg',coAnhNho:false}}
+    CTDM: {slug:'dong-mau', ten:'Đồng Mẫu', anh:[], thuVien:{soAnh:13,duoi:'jpg',coAnhNho:false}},
+    TL1: {slug:'truong-le-1', ten:'Trường Lệ 1', anh:[], thuVien:{soAnh:0,duoi:'jpg',coAnhNho:false}}
   },
   // Sau khi upload 01.jpg ... 15.jpg vào img/canh-dong/ckod (hoặc ctdc/ctdm),
   // đổi soAnh:0 thành soAnh:15 của đúng đồng. Ảnh bìa không thuộc thư viện.

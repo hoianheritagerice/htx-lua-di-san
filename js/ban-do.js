@@ -591,7 +591,7 @@ function apDungKetQua(r){
        vì lúc đó nhiều khả năng chỉ là chưa kịp nhập liệu. */
     if(!nd && r.season && r.season.daXong){ el.classList.add('khong-huu-co'); return; }
     // Khi đang Chuẩn bị, thiếu nhãn hữu cơ = chưa xác nhận, không phải không hữu cơ.
-    if(nd && !nd.organicLabel && r.season && r.season.trangThaiVu==='Chuẩn bị'){
+    if(nd && !nd.organicLabel){
       el.classList.add('chua-ro');return;
     }
     /* BA trạng thái: hữu cơ · hữu cơ nhưng vi phạm quy trình · không hữu cơ.

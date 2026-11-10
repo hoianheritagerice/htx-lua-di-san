@@ -25,7 +25,7 @@ const TL1_MAP_DATA = (() => {
   return {
     field: 'TL1', fieldName: 'Trường Lệ 1 — Cẩm Châu',
     viewW: 6010, viewH: 5440, viewX0: 0, viewY0: 0,
-    drawing: 'img/truong-le-1-ban-do.svg?v=20261110c',
+    drawing: 'img/truong-le-1-ban-do.svg?v=20261110d',
     plots, zones: []
   };
 })();

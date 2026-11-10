@@ -261,7 +261,7 @@ canhDong: {
       tenNgan: `Trường Lệ&nbsp;1`,
       viTri: `Cẩm&nbsp;Châu`,
       phu: `Cẩm&nbsp;Châu, Hội&nbsp;An`,
-      anh: `img/truong-le-1-ban-do.svg?v=20261110c`,
+      anh: `img/truong-le-1-ban-do.svg?v=20261110d`,
       tomTat: `13 khu ruộng trồng lúa do một mình Anh Trung canh tác, với tổng diện tích 28.430&nbsp;m².`,
       dan: `Cánh đồng Trường Lệ&nbsp;1 gồm 13 khu ruộng trồng lúa A1–D3 do Anh Trung trực tiếp canh tác. Bản đồ giữ riêng các ao sen và khu nuôi vịt, không tính vào diện tích lúa.`,
       so: [[`13`,`khu ruộng`],[`28.430`,`m² trồng lúa`],[`ĐX 2027`,`vụ đang lập kế hoạch`]],

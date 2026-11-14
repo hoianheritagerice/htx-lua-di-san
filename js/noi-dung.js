@@ -261,12 +261,12 @@ canhDong: {
       tenNgan: `Trường Lệ&nbsp;1`,
       viTri: `Cẩm&nbsp;Châu`,
       phu: `Cẩm&nbsp;Châu, Hội&nbsp;An`,
-      anh: `img/truong-le-1-ban-do.svg?v=20261110e`,
-      tomTat: `13 khu ruộng trồng lúa do một mình Anh Trung canh tác, với tổng diện tích 28.430&nbsp;m².`,
-      dan: `Cánh đồng Trường Lệ&nbsp;1 gồm 13 khu ruộng trồng lúa A1–D3 do Anh Trung trực tiếp canh tác. Bản đồ giữ riêng các ao sen và khu nuôi vịt, không tính vào diện tích lúa.`,
-      so: [[`13`,`khu ruộng`],[`28.430`,`m² trồng lúa`],[`ĐX 2027`,`vụ đang lập kế hoạch`]],
+      anh: `img/truong-le-1-ban-do.svg?v=20261114a`,
+      tomTat: `12 khu ruộng trồng lúa do một mình Anh Trung canh tác, với tổng diện tích 28.480&nbsp;m².`,
+      dan: `Cánh đồng Trường Lệ&nbsp;1 gồm 12 khu ruộng trồng lúa A1–D3 do Anh Trung trực tiếp canh tác. Bản đồ giữ riêng các ao sen và khu nuôi vịt, không tính vào diện tích lúa.`,
+      so: [[`12`,`khu ruộng`],[`28.480`,`m² trồng lúa`],[`ĐX 2027`,`vụ đang lập kế hoạch`]],
       than: [
-        {h:`Một người canh tác, nhiều khu ruộng`,p:[`Anh Trung trực tiếp quản lý 13 khu ruộng có mã riêng từ A1 đến D3. Mỗi khu có diện tích và hồ sơ sản xuất riêng trên Notion.`]},
+        {h:`Một người canh tác, nhiều khu ruộng`,p:[`Anh Trung trực tiếp quản lý 12 khu ruộng có mã riêng từ A1 đến D3. Mỗi khu có diện tích và hồ sơ sản xuất riêng trên Notion.`]},
         {h:`Phân biệt ruộng lúa và các khu khác`,p:[`Ao sen, khu nuôi vịt, kênh và đường được thể hiện như thông tin địa hình, không được cộng vào diện tích trồng lúa hoặc cấp mã sản phẩm.`]},
         {h:`Thông tin mùa vụ`,p:[`Đông Xuân 2027 đang ở giai đoạn Kế hoạch. Ngày gieo sạ, giống lúa và trạng thái canh tác sẽ được bổ sung khi có số liệu xác nhận.`]}
       ],

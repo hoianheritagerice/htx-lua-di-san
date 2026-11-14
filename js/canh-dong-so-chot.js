@@ -12,7 +12,7 @@ const SO_CHOT_CANH_DONG = Object.freeze({
   CKOD:Object.freeze({soThua:21,soHo:18,dienTich:17056.1}),
   CTDC:Object.freeze({soThua:41,soHo:32,dienTich:15479}),
   CTDM:Object.freeze({soThua:20,soHo:19,dienTich:14538}),
-  TL1:Object.freeze({soThua:13,soHo:1,dienTich:28430})
+  TL1:Object.freeze({soThua:12,soHo:1,dienTich:28480})
 });
 
 /* Tổng mục Tác động lấy từ đúng các số cố định ở trên.

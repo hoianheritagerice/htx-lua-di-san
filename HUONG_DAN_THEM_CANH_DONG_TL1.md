@@ -86,3 +86,10 @@ Có view riêng cho TL1 ở cả năm database trên. Các lựa chọn cũ CKOD
 - **Giới hạn:** Hình vẽ có độ chính xác theo hình học DXF, không phải bản đồ tọa độ địa lý WGS84. Tọa độ GPS 15.894578, 108.338016 vẫn chỉ là điểm thời tiết TL1.
 
 **Quy tắc kiểm thử trước merge:** xác nhận 13 thửa vẽ khép kín, click từng thửa riêng, các đường cong ARC không chuyển thành cạnh thẳng; hai ao, kênh, mương, đường và khu vịt không click được; bật cả dạng bản đồ nhúng, toàn màn hình và thumbnail. Ba cánh đồng cũ phải giữ nguyên dữ liệu polygon. Kiểm tra cú pháp, đối chiếu trước/sau với bản DXF và không đổi bất kỳ dữ liệu Notion nào.
+
+## 8. Bản đồ DXF cập nhật ngày 14/11/2026 — đang đối chiếu Notion
+
+- Bản đính kèm `Trường Lệ 1.dxf`, SHA-256 `4c82f323a4b6e5e380853ac19195c424327d08ad68b3f4799a31545e7af7e726`. Layout1 có 12 nhãn thửa trồng lúa, tổng nhãn 28.480 m²; đây là diện tích do bản vẽ ghi, không phải tính từ tọa độ bản vẽ hoặc đo đạc pháp lý.
+- B2 mới gồm B2 và B3 cũ: 3.100 m²; C2 2.850 m²; D3 2.750 m². Các diện tích khác theo nhãn không đổi.
+- Ranh B2, C2, C4, D3 lấy từ các LWPOLYLINE đóng E7C, DF6, DF2, DF4; cung được biểu diễn theo bulge. Không coi REGION cũ còn sót làm ranh mới. Khu ao, đường, kênh vẫn không phải thửa lúa.
+- Cần đồng bộ Notion và xử lý hồ sơ B3 cũ trước khi triển khai, để không cộng trùng diện tích hay để mã B3 vẫn xuất hiện trong dữ liệu hiện hành. Giữ hồ sơ lịch sử theo quyết định của HTX. Chưa kết luận giống lúa.

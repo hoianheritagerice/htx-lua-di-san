@@ -243,7 +243,7 @@ canhDong: {
       anh:    `img/dong-dong-mau.jpg`,
       tomTat: `Những thửa ruộng rộng, canh tác giống lúa bản địa theo lịch mùa vụ truyền thống.`,
       dan:    `Những thửa ruộng rộng, canh tác giống lúa bản địa theo lịch mùa vụ truyền thống.`,
-      so: [[`20`, `thửa ruộng`], [`Cẩm&nbsp;Thanh`, `vị trí`], [`Hè&nbsp;Thu&nbsp;2026`, `vụ đang canh tác`]],
+      so: [[`32`, `thửa ruộng`], [`Cẩm&nbsp;Thanh`, `vị trí`], [`23.498`, `m² trồng lúa`]],
       than: [
         { h: `Cánh đồng của những thửa lớn`,
           p: [`Đồng&nbsp;Mẫu có các thửa ruộng khổ lớn, thuận cho việc cơ giới hóa khâu làm đất và thu hoạch.`,
@@ -253,7 +253,7 @@ canhDong: {
                `Giữ giống lúa địa phương`,
                `Lịch mùa vụ theo tập quán lâu đời của làng`] },
       ],
-      nut: [[`canh-dong.html`, `Xem bản đồ &amp; dòng thời gian`], [`san-pham.html`, `Xem các gói sản phẩm`, `phu`]],
+      nut: [[`canh-dong.html?dong=CTDM&vu=DX27`, `Xem bản đồ &amp; dòng thời gian`], [`san-pham.html`, `Xem các gói sản phẩm`, `phu`]],
     },
 
     'truong-le-1': {
@@ -261,7 +261,7 @@ canhDong: {
       tenNgan: `Trường Lệ&nbsp;1`,
       viTri: `Cẩm&nbsp;Châu`,
       phu: `Cẩm&nbsp;Châu, Hội&nbsp;An`,
-      anh: `img/truong-le-1-ban-do.svg?v=20261114a`,
+      anh: `img/truong-le-1-ban-do.svg?v=20261117e`,
       tomTat: `12 khu ruộng trồng lúa do một mình Anh Trung canh tác, với tổng diện tích 28.480&nbsp;m².`,
       dan: `Cánh đồng Trường Lệ&nbsp;1 gồm 12 khu ruộng trồng lúa A1–D3 do Anh Trung trực tiếp canh tác. Bản đồ giữ riêng các ao sen và khu nuôi vịt, không tính vào diện tích lúa.`,
       so: [[`12`,`khu ruộng`],[`28.480`,`m² trồng lúa`],[`ĐX 2027`,`vụ đang lập kế hoạch`]],

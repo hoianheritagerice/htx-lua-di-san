@@ -75,8 +75,12 @@ body.nhung #trangthai{padding-top:10px}
 .thua.dong-hanh-chua{fill:#ece8de;stroke:#aaa394}
 .thua.dong-hanh-con{fill:#ead07b;stroke:#a98b2f}
 .thua.dong-hanh-du{fill:#88a864;stroke:#4f7132}
-/* Nhãn địa hình Trường Lệ 1 cần tương phản rõ trên các dải kênh hẹp. */
-#svgBanDo use[href$="#tl1-nhan-dia-hinh"]{fill:#1b2a14;opacity:1;letter-spacing:normal}
+/* Chữ ao, kênh, mương, sông và đường dùng chung ở mọi cánh đồng. */
+#svgBanDo .nhan-dia-hinh{
+  fill:#1b2a14;opacity:1;letter-spacing:normal;font-weight:600;
+  stroke:#fbf9f1;stroke-width:.13em;stroke-linejoin:round;
+  paint-order:stroke;pointer-events:none
+}
 .chuthich-donghanh{display:flex;gap:16px;padding:0 16px 18px;font-size:12.5px;flex-wrap:wrap}
 .chuthich-donghanh span{display:inline-flex;align-items:center;gap:6px}
 .chuthich-donghanh i{width:16px;height:16px;border-radius:4px;display:inline-block;border:1.5px solid}
@@ -480,8 +484,9 @@ body.nhung #trangthai{padding-top:10px}
      xong không lưu được.
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
-<script src="js/tl1-ban-do.js?v=20261114a"></script>
-<script src="js/ban-do.js?v=20261114a"></script>
+<script src="js/tl1-ban-do.js?v=20261117e"></script>
+<script src="js/ctdm-dx27-ban-do.js?v=20261117d"></script>
+<script src="js/ban-do.js?v=20261117e"></script>
 <script src="js/phan-bon.js?v=20261007b"></script>
 <script>
 /* ======================================================================
@@ -648,7 +653,7 @@ body.nhung #trangthai{padding-top:10px}
   /* --- lấy mã sản phẩm của thửa đang chọn --- */
   function maThuaDangChon() {
     var p  = MAP_DATA.plots[thuaDangChon];
-    var ma = ((MA_NONG_DAN[MAP_DATA.field] || {})[(p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim()] || '').toUpperCase();
+    var ma = maThuaNotion(p);
     return notionPlots[ma];
   }
 
@@ -673,7 +678,7 @@ body.nhung #trangthai{padding-top:10px}
     var boQua = [];
     thuaDaChonNhieu.forEach(function (i) {
       var p  = MAP_DATA.plots[i];
-      var ma = ((MA_NONG_DAN[MAP_DATA.field] || {})[(p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim()] || '').toUpperCase();
+      var ma = maThuaNotion(p);
       var nd = notionPlots[ma];
       if (nd) maNhieuThua.push(nd.productCode);
       else boQua.push((p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim());
@@ -869,7 +874,7 @@ body.nhung #trangthai{padding-top:10px}
   var dong = (q.get('dong') || '').toUpperCase();
   if (dong && typeof ALL_FIELDS !== 'undefined' && ALL_FIELDS[dong]
       && String(MAP_DATA.field).toUpperCase() !== dong) {
-    MAP_DATA = ALL_FIELDS[dong];
+    MAP_DATA = banDoTheoVu(dong);
     $('selDong').value = dong;
     var vp = $('vuPanel'); if (vp) vp.style.display = 'none';  // xoá số liệu đồng trước
     try { zoomLv = 1; $('svgwrap').style.width = '100%'; } catch (e) {}

@@ -560,9 +560,12 @@ function veBanDo(){
   if(d.drawing){
     s += `<use href="${d.drawing}#tl1-nhan-dia-hinh" class="vung"/>`;
   }
+  const lopNhanDiaHinh = d.field === 'CTDM' ? 'nhan-dia-hinh' : 'vung';
+  const canGiuaNhan = d === CTDM_DX27_MAP ? ' dominant-baseline="central"' : '';
   d.zones.forEach(z=>{
     const zr = z.rot ? ` transform="rotate(${z.rot} ${z.x} ${z.y})"` : '';
-    s += `<text class="vung" x="${z.x}" y="${z.y}" font-size="${z.fs||86}" text-anchor="middle"${zr}>${z.text}</text>`;
+    const chiTiet = z.detail ? `<tspan x="${z.x}" dy="1.2em">${escHtml(z.detail)}</tspan>` : '';
+    s += `<text class="${lopNhanDiaHinh}" x="${z.x}" y="${z.y}" font-size="${z.fs||86}" text-anchor="middle"${canGiuaNhan}${zr}>${escHtml(z.text)}${chiTiet}</text>`;
   });
   s += '</g></svg>';
   $('svgwrap').innerHTML = s;

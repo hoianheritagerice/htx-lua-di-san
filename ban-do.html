@@ -481,7 +481,8 @@ body.nhung #trangthai{padding-top:10px}
      MỖI LẦN SỬA js/ hoặc css/ PHẢI ĐỔI SỐ NÀY, nếu không xã viên vẫn chạy
      bản cũ mà không ai biết. Quy ước: ngày + chữ cái, ví dụ 20260822a. -->
 <script src="js/tl1-ban-do.js?v=20261114a"></script>
-<script src="js/ban-do.js?v=20261114a"></script>
+<script src="js/ctdm-dx27-ban-do.js?v=20261117a"></script>
+<script src="js/ban-do.js?v=20261117a"></script>
 <script src="js/phan-bon.js?v=20261007b"></script>
 <script>
 /* ======================================================================
@@ -648,7 +649,7 @@ body.nhung #trangthai{padding-top:10px}
   /* --- lấy mã sản phẩm của thửa đang chọn --- */
   function maThuaDangChon() {
     var p  = MAP_DATA.plots[thuaDangChon];
-    var ma = ((MA_NONG_DAN[MAP_DATA.field] || {})[(p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim()] || '').toUpperCase();
+    var ma = maThuaNotion(p);
     return notionPlots[ma];
   }
 
@@ -673,7 +674,7 @@ body.nhung #trangthai{padding-top:10px}
     var boQua = [];
     thuaDaChonNhieu.forEach(function (i) {
       var p  = MAP_DATA.plots[i];
-      var ma = ((MA_NONG_DAN[MAP_DATA.field] || {})[(p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim()] || '').toUpperCase();
+      var ma = maThuaNotion(p);
       var nd = notionPlots[ma];
       if (nd) maNhieuThua.push(nd.productCode);
       else boQua.push((p.farmer + (p.symbol ? ' ' + p.symbol : '')).trim());
@@ -869,7 +870,7 @@ body.nhung #trangthai{padding-top:10px}
   var dong = (q.get('dong') || '').toUpperCase();
   if (dong && typeof ALL_FIELDS !== 'undefined' && ALL_FIELDS[dong]
       && String(MAP_DATA.field).toUpperCase() !== dong) {
-    MAP_DATA = ALL_FIELDS[dong];
+    MAP_DATA = banDoTheoVu(dong);
     $('selDong').value = dong;
     var vp = $('vuPanel'); if (vp) vp.style.display = 'none';  // xoá số liệu đồng trước
     try { zoomLv = 1; $('svgwrap').style.width = '100%'; } catch (e) {}

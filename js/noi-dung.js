@@ -243,7 +243,7 @@ canhDong: {
       anh:    `img/dong-dong-mau.jpg`,
       tomTat: `Những thửa ruộng rộng, canh tác giống lúa bản địa theo lịch mùa vụ truyền thống.`,
       dan:    `Những thửa ruộng rộng, canh tác giống lúa bản địa theo lịch mùa vụ truyền thống.`,
-      so: [[`20`, `thửa ruộng`], [`Cẩm&nbsp;Thanh`, `vị trí`], [`Hè&nbsp;Thu&nbsp;2026`, `vụ đang canh tác`]],
+      so: [[`32`, `thửa ruộng`], [`Cẩm&nbsp;Thanh`, `vị trí`], [`23.546`, `m² trồng lúa`]],
       than: [
         { h: `Cánh đồng của những thửa lớn`,
           p: [`Đồng&nbsp;Mẫu có các thửa ruộng khổ lớn, thuận cho việc cơ giới hóa khâu làm đất và thu hoạch.`,
@@ -253,7 +253,7 @@ canhDong: {
                `Giữ giống lúa địa phương`,
                `Lịch mùa vụ theo tập quán lâu đời của làng`] },
       ],
-      nut: [[`canh-dong.html`, `Xem bản đồ &amp; dòng thời gian`], [`san-pham.html`, `Xem các gói sản phẩm`, `phu`]],
+      nut: [[`canh-dong.html?dong=CTDM&vu=DX27`, `Xem bản đồ &amp; dòng thời gian`], [`san-pham.html`, `Xem các gói sản phẩm`, `phu`]],
     },
 
     'truong-le-1': {

@@ -120,7 +120,36 @@ const ALL_FIELDS = {
 
 // TL1 riêng file để không sửa hình học ba cánh đồng gốc.
 ALL_FIELDS.TL1 = TL1_MAP_DATA;
-let MAP_DATA = ALL_FIELDS.CKOD;
+let MAP_DATA = ALL_FIELDS[$('selDong').value] || ALL_FIELDS.CKOD;
+
+function banDoTheoVu(field){
+  return field === 'CTDM' && $('selVu').value === 'DX27'
+    ? CTDM_DX27_MAP
+    : ALL_FIELDS[field];
+}
+
+function doiBanDoTheoVu(){
+  const banDo = banDoTheoVu(MAP_DATA.field);
+  if(banDo === MAP_DATA) return;
+  if(cheDoChonNhieu) huyChonNhieu();
+  if(thuaDangChon !== null){
+    dongModal('mpThua');
+    dongModal('mpDongHanh');
+  }
+  thuaDangChon = null;
+  ketQuaCuoi = null;
+  notionPlots = {};
+  DONG_HANH_THEO_SHEET = null;
+  MAP_DATA = banDo;
+  zoomLv = 1;
+  $('svgwrap').style.width = '100%';
+  veBanDo();
+}
+
+function maThuaNotion(p){
+  if(MAP_DATA === CTDM_DX27_MAP) return p.code;
+  return ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
+}
 
 /* ================================================================
    3. LOGIC — không cần sửa từ đây trở xuống
@@ -340,6 +369,7 @@ function moThuaCuaToiTuURL(coZoom=true){
         sel.appendChild(opt);
       }
       sel.value = season;
+      doiBanDoTheoVu();
     }
 
     THUA_CUA_TOI = {field, season, code, index:-1};
@@ -582,7 +612,7 @@ function apDungKetQua(r){
   });
   let khop = 0;
   MAP_DATA.plots.forEach((p,i)=>{
-    const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
+    const ma = maThuaNotion(p);
     const nd = notionPlots[ma];
     const el = $('thua'+i);
     if(nd){
@@ -799,7 +829,7 @@ function moDongHanh(i){
   const ttChu = tt === 'chua' ? 'Chưa có người đồng hành'
               : (tt === 'du' ? 'Đã đủ người đồng hành' : 'Còn ' + fmtKg(con) + ' để đồng hành');
 
-  const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
+  const ma = maThuaNotion(p);
   const nd = notionPlots[ma];
   /* Popup Đồng hành: mã sản phẩm là thông tin nhận diện chính.
      Dòng phụ chỉ giữ người canh tác + diện tích để gọn và dễ quét. */
@@ -913,7 +943,7 @@ function chonThua(i){
   document.querySelectorAll('.thua').forEach(e=>e.classList.remove('chon-active'));
   $('thua'+i).classList.add('chon-active');
   const p = MAP_DATA.plots[i];
-  const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
+  const ma = maThuaNotion(p);
   const nd = notionPlots[ma];
   $('tThua').textContent = nhanThua(p) + ' — ' + p.area + ' m²';
   $('tMa').textContent = nd ? nd.productCode : 'Chưa có mã sản phẩm';
@@ -990,7 +1020,7 @@ function chonHetHuuCo(){
 
   let khongHC = 0, chuaCoMa = 0;
   MAP_DATA.plots.forEach((p,i)=>{
-    const ma = ((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase();
+    const ma = maThuaNotion(p);
     const nd = notionPlots[ma];
     if(!nd){ chuaCoMa++; return; }          // thửa chưa có mã sản phẩm trong vụ này
     if(!nd.organic){ khongHC++; return; }
@@ -1034,7 +1064,7 @@ function huyChonNhieu(){
 /* ---------- nhật ký ---------- */
 async function moNhatKy(){
   const p = MAP_DATA.plots[thuaDangChon];
-  const nd = notionPlots[((MA_NONG_DAN[MAP_DATA.field]||{})[nhanThua(p)]||'').toUpperCase()];
+  const nd = notionPlots[maThuaNotion(p)];
   if(!nd){ alert('Thửa này chưa có dữ liệu nên chưa xem được nhật ký.'); return; }
   dongModal('mpThua'); dongModal('mpDongHanh'); moModal('mpNK');
   $('nkMa').textContent = nd.productCode;
@@ -1294,6 +1324,7 @@ function nenAnh(file){
 }
 
 /* ---------- khởi động ---------- */
+MAP_DATA = banDoTheoVu(MAP_DATA.field);
 veBanDo();
 
 /* ---- zoom bằng lăn chuột & véo 2 ngón ---- */
@@ -1451,6 +1482,7 @@ goiAPI({ action: 'getCauHinh' }).then(function (r) {
   if(!Array.from(sel.options).some(v=>v.value===dangChon))sel.add(new Option(dangChon,dangChon));
   sel.value=dangChon;
   const daChuyen=apDungVuTheoDongMap();
+  if(daChuyen) doiBanDoTheoVu();
   if(DEEP_LINK_THUA_CUA_TOI && typeof moThuaCuaToiTuURL === 'function')
     moThuaCuaToiTuURL(false);
   if(daChuyen && API_URL.startsWith('http'))napNotion();
@@ -1469,6 +1501,7 @@ $('selVu').addEventListener('change', function(){
   if(!DANG_AP_DEEP_LINK){
     THUA_CUA_TOI = null; xoaHienThiThuaCuaToi(); anBannerThuaCuaToi();
   }
+  doiBanDoTheoVu();
   napNotion();
 });
 $('selDong').addEventListener('change', function(){
@@ -1478,6 +1511,7 @@ $('selDong').addEventListener('change', function(){
   if(cheDoChonNhieu) huyChonNhieu();   // đổi đồng thì bỏ chọn nhiều (chỉ số thửa khác nhau)
   MAP_DATA = ALL_FIELDS[this.value];
   apDungVuTheoDongMap();
+  MAP_DATA = banDoTheoVu(this.value);
   zoomLv = 1; $('svgwrap').style.width = '100%';
   veBanDo();
   if(API_URL.startsWith('http')) napNotion();

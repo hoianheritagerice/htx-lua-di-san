@@ -12,7 +12,7 @@ const SO_CHOT_CANH_DONG = Object.freeze({
   ngayChot:'2026-11-10',
   CKOD:Object.freeze({soThua:21,soHo:18,dienTich:17056.1}),
   CTDC:Object.freeze({soThua:41,soHo:32,dienTich:15479}),
-  CTDM:Object.freeze({soThua:32,soHo:25,dienTich:23546}),
+  CTDM:Object.freeze({soThua:32,soHo:25,dienTich:23498}),
   TL1:Object.freeze({soThua:12,soHo:1,dienTich:28480})
 });
 

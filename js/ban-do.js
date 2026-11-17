@@ -558,11 +558,12 @@ function veBanDo(){
     s += `</g>`;
   });
   if(d.drawing){
-    s += `<use href="${d.drawing}#tl1-nhan-dia-hinh" class="vung"/>`;
+    s += `<use href="${d.drawing}#tl1-nhan-dia-hinh" class="nhan-dia-hinh"/>`;
   }
-  const lopNhanDiaHinh = d.field === 'CTDM' ? 'nhan-dia-hinh' : 'vung';
   const canGiuaNhan = d === CTDM_DX27_MAP ? ' dominant-baseline="central"' : '';
   d.zones.forEach(z=>{
+    const laNhanDiaHinhChinh = /^(AO|KÊNH|MƯƠNG|SÔNG|ĐƯỜNG)(?:\s|$)/i.test(z.text);
+    const lopNhanDiaHinh = laNhanDiaHinhChinh ? 'nhan-dia-hinh' : 'vung';
     const zr = z.rot ? ` transform="rotate(${z.rot} ${z.x} ${z.y})"` : '';
     const chiTiet = z.detail ? `<tspan x="${z.x}" dy="1.2em">${escHtml(z.detail)}</tspan>` : '';
     s += `<text class="${lopNhanDiaHinh}" x="${z.x}" y="${z.y}" font-size="${z.fs||86}" text-anchor="middle"${canGiuaNhan}${zr}>${escHtml(z.text)}${chiTiet}</text>`;
